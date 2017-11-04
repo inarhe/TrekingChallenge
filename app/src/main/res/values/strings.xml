@@ -1,3 +1,24 @@
 <resources>
     <string name="app_name">TrekkingChallenge</string>
+    <string name="mapMenuButton">Mapa rutes</string>
+    <string name="searchMenuButton">Cerca rutes</string>
+    <string name="tripMenuButton">Excursions</string>
+    <string name="challengeMenuButton">Reptes</string>
+    <string name="registerTitle">Registre d\'usuari</string>
+    <string name="textIdUser">Identificador d\'usuari:</string>
+    <string name="textNameUser">Nom:</string>
+    <string name="textMailUser">Mail:</string>
+    <string name="hintNameUser">Introdueix el nom</string>
+    <string name="hintIdUser">Introdueix l\'identificador d\'usuari</string>
+    <string name="hintMailUser">Introdueix el mail</string>
+    <string name="textPassUser">Contrasenya:</string>
+    <string name="hintPassUser">Introdueix la contrasenya</string>
+    <string name="textPassRepeat">Confrmació contrasenya:</string>
+    <string name="acceptButton">Acceptar</string>
+    <string name="cancelButton">Cancel·lar</string>
+    <string name="registered">Ja ets usuari?</string>
+    <string name="accessButton">Accedeix</string>
+    <string name="nonRegistered">Encara no ets usuari?</string>
+    <string name="registerButton">Registra\'t</string>
+
 </resources>

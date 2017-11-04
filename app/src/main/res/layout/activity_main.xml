@@ -1,18 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.widget.RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="edu.uoc.iartal.trekkingchallenge.MainActivity">
 
-    <TextView
+    <Button
+        android:id="@+id/searchMenuButton"
+        style="@style/Widget.AppCompat.Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:text="@string/searchMenuButton"
+        android:layout_marginLeft="39dp"
+        android:layout_marginStart="39dp"
+        android:layout_alignBaseline="@+id/mapMenuButton"
+        android:layout_alignBottom="@+id/mapMenuButton"
+        android:layout_toRightOf="@+id/mapMenuButton"
+        android:layout_toEndOf="@+id/mapMenuButton" />
 
-</android.support.constraint.ConstraintLayout>
+    <Button
+        android:id="@+id/mapMenuButton"
+        style="@style/Widget.AppCompat.Button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="56dp"
+        android:layout_marginStart="56dp"
+        android:layout_marginTop="118dp"
+        android:onClick="showMap"
+        android:text="@string/mapMenuButton" />
+
+    <Button
+        android:id="@+id/tripMenuButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/mapMenuButton"
+        android:layout_alignStart="@+id/mapMenuButton"
+        android:layout_below="@+id/mapMenuButton"
+        android:layout_marginTop="50dp"
+        android:text="@string/tripMenuButton" />
+
+    <Button
+        android:id="@+id/challengeMenuButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/tripMenuButton"
+        android:layout_alignBottom="@+id/tripMenuButton"
+        android:layout_alignEnd="@+id/searchMenuButton"
+        android:layout_alignRight="@+id/searchMenuButton"
+        android:elevation="1dp"
+        android:text="@string/challengeMenuButton" />
+
+</android.widget.RelativeLayout>

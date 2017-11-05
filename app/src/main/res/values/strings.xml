@@ -16,9 +16,18 @@
     <string name="textPassRepeat">Confrmació contrasenya:</string>
     <string name="acceptButton">Acceptar</string>
     <string name="cancelButton">Cancel·lar</string>
-    <string name="registered">Ja ets usuari?</string>
+    <string name="registeredText">Ja ets usuari?</string>
     <string name="accessButton">Accedeix</string>
-    <string name="nonRegistered">Encara no ets usuari?</string>
+    <string name="noRegisteredText">Encara no ets usuari?</string>
     <string name="registerButton">Registra\'t</string>
+
+    <string name="nameField">Siusplau, introdueix un nom</string>
+    <string name="idField">Siusplau, introdueix un identificador</string>
+    <string name="mailField">Siusplau, introdueix un correu electrònic</string>
+    <string name="passwordField">Siusplau, introdueix una contrasenya</string>
+    <string name="samePass">Les contrasenyes no són iguals</string>
+    <string name="registering">Registrant usuari...</string>
+    <string name="successfulRegister">Usuari registrat correctament</string>
+    <string name="failedRegister">No s\'ha pogut registrar l\'usuari, siusplau torna-ho a provar</string>
 
 </resources>

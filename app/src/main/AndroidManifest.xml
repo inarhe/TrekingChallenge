@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="edu.uoc.iartal.trekkingchallenge">
 
+    <uses-permission android:name="android.permission.INTERNET"></uses-permission>
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -19,6 +20,7 @@
         <activity android:name=".MapActivity"></activity>
         <activity android:name=".RegisterActivity"></activity>
         <activity android:name=".AccessActivity"></activity>
+        <activity android:name=".LoginActivity"></activity>
     </application>
 
 </manifest>

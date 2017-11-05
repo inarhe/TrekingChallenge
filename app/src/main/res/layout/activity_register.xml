@@ -16,10 +16,10 @@
                 android:id="@+id/cancelRegister"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignEnd="@+id/passRepeat"
-                android:layout_alignRight="@+id/passRepeat"
+                android:layout_alignEnd="@+id/editTextPassRepeat"
+                android:layout_alignRight="@+id/editTextPassRepeat"
                 android:layout_alignTop="@+id/acceptRegister"
-                android:layout_below="@+id/passRepeat"
+                android:layout_below="@+id/editTextPassRepeat"
                 android:layout_marginRight="50dp"
                 android:text="@string/cancelButton"
                 android:textSize="14sp" />
@@ -30,14 +30,15 @@
                 android:layout_height="wrap_content"
                 android:layout_alignEnd="@+id/textIdUser"
                 android:layout_alignRight="@+id/textIdUser"
-                android:layout_below="@+id/passRepeat"
+                android:layout_below="@+id/editTextPassRepeat"
                 android:layout_marginLeft="50dp"
                 android:layout_marginTop="10dp"
+                android:onClick="registerUser"
                 android:text="@string/acceptButton"
                 android:textSize="14sp" />
 
             <EditText
-                android:id="@+id/passRepeat"
+                android:id="@+id/editTextPassRepeat"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
@@ -56,7 +57,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
-                android:layout_below="@+id/userPassword"
+                android:layout_below="@+id/editTextUserPass"
                 android:layout_marginLeft="15dp"
                 android:layout_marginTop="20dp"
                 android:text="@string/textPassRepeat"
@@ -65,7 +66,7 @@
                 android:textStyle="bold" />
 
             <EditText
-                android:id="@+id/userPassword"
+                android:id="@+id/editTextUserPass"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
@@ -84,7 +85,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
-                android:layout_below="@+id/userMail"
+                android:layout_below="@+id/editTextUserMail"
                 android:layout_marginLeft="15dp"
                 android:layout_marginTop="20dp"
                 android:text="@string/textPassUser"
@@ -93,7 +94,7 @@
                 android:textStyle="bold" />
 
             <EditText
-                android:id="@+id/userMail"
+                android:id="@+id/editTextUserMail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
@@ -112,7 +113,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
-                android:layout_below="@+id/userName"
+                android:layout_below="@+id/editTextUserName"
                 android:layout_marginLeft="15dp"
                 android:layout_marginTop="20dp"
                 android:text="@string/textMailUser"
@@ -121,7 +122,7 @@
                 android:textStyle="bold" />
 
             <EditText
-                android:id="@+id/userName"
+                android:id="@+id/editTextUserName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
@@ -140,7 +141,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
-                android:layout_below="@+id/idUser"
+                android:layout_below="@+id/editTextIdUser"
                 android:layout_marginLeft="15dp"
                 android:layout_marginTop="20dp"
                 android:text="@string/textNameUser"
@@ -149,7 +150,7 @@
                 android:textStyle="bold" />
 
             <EditText
-                android:id="@+id/idUser"
+                android:id="@+id/editTextIdUser"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/textIdUser"
@@ -165,8 +166,8 @@
                 android:id="@+id/textIdUser"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignLeft="@+id/idUser"
-                android:layout_alignStart="@+id/idUser"
+                android:layout_alignLeft="@+id/editTextIdUser"
+                android:layout_alignStart="@+id/editTextIdUser"
                 android:layout_below="@+id/registerTitle"
                 android:layout_marginTop="30dp"
                 android:text="@string/textIdUser"
@@ -178,9 +179,9 @@
                 android:id="@+id/registerTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignLeft="@+id/idUser"
+                android:layout_alignLeft="@+id/editTextIdUser"
                 android:layout_alignParentTop="true"
-                android:layout_alignStart="@+id/idUser"
+                android:layout_alignStart="@+id/editTextIdUser"
                 android:layout_centerHorizontal="true"
                 android:layout_marginLeft="101dp"
                 android:layout_marginStart="101dp"

@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
        // Intent showMap = new Intent(this, MapActivity.class);
        // startActivity(showMap);
 
-        Intent userAccess = new Intent(this, RegisterActivity.class);
+        Intent userAccess = new Intent(this, AccessActivity.class);
         startActivity(userAccess);
     }
 }

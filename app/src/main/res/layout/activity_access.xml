@@ -4,7 +4,7 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/registered"
+        android:id="@+id/registeredText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
@@ -12,34 +12,35 @@
         android:layout_alignParentTop="true"
         android:layout_marginLeft="30dp"
         android:layout_marginTop="141dp"
-        android:text="@string/registered"
+        android:text="@string/registeredText"
         android:textAlignment="center"
         android:textAppearance="@android:style/TextAppearance.Large"
         android:textSize="24sp" />
 
     <Button
-        android:id="@+id/accessButton"
+        android:id="@+id/loginButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/registered"
+        android:layout_below="@+id/registeredText"
         android:layout_marginLeft="30dp"
         android:layout_marginRight="30dp"
         android:layout_marginTop="12dp"
+        android:onClick="loginActivity"
         android:text="@string/accessButton"
         android:textSize="18sp" />
 
     <TextView
-        android:id="@+id/nonRegistered"
+        android:id="@+id/noRegisteredText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/accessButton"
+        android:layout_below="@+id/loginButton"
         android:layout_marginLeft="30dp"
         android:layout_marginTop="40dp"
-        android:text="@string/nonRegistered"
+        android:text="@string/noRegisteredText"
         android:textAppearance="@android:style/TextAppearance.Large"
         android:textSize="24sp" />
 
@@ -49,10 +50,11 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/nonRegistered"
+        android:layout_below="@+id/noRegisteredText"
         android:layout_marginLeft="30dp"
         android:layout_marginRight="30dp"
         android:layout_marginTop="12dp"
+        android:onClick="registerActivity"
         android:text="@string/registerButton"
-        android:textSize="18sp"/>
+        android:textSize="18sp" />
 </RelativeLayout>

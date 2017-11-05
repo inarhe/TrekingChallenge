@@ -1,9 +1,11 @@
 package edu.uoc.iartal.trekkingchallenge;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -16,51 +18,25 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class AccessActivity extends Activity {
 
-    EditText userIdText;
-    EditText userNameText;
-    EditText userMailText;
-    EditText userPasswordText;
-
-
-    DatabaseReference databaseUser;
-
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_access);
 
-        databaseUser = FirebaseDatabase.getInstance().getReference("user");
-
-        userIdText = (EditText) findViewById(R.id.userId);
-        userNameText = (EditText) findViewById(R.id.userName);
-        userMailText = (EditText) findViewById(R.id.userMail);
-        userPasswordText = (EditText) findViewById(R.id.userPassword);
-
     }
 
-    public void saveUser (View view){
-        addUser();
+    public void registerActivity (View view){
+        //Will open register activity
+        startActivity(new Intent(this, RegisterActivity.class));
     }
 
-    public void addUser(){
-        String idUser = userIdText.getText().toString().trim();
-        String userName = userNameText.getText().toString().trim();
-        String userMail = userMailText.getText().toString().trim();
-        String userPassword = userPasswordText.getText().toString().trim();
-
-        if(!TextUtils.isEmpty(userName)){
-           // String id = databaseUser.push().getKey();
-
-            User user = new User(idUser,userName,userMail, userPassword);
-            databaseUser.child(idUser).setValue(user);
-
-            Toast.makeText(this, "User created", Toast.LENGTH_LONG).show();
-
-
-        }else {
-            Toast.makeText(this, "Nom no buit", Toast.LENGTH_LONG).show();
-        }
-
-
-
+    public void loginActivity (View view){
+        //Will open login activity
+        startActivity(new Intent(this, LoginActivity.class));
     }
+
+
+
+
+
+
 }

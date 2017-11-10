@@ -25,9 +25,14 @@
     <string name="idField">Siusplau, introdueix un identificador</string>
     <string name="mailField">Siusplau, introdueix un correu electrònic</string>
     <string name="passwordField">Siusplau, introdueix una contrasenya</string>
+    <string name="passwordTooShort">La contrasenya ha de tenir mínim 6 caràcters</string>
     <string name="samePass">Les contrasenyes no són iguals</string>
     <string name="registering">Registrant usuari...</string>
     <string name="successfulRegister">Usuari registrat correctament</string>
     <string name="failedRegister">No s\'ha pogut registrar l\'usuari, siusplau torna-ho a provar</string>
+    <string name="failedLogin">No s\'ha pogut iniciar sessió, siusplau torna-ho a provar</string>
+    <string name="loginTitle">Inici de sessió</string>
+    <string name="newTripTitle">Crea una excursió</string>
+    <string name="nameTrip">Nom excursió</string>
 
 </resources>

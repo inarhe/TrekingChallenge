@@ -12,6 +12,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
+
             <Button
                 android:id="@+id/cancelRegister"
                 android:layout_width="wrap_content"
@@ -33,6 +34,7 @@
                 android:layout_below="@+id/editTextPassRepeat"
                 android:layout_marginLeft="50dp"
                 android:layout_marginTop="10dp"
+                android:background="@color/colorAccent"
                 android:onClick="registerUser"
                 android:text="@string/acceptButton"
                 android:textSize="14sp" />
@@ -186,7 +188,6 @@
                 android:layout_marginLeft="101dp"
                 android:layout_marginStart="101dp"
                 android:layout_marginTop="28dp"
-                android:editable="false"
                 android:gravity="center_vertical"
                 android:text="@string/registerTitle"
                 android:textColor="@android:color/black"

@@ -2,6 +2,7 @@ package edu.uoc.iartal.trekkingchallenge;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
@@ -23,11 +24,8 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class RegisterActivity extends Activity {
 
-    private EditText editTextUserId;
-    private EditText editTextUserName;
-    private EditText editTextUserMail;
-    private EditText editTextUserPass;
-    private EditText editTextPassRepeat;
+    private EditText editTextUserId, editTextUserName, editTextUserMail, editTextUserPass, editTextPassRepeat;
+    private String idUser, userName, userMail, userPassword;
 
     private ProgressDialog progressDialog;
 
@@ -52,10 +50,10 @@ public class RegisterActivity extends Activity {
     }
 
     public void registerUser (View view){
-        String idUser = editTextUserId.getText().toString().trim();
-        String userName = editTextUserName.getText().toString().trim();
-        String userMail = editTextUserMail.getText().toString().trim();
-        String userPassword = editTextUserPass.getText().toString().trim();
+        idUser = editTextUserId.getText().toString().trim();
+        userName = editTextUserName.getText().toString().trim();
+        userMail = editTextUserMail.getText().toString().trim();
+        userPassword = editTextUserPass.getText().toString().trim();
         String repeatPassword = editTextPassRepeat.getText().toString().trim();
 
         if(TextUtils.isEmpty(userName)) {
@@ -80,6 +78,9 @@ public class RegisterActivity extends Activity {
             Toast.makeText(this, getString(R.string.passwordField), Toast.LENGTH_LONG).show();
             //Stopping the function execution further
             return;
+        }else if (userPassword.length() < 6){
+            Toast.makeText(this, getString(R.string.passwordTooShort), Toast.LENGTH_LONG).show();
+            return;
         }
 
         if(!userPassword.equals(repeatPassword)) {
@@ -99,8 +100,14 @@ public class RegisterActivity extends Activity {
                         if(task.isSuccessful()){
                             //user is successfully registered and logged in
                             //We will start the profile activity here
+                            User user = new User(idUser,userName,userMail,userPassword);
+                            // FirebaseUser user = firebaseAuth.getCurrentUser();
+                            //.child(user.getUid())
+                            databaseUser.child(idUser).setValue(user);
                             progressDialog.dismiss();
                             Toast.makeText(RegisterActivity.this, getString(R.string.successfulRegister),Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                            finish();
                         }else{
                             Toast.makeText(RegisterActivity.this,getString(R.string.failedRegister),Toast.LENGTH_SHORT).show();
                         }
@@ -108,10 +115,10 @@ public class RegisterActivity extends Activity {
                 });
 
 
+
                 // String id = databaseUser.push().getKey();
 
-            //User user = new User(idUser,userName,userMail,userPassword);
-           // databaseUser.child(idUser).setValue(user);
+
     }
 
 

@@ -26,12 +26,14 @@ public class AccessActivity extends Activity {
 
     public void registerActivity (View view){
         //Will open register activity
-        startActivity(new Intent(this, RegisterActivity.class));
+        startActivity(new Intent(getApplicationContext(), RegisterActivity.class));
+        finish();
     }
 
     public void loginActivity (View view){
         //Will open login activity
-        startActivity(new Intent(this, LoginActivity.class));
+        startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+        finish();
     }
 
 

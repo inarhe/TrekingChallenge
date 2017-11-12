@@ -4,6 +4,8 @@
     <string name="searchMenuButton">Cerca rutes</string>
     <string name="tripMenuButton">Excursions</string>
     <string name="challengeMenuButton">Reptes</string>
+    <string name="userMenuButton">Àrea usuari</string>
+    <string name="groupMenuButton">Grups usuaris</string>
     <string name="registerTitle">Registre d\'usuari</string>
     <string name="textIdUser">Identificador d\'usuari:</string>
     <string name="textNameUser">Nom:</string>
@@ -22,17 +24,26 @@
     <string name="registerButton">Registra\'t</string>
 
     <string name="nameField">Siusplau, introdueix un nom</string>
+    <string name="descriptionField">Siusplau, introdueix una descripció</string>
     <string name="idField">Siusplau, introdueix un identificador</string>
     <string name="mailField">Siusplau, introdueix un correu electrònic</string>
     <string name="passwordField">Siusplau, introdueix una contrasenya</string>
     <string name="passwordTooShort">La contrasenya ha de tenir mínim 6 caràcters</string>
     <string name="samePass">Les contrasenyes no són iguals</string>
     <string name="registering">Registrant usuari...</string>
+    <string name="groupSaved">Grup creat</string>
     <string name="successfulRegister">Usuari registrat correctament</string>
     <string name="failedRegister">No s\'ha pogut registrar l\'usuari, siusplau torna-ho a provar</string>
     <string name="failedLogin">No s\'ha pogut iniciar sessió, siusplau torna-ho a provar</string>
     <string name="loginTitle">Inici de sessió</string>
+    <string name="newGroupTitle">Crea un grup</string>
     <string name="newTripTitle">Crea una excursió</string>
     <string name="nameTrip">Nom excursió</string>
+
+    <string name="hintNameGroup">Introdueix el nom del grup</string>
+    <string name="hintDescription">Introdueix una descripció</string>
+    <string name="textInviteUsers">Convida a usuaris</string>
+    <string name="checkIsPublic">Públic?</string>
+
 
 </resources>

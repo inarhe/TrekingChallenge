@@ -18,6 +18,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import edu.uoc.iartal.trekkingchallenge.ObjectsDB.FireBaseReferences;
+
 /**
  * Created by Ingrid Artal on 04/11/2017.
  */
@@ -38,7 +40,7 @@ public class RegisterActivity extends Activity {
 
         firebaseAuth = FirebaseAuth.getInstance();
 
-        databaseUser = FirebaseDatabase.getInstance().getReference("user");
+        databaseUser = FirebaseDatabase.getInstance().getReference(FireBaseReferences.USER_REFERENCE);
 
         progressDialog = new ProgressDialog(this);
 

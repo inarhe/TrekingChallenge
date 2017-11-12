@@ -7,4 +7,5 @@ package edu.uoc.iartal.trekkingchallenge.ObjectsDB;
 public class FireBaseReferences {
 
     final public static String USER_REFERENCE = "user";
+    final public static String GROUP_REFERENCE = "group";
 }

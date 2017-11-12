@@ -5,26 +5,72 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class MainActivity extends AppCompatActivity {
+
+    private FirebaseAuth firebaseAuth;
+    private FirebaseDatabase dataBase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        FirebaseDatabase dataBase = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = dataBase.getReference();
+        firebaseAuth = FirebaseAuth.getInstance();
+
+        dataBase = FirebaseDatabase.getInstance();
+       // DatabaseReference myRef = dataBase.getReference();
+
     }
 
-    public void showMap (View view){
+    public void mapActivity (View view){
+        if (firebaseAuth.getCurrentUser()!=null) {
+            startActivity(new Intent(getApplicationContext(),MainActivity.class));
+        } else {
+            startActivity(new Intent(getApplicationContext(), AccessActivity.class));
+        }
+    }
 
-       // Intent showMap = new Intent(this, MapActivity.class);
-       // startActivity(showMap);
+    public void searchActivity (View view){
+        if (firebaseAuth.getCurrentUser()!=null) {
+            startActivity(new Intent(getApplicationContext(),MainActivity.class));
+        } else {
+            startActivity(new Intent(getApplicationContext(), AccessActivity.class));
+        }
+    }
 
-        Intent userAccess = new Intent(this, AccessActivity.class);
-        startActivity(userAccess);
+    public void tripActivity (View view){
+        if (firebaseAuth.getCurrentUser()!=null) {
+            startActivity(new Intent(getApplicationContext(),MainActivity.class));
+        } else {
+            startActivity(new Intent(getApplicationContext(), AccessActivity.class));
+        }
+    }
+
+    public void challengeActivity (View view){
+        if (firebaseAuth.getCurrentUser()!=null) {
+            startActivity(new Intent(getApplicationContext(),MainActivity.class));
+        } else {
+            startActivity(new Intent(getApplicationContext(), AccessActivity.class));
+        }
+    }
+
+    public void userActivity (View view){
+        if (firebaseAuth.getCurrentUser()!=null) {
+            startActivity(new Intent(getApplicationContext(),MainActivity.class));
+        } else {
+            startActivity(new Intent(getApplicationContext(), AccessActivity.class));
+        }
+    }
+
+    public void groupActivity (View view){
+        if (firebaseAuth.getCurrentUser()!=null) {
+            startActivity(new Intent(getApplicationContext(),ListGroupsActivity.class));
+        } else {
+            startActivity(new Intent(getApplicationContext(), AccessActivity.class));
+        }
     }
 }

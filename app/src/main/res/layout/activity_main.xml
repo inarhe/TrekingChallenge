@@ -1,57 +1,95 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.widget.RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="edu.uoc.iartal.trekkingchallenge.MainActivity">
 
-    <Button
-        android:id="@+id/searchMenuButton"
-        style="@style/Widget.AppCompat.Button"
+
+    <TextView
+        android:id="@+id/textMainMenu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/searchMenuButton"
-        android:layout_marginLeft="39dp"
-        android:layout_marginStart="39dp"
-        android:layout_alignBaseline="@+id/mapMenuButton"
-        android:layout_alignBottom="@+id/mapMenuButton"
-        android:layout_toRightOf="@+id/mapMenuButton"
-        android:layout_toEndOf="@+id/mapMenuButton" />
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="54dp"
+        android:text="@string/app_name"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textStyle="bold"/>
 
     <Button
-        android:id="@+id/mapMenuButton"
-        style="@style/Widget.AppCompat.Button"
+        android:id="@+id/buttonMapMenu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginLeft="56dp"
-        android:layout_marginStart="56dp"
-        android:layout_marginTop="118dp"
-        android:onClick="showMap"
+        android:layout_below="@+id/textMainMenu"
+        android:layout_marginLeft="44dp"
+        android:layout_marginStart="44dp"
+        android:layout_marginTop="51dp"
+        android:width="132dp"
+        android:drawableTop="@drawable/ic_map"
         android:text="@string/mapMenuButton" />
 
     <Button
-        android:id="@+id/tripMenuButton"
+        android:id="@+id/buttonSearchMenu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/mapMenuButton"
-        android:layout_alignStart="@+id/mapMenuButton"
-        android:layout_below="@+id/mapMenuButton"
-        android:layout_marginTop="50dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@+id/buttonMapMenu"
+        android:layout_marginEnd="61dp"
+        android:layout_marginRight="61dp"
+        android:width="132dp"
+        android:drawableTop="@drawable/ic_search"
+        android:text="@string/searchMenuButton" />
+
+    <Button
+        android:id="@+id/buttonTripMenu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/buttonMapMenu"
+        android:layout_alignStart="@+id/buttonMapMenu"
+        android:layout_below="@+id/buttonMapMenu"
+        android:layout_marginTop="49dp"
+        android:width="132dp"
+        android:drawableTop="@drawable/ic_landscape"
         android:text="@string/tripMenuButton" />
 
     <Button
-        android:id="@+id/challengeMenuButton"
+        android:id="@+id/buttonChallengeMenu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/tripMenuButton"
-        android:layout_alignBottom="@+id/tripMenuButton"
-        android:layout_alignEnd="@+id/searchMenuButton"
-        android:layout_alignRight="@+id/searchMenuButton"
-        android:elevation="1dp"
+        android:layout_alignBottom="@+id/buttonTripMenu"
+        android:layout_alignEnd="@+id/buttonSearchMenu"
+        android:layout_alignRight="@+id/buttonSearchMenu"
+        android:width="132dp"
+        android:drawableTop="@drawable/ic_fitness_center"
         android:text="@string/challengeMenuButton" />
 
-</android.widget.RelativeLayout>
+    <Button
+        android:id="@+id/buttonUserMenu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/buttonTripMenu"
+        android:layout_alignStart="@+id/buttonTripMenu"
+        android:layout_below="@+id/buttonTripMenu"
+        android:layout_marginTop="48dp"
+        android:width="132dp"
+        android:drawableTop="@drawable/ic_person"
+        android:text="@string/userMenuButton" />
+
+    <Button
+        android:id="@+id/buttonGroupMenu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/buttonUserMenu"
+        android:layout_alignEnd="@+id/buttonChallengeMenu"
+        android:layout_alignRight="@+id/buttonChallengeMenu"
+        android:width="132dp"
+        android:drawableTop="@drawable/ic_people"
+        android:onClick="groupActivity"
+        android:text="@string/groupMenuButton" />
+
+</RelativeLayout>

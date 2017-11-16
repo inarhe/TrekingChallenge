@@ -1,8 +1,8 @@
 package edu.uoc.iartal.trekkingchallenge.ObjectsDB;
 
-import android.graphics.drawable.Drawable;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import edu.uoc.iartal.trekkingchallenge.Group;
 import edu.uoc.iartal.trekkingchallenge.R;
 
 /**
@@ -20,39 +19,25 @@ import edu.uoc.iartal.trekkingchallenge.R;
 
 public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.GroupViewHolder>{
 
-    List<Group> groups;
-
-    public GroupAdapter(List<Group> groups) {
-        this.groups = groups;
-    }
+    private List<Group> groups;
 
     public static class GroupViewHolder extends RecyclerView.ViewHolder {
-        CardView cardView;
-        TextView textViewGroupName;
+      //  CardView cardView;
+        TextView textViewGroupName, textViewGroupDesc;
         ImageView imageViewGroup;
 
         public GroupViewHolder(View itemView) {
             super(itemView);
-            cardView = (CardView) itemView.findViewById(R.id.cardView);
-            textViewGroupName = (TextView) itemView.findViewById(R.id.groupName);
-            imageViewGroup = (ImageView) itemView.findViewById(R.id.groupPhoto);
+          //  cardView = (CardView) itemView.findViewById(R.id.cardViewGroup);
+            textViewGroupName = (TextView) itemView.findViewById(R.id.cvGroupName);
+            textViewGroupDesc = (TextView) itemView.findViewById(R.id.cvGroupDescription);
+            imageViewGroup = (ImageView) itemView.findViewById(R.id.cvGroupPhoto);
 
         }
     }
 
-    @Override
-    public GroupViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_view_group, parent, false);
-        GroupViewHolder holder = new GroupViewHolder(view);
-        return holder;
-    }
-
-    @Override
-    public void onBindViewHolder(GroupViewHolder holder, int position) {
-        Group group = groups.get(position);
-        holder.textViewGroupName.setText(group.getGroupName());
-        holder.imageViewGroup.setImageResource(R.drawable.ic_landscape);
-       // holder.imageViewGroup
+    public GroupAdapter(List<Group> groups) {
+        this.groups = groups;
     }
 
     @Override
@@ -61,9 +46,24 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.GroupViewHol
     }
 
     @Override
+    public GroupViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.card_view_group, viewGroup, false);
+        return new GroupViewHolder(view);
+    }
+
+    @Override
+    public void onBindViewHolder(GroupViewHolder viewHolder, int i) {
+       // Group group = groups.get(position);
+        viewHolder.textViewGroupName.setText(groups.get(i).getGroupName());
+        viewHolder.textViewGroupDesc.setText(groups.get(i).getGroupDescription());
+        viewHolder.imageViewGroup.setImageResource(R.drawable.ic_people);
+
+    }
+
+/*    @Override
     public void onAttachedToRecyclerView(RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
-    }
+    }*/
 
 
 }

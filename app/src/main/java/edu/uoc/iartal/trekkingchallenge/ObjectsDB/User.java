@@ -1,4 +1,4 @@
-package edu.uoc.iartal.trekkingchallenge;
+package edu.uoc.iartal.trekkingchallenge.ObjectsDB;
 
 /**
  * Created by Ingrid Artal on 04/11/2017.

@@ -1,11 +1,14 @@
 package edu.uoc.iartal.trekkingchallenge;
 
+import android.content.Intent;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 
-import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -16,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.uoc.iartal.trekkingchallenge.ObjectsDB.FireBaseReferences;
+import edu.uoc.iartal.trekkingchallenge.ObjectsDB.Group;
 import edu.uoc.iartal.trekkingchallenge.ObjectsDB.GroupAdapter;
 
 public class ListGroupsActivity extends AppCompatActivity {
@@ -23,36 +27,52 @@ public class ListGroupsActivity extends AppCompatActivity {
     //private DatabaseReference databaseGroup;
     //private FirebaseAuth firebaseAuth;
 
-    RecyclerView recyclerView;
+    private RecyclerView recyclerView;
+    //GroupAdapter groupAdapter;
+    private RecyclerView.Adapter groupAdapter;
+    private List<Group> groups;
+    private DatabaseReference databaseGroup;
 
-    List<Group> groups;
 
-    GroupAdapter groupAdapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_list_groups);
+        setContentView(R.layout.activity_rv_groups);
 
-        recyclerView = (RecyclerView) findViewById(R.id.rvListGroup);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fabAddGroup);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getApplicationContext(), AddGroupActivity.class));
+            }
+        });
 
         groups = new ArrayList<>();
 
+        //items.add(new Anime(R.drawable.angel, "Angel Beats", 230));
 
+        recyclerView = (RecyclerView) findViewById(R.id.rvListGroup);
+        recyclerView.setHasFixedSize(true);
 
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        //FirebaseDatabase databaseGroup = FirebaseDatabase.getInstance();
+         databaseGroup = FirebaseDatabase.getInstance().getReference(FireBaseReferences.GROUP_REFERENCE);
+
 
         groupAdapter = new GroupAdapter(groups);
         recyclerView.setAdapter(groupAdapter);
 
-        database.getReference().getRoot().addValueEventListener(new ValueEventListener() {
+
+        databaseGroup.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 groups.removeAll(groups);
-                for (DataSnapshot snapshot:
+                for (DataSnapshot groupSapshot:
                         dataSnapshot.getChildren()) {
-                    Group group = snapshot.getValue(Group.class);
+                    Group group = groupSapshot.getValue(Group.class);
                     groups.add(group);
                 }
                 groupAdapter.notifyDataSetChanged();
@@ -83,4 +103,26 @@ public class ListGroupsActivity extends AppCompatActivity {
        // })
 
     }
+
+  /*  @Override
+    protected void onStart() {
+        super.onStart();
+
+        databaseGroup.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                groups.clear();
+                for(DataSnapshot groupSnapshot : dataSnapshot.getChildren()) {
+                    Group group = groupSnapshot.getValue(Group.class);
+                    groups.add(group);
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        })
+    }*/
 }

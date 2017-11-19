@@ -8,8 +8,8 @@
     <string name="groupMenuButton">Grups usuaris</string>
     <string name="registerTitle">Registre d\'usuari</string>
     <string name="textIdUser">Identificador d\'usuari:</string>
-    <string name="textNameUser">Nom:</string>
-    <string name="textMailUser">Mail:</string>
+    <string name="textUserName">Nom:</string>
+    <string name="textUserMail">Mail:</string>
     <string name="hintNameUser">Introdueix el nom</string>
     <string name="hintIdUser">Introdueix l\'identificador d\'usuari</string>
     <string name="hintMailUser">Introdueix el mail</string>
@@ -44,6 +44,14 @@
     <string name="hintDescription">Introdueix una descripció</string>
     <string name="textInviteUsers">Convida a usuaris</string>
     <string name="checkIsPublic">Públic?</string>
+
+    <string name="buttonMyHistory">El meu històric</string>
+    <string name="buttonEditProfile">Editar perfil</string>
+    <string name="buttonDeleteProfile">Eliminar perfil</string>
+    <string name="buttonSignOut">Tancar sessió</string>
+    <string name="userSignOut">Sessió tancada</string>
+    <string name="userAccountDeleted">Compte esborrat</string>
+    <string name="userAreaActivity">Àrea d\'usuari</string>
 
 
 </resources>

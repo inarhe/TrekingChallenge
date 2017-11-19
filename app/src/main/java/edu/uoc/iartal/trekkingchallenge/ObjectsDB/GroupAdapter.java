@@ -21,18 +21,24 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.GroupViewHol
 
     private List<Group> groups;
 
-    public static class GroupViewHolder extends RecyclerView.ViewHolder {
+    public static class GroupViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
       //  CardView cardView;
         TextView textViewGroupName, textViewGroupDesc;
         ImageView imageViewGroup;
 
-        public GroupViewHolder(View itemView) {
-            super(itemView);
-          //  cardView = (CardView) itemView.findViewById(R.id.cardViewGroup);
-            textViewGroupName = (TextView) itemView.findViewById(R.id.cvGroupName);
-            textViewGroupDesc = (TextView) itemView.findViewById(R.id.cvGroupDescription);
-            imageViewGroup = (ImageView) itemView.findViewById(R.id.cvGroupPhoto);
+        public GroupViewHolder(View view) {
+            super(view);
+          //  cardView = (CardView) view.findViewById(R.id.cardViewGroup);
+            view.setOnClickListener(this);
+            textViewGroupName = (TextView) view.findViewById(R.id.cvGroupName);
+            textViewGroupDesc = (TextView) view.findViewById(R.id.cvGroupDescription);
+            imageViewGroup = (ImageView) view.findViewById(R.id.cvGroupPhoto);
 
+        }
+
+        @Override
+        public void onClick(View v) {
+            //start activity and pass data
         }
     }
 

@@ -11,18 +11,27 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 
+import edu.uoc.iartal.trekkingchallenge.ObjectsDB.FireBaseReferences;
 import edu.uoc.iartal.trekkingchallenge.ObjectsDB.Group;
+import edu.uoc.iartal.trekkingchallenge.ObjectsDB.User;
 
 public class AddGroupActivity extends AppCompatActivity {
 
     private EditText editTextName;
     private EditText editTextDescription;
   //  private ProgressDialog progressDialog;
-    private DatabaseReference databaseGroup;
+    private FirebaseDatabase database;
+    private DatabaseReference databaseGroup, databaseUser;
     private CheckBox checkBox;
+    private String userAdmin;
+    private FirebaseAuth firebaseAuth;
 
 
     @Override
@@ -31,7 +40,7 @@ public class AddGroupActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_group);
 
         //get Firebase auth instance
-        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        firebaseAuth = FirebaseAuth.getInstance();
         databaseGroup = FirebaseDatabase.getInstance().getReference("group");
 
    //     progressDialog = new ProgressDialog(this);
@@ -45,6 +54,37 @@ public class AddGroupActivity extends AppCompatActivity {
             // start login activity
             finish();
             startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+        } else {
+            String mail = firebaseAuth.getCurrentUser().getEmail();
+            databaseUser = FirebaseDatabase.getInstance().getReference(FireBaseReferences.USER_REFERENCE);
+            Query query = databaseUser.orderByChild("mailUser").equalTo(mail);
+            query.addChildEventListener(new ChildEventListener() {
+                @Override
+                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+
+                    userAdmin = dataSnapshot.getValue(User.class).getIdUser();
+                }
+
+                @Override
+                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+                }
+
+                @Override
+                public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                }
+
+                @Override
+                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
         }
     }
 
@@ -74,13 +114,16 @@ public class AddGroupActivity extends AppCompatActivity {
             isPublic = true;
         }
 
+
+
         String id = databaseGroup.push().getKey();
-        Group group = new Group(id, name, description, isPublic);
+        Group group = new Group(id, name, description, isPublic, userAdmin);
 
         // FirebaseUser user = firebaseAuth.getCurrentUser();
         //.child(user.getUid())
         databaseGroup.child(id).setValue(group);
         // progressDialog.dismiss();
+
         Toast.makeText(getApplicationContext(), getString(R.string.groupSaved), Toast.LENGTH_LONG).show();
         finish();
 

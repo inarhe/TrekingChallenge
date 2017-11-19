@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -11,7 +12,7 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rvListGroup"
         android:layout_width="match_parent"
-        android:layout_height="431dp"
+        android:layout_height="match_parent"
         android:clipToPadding="false"
         android:padding="3dp"
         android:paddingBottom="48dp"
@@ -23,7 +24,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
-
         android:src="@drawable/ic_add" />
 
-</LinearLayout>
+</android.support.design.widget.CoordinatorLayout>

@@ -4,7 +4,7 @@
     android:id="@+id/cardViewGroup"
     android:layout_width="match_parent"
     android:layout_height="150dp"
-    card_view:cardBackgroundColor="#616161"
+    card_view:cardBackgroundColor="#EEEEEE"
     card_view:cardCornerRadius="4dp"
     card_view:cardElevation="4dp"
     card_view:cardUseCompatPadding="true"
@@ -17,11 +17,14 @@
 
         <ImageView
             android:id="@+id/cvGroupPhoto"
+            android:cropToPadding="true"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:layout_marginRight="16dp"/>/>
+            android:layout_marginRight="16dp"
+            android:layout_marginEnd="16dp"/>
 
             <TextView
                 android:id="@+id/cvGroupName"

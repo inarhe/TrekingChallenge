@@ -10,17 +10,20 @@ public class Group {
     public String groupName;
     public String groupDescription;
     public Boolean isPublic;
+    public String userAdmin;
 
 
     public Group() {
 
     }
 
-    public Group(String idGroup, String groupName, String groupDescription, Boolean isPublic) {
+
+    public Group(String idGroup, String groupName, String groupDescription, Boolean isPublic, String userAdmin) {
         this.idGroup = idGroup;
         this.groupName = groupName;
         this.groupDescription = groupDescription;
         this.isPublic = isPublic;
+        this.userAdmin = userAdmin;
     }
 
     public String getIdGroup() {
@@ -55,5 +58,12 @@ public class Group {
         this.isPublic = isPublic;
     }
 
+    public String getUserAdmin() {
+        return userAdmin;
+    }
+
+    public void setUserAdmin(String userAdmin) {
+        this.userAdmin = userAdmin;
+    }
 
 }

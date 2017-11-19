@@ -118,7 +118,7 @@
                 android:layout_below="@+id/editTextUserName"
                 android:layout_marginLeft="15dp"
                 android:layout_marginTop="20dp"
-                android:text="@string/textMailUser"
+                android:text="@string/textUserMail"
                 android:textColor="@android:color/black"
                 android:textSize="14sp"
                 android:textStyle="bold" />
@@ -146,7 +146,7 @@
                 android:layout_below="@+id/editTextIdUser"
                 android:layout_marginLeft="15dp"
                 android:layout_marginTop="20dp"
-                android:text="@string/textNameUser"
+                android:text="@string/textUserName"
                 android:textColor="@android:color/black"
                 android:textSize="14sp"
                 android:textStyle="bold" />

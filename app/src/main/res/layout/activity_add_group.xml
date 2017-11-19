@@ -5,12 +5,11 @@
     tools:context="edu.uoc.iartal.trekkingchallenge.AddGroupActivity"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingBottom="16dp"
-    android:paddingLeft="16dp"
-    android:paddingRight="16dp"
-    android:paddingTop="16dp"
     android:gravity="center"
     android:orientation="vertical" >
+
+    <include android:id="@+id/addGroupToolbar"
+        layout="@layout/toolbar" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -26,6 +25,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
+                android:paddingLeft="16dp"
+                android:paddingStart="16dp"
                 android:text="@string/newGroupTitle"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:textStyle="bold" />
@@ -34,6 +35,8 @@
                 android:id="@+id/etNameGroup"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:paddingLeft="16dp"
+                android:paddingStart="16dp"
                 android:layout_margin="5dp"
                 android:hint="@string/hintNameGroup" />
 
@@ -41,6 +44,8 @@
                 android:id="@+id/etDescriptionGroup"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:paddingLeft="16dp"
+                android:paddingStart="16dp"
                 android:layout_margin="5dp"
                 android:hint="@string/hintDescription"
                 android:inputType="textMultiLine|textLongMessage" />
@@ -76,8 +81,10 @@
                 android:id="@+id/cBPublicGgroup"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-
                 android:layout_weight="1"
+                android:paddingLeft="16dp"
+                android:paddingStart="16dp"
+                android:layout_margin="5dp"
                 android:text="@string/checkIsPublic" />
 
 

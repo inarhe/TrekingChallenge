@@ -2,13 +2,14 @@ package edu.uoc.iartal.trekkingchallenge;
 
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -39,7 +40,14 @@ public class ListGroupsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_rv_groups);
+        setContentView(R.layout.activity_list_groups);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.listGroupToolbar);
+        setSupportActionBar(toolbar);
+
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setTitle(getString(R.string.listGroupsActivity));
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fabAddGroup);
         fab.setOnClickListener(new View.OnClickListener() {

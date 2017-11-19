@@ -10,6 +10,8 @@
     <string name="textIdUser">Identificador d\'usuari:</string>
     <string name="textUserName">Nom:</string>
     <string name="textUserMail">Mail:</string>
+    <string name="textGroupDescription">Descripció:</string>
+    <string name="textGroupMembers">Nombre d\'integrants:</string>
     <string name="hintNameUser">Introdueix el nom</string>
     <string name="hintIdUser">Introdueix l\'identificador d\'usuari</string>
     <string name="hintMailUser">Introdueix el mail</string>
@@ -52,6 +54,10 @@
     <string name="userSignOut">Sessió tancada</string>
     <string name="userAccountDeleted">Compte esborrat</string>
     <string name="userAreaActivity">Àrea d\'usuari</string>
+    <string name="listGroupsActivity">Grups</string>
+    <string name="addGroupActivity">Nou grup</string>
+    <string name="joinGroup">Apunta\'t</string>
+    <string name="leaveGroup">Abandona</string>
 
 
 </resources>

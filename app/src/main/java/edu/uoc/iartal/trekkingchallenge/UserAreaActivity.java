@@ -27,7 +27,6 @@ import edu.uoc.iartal.trekkingchallenge.ObjectsDB.User;
 public class UserAreaActivity extends AppCompatActivity {
 
     private TextView textViewUserName, textViewUserMail, textViewIdUser;
-    private DatabaseReference databaseUser;
     private FirebaseAuth firebaseAuth;
 
 
@@ -45,7 +44,7 @@ public class UserAreaActivity extends AppCompatActivity {
 
         //get Firebase auth instance
         firebaseAuth = FirebaseAuth.getInstance();
-        databaseUser = FirebaseDatabase.getInstance().getReference("user");
+        DatabaseReference databaseUser = FirebaseDatabase.getInstance().getReference("user");
 
         //     progressDialog = new ProgressDialog(this);
 
@@ -95,16 +94,22 @@ public class UserAreaActivity extends AppCompatActivity {
 
     public void deleteUserAccount(View view){
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        user.delete()
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            Toast.makeText(getApplicationContext(), getString(R.string.userAccountDeleted), Toast.LENGTH_LONG).show();
-                            finish();
+        if (user!=null){
+            user.delete()
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                Toast.makeText(getApplicationContext(), getString(R.string.userAccountDeleted), Toast.LENGTH_LONG).show();
+                                finish();
+                            }
                         }
-                    }
-                });
+                    });
+        } else {
+            finish();
+            startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+        }
+
     }
 
     public void signOut(View view) {

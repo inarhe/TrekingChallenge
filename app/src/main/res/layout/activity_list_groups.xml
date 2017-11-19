@@ -9,10 +9,14 @@
     android:orientation="vertical"
     tools:context="edu.uoc.iartal.trekkingchallenge.ListGroupsActivity">
 
+    <include android:id="@+id/listGroupToolbar"
+        layout="@layout/toolbar" />
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rvListGroup"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/cast_expanded_controller_control_toolbar_min_height"
         android:clipToPadding="false"
         android:padding="3dp"
         android:paddingBottom="48dp"

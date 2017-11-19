@@ -102,7 +102,7 @@ public class RegisterActivity extends Activity {
                         if(task.isSuccessful()){
                             //user is successfully registered and logged in
                             //We will start the profile activity here
-                            User user = new User(idUser,userName,userMail,userPassword);
+                            User user = new User(idUser,userName,userMail,userPassword, "none");
                             // FirebaseUser user = firebaseAuth.getCurrentUser();
                             //.child(user.getUid())
                             databaseUser.child(idUser).setValue(user);

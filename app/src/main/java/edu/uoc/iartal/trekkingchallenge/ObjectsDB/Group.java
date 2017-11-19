@@ -1,5 +1,7 @@
 package edu.uoc.iartal.trekkingchallenge.ObjectsDB;
 
+import java.util.List;
+
 /**
  * Created by Ingrid Artal on 04/11/2017.
  */
@@ -11,6 +13,7 @@ public class Group {
     public String groupDescription;
     public Boolean isPublic;
     public String userAdmin;
+    public String members;
 
 
     public Group() {
@@ -18,12 +21,15 @@ public class Group {
     }
 
 
-    public Group(String idGroup, String groupName, String groupDescription, Boolean isPublic, String userAdmin) {
+
+
+    public Group(String idGroup, String groupName, String groupDescription, Boolean isPublic, String userAdmin, String member) {
         this.idGroup = idGroup;
         this.groupName = groupName;
         this.groupDescription = groupDescription;
         this.isPublic = isPublic;
         this.userAdmin = userAdmin;
+        this.members = member;
     }
 
     public String getIdGroup() {
@@ -65,5 +71,15 @@ public class Group {
     public void setUserAdmin(String userAdmin) {
         this.userAdmin = userAdmin;
     }
+
+    public String getMembers() {
+        return members;
+    }
+
+    public void setMembers(String members) {
+        this.members = members;
+    }
+
+
 
 }

@@ -1,8 +1,10 @@
 package edu.uoc.iartal.trekkingchallenge;
 
 import android.content.Intent;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -28,7 +30,7 @@ public class AddGroupActivity extends AppCompatActivity {
     private EditText editTextDescription;
   //  private ProgressDialog progressDialog;
     private FirebaseDatabase database;
-    private DatabaseReference databaseGroup, databaseUser;
+    private DatabaseReference databaseGroup, databaseUser, databaseGroupMembers;
     private CheckBox checkBox;
     private String userAdmin;
     private FirebaseAuth firebaseAuth;
@@ -38,6 +40,13 @@ public class AddGroupActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_group);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.addGroupToolbar);
+        setSupportActionBar(toolbar);
+
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setTitle(getString(R.string.addGroupActivity));
 
         //get Firebase auth instance
         firebaseAuth = FirebaseAuth.getInstance();
@@ -117,11 +126,12 @@ public class AddGroupActivity extends AppCompatActivity {
 
 
         String id = databaseGroup.push().getKey();
-        Group group = new Group(id, name, description, isPublic, userAdmin);
+        Group group = new Group(id, name, description, isPublic, userAdmin, userAdmin);
 
         // FirebaseUser user = firebaseAuth.getCurrentUser();
         //.child(user.getUid())
         databaseGroup.child(id).setValue(group);
+        databaseUser.child(userAdmin).child("groups").setValue(name);
         // progressDialog.dismiss();
 
         Toast.makeText(getApplicationContext(), getString(R.string.groupSaved), Toast.LENGTH_LONG).show();

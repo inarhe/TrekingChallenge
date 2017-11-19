@@ -1,4 +1,4 @@
-package edu.uoc.iartal.trekkingchallenge;
+package edu.uoc.iartal.trekkingchallenge.User;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -17,8 +17,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import edu.uoc.iartal.trekkingchallenge.MainActivity;
 import edu.uoc.iartal.trekkingchallenge.ObjectsDB.FireBaseReferences;
 import edu.uoc.iartal.trekkingchallenge.ObjectsDB.User;
+import edu.uoc.iartal.trekkingchallenge.R;
 
 /**
  * Created by Ingrid Artal on 04/11/2017.
@@ -102,7 +104,7 @@ public class RegisterActivity extends Activity {
                         if(task.isSuccessful()){
                             //user is successfully registered and logged in
                             //We will start the profile activity here
-                            User user = new User(idUser,userName,userMail,userPassword, "none");
+                            User user = new User(idUser,userName,userMail,userPassword);
                             // FirebaseUser user = firebaseAuth.getCurrentUser();
                             //.child(user.getUid())
                             databaseUser.child(idUser).setValue(user);

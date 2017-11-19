@@ -34,7 +34,8 @@
                 android:layout_below="@+id/editTextPassRepeat"
                 android:layout_marginLeft="50dp"
                 android:layout_marginTop="10dp"
-                android:background="@color/colorAccent"
+                android:background="#009688"
+                android:textColor="#FFFFFF"
                 android:onClick="registerUser"
                 android:text="@string/acceptButton"
                 android:textSize="14sp" />

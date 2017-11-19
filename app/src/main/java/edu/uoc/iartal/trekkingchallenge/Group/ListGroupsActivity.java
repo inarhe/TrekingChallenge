@@ -1,4 +1,4 @@
-package edu.uoc.iartal.trekkingchallenge;
+package edu.uoc.iartal.trekkingchallenge.Group;
 
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
@@ -22,6 +22,7 @@ import java.util.List;
 import edu.uoc.iartal.trekkingchallenge.ObjectsDB.FireBaseReferences;
 import edu.uoc.iartal.trekkingchallenge.ObjectsDB.Group;
 import edu.uoc.iartal.trekkingchallenge.ObjectsDB.GroupAdapter;
+import edu.uoc.iartal.trekkingchallenge.R;
 
 public class ListGroupsActivity extends AppCompatActivity {
 

@@ -1,4 +1,4 @@
-package edu.uoc.iartal.trekkingchallenge;
+package edu.uoc.iartal.trekkingchallenge.Group;
 
 import android.content.Intent;
 import android.support.v7.app.ActionBar;
@@ -6,7 +6,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -20,9 +19,15 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import edu.uoc.iartal.trekkingchallenge.User.LoginActivity;
+import edu.uoc.iartal.trekkingchallenge.MainActivity;
 import edu.uoc.iartal.trekkingchallenge.ObjectsDB.FireBaseReferences;
 import edu.uoc.iartal.trekkingchallenge.ObjectsDB.Group;
 import edu.uoc.iartal.trekkingchallenge.ObjectsDB.User;
+import edu.uoc.iartal.trekkingchallenge.R;
 
 public class AddGroupActivity extends AppCompatActivity {
 
@@ -126,12 +131,12 @@ public class AddGroupActivity extends AppCompatActivity {
 
 
         String id = databaseGroup.push().getKey();
-        Group group = new Group(id, name, description, isPublic, userAdmin, userAdmin);
+        Group group = new Group(id, name, description, isPublic, userAdmin);
 
         // FirebaseUser user = firebaseAuth.getCurrentUser();
         //.child(user.getUid())
         databaseGroup.child(id).setValue(group);
-        databaseUser.child(userAdmin).child("groups").setValue(name);
+        databaseUser.child(userAdmin+"/groups").child(group.getGroupName()).setValue("true");
         // progressDialog.dismiss();
 
         Toast.makeText(getApplicationContext(), getString(R.string.groupSaved), Toast.LENGTH_LONG).show();

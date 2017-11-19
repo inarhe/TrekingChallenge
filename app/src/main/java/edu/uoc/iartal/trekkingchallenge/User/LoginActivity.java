@@ -1,4 +1,4 @@
-package edu.uoc.iartal.trekkingchallenge;
+package edu.uoc.iartal.trekkingchallenge.User;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -15,6 +15,9 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+
+import edu.uoc.iartal.trekkingchallenge.MainActivity;
+import edu.uoc.iartal.trekkingchallenge.R;
 
 /**
  * Created by Ingrid Artal on 05/11/2017.

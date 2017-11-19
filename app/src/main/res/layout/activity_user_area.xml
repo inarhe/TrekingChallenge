@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="edu.uoc.iartal.trekkingchallenge.UserAreaActivity">
+    tools:context="edu.uoc.iartal.trekkingchallenge.User.UserAreaActivity">
 
     <include android:id="@+id/userToolbar"
         layout="@layout/toolbar" />
@@ -147,9 +147,9 @@
         android:layout_marginTop="8dp"
         android:width="135dp"
         android:background="#009688"
+        android:textColor="#FFFFFF"
         android:onClick="signOut"
         android:text="@string/buttonSignOut"
-        android:textColor="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.502"

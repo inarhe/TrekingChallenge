@@ -13,7 +13,7 @@ public class Group {
     public String groupDescription;
     public Boolean isPublic;
     public String userAdmin;
-    public String members;
+ //   public String members;
 
 
     public Group() {
@@ -23,13 +23,13 @@ public class Group {
 
 
 
-    public Group(String idGroup, String groupName, String groupDescription, Boolean isPublic, String userAdmin, String member) {
+    public Group(String idGroup, String groupName, String groupDescription, Boolean isPublic, String userAdmin) {
         this.idGroup = idGroup;
         this.groupName = groupName;
         this.groupDescription = groupDescription;
         this.isPublic = isPublic;
         this.userAdmin = userAdmin;
-        this.members = member;
+     //   this.members = member;
     }
 
     public String getIdGroup() {
@@ -72,13 +72,13 @@ public class Group {
         this.userAdmin = userAdmin;
     }
 
-    public String getMembers() {
+  /*  public String getMembers() {
         return members;
     }
 
     public void setMembers(String members) {
         this.members = members;
-    }
+    }*/
 
 
 

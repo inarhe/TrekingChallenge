@@ -1,5 +1,6 @@
 package edu.uoc.iartal.trekkingchallenge.ObjectsDB;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -8,15 +9,11 @@ import java.util.List;
 
 public class User {
 
-    public String idUser;
-  //  public String nick;
-    public String nameUser;
-    public String mailUser;
-    public String passwordUser;
+    private String idUser;
+    private String nameUser;
+    private String mailUser;
+    private String passwordUser;
 
-
-
-    public String groups;
 
     public User() {
 
@@ -25,13 +22,13 @@ public class User {
 
 
 
-    public User(String idUser, String nameUser, String mailUser, String passwordUser, String group) {
+    public User(String idUser, String nameUser, String mailUser, String passwordUser) {
         this.idUser = idUser;
 
         this.nameUser = nameUser;
         this.mailUser = mailUser;
         this.passwordUser = passwordUser;
-        this.groups = group;
+
     }
 
     public String getIdUser() {
@@ -68,11 +65,5 @@ public class User {
         this.passwordUser = passwordUser;
     }
 
-    public String getGroups() {
-        return groups;
-    }
 
-    public void setGroups(String groups) {
-        this.groups = groups;
-    }
 }

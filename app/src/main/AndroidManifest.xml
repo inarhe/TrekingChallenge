@@ -27,38 +27,33 @@
                 android:value=".MainActivity" />
         </activity>
 
-        <activity android:name=".RegisterActivity" />
-        <activity android:name=".AccessActivity" />
-        <activity android:name=".LoginActivity" />
-        <activity android:name=".ProfileActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
-        </activity>
+        <activity android:name=".User.RegisterActivity" />
+        <activity android:name=".User.AccessActivity" />
+        <activity android:name=".User.LoginActivity" />
         <activity android:name=".AddTripActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
-        <activity android:name=".AddGroupActivity" >
+        <activity android:name=".Group.AddGroupActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ListGroupsActivity" />
+                android:value=".Group.ListGroupsActivity" />
         </activity>
-        <activity android:name=".ListGroupsActivity" >
+        <activity android:name=".Group.ListGroupsActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
-        <activity android:name=".UserAreaActivity" >
+        <activity android:name=".User.UserAreaActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
-        <activity android:name=".ShowGroupActivity">
+        <activity android:name=".Group.ShowGroupActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ListGroupsActivity" />
+                android:value=".Group.ListGroupsActivity" />
         </activity>
     </application>
 

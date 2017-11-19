@@ -1,4 +1,4 @@
-package edu.uoc.iartal.trekkingchallenge;
+package edu.uoc.iartal.trekkingchallenge.User;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -23,6 +23,7 @@ import com.google.firebase.database.Query;
 
 import edu.uoc.iartal.trekkingchallenge.ObjectsDB.FireBaseReferences;
 import edu.uoc.iartal.trekkingchallenge.ObjectsDB.User;
+import edu.uoc.iartal.trekkingchallenge.R;
 
 public class UserAreaActivity extends AppCompatActivity {
 
@@ -113,6 +114,8 @@ public class UserAreaActivity extends AppCompatActivity {
     }
 
     public void signOut(View view) {
+
         firebaseAuth.signOut();
+        finish();
     }
 }

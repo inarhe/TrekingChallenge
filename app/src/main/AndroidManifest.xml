@@ -21,31 +21,20 @@
             </intent-filter>
         </activity>
         <activity android:name=".MainActivity" />
-        <activity android:name=".MapActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
-        </activity>
-
         <activity android:name=".User.RegisterActivity" />
         <activity android:name=".User.AccessActivity" />
         <activity android:name=".User.LoginActivity" />
-        <activity android:name=".AddTripActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
-        </activity>
-        <activity android:name=".Group.AddGroupActivity" >
+        <activity android:name=".Group.AddGroupActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".Group.ListGroupsActivity" />
         </activity>
-        <activity android:name=".Group.ListGroupsActivity" >
+        <activity android:name=".Group.ListGroupsActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
-        <activity android:name=".User.UserAreaActivity" >
+        <activity android:name=".User.UserAreaActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
@@ -55,6 +44,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".Group.ListGroupsActivity" />
         </activity>
+        <activity android:name=".EditProfileActivity"></activity>
     </application>
 
 </manifest>

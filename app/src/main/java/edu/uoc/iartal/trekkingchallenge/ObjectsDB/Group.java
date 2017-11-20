@@ -1,27 +1,17 @@
 package edu.uoc.iartal.trekkingchallenge.ObjectsDB;
 
-import java.util.List;
-
 /**
  * Created by Ingrid Artal on 04/11/2017.
  */
 
+// Group object class
 public class Group {
-
-    public String idGroup;
-    public String groupName;
-    public String groupDescription;
-    public Boolean isPublic;
-    public String userAdmin;
- //   public String members;
-
+    private String idGroup, groupName, groupDescription, userAdmin;
+    private Boolean isPublic;
 
     public Group() {
 
     }
-
-
-
 
     public Group(String idGroup, String groupName, String groupDescription, Boolean isPublic, String userAdmin) {
         this.idGroup = idGroup;
@@ -29,7 +19,6 @@ public class Group {
         this.groupDescription = groupDescription;
         this.isPublic = isPublic;
         this.userAdmin = userAdmin;
-     //   this.members = member;
     }
 
     public String getIdGroup() {
@@ -71,15 +60,4 @@ public class Group {
     public void setUserAdmin(String userAdmin) {
         this.userAdmin = userAdmin;
     }
-
-  /*  public String getMembers() {
-        return members;
-    }
-
-    public void setMembers(String members) {
-        this.members = members;
-    }*/
-
-
-
 }

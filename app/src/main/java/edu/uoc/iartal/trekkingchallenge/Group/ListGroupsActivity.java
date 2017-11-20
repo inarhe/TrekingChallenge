@@ -25,18 +25,8 @@ import edu.uoc.iartal.trekkingchallenge.ObjectsDB.GroupAdapter;
 import edu.uoc.iartal.trekkingchallenge.R;
 
 public class ListGroupsActivity extends AppCompatActivity {
-
-    //private DatabaseReference databaseGroup;
-    //private FirebaseAuth firebaseAuth;
-
-    private RecyclerView recyclerView;
-    //GroupAdapter groupAdapter;
     private RecyclerView.Adapter groupAdapter;
     private List<Group> groups;
-    private DatabaseReference databaseGroup;
-
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +40,7 @@ public class ListGroupsActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle(getString(R.string.listGroupsActivity));
 
+        // Floating button for adding new group
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fabAddGroup);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,21 +51,16 @@ public class ListGroupsActivity extends AppCompatActivity {
 
         groups = new ArrayList<>();
 
-        //items.add(new Anime(R.drawable.angel, "Angel Beats", 230));
-
-        recyclerView = (RecyclerView) findViewById(R.id.rvListGroup);
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rvListGroup);
         recyclerView.setHasFixedSize(true);
-
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        //FirebaseDatabase databaseGroup = FirebaseDatabase.getInstance();
-         databaseGroup = FirebaseDatabase.getInstance().getReference(FireBaseReferences.GROUP_REFERENCE);
-
+        DatabaseReference databaseGroup = FirebaseDatabase.getInstance().getReference(FireBaseReferences.GROUP_REFERENCE);
 
         groupAdapter = new GroupAdapter(groups);
         recyclerView.setAdapter(groupAdapter);
 
-
+        // Show database groups in recycler view
         databaseGroup.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -87,51 +73,10 @@ public class ListGroupsActivity extends AppCompatActivity {
                 groupAdapter.notifyDataSetChanged();
             }
 
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                //TO-DO
             }
         });
-
-
-
-
-        // databaseGroup = FirebaseDatabase.getInstance().getReference(FireBaseReferences.GROUP_REFERENCE);
-      //  databaseGroup.addValueEventListener(new ValueEventListener() {
-      //      @Override
-       //     public void onDataChange(DataSnapshot dataSnapshot) {
-        //        Group group = dataSnapshot.getValue(Group.class);
-
-       //     }
-
-     //      @Override
-       //     public void onCancelled(DatabaseError databaseError) {
-
-       //     }
-       // })
-
     }
-
-  /*  @Override
-    protected void onStart() {
-        super.onStart();
-
-        databaseGroup.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                groups.clear();
-                for(DataSnapshot groupSnapshot : dataSnapshot.getChildren()) {
-                    Group group = groupSnapshot.getValue(Group.class);
-                    groups.add(group);
-                }
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        })
-    }*/
 }

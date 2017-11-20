@@ -9,12 +9,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingBottom="16dp"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        android:paddingTop="16dp"
-        android:gravity="center"
+        android:layout_height="match_parent"
         android:orientation="vertical" >
 
         <TextView
@@ -27,27 +22,27 @@
             android:textStyle="bold" />
 
         <EditText
-            android:id="@+id/loginPassword"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="50dp"
-            android:hint="@string/passwordField"
-            android:inputType="textPassword" />
-
-        <EditText
             android:id="@+id/loginMail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="15dp"
-            android:layout_weight="1"
-            android:hint="@string/mailField"
+            android:layout_marginTop="50dp"
+            android:hint="@string/hintMailUser"
             android:inputType="textEmailAddress" />
+
+        <EditText
+            android:id="@+id/loginPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:hint="@string/hintPassUser"
+            android:inputType="textPassword" />
+
 
         <LinearLayout
             android:layout_width="309dp"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="40dp"
             android:orientation="horizontal">
 
             <Button
@@ -56,6 +51,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="left"
                 android:layout_margin="20dp"
+                android:background="#009688"
+                android:textColor="#FFFFFF"
                 android:width="120dp"
                 android:onClick="userLogin"
                 android:text="@string/acceptButton" />

@@ -1,34 +1,23 @@
 package edu.uoc.iartal.trekkingchallenge.ObjectsDB;
 
-import java.util.HashMap;
-import java.util.List;
 
 /**
  * Created by Ingrid Artal on 04/11/2017.
  */
 
+// User object class
 public class User {
-
-    private String idUser;
-    private String nameUser;
-    private String mailUser;
-    private String passwordUser;
-
+    private String idUser, nameUser, mailUser, passwordUser;
 
     public User() {
 
     }
 
-
-
-
     public User(String idUser, String nameUser, String mailUser, String passwordUser) {
         this.idUser = idUser;
-
         this.nameUser = nameUser;
         this.mailUser = mailUser;
         this.passwordUser = passwordUser;
-
     }
 
     public String getIdUser() {
@@ -38,8 +27,6 @@ public class User {
     public void setIdUser(String idUser) {
         this.idUser = idUser;
     }
-
-
 
     public String getNameUser() {
         return nameUser;
@@ -64,6 +51,5 @@ public class User {
     public void setPasswordUser(String passwordUser) {
         this.passwordUser = passwordUser;
     }
-
 
 }

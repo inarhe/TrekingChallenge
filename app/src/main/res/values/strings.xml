@@ -24,15 +24,17 @@
     <string name="accessButton">Accedeix</string>
     <string name="noRegisteredText">Encara no ets usuari?</string>
     <string name="registerButton">Registra\'t</string>
+    <string name="failedAddGroup">El grup no s\'ha creat correctament</string>
 
     <string name="nameField">Siusplau, introdueix un nom</string>
     <string name="descriptionField">Siusplau, introdueix una descripció</string>
     <string name="idField">Siusplau, introdueix un identificador</string>
     <string name="mailField">Siusplau, introdueix un correu electrònic</string>
     <string name="passwordField">Siusplau, introdueix una contrasenya</string>
-    <string name="passwordTooShort">La contrasenya ha de tenir mínim 6 caràcters</string>
+    <string name="passwordTooShort">La contrasenya no pot ser inferior a 6 caràcters</string>
     <string name="samePass">Les contrasenyes no són iguals</string>
     <string name="registering">Registrant usuari...</string>
+    <string name="logging">Accedint usuari...</string>
     <string name="groupSaved">Grup creat</string>
     <string name="successfulRegister">Usuari registrat correctament</string>
     <string name="failedRegister">No s\'ha pogut registrar l\'usuari, siusplau torna-ho a provar</string>
@@ -48,16 +50,23 @@
     <string name="checkIsPublic">Públic?</string>
 
     <string name="buttonMyHistory">El meu històric</string>
-    <string name="buttonEditProfile">Editar perfil</string>
-    <string name="buttonDeleteProfile">Eliminar perfil</string>
+    <string name="actionEditProfile">Editar perfil</string>
+    <string name="actionDeleteProfile">Eliminar perfil</string>
+    <string name="actionUserHistory">El meu històric</string>
     <string name="buttonSignOut">Tancar sessió</string>
     <string name="userSignOut">Sessió tancada</string>
     <string name="userAccountDeleted">Compte esborrat</string>
     <string name="userAreaActivity">Àrea d\'usuari</string>
+    <string name="editProfileActivity">Editar perfil</string>
     <string name="listGroupsActivity">Grups</string>
     <string name="addGroupActivity">Nou grup</string>
     <string name="joinGroup">Apunta\'t</string>
     <string name="leaveGroup">Abandona</string>
+    <string name="idUserExists">L\'identificador d\'usuari ja existeix</string>
+    <string name="mailUserExists">El correu electrònic ja existeix</string>
+    <string name="deleteUserConfirmation">Estàs segur que vols eliminar el compte d\'usuari?</string>
+    <string name="alertConfirm">Confirmació</string>
+    <string name="confirmEditProfile">Perfil d'usuari modificat</string>
 
 
 </resources>

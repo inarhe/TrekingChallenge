@@ -1,16 +1,17 @@
 package edu.uoc.iartal.trekkingchallenge;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-public class SplashActivity extends Activity {
+public class SplashActivity extends AppCompatActivity {
 
     private final int TIME_SPLASH = 3000;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // First app screen with aplication name and logo
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 

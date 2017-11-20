@@ -127,7 +127,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:drawableTop="@drawable/ic_edit"
-            android:text="@string/buttonEditProfile" />
+            android:text="@string/actionEditProfile" />
 
         <Button
             android:id="@+id/buttonDeleteProfile"
@@ -135,7 +135,7 @@
             android:layout_height="wrap_content"
             android:drawableTop="@drawable/ic_delete"
             android:onClick="deleteUserAccount"
-            android:text="@string/buttonDeleteProfile" />
+            android:text="@string/actionDeleteProfile" />
 
     </LinearLayout>
 

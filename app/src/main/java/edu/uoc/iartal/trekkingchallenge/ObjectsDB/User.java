@@ -7,17 +7,17 @@ package edu.uoc.iartal.trekkingchallenge.ObjectsDB;
 
 // User object class
 public class User {
-    private String idUser, nameUser, mailUser, passwordUser;
+    private String idUser, userName, userMail, userPassword;
 
     public User() {
-
+        // Default constructor required for calls to DataSnapshot.getValue(User.class)
     }
 
-    public User(String idUser, String nameUser, String mailUser, String passwordUser) {
+    public User(String idUser, String userName, String userMail, String userPassword) {
         this.idUser = idUser;
-        this.nameUser = nameUser;
-        this.mailUser = mailUser;
-        this.passwordUser = passwordUser;
+        this.userName = userName;
+        this.userMail = userMail;
+        this.userPassword = userPassword;
     }
 
     public String getIdUser() {
@@ -28,28 +28,28 @@ public class User {
         this.idUser = idUser;
     }
 
-    public String getNameUser() {
-        return nameUser;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setNameUser(String nameUser) {
-        this.nameUser = nameUser;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
-    public String getMailUser() {
-        return mailUser;
+    public String getUserMail() {
+        return userMail;
     }
 
-    public void setMailUser(String mailUser) {
-        this.mailUser = mailUser;
+    public void setUserMail(String userMail) {
+        this.userMail = userMail;
     }
 
-    public String getPasswordUser() {
-        return passwordUser;
+    public String getUserPassword() {
+        return userPassword;
     }
 
-    public void setPasswordUser(String passwordUser) {
-        this.passwordUser = passwordUser;
+    public void setUserPassword(String userPassword) {
+        this.userPassword = userPassword;
     }
 
 }

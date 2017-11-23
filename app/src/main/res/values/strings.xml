@@ -66,7 +66,7 @@
     <string name="mailUserExists">El correu electrònic ja existeix</string>
     <string name="deleteUserConfirmation">Estàs segur que vols eliminar el compte d\'usuari?</string>
     <string name="alertConfirm">Confirmació</string>
-    <string name="confirmEditProfile">Perfil d'usuari modificat</string>
+    <string name="confirmEditProfile">Perfil d\'usuari modificat</string>
 
 
 </resources>

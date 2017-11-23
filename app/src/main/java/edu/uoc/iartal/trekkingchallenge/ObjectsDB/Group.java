@@ -8,17 +8,20 @@ package edu.uoc.iartal.trekkingchallenge.ObjectsDB;
 public class Group {
     private String idGroup, groupName, groupDescription, userAdmin;
     private Boolean isPublic;
+    private int numberOfMembers;
 
     public Group() {
 
     }
 
-    public Group(String idGroup, String groupName, String groupDescription, Boolean isPublic, String userAdmin) {
+
+    public Group(String idGroup, String groupName, String groupDescription, Boolean isPublic, String userAdmin, int numberOfMembers) {
         this.idGroup = idGroup;
         this.groupName = groupName;
         this.groupDescription = groupDescription;
         this.isPublic = isPublic;
         this.userAdmin = userAdmin;
+        this.numberOfMembers = numberOfMembers;
     }
 
     public String getIdGroup() {
@@ -60,4 +63,13 @@ public class Group {
     public void setUserAdmin(String userAdmin) {
         this.userAdmin = userAdmin;
     }
+
+    public int getNumberOfMembers() {
+        return numberOfMembers;
+    }
+
+    public void setNumberOfMembers(int numberOfMembers) {
+        this.numberOfMembers = numberOfMembers;
+    }
+
 }

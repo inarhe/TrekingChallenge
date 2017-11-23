@@ -25,6 +25,7 @@
                 android:layout_alignTop="@+id/acceptRegister"
                 android:layout_below="@+id/editTextPassRepeat"
                 android:layout_marginRight="50dp"
+                android:onClick="editProfileCanceled"
                 android:text="@string/cancelButton"
                 android:textSize="14sp" />
 

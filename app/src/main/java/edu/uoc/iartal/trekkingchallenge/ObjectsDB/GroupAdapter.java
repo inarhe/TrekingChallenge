@@ -66,7 +66,7 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.GroupViewHol
                 Intent intent = new Intent(context, ShowGroupActivity.class);
                 intent.putExtra("groupName", groups.get(position).getGroupName());
                 intent.putExtra("groupDescription", groups.get(position).getGroupDescription());
-                //intent.putExtra("members", groups.get(position).getMembers().length());
+                intent.putExtra("members", groups.get(position).getNumberOfMembers());
                 intent.putExtra("groupKey", groups.get(position).getIdGroup());
 
                 context.startActivity(intent);

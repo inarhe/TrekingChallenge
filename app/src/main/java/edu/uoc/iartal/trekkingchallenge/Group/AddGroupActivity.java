@@ -119,7 +119,7 @@ public class AddGroupActivity extends AppCompatActivity {
 
         // Add group to firebase database
         String id = databaseGroup.push().getKey();
-        Group group = new Group(id, name, description, isPublic, userAdmin);
+        Group group = new Group(id, name, description, isPublic, userAdmin, 1);
 
         databaseGroup.child(id).setValue(group).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override

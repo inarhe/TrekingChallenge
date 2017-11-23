@@ -101,13 +101,13 @@ public class RegisterActivity extends AppCompatActivity {
                 Log.i("TEST:","hola");
                 for (DataSnapshot child : dataSnapshot.getChildren()){
                     Log.i("USERID:",child.getValue(User.class).getIdUser());
-                    Log.i("USERMAIL:",child.getValue(User.class).getMailUser());
+                    Log.i("USERMAIL:",child.getValue(User.class).getUserMail());
                     if (child.getValue(User.class).getIdUser().equals(idUser)){
                         Toast.makeText(getApplicationContext(), getString(R.string.idUserExists), Toast.LENGTH_LONG).show();
                         return;
                     }
 
-                    if (child.getValue(User.class).getMailUser().equals(userMail)){
+                    if (child.getValue(User.class).getUserMail().equals(userMail)){
                         Toast.makeText(getApplicationContext(), getString(R.string.mailUserExists), Toast.LENGTH_LONG).show();
                         return;
                     }
@@ -129,7 +129,9 @@ public class RegisterActivity extends AppCompatActivity {
                         if(task.isSuccessful()){
                             // If user is successfully registered and logged in, start main activity
                             User user = new User(idUser,userName,userMail,userPassword);
-                            databaseUser.child(idUser).setValue(user);
+                            String id = databaseUser.push().getKey();
+                            databaseUser.child(id).setValue(user);
+                        //    databaseUser.child(idUser).setValue(user);
                             progressDialog.dismiss();
 
                             Toast.makeText(RegisterActivity.this, getString(R.string.successfulRegister),Toast.LENGTH_SHORT).show();

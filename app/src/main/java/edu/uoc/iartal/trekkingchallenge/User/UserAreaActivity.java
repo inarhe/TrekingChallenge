@@ -36,9 +36,12 @@ import edu.uoc.iartal.trekkingchallenge.R;
 
 public class UserAreaActivity extends AppCompatActivity {
 
+    private static final int ACTIVITY_CODE = 1;
     private TextView textViewUserName, textViewUserMail, textViewIdUser;
     private FirebaseAuth firebaseAuth;
-    private String userMail, userPassword;
+    private String idUser, userName, userMail, userPassword, userKey, currentMail;
+    private DatabaseReference databaseUser;
+    private Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,44 +67,60 @@ public class UserAreaActivity extends AppCompatActivity {
             // If user isn't logged, start login activity
             startActivity(new Intent(getApplicationContext(), LoginActivity.class));
             finish();
-        } else {
-            // Get database user data with current user mail
-            final String mail = firebaseAuth.getCurrentUser().getEmail();
-            DatabaseReference databaseUser = FirebaseDatabase.getInstance().getReference(FireBaseReferences.USER_REFERENCE);
-            Query query = databaseUser.orderByChild("mailUser").equalTo(mail);
-
-            // Query database to get user information
-            query.addChildEventListener(new ChildEventListener() {
-                @Override
-                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                    textViewIdUser.setText(dataSnapshot.getValue(User.class).getIdUser());
-                    textViewUserName.setText(dataSnapshot.getValue(User.class).getNameUser());
-                    userMail = dataSnapshot.getValue(User.class).getMailUser();
-                    textViewUserMail.setText(userMail);
-                    userPassword = dataSnapshot.getValue(User.class).getPasswordUser();
-                }
-
-                @Override
-                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                    //TO-DO
-                }
-
-                @Override
-                public void onChildRemoved(DataSnapshot dataSnapshot) {
-                    //TO-DO
-                }
-
-                @Override
-                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-                    //TO-DO
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                    //TO-DO
-                }
-            });
         }
+        // Get database user data with current user mail
+        currentMail = firebaseAuth.getCurrentUser().getEmail();
+        databaseUser = FirebaseDatabase.getInstance().getReference(FireBaseReferences.USER_REFERENCE);
+        intent = new Intent(UserAreaActivity.this, EditProfileActivity.class);
+        Query query = databaseUser.orderByChild(FireBaseReferences.USERMAIL_REFERENCE).equalTo(currentMail);
+
+        // Query database to get user information
+        query.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                idUser = dataSnapshot.getValue(User.class).getIdUser();
+                userName = dataSnapshot.getValue(User.class).getUserName();
+                userMail = dataSnapshot.getValue(User.class).getUserMail();
+                userPassword = dataSnapshot.getValue(User.class).getUserPassword();
+                userKey = dataSnapshot.getKey();
+
+                textViewIdUser.setText(idUser);
+                textViewUserName.setText(userName);
+                textViewUserMail.setText(userMail);
+
+
+                intent.putExtra("idUser", idUser);
+                intent.putExtra("userName", userName);
+                intent.putExtra("userMail", userMail);
+                intent.putExtra("userPassword", userPassword);
+                intent.putExtra("userKey", userKey);
+
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                //TO-DO
+
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                //TO-DO
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                //TO-DO
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Getting Post failed, log a message
+                Log.w("ERROR", "loadUser:onCancelled", databaseError.toException());
+                // ...
+            }
+        });
     }
 
     @Override
@@ -115,7 +134,11 @@ public class UserAreaActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_editProfile:
-                startActivity(new Intent(getApplicationContext(), EditProfileActivity.class));
+
+
+
+                startActivityForResult(intent, ACTIVITY_CODE);
+
                 return true;
             case R.id.action_deleteProfile:
                 deleteUserAccount();
@@ -129,10 +152,10 @@ public class UserAreaActivity extends AppCompatActivity {
     }
 
 
+
+
     public void deleteUserAccount(){
         // Delete user account when delete button is clicked
-
-
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(getString(R.string.deleteUserConfirmation));
         builder.setCancelable(true);
@@ -142,10 +165,11 @@ public class UserAreaActivity extends AppCompatActivity {
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
+
                         final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                         AuthCredential credential = EmailAuthProvider
                                 .getCredential(userMail, userPassword);
-                        Log.i("USER", "onClick: " + user.getEmail());
+
                         if (user != null){
                             user.reauthenticate(credential)
                                     .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -185,7 +209,23 @@ public class UserAreaActivity extends AppCompatActivity {
 
     public void signOut(View view) {
         // User sign out when sign out button is clicked
-        finish();
         firebaseAuth.signOut();
+        finish();
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        textViewIdUser.setText(data.getStringExtra("idUser"));
+        textViewUserName.setText(data.getStringExtra("userName"));
+        textViewUserMail.setText(data.getStringExtra("userMail"));
+
+        intent.putExtra("idUser", data.getStringExtra("idUser"));
+        intent.putExtra("userName", data.getStringExtra("userName"));
+        intent.putExtra("userMail", data.getStringExtra("userMail"));
+        //NECESSITAT DE PASSAR CONTRASENYA TAMBÉ PER SI CANVIA QUE S'ACTUALITZI AL EDITAR
+
+    }
+
+
 }

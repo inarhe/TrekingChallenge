@@ -17,6 +17,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 
 import edu.uoc.iartal.trekkingchallenge.ObjectsDB.FireBaseReferences;
+import edu.uoc.iartal.trekkingchallenge.ObjectsDB.Group;
 import edu.uoc.iartal.trekkingchallenge.ObjectsDB.User;
 import edu.uoc.iartal.trekkingchallenge.User.LoginActivity;
 import edu.uoc.iartal.trekkingchallenge.R;
@@ -35,7 +36,7 @@ public class ShowGroupActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         TextView textViewDescription = (TextView) findViewById(R.id.textViewGroupDescription);
-        //TextView textViewMembers = (TextView) findViewById(R.id.textViewNumberMembers);
+        TextView textViewMembers = (TextView) findViewById(R.id.textViewNumberMembers);
 
         // Get Firebase authentication instance and database group reference
         firebaseAuth = FirebaseAuth.getInstance();
@@ -45,7 +46,7 @@ public class ShowGroupActivity extends AppCompatActivity {
         Bundle groupData = getIntent().getExtras();
         String name = groupData.getString("groupName");
         String description = groupData.getString("groupDescription");
-      //int members = groupData.getInt("members");
+        int members = groupData.getInt("members");
         groupKey = groupData.getString("groupKey");
 
         ActionBar actionBar = getSupportActionBar();
@@ -53,6 +54,7 @@ public class ShowGroupActivity extends AppCompatActivity {
         actionBar.setTitle(name);
 
         textViewDescription.setText(description);
+        textViewMembers.setText(members);
 
         if (firebaseAuth.getCurrentUser() == null) {
             // If user isn't logged, start login activity
@@ -73,6 +75,9 @@ public class ShowGroupActivity extends AppCompatActivity {
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 User user = dataSnapshot.getValue(User.class);
                 databaseGroup.child(groupKey+"/members").child(user.getIdUser()).setValue("true");
+                int members = dataSnapshot.getValue(Group.class).getNumberOfMembers();
+                databaseGroup.child(groupKey+"/numberOfMembers").setValue(members +1);
+               // textViewMembers.setText(members+1);
             }
 
             @Override

@@ -34,7 +34,7 @@
     <string name="passwordTooShort">La contrasenya no pot ser inferior a 6 caràcters</string>
     <string name="samePass">Les contrasenyes no són iguals</string>
     <string name="registering">Registrant usuari...</string>
-    <string name="logging">Accedint usuari...</string>
+    <string name="logging">Iniciant sessió usuari...</string>
     <string name="groupSaved">Grup creat</string>
     <string name="successfulRegister">Usuari registrat correctament</string>
     <string name="failedRegister">No s\'ha pogut registrar l\'usuari, siusplau torna-ho a provar</string>
@@ -67,6 +67,10 @@
     <string name="deleteUserConfirmation">Estàs segur que vols eliminar el compte d\'usuari?</string>
     <string name="alertConfirm">Confirmació</string>
     <string name="confirmEditProfile">Perfil d\'usuari modificat</string>
+
+    <string name="actionJoinGroup">Uneix-t\'hi</string>
+    <string name="actionLeaveGroup">Deixa el grup</string>
+    <string name="listUsersActivity">Usuaris</string>
 
 
 </resources>

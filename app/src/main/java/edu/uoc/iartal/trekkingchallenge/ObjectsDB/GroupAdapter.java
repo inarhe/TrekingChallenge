@@ -28,9 +28,9 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.GroupViewHol
 
         public GroupViewHolder(View view) {
             super(view);
-            textViewGroupName = (TextView) view.findViewById(R.id.cvGroupName);
-            textViewGroupDesc = (TextView) view.findViewById(R.id.cvGroupDescription);
-            imageViewGroup = (ImageView) view.findViewById(R.id.cvGroupPhoto);
+            textViewGroupName = (TextView) view.findViewById(R.id.cvUserAlias);
+            textViewGroupDesc = (TextView) view.findViewById(R.id.cvUserName);
+            imageViewGroup = (ImageView) view.findViewById(R.id.cvUserPhoto);
         }
     }
 

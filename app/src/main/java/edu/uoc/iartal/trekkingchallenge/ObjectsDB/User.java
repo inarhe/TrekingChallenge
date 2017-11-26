@@ -7,17 +7,20 @@ package edu.uoc.iartal.trekkingchallenge.ObjectsDB;
 
 // User object class
 public class User {
-    private String idUser, userName, userMail, userPassword;
+    private String idUser, alias, userName, userMail, userPassword;
 
     public User() {
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
     }
 
-    public User(String idUser, String userName, String userMail, String userPassword) {
+
+
+    public User(String idUser, String alias, String userName, String userMail, String userPassword) {
         this.idUser = idUser;
         this.userName = userName;
         this.userMail = userMail;
         this.userPassword = userPassword;
+        this.alias = alias;
     }
 
     public String getIdUser() {
@@ -50,6 +53,14 @@ public class User {
 
     public void setUserPassword(String userPassword) {
         this.userPassword = userPassword;
+    }
+
+    public String getAlias() {
+        return alias;
+    }
+
+    public void setAlias(String alias) {
+        this.alias = alias;
     }
 
 }

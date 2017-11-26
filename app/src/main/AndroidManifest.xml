@@ -49,6 +49,11 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".User.UserAreaActivity" />
         </activity>
+        <activity android:name=".User.ListUsersActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".Group.AddGroupActivity" />
+        </activity>
     </application>
 
 </manifest>

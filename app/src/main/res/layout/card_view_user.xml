@@ -3,7 +3,7 @@
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:id="@+id/cardViewUser"
     android:layout_width="match_parent"
-    android:layout_height="125dp"
+    android:layout_height="100dp"
     card_view:cardBackgroundColor="#EEEEEE"
     card_view:cardCornerRadius="4dp"
     card_view:cardElevation="4dp"
@@ -40,6 +40,14 @@
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@+id/cvUserPhoto"
                 android:layout_below="@+id/cvUserAlias"/>
+
+            <CheckBox
+                android:id="@+id/checkListUser"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="30dp"/>
 
 
         </RelativeLayout>

@@ -34,7 +34,7 @@ import edu.uoc.iartal.trekkingchallenge.R;
 
 public class RegisterActivity extends AppCompatActivity {
     private EditText editTextUserId, editTextUserName, editTextUserMail, editTextUserPass, editTextPassRepeat;
-    private String idUser, userName, userMail, userPassword;
+    private String idUser, alias, userName, userMail, userPassword;
     private ProgressDialog progressDialog;
     private FirebaseAuth firebaseAuth;
     private DatabaseReference databaseUser;
@@ -57,7 +57,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     public void registerUser (View view){
         // Check input parameters and register user when accept button is clicked
-        idUser = editTextUserId.getText().toString().trim();
+        alias = editTextUserId.getText().toString().trim();
         userName = editTextUserName.getText().toString().trim();
         userMail = editTextUserMail.getText().toString().trim();
         userPassword = editTextUserPass.getText().toString().trim();
@@ -69,7 +69,7 @@ public class RegisterActivity extends AppCompatActivity {
             return;
         }
 
-        if(TextUtils.isEmpty(idUser)) {
+        if(TextUtils.isEmpty(alias)) {
             Toast.makeText(this, getString(R.string.idField), Toast.LENGTH_LONG).show();
             return;
         }
@@ -128,9 +128,9 @@ public class RegisterActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()){
                             // If user is successfully registered and logged in, start main activity
-                            User user = new User(idUser,userName,userMail,userPassword);
-                            String id = databaseUser.push().getKey();
-                            databaseUser.child(id).setValue(user);
+                            idUser = databaseUser.push().getKey();
+                            User user = new User(idUser, alias, userName,userMail,userPassword);
+                            databaseUser.child(idUser).setValue(user);
                         //    databaseUser.child(idUser).setValue(user);
                             progressDialog.dismiss();
 

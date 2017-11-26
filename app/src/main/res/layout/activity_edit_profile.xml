@@ -9,11 +9,18 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/editProfileToolbar">
+
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/editProfileToolbar">
 
 
             <Button
@@ -39,9 +46,9 @@
                 android:layout_marginLeft="50dp"
                 android:layout_marginTop="30dp"
                 android:background="#009688"
-                android:textColor="#FFFFFF"
                 android:onClick="editProfile"
                 android:text="@string/acceptButton"
+                android:textColor="#FFFFFF"
                 android:textSize="14sp" />
 
             <EditText
@@ -111,6 +118,10 @@
                 android:layout_marginRight="15dp"
                 android:ems="10"
                 android:inputType="textEmailAddress"
+                android:clickable="false"
+                android:cursorVisible="false"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
                 android:textSize="14sp" />
 
             <TextView
@@ -171,9 +182,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignLeft="@+id/editTextIdUser"
+                android:layout_alignParentTop="true"
                 android:layout_alignStart="@+id/editTextIdUser"
-                android:layout_below="@+id/registerTitle"
-                android:layout_marginTop="80dp"
+                android:layout_marginTop="41dp"
                 android:text="@string/textIdUser"
                 android:textColor="@android:color/black"
                 android:textSize="14sp"

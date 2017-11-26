@@ -1,5 +1,6 @@
 package edu.uoc.iartal.trekkingchallenge.User;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -39,9 +40,10 @@ public class UserAreaActivity extends AppCompatActivity {
     private static final int ACTIVITY_CODE = 1;
     private TextView textViewUserName, textViewUserMail, textViewIdUser;
     private FirebaseAuth firebaseAuth;
-    private String idUser, userName, userMail, userPassword, userKey, currentMail;
+    private String idUser, alias, userName, userMail, userPassword, userKey, currentMail;
     private DatabaseReference databaseUser;
     private Intent intent;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +57,9 @@ public class UserAreaActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle(getString(R.string.userAreaActivity));
+
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("loading..");
 
         // Get Firebase authentication instance
         firebaseAuth = FirebaseAuth.getInstance();
@@ -73,27 +78,30 @@ public class UserAreaActivity extends AppCompatActivity {
         databaseUser = FirebaseDatabase.getInstance().getReference(FireBaseReferences.USER_REFERENCE);
         intent = new Intent(UserAreaActivity.this, EditProfileActivity.class);
         Query query = databaseUser.orderByChild(FireBaseReferences.USERMAIL_REFERENCE).equalTo(currentMail);
-
+        progressDialog.show();
         // Query database to get user information
         query.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                idUser = dataSnapshot.getValue(User.class).getIdUser();
+
+                alias = dataSnapshot.getValue(User.class).getAlias();
                 userName = dataSnapshot.getValue(User.class).getUserName();
                 userMail = dataSnapshot.getValue(User.class).getUserMail();
                 userPassword = dataSnapshot.getValue(User.class).getUserPassword();
-                userKey = dataSnapshot.getKey();
+                userKey = dataSnapshot.getValue(User.class).getIdUser();
 
-                textViewIdUser.setText(idUser);
+                textViewIdUser.setText(alias);
                 textViewUserName.setText(userName);
                 textViewUserMail.setText(userMail);
 
 
-                intent.putExtra("idUser", idUser);
+                intent.putExtra("idUser", alias);
                 intent.putExtra("userName", userName);
                 intent.putExtra("userMail", userMail);
                 intent.putExtra("userPassword", userPassword);
                 intent.putExtra("userKey", userKey);
+
+                progressDialog.dismiss();
 
             }
 
@@ -219,6 +227,7 @@ public class UserAreaActivity extends AppCompatActivity {
         textViewIdUser.setText(data.getStringExtra("idUser"));
         textViewUserName.setText(data.getStringExtra("userName"));
         textViewUserMail.setText(data.getStringExtra("userMail"));
+        Log.i("NYE3", data.getStringExtra("userMail"));
 
         intent.putExtra("idUser", data.getStringExtra("idUser"));
         intent.putExtra("userName", data.getStringExtra("userName"));

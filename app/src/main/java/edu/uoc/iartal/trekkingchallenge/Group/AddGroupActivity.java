@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -22,20 +23,26 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 
+import java.util.ArrayList;
+
+import edu.uoc.iartal.trekkingchallenge.User.ListUsersActivity;
 import edu.uoc.iartal.trekkingchallenge.User.LoginActivity;
 import edu.uoc.iartal.trekkingchallenge.MainActivity;
 import edu.uoc.iartal.trekkingchallenge.ObjectsDB.FireBaseReferences;
 import edu.uoc.iartal.trekkingchallenge.ObjectsDB.Group;
 import edu.uoc.iartal.trekkingchallenge.ObjectsDB.User;
 import edu.uoc.iartal.trekkingchallenge.R;
-import edu.uoc.iartal.trekkingchallenge.User.RegisterActivity;
 
 public class AddGroupActivity extends AppCompatActivity {
+    private static final int ACTIVITY_CODE = 1;
     private EditText editTextName, editTextDescription;
     private DatabaseReference databaseGroup, databaseUser;
     private CheckBox checkBox;
-    private String userAdmin;
+    private String userAdmin, userKey, name, id;
     private FirebaseAuth firebaseAuth;
+    private Intent intent;
+    ListUsersActivity listUsersActivity;
+    ArrayList<User> userMembers = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,13 +71,14 @@ public class AddGroupActivity extends AppCompatActivity {
         } else {
             String mail = firebaseAuth.getCurrentUser().getEmail();
             databaseUser = FirebaseDatabase.getInstance().getReference(FireBaseReferences.USER_REFERENCE);
-            Query query = databaseUser.orderByChild("mailUser").equalTo(mail);
+            Query query = databaseUser.orderByChild(FireBaseReferences.USERMAIL_REFERENCE).equalTo(mail);
 
             // Query database to get user admin information
             query.addChildEventListener(new ChildEventListener() {
                 @Override
                 public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                    userAdmin = dataSnapshot.getValue(User.class).getIdUser();
+                    userAdmin = dataSnapshot.getValue(User.class).getAlias();
+                    userKey = dataSnapshot.getValue(User.class).getIdUser();
                 }
 
                 @Override
@@ -99,7 +107,7 @@ public class AddGroupActivity extends AppCompatActivity {
     public void addGroup (View view) {
         // Add group to database when accept button is clicked
         Boolean isPublic = false;
-        String name = editTextName.getText().toString().trim();
+        name = editTextName.getText().toString().trim();
         String description = editTextDescription.getText().toString().trim();
 
         // If some of the input parameters are incorrect, stops the function execution further
@@ -118,7 +126,7 @@ public class AddGroupActivity extends AppCompatActivity {
         }
 
         // Add group to firebase database
-        String id = databaseGroup.push().getKey();
+        id = databaseGroup.push().getKey();
         Group group = new Group(id, name, description, isPublic, userAdmin, 1);
 
         databaseGroup.child(id).setValue(group).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -130,23 +138,58 @@ public class AddGroupActivity extends AppCompatActivity {
             }
         });
 
-        databaseUser.child(userAdmin+"/groups").child(group.getGroupName()).setValue("true").addOnCompleteListener(new OnCompleteListener<Void>() {
+        databaseGroup.child(id).child("members").child(userAdmin).setValue("true");
+
+        databaseUser.child(userKey+"/groups").child(group.getGroupName()).setValue("true").addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if(task.isSuccessful()){
                     Toast.makeText(getApplicationContext(), getString(R.string.groupSaved), Toast.LENGTH_LONG).show();
 
-                    startActivity(new Intent(getApplicationContext(), ListGroupsActivity.class));
-                    finish();
+                 //   startActivity(new Intent(getApplicationContext(), ListGroupsActivity.class));
+                  //  finish();
                 } else {
                     Toast.makeText(AddGroupActivity.this,getString(R.string.failedAddGroup),Toast.LENGTH_SHORT).show();
                 }
             }
         });
+
+        inviteUsers();
+
+
     }
 
     public void cancelGroup (View view) {
         startActivity(new Intent(getApplicationContext(), MainActivity.class));
         finish();
+    }
+
+    public void listUsers (View view) {
+        startActivity(new Intent(getApplicationContext(), ListUsersActivity.class));
+     //   finish();
+    }
+
+    private void inviteUsers (){
+        intent = new Intent(getApplicationContext(), ListUsersActivity.class);
+       // startActivityForResult(intent,ACTIVITY_CODE);
+        intent.putExtra("groupName", name);
+        intent.putExtra("idGroup", id);
+        startActivity(intent);
+        finish();
+
+      /* userMembers = listUsersActivity.getSelectedUsers();
+        for (User user : userMembers){
+            databaseUser.child(user.getIdUser()).child("groups").child(name).setValue("true");
+            databaseGroup.child(id).child("members").child(user.getAlias()).setValue("true");
+        }*/
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        intent.putExtra("groupName", name);
+        intent.putExtra("idGroup", id);
+
     }
 }

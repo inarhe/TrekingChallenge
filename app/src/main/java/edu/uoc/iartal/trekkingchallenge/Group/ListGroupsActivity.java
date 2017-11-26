@@ -33,7 +33,7 @@ public class ListGroupsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_groups);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.listGroupToolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.listUserToolbar);
         setSupportActionBar(toolbar);
 
         ActionBar actionBar = getSupportActionBar();
@@ -51,7 +51,7 @@ public class ListGroupsActivity extends AppCompatActivity {
 
         groups = new ArrayList<>();
 
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rvListGroup);
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rvListUser);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 

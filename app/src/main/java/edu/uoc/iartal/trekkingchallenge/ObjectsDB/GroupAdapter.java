@@ -2,10 +2,13 @@ package edu.uoc.iartal.trekkingchallenge.ObjectsDB;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -20,17 +23,23 @@ import edu.uoc.iartal.trekkingchallenge.Group.ShowGroupActivity;
 public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.GroupViewHolder> {
 
     private List<Group> groups;
+    public Boolean isVisible = false;
+
 
     // Object which represents a list item and save view references
     public static class GroupViewHolder extends RecyclerView.ViewHolder {
         TextView textViewGroupName, textViewGroupDesc;
         ImageView imageViewGroup;
+        ImageButton imageButton;
+
 
         public GroupViewHolder(View view) {
             super(view);
             textViewGroupName = (TextView) view.findViewById(R.id.cvUserAlias);
             textViewGroupDesc = (TextView) view.findViewById(R.id.cvUserName);
             imageViewGroup = (ImageView) view.findViewById(R.id.cvUserPhoto);
+            imageButton = (ImageButton) view.findViewById(R.id.icDelGroupAdmin);
+
         }
     }
 
@@ -53,9 +62,17 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.GroupViewHol
     @Override
     public void onBindViewHolder(GroupViewHolder viewHolder, final int position) {
        // Modify content of each list item
-        viewHolder.textViewGroupName.setText(groups.get(position).getGroupName());
+        viewHolder.textViewGroupName.setText(groups.get(position).getIdGroup());
         viewHolder.textViewGroupDesc.setText(groups.get(position).getGroupDescription());
         viewHolder.imageViewGroup.setImageResource(R.drawable.ic_people);
+        if(isVisible){
+            viewHolder.imageButton.setVisibility(View.VISIBLE);
+            Log.i("BUTTON", "visible");
+        } else {
+            viewHolder.imageButton.setVisibility(View.GONE);
+            Log.i("BUTTON", "gone");
+        }
+
 
         // When an item is clicked starts show detail group activity
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -73,4 +90,17 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.GroupViewHol
             }
         });
     }
+
+    public void setVisibility(Boolean visible){
+        if (visible){
+            isVisible = true;
+        } else {
+            isVisible = false;
+        }
+        Log.i("VISIBLE",isVisible.toString());
+
+        this.notifyDataSetChanged();
+    }
+
+
 }

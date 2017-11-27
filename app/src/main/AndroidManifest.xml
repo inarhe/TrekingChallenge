@@ -29,11 +29,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".Group.ListGroupsActivity" />
         </activity>
-        <activity android:name=".Group.ListGroupsActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
-        </activity>
         <activity android:name=".User.UserAreaActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -49,10 +44,11 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".User.UserAreaActivity" />
         </activity>
-        <activity android:name=".User.ListUsersActivity">
+        <activity android:name=".User.ListUsersActivity" />
+        <activity android:name=".Group.ListGroupsActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".Group.AddGroupActivity" />
+                android:value=".MainActivity" />
         </activity>
     </application>
 

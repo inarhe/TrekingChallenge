@@ -7,7 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -38,7 +37,7 @@ public class AddGroupActivity extends AppCompatActivity {
     private EditText editTextName, editTextDescription;
     private DatabaseReference databaseGroup, databaseUser;
     private CheckBox checkBox;
-    private String userAdmin, userKey, name, id;
+    private String userAdmin, name, idGroup;
     private FirebaseAuth firebaseAuth;
     private Intent intent;
     ListUsersActivity listUsersActivity;
@@ -77,8 +76,8 @@ public class AddGroupActivity extends AppCompatActivity {
             query.addChildEventListener(new ChildEventListener() {
                 @Override
                 public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                    userAdmin = dataSnapshot.getValue(User.class).getAlias();
-                    userKey = dataSnapshot.getValue(User.class).getIdUser();
+                    userAdmin = dataSnapshot.getValue(User.class).getIdUser();
+                 //   userKey = dataSnapshot.getValue(User.class).getIdUser();
                 }
 
                 @Override
@@ -126,10 +125,11 @@ public class AddGroupActivity extends AppCompatActivity {
         }
 
         // Add group to firebase database
-        id = databaseGroup.push().getKey();
-        Group group = new Group(id, name, description, isPublic, userAdmin, 1);
+      //  idGroup = databaseGroup.push().s.getKey();
+        idGroup = name;
+        Group group = new Group(idGroup, name, description, isPublic, userAdmin, 1);
 
-        databaseGroup.child(id).setValue(group).addOnCompleteListener(new OnCompleteListener<Void>() {
+        databaseGroup.child(idGroup).setValue(group).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if(!task.isSuccessful()) {
@@ -138,16 +138,14 @@ public class AddGroupActivity extends AppCompatActivity {
             }
         });
 
-        databaseGroup.child(id).child("members").child(userAdmin).setValue("true");
+        databaseGroup.child(idGroup).child(FireBaseReferences.MEMBERSGROUP_REFERENCE).child(userAdmin).setValue("true");
 
-        databaseUser.child(userKey+"/groups").child(group.getGroupName()).setValue("true").addOnCompleteListener(new OnCompleteListener<Void>() {
+        databaseUser.child(userAdmin).child(FireBaseReferences.USERGROUPS_REFERENCE).child(group.getGroupName()).setValue("true")
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if(task.isSuccessful()){
                     Toast.makeText(getApplicationContext(), getString(R.string.groupSaved), Toast.LENGTH_LONG).show();
-
-                 //   startActivity(new Intent(getApplicationContext(), ListGroupsActivity.class));
-                  //  finish();
                 } else {
                     Toast.makeText(AddGroupActivity.this,getString(R.string.failedAddGroup),Toast.LENGTH_SHORT).show();
                 }
@@ -164,32 +162,11 @@ public class AddGroupActivity extends AppCompatActivity {
         finish();
     }
 
-    public void listUsers (View view) {
-        startActivity(new Intent(getApplicationContext(), ListUsersActivity.class));
-     //   finish();
-    }
-
     private void inviteUsers (){
         intent = new Intent(getApplicationContext(), ListUsersActivity.class);
-       // startActivityForResult(intent,ACTIVITY_CODE);
         intent.putExtra("groupName", name);
-        intent.putExtra("idGroup", id);
+        intent.putExtra("idGroup", idGroup);
         startActivity(intent);
         finish();
-
-      /* userMembers = listUsersActivity.getSelectedUsers();
-        for (User user : userMembers){
-            databaseUser.child(user.getIdUser()).child("groups").child(name).setValue("true");
-            databaseGroup.child(id).child("members").child(user.getAlias()).setValue("true");
-        }*/
-
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        intent.putExtra("groupName", name);
-        intent.putExtra("idGroup", id);
-
     }
 }

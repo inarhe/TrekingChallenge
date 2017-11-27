@@ -8,9 +8,9 @@ public class FireBaseReferences {
     // Firebase database references
     final public static String USER_REFERENCE = "user";
     final public static String IDUSER_REFERENCE = "idUser";
-    final public static String ALIAS_REFERENCE = "alias";
     final public static String USERNAME_REFERENCE = "userName";
     final public static String USERMAIL_REFERENCE = "userMail";
+    final public static String USERGROUPS_REFERENCE = "groups";
     final public static String USERPASSWORD_REFERENCE = "userPassword";
 
     final public static String GROUP_REFERENCE = "group";

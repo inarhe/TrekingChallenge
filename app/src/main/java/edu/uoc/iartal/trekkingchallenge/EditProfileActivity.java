@@ -152,7 +152,7 @@ public class EditProfileActivity extends AppCompatActivity {
         progressDialog.show();
 
         if ((!currentIdUser.equals(idUser)) && (!TextUtils.isEmpty(idUser))){
-            databaseUser.child(userKey).child(FireBaseReferences.ALIAS_REFERENCE).setValue(idUser);
+            databaseUser.child(userKey).child(FireBaseReferences.IDUSER_REFERENCE).setValue(idUser);
             result.putExtra("idUser", idUser);
 
         }

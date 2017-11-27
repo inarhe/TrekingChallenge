@@ -1,13 +1,18 @@
 package edu.uoc.iartal.trekkingchallenge.ObjectsDB;
 
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by Ingrid Artal on 04/11/2017.
  */
 
 // User object class
 public class User {
-    private String idUser, alias, userName, userMail, userPassword;
+    public String idUser, userName, userMail, userPassword;
+    public Map<String, String> groups = new HashMap<>();
 
     public User() {
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
@@ -15,12 +20,11 @@ public class User {
 
 
 
-    public User(String idUser, String alias, String userName, String userMail, String userPassword) {
+    public User(String idUser, String userName, String userMail, String userPassword) {
         this.idUser = idUser;
         this.userName = userName;
         this.userMail = userMail;
         this.userPassword = userPassword;
-        this.alias = alias;
     }
 
     public String getIdUser() {
@@ -55,12 +59,9 @@ public class User {
         this.userPassword = userPassword;
     }
 
-    public String getAlias() {
-        return alias;
-    }
 
-    public void setAlias(String alias) {
-        this.alias = alias;
+    public Map<String, String> getGroups() {
+        return this.groups;
     }
 
 }

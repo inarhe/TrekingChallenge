@@ -68,9 +68,24 @@
     <string name="alertConfirm">Confirmació</string>
     <string name="confirmEditProfile">Perfil d\'usuari modificat</string>
 
+    <string name="actionSearch">Buscar</string>
+    <string name="actionDone">Fet</string>
     <string name="actionJoinGroup">Uneix-t\'hi</string>
     <string name="actionLeaveGroup">Deixa el grup</string>
     <string name="listUsersActivity">Usuaris</string>
+    <string name="usersInvited">"Usuaris afegits al grup"</string>
+
+    <string name="tabAllGroups">"Tots"</string>
+    <string name="tabMyGroups">"Els meus"</string>
+    <string name="title_activity_list_groups2">Grups</string>
+    <string name="action_settings">Settings</string>
+    <string name="section_format">Hello World from section: %1$d</string>
+
+    <string name="loadingData">Carregant dades...</string>
+    <string name="title_activity_caca">caca</string>
+    <string name="tab_text_1">Tab 1</string>
+    <string name="tab_text_2">Tab 2</string>
+    <string name="tab_text_3">Tab 3</string>
 
 
 </resources>

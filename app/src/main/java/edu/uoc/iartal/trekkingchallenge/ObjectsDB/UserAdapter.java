@@ -1,8 +1,6 @@
 package edu.uoc.iartal.trekkingchallenge.ObjectsDB;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -19,10 +17,8 @@ import edu.uoc.iartal.trekkingchallenge.R;
 import edu.uoc.iartal.trekkingchallenge.User.ListUsersActivity;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 
 /**
  * Created by Ingrid Artal on 25/11/2017.
@@ -52,8 +48,8 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
             imageViewUser = (ImageView) itemView.findViewById(R.id.cvUserPhoto);
             checkBox = (CheckBox) itemView.findViewById(R.id.checkListUser);
             this.listUsersActivity = listUsersActivity;
-            cardView = (CardView)itemView.findViewById(R.id.cardViewUser);
-            cardView.setOnLongClickListener(listUsersActivity);
+            cardView = (CardView)itemView.findViewById(R.id.cardViewGroup);
+          //  cardView.setOnLongClickListener(listUsersActivity);
             checkBox.setOnClickListener(this);
         }
 
@@ -88,16 +84,16 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
         databaseUser = FirebaseDatabase.getInstance().getReference(FireBaseReferences.USER_REFERENCE);
         databaseGroup = FirebaseDatabase.getInstance().getReference(FireBaseReferences.GROUP_REFERENCE);
         // Modify content of each list item
-        viewHolder.textViewUserAlias.setText(users.get(position).getAlias());
+        viewHolder.textViewUserAlias.setText(users.get(position).getIdUser());
         viewHolder.textViewUserName.setText(users.get(position).getUserName());
         viewHolder.imageViewUser.setImageResource(R.drawable.ic_person);
 
-        if(!listUsersActivity.isInActionMode){
-            viewHolder.checkBox.setVisibility(View.GONE);
-        } else {
+    //    if(!listUsersActivity.isInActionMode){
+      //      viewHolder.checkBox.setVisibility(View.GONE);
+       // } else {
             viewHolder.checkBox.setVisibility(View.VISIBLE);
             viewHolder.checkBox.setChecked(false);
-        }
+       // }
 
 
 

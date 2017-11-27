@@ -40,7 +40,7 @@ public class UserAreaActivity extends AppCompatActivity {
     private static final int ACTIVITY_CODE = 1;
     private TextView textViewUserName, textViewUserMail, textViewIdUser;
     private FirebaseAuth firebaseAuth;
-    private String idUser, alias, userName, userMail, userPassword, userKey, currentMail;
+    private String idUser, userName, userMail, userPassword, userKey, currentMail;
     private DatabaseReference databaseUser;
     private Intent intent;
     private ProgressDialog progressDialog;
@@ -59,7 +59,7 @@ public class UserAreaActivity extends AppCompatActivity {
         actionBar.setTitle(getString(R.string.userAreaActivity));
 
         progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("loading..");
+        progressDialog.setMessage(getString(R.string.loadingData));
 
         // Get Firebase authentication instance
         firebaseAuth = FirebaseAuth.getInstance();
@@ -84,18 +84,18 @@ public class UserAreaActivity extends AppCompatActivity {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 
-                alias = dataSnapshot.getValue(User.class).getAlias();
+                idUser = dataSnapshot.getValue(User.class).getIdUser();
                 userName = dataSnapshot.getValue(User.class).getUserName();
                 userMail = dataSnapshot.getValue(User.class).getUserMail();
                 userPassword = dataSnapshot.getValue(User.class).getUserPassword();
                 userKey = dataSnapshot.getValue(User.class).getIdUser();
 
-                textViewIdUser.setText(alias);
+                textViewIdUser.setText(idUser);
                 textViewUserName.setText(userName);
                 textViewUserMail.setText(userMail);
 
 
-                intent.putExtra("idUser", alias);
+                intent.putExtra("idUser", idUser);
                 intent.putExtra("userName", userName);
                 intent.putExtra("userMail", userMail);
                 intent.putExtra("userPassword", userPassword);

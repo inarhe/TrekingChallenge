@@ -34,7 +34,7 @@ import edu.uoc.iartal.trekkingchallenge.R;
 
 public class RegisterActivity extends AppCompatActivity {
     private EditText editTextUserId, editTextUserName, editTextUserMail, editTextUserPass, editTextPassRepeat;
-    private String idUser, alias, userName, userMail, userPassword;
+    private String idUser, userName, userMail, userPassword;
     private ProgressDialog progressDialog;
     private FirebaseAuth firebaseAuth;
     private DatabaseReference databaseUser;
@@ -57,7 +57,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     public void registerUser (View view){
         // Check input parameters and register user when accept button is clicked
-        alias = editTextUserId.getText().toString().trim();
+        idUser = editTextUserId.getText().toString().trim();
         userName = editTextUserName.getText().toString().trim();
         userMail = editTextUserMail.getText().toString().trim();
         userPassword = editTextUserPass.getText().toString().trim();
@@ -69,7 +69,7 @@ public class RegisterActivity extends AppCompatActivity {
             return;
         }
 
-        if(TextUtils.isEmpty(alias)) {
+        if(TextUtils.isEmpty(idUser)) {
             Toast.makeText(this, getString(R.string.idField), Toast.LENGTH_LONG).show();
             return;
         }
@@ -128,8 +128,8 @@ public class RegisterActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()){
                             // If user is successfully registered and logged in, start main activity
-                            idUser = databaseUser.push().getKey();
-                            User user = new User(idUser, alias, userName,userMail,userPassword);
+                           // idUser = databaseUser.push().getKey();
+                            User user = new User(idUser, userName,userMail,userPassword);
                             databaseUser.child(idUser).setValue(user);
                         //    databaseUser.child(idUser).setValue(user);
                             progressDialog.dismiss();
@@ -139,6 +139,7 @@ public class RegisterActivity extends AppCompatActivity {
                             startActivity(new Intent(getApplicationContext(), MainActivity.class));
                             finish();
                         } else {
+                            progressDialog.dismiss();
                             Toast.makeText(RegisterActivity.this,getString(R.string.failedRegister),Toast.LENGTH_SHORT).show();
                         }
                     }

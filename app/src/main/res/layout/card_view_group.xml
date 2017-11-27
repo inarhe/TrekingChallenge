@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/cardViewUser"
+    android:id="@+id/cardViewGroup"
     android:layout_width="match_parent"
     android:layout_height="125dp"
     card_view:cardBackgroundColor="#EEEEEE"
@@ -41,6 +41,14 @@
                 android:layout_toRightOf="@+id/cvUserPhoto"
                 android:layout_below="@+id/cvUserAlias"/>
 
+            <ImageButton
+                android:id="@+id/icDelGroupAdmin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/ic_delete"
+                android:layout_marginTop="30dp"/>
 
         </RelativeLayout>
 

@@ -77,6 +77,8 @@ public class ShowGroupActivity extends AppCompatActivity {
         updateJoins(currentMail);
         updateMembers();
 
+        finish();
+
     }
 
     private void updateJoins(String currentMail){
@@ -87,7 +89,7 @@ public class ShowGroupActivity extends AppCompatActivity {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 User user = dataSnapshot.getValue(User.class);
-                databaseGroup.child(groupKey).child(FireBaseReferences.MEMBERSGROUP_REFERENCE).child(user.getAlias()).setValue("true");
+                databaseGroup.child(groupKey).child(FireBaseReferences.MEMBERSGROUP_REFERENCE).child(user.getIdUser()).setValue("true");
 
                 databaseUser.child(user.getIdUser()).child("groups").child(name).setValue("true");
               //  int members = databaseGroup.child(groupKey).child(FireBaseReferences.NUMBERMEMBERS_REFERENCE);

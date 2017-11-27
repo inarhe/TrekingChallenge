@@ -6,20 +6,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context="edu.uoc.iartal.trekkingchallenge.User.ListUsersActivity">
-
-    <include android:id="@+id/listUserToolbar"
-        layout="@layout/toolbar" />
+    android:orientation="vertical">
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/rvListMyGroups"
+        android:id="@+id/rvListAllGroups"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/cast_expanded_controller_control_toolbar_min_height"
         android:clipToPadding="false"
         android:padding="3dp"
         android:paddingBottom="48dp"
         android:scrollbars="vertical" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fabAddGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="16dp"
+        android:src="@drawable/ic_add" />
 
 </android.support.design.widget.CoordinatorLayout>

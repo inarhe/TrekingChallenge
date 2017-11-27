@@ -2,7 +2,6 @@ package edu.uoc.iartal.trekkingchallenge.User;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,32 +15,32 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import edu.uoc.iartal.trekkingchallenge.Group.AddGroupActivity;
+import edu.uoc.iartal.trekkingchallenge.Group.ListGroupsActivity;
 import edu.uoc.iartal.trekkingchallenge.ObjectsDB.FireBaseReferences;
 import edu.uoc.iartal.trekkingchallenge.ObjectsDB.Group;
-import edu.uoc.iartal.trekkingchallenge.ObjectsDB.GroupAdapter;
 import edu.uoc.iartal.trekkingchallenge.ObjectsDB.User;
 import edu.uoc.iartal.trekkingchallenge.ObjectsDB.UserAdapter;
 import edu.uoc.iartal.trekkingchallenge.R;
 
-public class ListUsersActivity extends AppCompatActivity implements View.OnLongClickListener {
-    public boolean isInActionMode = false;
+public class ListUsersActivity extends AppCompatActivity {
     private RecyclerView.Adapter userAdapter;
     private RecyclerView recyclerView;
     private ArrayList<User> users = new ArrayList<>();
     private ArrayList<User> selectedUsers = new ArrayList<>();
     private String idGroup, groupName;
-    int counter = 0;
     private Toolbar toolbar;
+    private DatabaseReference databaseUser, databaseGroup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,19 +58,16 @@ public class ListUsersActivity extends AppCompatActivity implements View.OnLongC
         idGroup = groupData.getString("idGroup");
         groupName = groupData.getString("groupName");
 
-
-        recyclerView = (RecyclerView) findViewById(R.id.rvListUser);
+        recyclerView = (RecyclerView) findViewById(R.id.rvListMyGroups);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-
-
-        DatabaseReference databaseUser = FirebaseDatabase.getInstance().getReference(FireBaseReferences.USER_REFERENCE);
 
         userAdapter = new UserAdapter(users, ListUsersActivity.this);
         recyclerView.setAdapter(userAdapter);
 
-        // Show database groups in recycler view
+        databaseUser = FirebaseDatabase.getInstance().getReference(FireBaseReferences.USER_REFERENCE);
+
+        // Show database users in recycler view
         databaseUser.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -79,11 +75,12 @@ public class ListUsersActivity extends AppCompatActivity implements View.OnLongC
                 for (DataSnapshot userSnapshot:
                         dataSnapshot.getChildren()) {
                     User user = userSnapshot.getValue(User.class);
-                    users.add(user);
+                    if (!user.getUserMail().equals(FirebaseAuth.getInstance().getCurrentUser().getEmail())){
+                        users.add(user);
+                    }
+
                 }
                 userAdapter.notifyDataSetChanged();
-                Log.i("TEST", "ok");
-
             }
 
             @Override
@@ -91,13 +88,6 @@ public class ListUsersActivity extends AppCompatActivity implements View.OnLongC
                 //TO-DO
             }
         });
-    }
-
-    @Override
-    public boolean onLongClick(View v) {
-        isInActionMode = true;
-        userAdapter.notifyDataSetChanged();
-        return true;
     }
 
     @Override
@@ -112,11 +102,8 @@ public class ListUsersActivity extends AppCompatActivity implements View.OnLongC
         switch (item.getItemId()) {
             case R.id.action_inviteUsers:
                 inviteUsers();
-               // startActivityForResult(intent, ACTIVITY_CODE);
                 finish();
                 return true;
-
-
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -125,29 +112,62 @@ public class ListUsersActivity extends AppCompatActivity implements View.OnLongC
     public void prepareSelection (View view, int position){
         if (((CheckBox)view).isChecked()){
             selectedUsers.add(users.get(position));
-            counter = counter +1;
         } else {
             selectedUsers.remove(users.get(position));
-            counter = counter -1;
         }
     }
 
     private void inviteUsers(){
-        DatabaseReference databaseUser = FirebaseDatabase.getInstance().getReference(FireBaseReferences.USER_REFERENCE);
-        DatabaseReference databaseGroup = FirebaseDatabase.getInstance().getReference(FireBaseReferences.GROUP_REFERENCE);
-
-        for (User user : selectedUsers){
-            databaseUser.child(user.getIdUser()).child("groups").child(groupName).setValue("true");
-            databaseGroup.child(idGroup).child("members").child(user.getAlias()).setValue("true");
-        }
+        databaseUser = FirebaseDatabase.getInstance().getReference(FireBaseReferences.USER_REFERENCE);
+        databaseGroup = FirebaseDatabase.getInstance().getReference(FireBaseReferences.GROUP_REFERENCE);
 
         if (!selectedUsers.isEmpty()){
-            Toast.makeText(ListUsersActivity.this,"Usuaris afegits al grup",Toast.LENGTH_SHORT).show();
+            for (User user : selectedUsers){
+                databaseUser.child(user.getIdUser()).child("groups").child(groupName).setValue("true");
+                databaseGroup.child(idGroup).child("members").child(user.getIdUser()).setValue("true");
+
+                Query query = databaseGroup.orderByChild(FireBaseReferences.GROUPNAME_REFERENCE).equalTo(groupName);
+
+                // Query database to get user information
+                query.addChildEventListener(new ChildEventListener() {
+                    @Override
+                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                        //  Group group = dataSnapshot.getValue(Group.class);
+                        //  databaseGroup.child(groupKey).child(FireBaseReferences.MEMBERSGROUP_REFERENCE).child(user.getAlias()).setValue("true");
+
+                        // databaseUser.child(user.getIdUser()).child("groups").child(name).setValue("true");
+                        int members = dataSnapshot.getValue(Group.class).getNumberOfMembers();
+                        databaseGroup.child(idGroup).child(FireBaseReferences.NUMBERMEMBERS_REFERENCE).setValue(members+1);
+                        Log.i("MEM", Integer.toString(members));
+
+                        // textViewMembers.setText(members+1);
+                    }
+
+
+                    @Override
+                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                        //TO-DO
+                    }
+
+                    @Override
+                    public void onChildRemoved(DataSnapshot dataSnapshot) {
+                        //TO-DO
+                    }
+
+                    @Override
+                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                        //TO-DO
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        //TO-DO
+                    }
+                });
+
+            }
+            Toast.makeText(ListUsersActivity.this,getString(R.string.usersInvited),Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(getApplicationContext(), ListGroupsActivity.class));
         }
     }
-
-    public ArrayList<User> getSelectedUsers(){
-        return selectedUsers;
-    }
-
 }

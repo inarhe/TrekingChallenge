@@ -1,4 +1,4 @@
-package edu.uoc.iartal.trekkingchallenge.Group;
+package edu.uoc.iartal.trekkingchallenge.group;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -24,12 +24,12 @@ import com.google.firebase.database.Query;
 
 import java.util.ArrayList;
 
-import edu.uoc.iartal.trekkingchallenge.User.ListUsersActivity;
-import edu.uoc.iartal.trekkingchallenge.User.LoginActivity;
+import edu.uoc.iartal.trekkingchallenge.user.ListUsersActivity;
+import edu.uoc.iartal.trekkingchallenge.user.LoginActivity;
 import edu.uoc.iartal.trekkingchallenge.MainActivity;
-import edu.uoc.iartal.trekkingchallenge.ObjectsDB.FireBaseReferences;
-import edu.uoc.iartal.trekkingchallenge.ObjectsDB.Group;
-import edu.uoc.iartal.trekkingchallenge.ObjectsDB.User;
+import edu.uoc.iartal.trekkingchallenge.objectsDB.FireBaseReferences;
+import edu.uoc.iartal.trekkingchallenge.objectsDB.Group;
+import edu.uoc.iartal.trekkingchallenge.objectsDB.User;
 import edu.uoc.iartal.trekkingchallenge.R;
 
 public class AddGroupActivity extends AppCompatActivity {
@@ -151,6 +151,7 @@ public class AddGroupActivity extends AppCompatActivity {
                 }
             }
         });
+
 
         inviteUsers();
 

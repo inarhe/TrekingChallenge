@@ -1,4 +1,4 @@
-package edu.uoc.iartal.trekkingchallenge.User;
+package edu.uoc.iartal.trekkingchallenge.user;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -30,9 +29,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 
-import edu.uoc.iartal.trekkingchallenge.EditProfileActivity;
-import edu.uoc.iartal.trekkingchallenge.ObjectsDB.FireBaseReferences;
-import edu.uoc.iartal.trekkingchallenge.ObjectsDB.User;
+import edu.uoc.iartal.trekkingchallenge.objectsDB.FireBaseReferences;
+import edu.uoc.iartal.trekkingchallenge.objectsDB.User;
 import edu.uoc.iartal.trekkingchallenge.R;
 
 public class UserAreaActivity extends AppCompatActivity {
@@ -133,8 +131,8 @@ public class UserAreaActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.user_area_activity_menu, menu);
+
+        getMenuInflater().inflate(R.menu.user_area_activity_menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
 

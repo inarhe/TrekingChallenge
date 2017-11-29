@@ -8,9 +8,9 @@ import android.view.View;
 
 import com.google.firebase.auth.FirebaseAuth;
 
-import edu.uoc.iartal.trekkingchallenge.Group.ListGroupsActivity;
-import edu.uoc.iartal.trekkingchallenge.User.AccessActivity;
-import edu.uoc.iartal.trekkingchallenge.User.UserAreaActivity;
+import edu.uoc.iartal.trekkingchallenge.group.ListGroupsActivity;
+import edu.uoc.iartal.trekkingchallenge.user.AccessActivity;
+import edu.uoc.iartal.trekkingchallenge.user.UserAreaActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
     public void mapActivity (View view){
         // Main map functionality. If user isn't logged, access is forbidden and opens user access activity
         if (firebaseAuth.getCurrentUser()!=null) {
-            startActivity(new Intent(getApplicationContext(),MainActivity.class));
+            startActivity(new Intent(getApplicationContext(),MapActivity.class));
         } else {
             startActivity(new Intent(getApplicationContext(), AccessActivity.class));
         }

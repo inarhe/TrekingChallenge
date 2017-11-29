@@ -1,20 +1,21 @@
-package edu.uoc.iartal.trekkingchallenge.Group;
+package edu.uoc.iartal.trekkingchallenge.group;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.support.v7.widget.SearchView;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -24,23 +25,23 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
-import edu.uoc.iartal.trekkingchallenge.ObjectsDB.FireBaseReferences;
-import edu.uoc.iartal.trekkingchallenge.ObjectsDB.Group;
-import edu.uoc.iartal.trekkingchallenge.ObjectsDB.GroupAdapter;
-import edu.uoc.iartal.trekkingchallenge.ObjectsDB.User;
+import edu.uoc.iartal.trekkingchallenge.objectsDB.FireBaseReferences;
+import edu.uoc.iartal.trekkingchallenge.objectsDB.Group;
+import edu.uoc.iartal.trekkingchallenge.objectsDB.GroupAdapter;
+import edu.uoc.iartal.trekkingchallenge.objectsDB.User;
 import edu.uoc.iartal.trekkingchallenge.R;
+
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 /**
  * Created by Ingrid Artal on 26/11/2017.
  */
 
-public class MyGroupsFragment extends Fragment{
+public class MyGroupsFragment extends Fragment implements SearchView.OnQueryTextListener{
 
     private List<Group> groups;
     private List<String> keys;
@@ -68,8 +69,16 @@ public class MyGroupsFragment extends Fragment{
         View rootView = inflater.inflate(R.layout.activity_list_my_groups,container,false);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.rvListMyGroups);
         recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
+        return rootView;
+    }
 
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        setHasOptionsMenu(true);
         DatabaseReference databaseUser = FirebaseDatabase.getInstance().getReference(FireBaseReferences.USER_REFERENCE);
         String currentMail = FirebaseAuth.getInstance().getCurrentUser().getEmail();
 
@@ -118,31 +127,24 @@ public class MyGroupsFragment extends Fragment{
         groupAdapter = new GroupAdapter(groups);
 
         recyclerView.setAdapter(groupAdapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-                    // Show database groups in recycler view
+
+        // Show database groups in recycler view
         progressDialog.show();
         databaseGroup.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 groups.removeAll(groups);
-                for (DataSnapshot groupSapshot:
+                for (DataSnapshot groupSapshot :
                         dataSnapshot.getChildren()) {
                     Group group = groupSapshot.getValue(Group.class);
-                    if (keys.contains(group.getIdGroup())){
+                    if (keys.contains(group.getIdGroup())) {
                         groups.add(group);
                     }
                     if (group.getUserAdmin().equals(currentUser)) {
-                        Log.i("GRUP", group.getIdGroup());
-                        Log.i("ADMIN", group.getUserAdmin() );
-                        Log.i("CURRENT",currentUser);
                         groupAdapter.setVisibility(true);
                     } else {
-                        Log.i("GRUP", group.getIdGroup());
-                        Log.i("ADMIN", group.getUserAdmin() );
-                        Log.i("CURRENT",currentUser);
                         groupAdapter.setVisibility(false);
                     }
-                    //groupAdapter.notifyDataSetChanged();
                 }
                 groupAdapter.notifyDataSetChanged();
                 progressDialog.dismiss();
@@ -154,6 +156,57 @@ public class MyGroupsFragment extends Fragment{
             }
         });
 
-        return rootView;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        inflater.inflate(R.menu.menu_list_groups, menu);
+
+        final MenuItem item = menu.findItem(R.id.action_search);
+        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
+        searchView.setOnQueryTextListener(this);
+
+        MenuItemCompat.setOnActionExpandListener(item,
+                new MenuItemCompat.OnActionExpandListener() {
+                    @Override
+                    public boolean onMenuItemActionCollapse(MenuItem item) {
+// Do something when collapsed
+                        groupAdapter.setFilter(groups);
+                        return true; // Return true to collapse action view
+                    }
+
+                    @Override
+                    public boolean onMenuItemActionExpand(MenuItem item) {
+// Do something when expanded
+                        return true; // Return true to expand action view
+                    }
+                });
+    }
+
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        final List<Group> filteredModelList = filter(groups, newText);
+
+        groupAdapter.setFilter(filteredModelList);
+        return true;
+    }
+
+    private List<Group> filter(List<Group> models, String query) {
+        query = query.toLowerCase();
+        final List<Group> filteredModelList = new ArrayList<>();
+        for (Group model : models) {
+            final String text = model.getIdGroup().toLowerCase();
+            if (text.contains(query)) {
+                filteredModelList.add(model);
+            }
+        }
+        return filteredModelList;
     }
 }

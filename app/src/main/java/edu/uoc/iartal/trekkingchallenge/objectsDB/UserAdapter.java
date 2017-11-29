@@ -1,4 +1,4 @@
-package edu.uoc.iartal.trekkingchallenge.ObjectsDB;
+package edu.uoc.iartal.trekkingchallenge.objectsDB;
 
 import android.content.Context;
 import android.support.v7.widget.CardView;
@@ -14,7 +14,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import edu.uoc.iartal.trekkingchallenge.R;
-import edu.uoc.iartal.trekkingchallenge.User.ListUsersActivity;
+import edu.uoc.iartal.trekkingchallenge.user.ListUsersActivity;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -209,14 +209,10 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
         }
     }
 
-    public void updateAdapter(ArrayList<User> list){
-        for (User user : list){
-          //  databaseUser.child(user.getIdUser()).child("groups").child(name).setValue("true");
-        }
-    }
-
-    public ArrayList<User> getSelectedUsers (){
-        return null;
+    public void setFilter(List<User> filterUsers) {
+        users = new ArrayList<>();
+        users.addAll(filterUsers);
+        notifyDataSetChanged();
     }
 
 }

@@ -4,9 +4,7 @@
     android:id="@+id/cardViewGroup"
     android:layout_width="match_parent"
     android:layout_height="125dp"
-    card_view:cardBackgroundColor="#EEEEEE"
-    card_view:cardCornerRadius="4dp"
-    card_view:cardElevation="4dp"
+
     card_view:cardUseCompatPadding="true">
 
     <RelativeLayout
@@ -17,8 +15,9 @@
         <ImageView
             android:id="@+id/cvUserPhoto"
             android:cropToPadding="true"
-            android:layout_width="wrap_content"
+            android:layout_width="40dp"
             android:layout_height="match_parent"
+            android:scaleType="fitStart"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
@@ -40,6 +39,13 @@
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@+id/cvUserPhoto"
                 android:layout_below="@+id/cvUserAlias"/>
+
+            <TextView
+                android:id="@+id/cvisPublic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/cvUserPhoto"
+                android:layout_below="@+id/cvUserName"/>
 
             <ImageButton
                 android:id="@+id/icDelGroupAdmin"

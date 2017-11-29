@@ -30,8 +30,9 @@
     <string name="descriptionField">Siusplau, introdueix una descripció</string>
     <string name="idField">Siusplau, introdueix un identificador</string>
     <string name="mailField">Siusplau, introdueix un correu electrònic</string>
+    <string name="mailFormat">El correu electrònic no és vàlid</string>
     <string name="passwordField">Siusplau, introdueix una contrasenya</string>
-    <string name="passwordTooShort">La contrasenya no pot ser inferior a 6 caràcters</string>
+    <string name="passwordTooShort">La contrasenya no és vàlida</string>
     <string name="samePass">Les contrasenyes no són iguals</string>
     <string name="registering">Registrant usuari...</string>
     <string name="logging">Iniciant sessió usuari...</string>
@@ -39,7 +40,7 @@
     <string name="successfulRegister">Usuari registrat correctament</string>
     <string name="failedRegister">No s\'ha pogut registrar l\'usuari, siusplau torna-ho a provar</string>
     <string name="failedLogin">No s\'ha pogut iniciar sessió, siusplau torna-ho a provar</string>
-    <string name="loginTitle">Inici de sessió</string>
+    <string name="loginTitle">Accedeix a TrekkingChallenge</string>
     <string name="newGroupTitle">Crea un grup</string>
     <string name="newTripTitle">Crea una excursió</string>
     <string name="nameTrip">Nom excursió</string>
@@ -47,7 +48,7 @@
     <string name="hintNameGroup">Introdueix el nom del grup</string>
     <string name="hintDescription">Introdueix una descripció</string>
     <string name="textInviteUsers">Convida a usuaris</string>
-    <string name="checkIsPublic">Públic?</string>
+    <string name="checkIsPublic">Grup públic</string>
 
     <string name="buttonMyHistory">El meu històric</string>
     <string name="actionEditProfile">Editar perfil</string>
@@ -59,6 +60,8 @@
     <string name="userAreaActivity">Àrea d\'usuari</string>
     <string name="editProfileActivity">Editar perfil</string>
     <string name="listGroupsActivity">Grups</string>
+    <string name="loginActivity">Inici de sessió</string>
+    <string name="accessActivity">Accés usuaris</string>
     <string name="addGroupActivity">Nou grup</string>
     <string name="joinGroup">Apunta\'t</string>
     <string name="leaveGroup">Abandona</string>
@@ -67,6 +70,7 @@
     <string name="deleteUserConfirmation">Estàs segur que vols eliminar el compte d\'usuari?</string>
     <string name="alertConfirm">Confirmació</string>
     <string name="confirmEditProfile">Perfil d\'usuari modificat</string>
+    <string name="loginButton">Accedir</string>
 
     <string name="actionSearch">Buscar</string>
     <string name="actionDone">Fet</string>
@@ -86,6 +90,10 @@
     <string name="tab_text_1">Tab 1</string>
     <string name="tab_text_2">Tab 2</string>
     <string name="tab_text_3">Tab 3</string>
+
+    <string name="publicGroup">Grup públic</string>
+    <string name="privateGroup">Grup privat</string>
+    <string name="title_activity_map">Map</string>
 
 
 </resources>

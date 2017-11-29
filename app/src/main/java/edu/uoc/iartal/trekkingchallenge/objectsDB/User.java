@@ -1,7 +1,6 @@
-package edu.uoc.iartal.trekkingchallenge.ObjectsDB;
+package edu.uoc.iartal.trekkingchallenge.objectsDB;
 
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 

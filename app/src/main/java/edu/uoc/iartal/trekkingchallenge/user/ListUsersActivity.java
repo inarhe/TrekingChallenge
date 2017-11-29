@@ -1,15 +1,16 @@
-package edu.uoc.iartal.trekkingchallenge.User;
+package edu.uoc.iartal.trekkingchallenge.user;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
@@ -25,16 +26,17 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.List;
 
-import edu.uoc.iartal.trekkingchallenge.Group.ListGroupsActivity;
-import edu.uoc.iartal.trekkingchallenge.ObjectsDB.FireBaseReferences;
-import edu.uoc.iartal.trekkingchallenge.ObjectsDB.Group;
-import edu.uoc.iartal.trekkingchallenge.ObjectsDB.User;
-import edu.uoc.iartal.trekkingchallenge.ObjectsDB.UserAdapter;
+import edu.uoc.iartal.trekkingchallenge.group.ListGroupsActivity;
+import edu.uoc.iartal.trekkingchallenge.objectsDB.FireBaseReferences;
+import edu.uoc.iartal.trekkingchallenge.objectsDB.Group;
+import edu.uoc.iartal.trekkingchallenge.objectsDB.User;
+import edu.uoc.iartal.trekkingchallenge.objectsDB.UserAdapter;
 import edu.uoc.iartal.trekkingchallenge.R;
 
-public class ListUsersActivity extends AppCompatActivity {
-    private RecyclerView.Adapter userAdapter;
+public class ListUsersActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
+    private UserAdapter userAdapter;
     private RecyclerView recyclerView;
     private ArrayList<User> users = new ArrayList<>();
     private ArrayList<User> selectedUsers = new ArrayList<>();
@@ -92,9 +94,30 @@ public class ListUsersActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.list_users_menu, menu);
-        return super.onCreateOptionsMenu(menu);
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.list_users_menu, menu);
+
+        final MenuItem item = menu.findItem(R.id.action_searchUser);
+        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
+        searchView.setOnQueryTextListener(this);
+
+        MenuItemCompat.setOnActionExpandListener(item,
+                new MenuItemCompat.OnActionExpandListener() {
+                    @Override
+                    public boolean onMenuItemActionCollapse(MenuItem item) {
+// Do something when collapsed
+                      //  userAdapter.setFil
+                        userAdapter.setFilter(users);
+                        return true; // Return true to collapse action view
+                    }
+
+                    @Override
+                    public boolean onMenuItemActionExpand(MenuItem item) {
+// Do something when expanded
+                        return true; // Return true to expand action view
+                    }
+                });
+        return true;
     }
 
     @Override
@@ -169,5 +192,30 @@ public class ListUsersActivity extends AppCompatActivity {
             Toast.makeText(ListUsersActivity.this,getString(R.string.usersInvited),Toast.LENGTH_SHORT).show();
             startActivity(new Intent(getApplicationContext(), ListGroupsActivity.class));
         }
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        final List<User> filteredModelList = filter(users, newText);
+
+        userAdapter.setFilter(filteredModelList);
+        return true;
+    }
+
+    private List<User> filter(List<User> models, String query) {
+        query = query.toLowerCase();
+        final List<User> filteredModelList = new ArrayList<>();
+        for (User model : models) {
+            final String text = model.getIdUser().toLowerCase();
+            if (text.contains(query)) {
+                filteredModelList.add(model);
+            }
+        }
+        return filteredModelList;
     }
 }

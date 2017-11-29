@@ -1,8 +1,7 @@
-package edu.uoc.iartal.trekkingchallenge.ObjectsDB;
+package edu.uoc.iartal.trekkingchallenge.objectsDB;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,10 +11,11 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import edu.uoc.iartal.trekkingchallenge.R;
-import edu.uoc.iartal.trekkingchallenge.Group.ShowGroupActivity;
+import edu.uoc.iartal.trekkingchallenge.group.ShowGroupActivity;
 
 /**
  * Created by Ingrid Artal on 12/11/2017.
@@ -23,12 +23,13 @@ import edu.uoc.iartal.trekkingchallenge.Group.ShowGroupActivity;
 public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.GroupViewHolder> {
 
     private List<Group> groups;
-    public Boolean isVisible = false;
+    private Boolean isVisible = false;
+    private ArrayList<Boolean> isVisibleArray = new ArrayList<>();
 
 
     // Object which represents a list item and save view references
     public static class GroupViewHolder extends RecyclerView.ViewHolder {
-        TextView textViewGroupName, textViewGroupDesc;
+        TextView textViewGroupName, textViewGroupDesc, textViewIsPublic;
         ImageView imageViewGroup;
         ImageButton imageButton;
 
@@ -37,6 +38,7 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.GroupViewHol
             super(view);
             textViewGroupName = (TextView) view.findViewById(R.id.cvUserAlias);
             textViewGroupDesc = (TextView) view.findViewById(R.id.cvUserName);
+            textViewIsPublic = (TextView) view.findViewById(R.id.cvisPublic);
             imageViewGroup = (ImageView) view.findViewById(R.id.cvUserPhoto);
             imageButton = (ImageButton) view.findViewById(R.id.icDelGroupAdmin);
 
@@ -65,12 +67,23 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.GroupViewHol
         viewHolder.textViewGroupName.setText(groups.get(position).getIdGroup());
         viewHolder.textViewGroupDesc.setText(groups.get(position).getGroupDescription());
         viewHolder.imageViewGroup.setImageResource(R.drawable.ic_people);
-        if(isVisible){
-            viewHolder.imageButton.setVisibility(View.VISIBLE);
-            Log.i("BUTTON", "visible");
+        if (groups.get(position).getIsPublic()) {
+            viewHolder.textViewIsPublic.setText(R.string.publicGroup);
         } else {
+            viewHolder.textViewIsPublic.setText(R.string.privateGroup);
+        }
+
+        Log.i("BEFORE", isVisible.toString());
+        if (isVisibleArray.isEmpty()){
             viewHolder.imageButton.setVisibility(View.GONE);
-            Log.i("BUTTON", "gone");
+        } else {
+            if(isVisibleArray.get(position)){
+                viewHolder.imageButton.setVisibility(View.VISIBLE);
+                Log.i("BUTTON", "visible");
+            } else {
+                viewHolder.imageButton.setVisibility(View.GONE);
+                Log.i("BUTTON", "gone");
+            }
         }
 
 
@@ -93,14 +106,21 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.GroupViewHol
 
     public void setVisibility(Boolean visible){
         if (visible){
-            isVisible = true;
+            isVisibleArray.add(true);
         } else {
-            isVisible = false;
+            isVisibleArray.add(false);
         }
-        Log.i("VISIBLE",isVisible.toString());
+     //   Log.i("VISIBLE",isVisible.toString());
 
-        this.notifyDataSetChanged();
+     //   this.notifyDataSetChanged();
     }
+
+    public void setFilter(List<Group> filterGroups) {
+        groups = new ArrayList<>();
+        groups.addAll(filterGroups);
+        notifyDataSetChanged();
+    }
+
 
 
 }

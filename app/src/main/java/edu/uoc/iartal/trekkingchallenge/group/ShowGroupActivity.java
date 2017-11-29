@@ -1,4 +1,4 @@
-package edu.uoc.iartal.trekkingchallenge.Group;
+package edu.uoc.iartal.trekkingchallenge.group;
 
 import android.content.Intent;
 import android.support.v7.app.ActionBar;
@@ -9,7 +9,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -20,11 +19,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 
-import edu.uoc.iartal.trekkingchallenge.CommonFunctionality;
-import edu.uoc.iartal.trekkingchallenge.ObjectsDB.FireBaseReferences;
-import edu.uoc.iartal.trekkingchallenge.ObjectsDB.Group;
-import edu.uoc.iartal.trekkingchallenge.ObjectsDB.User;
-import edu.uoc.iartal.trekkingchallenge.User.LoginActivity;
+import edu.uoc.iartal.trekkingchallenge.objectsDB.FireBaseReferences;
+import edu.uoc.iartal.trekkingchallenge.objectsDB.Group;
+import edu.uoc.iartal.trekkingchallenge.objectsDB.User;
+import edu.uoc.iartal.trekkingchallenge.user.LoginActivity;
 import edu.uoc.iartal.trekkingchallenge.R;
 
 public class ShowGroupActivity extends AppCompatActivity {

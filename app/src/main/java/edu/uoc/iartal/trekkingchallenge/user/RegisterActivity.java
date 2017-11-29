@@ -1,13 +1,17 @@
-package edu.uoc.iartal.trekkingchallenge.User;
+package edu.uoc.iartal.trekkingchallenge.user;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.TextInputLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -15,17 +19,15 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import edu.uoc.iartal.trekkingchallenge.MainActivity;
-import edu.uoc.iartal.trekkingchallenge.ObjectsDB.FireBaseReferences;
-import edu.uoc.iartal.trekkingchallenge.ObjectsDB.User;
+import edu.uoc.iartal.trekkingchallenge.objectsDB.FireBaseReferences;
+import edu.uoc.iartal.trekkingchallenge.objectsDB.User;
 import edu.uoc.iartal.trekkingchallenge.R;
 
 /**
@@ -33,20 +35,43 @@ import edu.uoc.iartal.trekkingchallenge.R;
  */
 
 public class RegisterActivity extends AppCompatActivity {
+    private static final String EMAIL_PATTERN = "^[a-zA-Z0-9#_~!$&'()*+,;=:.\"(),:;<>@\\[\\]\\\\]+@[a-zA-Z0-9-]+(\\.[a-zA-Z0-9-]+)*$";
+
     private EditText editTextUserId, editTextUserName, editTextUserMail, editTextUserPass, editTextPassRepeat;
     private String idUser, userName, userMail, userPassword;
     private ProgressDialog progressDialog;
     private FirebaseAuth firebaseAuth;
     private DatabaseReference databaseUser;
+    private Pattern pattern;
+    private Matcher matcher;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.registerToolbar);
+        setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setTitle(getString(R.string.registerTitle));
+
+        pattern = Pattern.compile(EMAIL_PATTERN);
+
         // Get Firebase authentication instance and database user reference instance
         firebaseAuth = FirebaseAuth.getInstance();
         databaseUser = FirebaseDatabase.getInstance().getReference(FireBaseReferences.USER_REFERENCE);
         progressDialog = new ProgressDialog(this);
+
+        TextInputLayout userIdWrapper = (TextInputLayout) findViewById(R.id.userIdWrapper);
+        TextInputLayout userNameWrapper = (TextInputLayout) findViewById(R.id.userNameWrapper);
+        TextInputLayout userMailWrapper = (TextInputLayout) findViewById(R.id.userMailWrapper);
+        TextInputLayout userPassWrapper = (TextInputLayout) findViewById(R.id.userPassWrapper);
+        TextInputLayout userRepPassWrapper = (TextInputLayout) findViewById(R.id.userRepPassWrapper);
+        userIdWrapper.setHint(getString(R.string.hintIdUser));
+        userNameWrapper.setHint(getString(R.string.hintNameUser));
+        userMailWrapper.setHint(getString(R.string.hintMailUser));
+        userPassWrapper.setHint(getString(R.string.hintPassUser));
+        userRepPassWrapper.setHint(getString(R.string.hintPassUser));
 
         editTextUserId = (EditText) findViewById(R.id.editTextIdUser);
         editTextUserName = (EditText) findViewById(R.id.editTextUserName);
@@ -56,6 +81,8 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     public void registerUser (View view){
+        hideKeyboard();
+
         // Check input parameters and register user when accept button is clicked
         idUser = editTextUserId.getText().toString().trim();
         userName = editTextUserName.getText().toString().trim();
@@ -77,12 +104,15 @@ public class RegisterActivity extends AppCompatActivity {
         if(TextUtils.isEmpty(userMail)) {
             Toast.makeText(this, getString(R.string.mailField), Toast.LENGTH_LONG).show();
             return;
+        } else if (!validateEmail(userMail)){
+            Toast.makeText(this, getString(R.string.mailFormat), Toast.LENGTH_LONG).show();
+            return;
         }
 
         if(TextUtils.isEmpty(userPassword)) {
             Toast.makeText(this, getString(R.string.passwordField), Toast.LENGTH_LONG).show();
             return;
-        } else if (userPassword.length() < 6){
+        } else if (!validatePassword(userPassword)){
             Toast.makeText(this, getString(R.string.passwordTooShort), Toast.LENGTH_LONG).show();
             return;
         }
@@ -144,5 +174,22 @@ public class RegisterActivity extends AppCompatActivity {
                         }
                     }
                 });
+    }
+
+    private void hideKeyboard() {
+        View view = getCurrentFocus();
+        if (view != null) {
+            ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE)).
+                    hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        }
+    }
+
+    public boolean validateEmail(String email) {
+        matcher = pattern.matcher(email);
+        return matcher.matches();
+    }
+
+    public boolean validatePassword(String password) {
+        return password.length() > 5;
     }
 }

@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cardViewRoute"
+    android:layout_width="match_parent"
+    android:layout_height="165dp"
+    card_view:cardUseCompatPadding="true">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="8dp">
+
+        <ImageView
+            android:id="@+id/cvRoutePhoto"
+            android:cropToPadding="true"
+            android:layout_width="160dp"
+            android:layout_height="150dp"
+            android:scaleType="fitXY"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginRight="8dp"
+            android:layout_marginEnd="8dp"/>
+
+            <TextView
+                android:id="@+id/cvRouteName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/cvRoutePhoto"
+                android:layout_toEndOf="@+id/cvRoutePhoto"
+                android:layout_alignParentTop="true"
+                android:textStyle="bold"
+                android:textSize="20sp"/>
+
+            <TextView
+                android:id="@+id/cvRegion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/cvRoutePhoto"
+                android:layout_toEndOf="@+id/cvRoutePhoto"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                android:layout_below="@+id/cvRouteName"/>
+
+            <ImageView
+                android:id="@+id/cvIconType"
+                android:cropToPadding="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="4dp"
+                android:layout_marginEnd="4dp"
+                android:tint="@color/colorAccent"
+                android:layout_toRightOf="@+id/cvRoutePhoto"
+                android:layout_toEndOf="@+id/cvRoutePhoto"
+                android:layout_below="@+id/cvRegion" />
+
+            <TextView
+                android:id="@+id/cvDistance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/cvIconType"
+                android:layout_toEndOf="@+id/cvIconType"
+                android:layout_below="@+id/cvRegion"
+                android:gravity="center"
+                android:layout_alignTop="@+id/cvIconType"
+                android:layout_alignBottom="@+id/cvIconType" />
+
+            <ImageView
+                android:id="@+id/cvIconTime"
+                android:src="@drawable/ic_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:tint="@color/colorAccent"
+                android:layout_marginRight="4dp"
+                android:layout_marginEnd="4dp"
+                android:layout_toRightOf="@+id/cvRoutePhoto"
+                android:layout_toEndOf="@+id/cvRoutePhoto"
+                android:layout_below="@+id/cvIconType" />
+
+            <TextView
+                android:id="@+id/cvTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/cvIconTime"
+                android:layout_toEndOf="@+id/cvIconTime"
+                android:layout_below="@+id/cvDistance"
+                android:gravity="center"
+                android:layout_alignTop="@+id/cvIconTime"
+                android:layout_alignBottom="@+id/cvIconTime"/>
+
+            <ImageView
+                android:id="@+id/cvIconDifficult"
+                android:src="@drawable/ic_difficult"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:tint="@color/colorAccent"
+                android:layout_marginRight="4dp"
+                android:layout_marginEnd="4dp"
+                android:layout_toRightOf="@+id/cvRoutePhoto"
+                android:layout_toEndOf="@+id/cvRoutePhoto"
+                android:layout_below="@+id/cvIconTime" />
+
+            <TextView
+                android:id="@+id/cvDifficult"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/cvIconDifficult"
+                android:layout_toEndOf="@+id/cvIconDifficult"
+                android:layout_below="@+id/cvTime"
+                android:gravity="center"
+                android:layout_alignTop="@+id/cvIconDifficult"
+                android:layout_alignBottom="@+id/cvIconDifficult"/>
+        </RelativeLayout>
+
+</android.support.v7.widget.CardView>
+
+
+

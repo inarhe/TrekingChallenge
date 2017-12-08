@@ -59,7 +59,9 @@
     <string name="userAccountDeleted">Compte esborrat</string>
     <string name="userAreaActivity">Àrea d\'usuari</string>
     <string name="editProfileActivity">Editar perfil</string>
+    <string name="mapActivity">Mapa de rutes</string>
     <string name="listGroupsActivity">Grups</string>
+    <string name="listRoutesActivity">Llista de rutes</string>
     <string name="loginActivity">Inici de sessió</string>
     <string name="accessActivity">Accés usuaris</string>
     <string name="addGroupActivity">Nou grup</string>
@@ -94,6 +96,44 @@
     <string name="publicGroup">Grup públic</string>
     <string name="privateGroup">Grup privat</string>
     <string name="title_activity_map">Map</string>
+
+    <string name="action_gallery">Galeria de fotos</string>
+    <string name="action_trip">Crea una excursió</string>
+    <string name="action_chall">Crea un repte</string>
+    <string name="action_opinion">Opinions</string>
+    <string name="detailsButton">Informació detallada</string>
+    <string name="tracksButton">Recorregut i perfil de la ruta</string>
+    <string name="region">Comarca:</string>
+    <string name="township">Municipi:</string>
+
+    <string name="infoDetail">Informació detallada</string>
+    <string name="infoMeteo">Meteorologia</string>
+
+    <string name="advancedSearch">Cerca avançada</string>
+    <string name="difficult">Difícil</string>
+    <string name="moderate">Moderat</string>
+    <string name="easy">Fàcil</string>
+    <string name="all">Qualsevol</string>
+    <string name="difficultRoute">Dificultat ruta</string>
+    <string name="lessKm"> &lt;10km</string>
+    <string name="middleKm"> 10km/15km</string>
+    <string name="highKm"> &gt;15km</string>
+    <string name="distanceRoute">Distància ruta</string>
+    <string name="typeRoute">Tipus de recorregut</string>
+    <string name="circular">Circular</string>
+    <string name="goBack">Anada/Tornada</string>
+    <string name="search">Buscar</string>
+
+    <string name="photoGallery">Galeria de fotos</string>
+
+
+    <string name="listTripsActivity">Excursions</string>
+    <string name="hintNameTrip">Nom de l\'excursió</string>
+    <string name="hintDescTrip">Descripció</string>
+    <string name="hintPlaceTrip">Lloc de trobada</string>
+    <string name="addTripActivity">Nova excursió</string>
+    <string name="tripIsPublic">Excursió pública</string>
+    <string name="dateTrip">Data excursió</string>
 
 
 </resources>

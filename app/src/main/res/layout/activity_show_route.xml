@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="edu.uoc.iartal.trekkingchallenge.ShowRouteActivity">
+
+    <include android:id="@+id/showRouteToolbar"
+        layout="@layout/toolbar" />
+
+    <ImageView
+        android:id="@+id/ivRoute"
+        android:layout_width="match_parent"
+        android:scaleType="fitCenter"
+        android:cropToPadding="true"
+        android:layout_height="200dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="60dp" />
+
+    <View
+        android:id="@+id/viewDiv1"
+        style="@style/Divider"
+        android:layout_below="@id/ivRoute" />
+
+    <ImageView
+        android:id="@+id/icCalendar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_done"
+        android:layout_below="@id/viewDiv1"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginStart="25dp"
+        android:layout_marginRight="4dp"
+        android:layout_marginEnd="4dp"/>
+
+    <TextView
+        android:id="@+id/tvCalenadar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_toRightOf="@+id/icCalendar"
+        android:layout_toEndOf="@+id/icCalendar"
+        android:layout_below="@id/viewDiv1"
+        android:layout_alignTop="@+id/icCalendar"
+        android:layout_alignBottom="@+id/icCalendar"/>
+    <View
+        android:id="@+id/viewDivMiddle"
+        style="@style/Divider"
+        android:layout_marginTop="10dp"
+        android:layout_below="@id/icCalendar" />
+
+    <TextView
+        android:id="@+id/tvTownShip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginStart="25dp"
+        android:layout_marginRight="4dp"
+        android:layout_marginEnd="4dp"
+        android:layout_below="@id/viewDivMiddle"/>
+
+    <TextView
+        android:id="@+id/tvRegion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_below="@id/tvTownShip"
+        android:layout_alignLeft="@+id/tvTownShip"
+        android:layout_alignStart="@+id/tvTownShip"/>
+
+    <View
+        android:id="@+id/viewDiv2"
+        style="@style/Divider"
+        android:layout_marginTop="10dp"
+        android:layout_below="@id/tvRegion" />
+
+    <ImageView
+        android:id="@+id/icType"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:layout_marginRight="4dp"
+        android:layout_marginEnd="4dp"
+        android:layout_below="@id/viewDiv2"
+        android:layout_marginLeft="35dp"
+        android:layout_marginStart="35dp"
+        app:srcCompat="@drawable/ic_circular" />
+
+    <TextView
+        android:id="@+id/tvType"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_below="@id/viewDiv2"
+        android:layout_toRightOf="@+id/icType"
+        android:layout_toEndOf="@+id/icType"
+        android:layout_alignTop="@+id/icType"
+        android:layout_alignBottom="@+id/icType" />
+
+    <ImageView
+        android:id="@+id/icTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:layout_marginRight="4dp"
+        android:layout_marginEnd="4dp"
+        android:layout_below="@id/icType"
+        android:layout_alignLeft="@+id/icType"
+        android:layout_alignStart="@+id/icType"
+        app:srcCompat="@drawable/ic_time" />
+
+    <TextView
+        android:id="@+id/tvTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_below="@id/tvType"
+        android:layout_toRightOf="@+id/icTime"
+        android:layout_toEndOf="@+id/icTime"
+        android:layout_alignTop="@+id/icTime"
+        android:layout_alignBottom="@+id/icTime" />
+
+    <ImageView
+        android:id="@+id/icAscent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/icType"
+        android:layout_marginRight="4dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginStart="25dp"
+        android:layout_below="@id/viewDiv2"
+        android:layout_toRightOf="@+id/tvType"
+        android:layout_toEndOf="@+id/tvType"
+        app:srcCompat="@drawable/ic_ascent" />
+
+    <TextView
+        android:id="@+id/tvAscent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_below="@id/viewDiv2"
+        android:layout_toRightOf="@+id/icAscent"
+        android:layout_toEndOf="@+id/icAscent"
+        android:layout_alignTop="@+id/icAscent"
+        android:layout_alignBottom="@+id/icAscent" />
+
+    <ImageView
+        android:id="@+id/icDecline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/icTime"
+        android:layout_alignLeft="@+id/icAscent"
+        android:layout_alignStart="@+id/icAscent"
+        android:layout_marginRight="4dp"
+        android:layout_marginEnd="4dp"
+        android:layout_below="@id/icAscent"
+        android:layout_toRightOf="@+id/tvTime"
+        android:layout_toEndOf="@+id/tvTime"
+        app:srcCompat="@drawable/ic_decline" />
+
+    <TextView
+        android:id="@+id/tvDecline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_below="@id/tvAscent"
+        android:layout_toRightOf="@+id/icDecline"
+        android:layout_toEndOf="@+id/icDecline"
+        android:layout_alignTop="@+id/icDecline"
+        android:layout_alignBottom="@+id/icDecline" />
+
+    <ImageView
+        android:id="@+id/icSeason"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/icType"
+        android:layout_marginRight="4dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginStart="25dp"
+        android:layout_below="@id/viewDiv2"
+        android:layout_toRightOf="@+id/tvAscent"
+        android:layout_toEndOf="@+id/tvAscent"
+        app:srcCompat="@drawable/ic_spring" />
+
+    <TextView
+        android:id="@+id/tvSeason"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_below="@id/viewDiv2"
+        android:layout_toRightOf="@+id/icSeason"
+        android:layout_toEndOf="@+id/icSeason"
+        android:layout_alignTop="@+id/icSeason"
+        android:layout_alignBottom="@+id/icSeason" />
+
+    <ImageView
+        android:id="@+id/icDifficult"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/icDecline"
+        android:layout_alignLeft="@+id/icSeason"
+        android:layout_alignStart="@+id/icSeason"
+        android:layout_marginRight="4dp"
+        android:layout_marginEnd="4dp"
+        android:layout_below="@id/icSeason"
+        android:layout_toRightOf="@+id/tvDecline"
+        android:layout_toEndOf="@+id/tvDecline"
+        app:srcCompat="@drawable/ic_difficult" />
+
+    <TextView
+        android:id="@+id/tvDifficult"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_below="@id/tvSeason"
+        android:layout_toRightOf="@+id/icDifficult"
+        android:layout_toEndOf="@+id/icDifficult"
+        android:layout_alignTop="@+id/icDifficult"
+        android:layout_alignBottom="@+id/icDifficult" />
+
+    <View
+        android:id="@+id/viewDiv3"
+        style="@style/Divider"
+        android:layout_marginTop="12dp"
+        android:layout_below="@id/icDifficult" />
+
+    <Button
+        android:id="@+id/bDetails"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_below="@id/viewDiv3"
+        android:layout_marginTop="25dp"
+        android:drawableEnd="@drawable/ic_next"
+        android:drawableLeft="@drawable/ic_info"
+        android:drawableRight="@drawable/ic_next"
+        android:drawableStart="@drawable/ic_info"
+        android:gravity="center"
+        android:onClick="showDetails"
+        android:text="@string/detailsButton" />
+
+    <Button
+        android:id="@+id/bTrack"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_below="@id/bDetails"
+        android:drawableRight="@drawable/ic_next"
+        android:drawableEnd="@drawable/ic_next"
+        android:drawableStart="@drawable/ic_track"
+        android:drawableLeft="@drawable/ic_track"
+        android:text="@string/tracksButton"
+        android:gravity="center"/>
+
+</RelativeLayout>

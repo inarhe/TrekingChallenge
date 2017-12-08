@@ -1,27 +1,81 @@
 package edu.uoc.iartal.trekkingchallenge;
 
+import android.content.Context;
+import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
-
+import android.support.v7.app.ActionBar;
+import android.support.v7.widget.Toolbar;
+import android.util.AttributeSet;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.support.v7.app.AppCompatActivity;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
-public class MapActivity extends FragmentActivity implements OnMapReadyCallback {
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import edu.uoc.iartal.trekkingchallenge.objectsDB.FireBaseReferences;
+import edu.uoc.iartal.trekkingchallenge.objectsDB.Group;
+import edu.uoc.iartal.trekkingchallenge.objectsDB.Route;
+import edu.uoc.iartal.trekkingchallenge.user.LoginActivity;
+
+public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
+    private FirebaseAuth firebaseAuth;
+    private DatabaseReference databaseRoute;
+    private List<Route> routes;
+
+    public MapActivity() {
+
+    }
+
+    public static MapActivity newInstance() {
+        return new MapActivity();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.mapToolbar);
+        setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setTitle(R.string.mapActivity);
+
+
+        firebaseAuth = FirebaseAuth.getInstance();
+
+        if (firebaseAuth.getCurrentUser() == null) {
+            // If user isn't logged, start login activity
+            startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+            finish();
+        }
     }
 
 
@@ -38,11 +92,67 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
+        UiSettings uiSettings = mMap.getUiSettings();
+        uiSettings.setRotateGesturesEnabled(false);
+        uiSettings.setTiltGesturesEnabled(false);
+
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 
         // Add a marker in Barcelona and move the camera
-        LatLng bcn = new LatLng(41.38, 2.16);
+     /*   LatLng bcn = new LatLng(41.49, 1.28);
+
         mMap.addMarker(new MarkerOptions().position(bcn).title("Marker in Barcelona"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(bcn));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(bcn));*/
+
+
+        loadMarkRoutes();
+        // Create a LatLngBounds that includes Australia.
+        centerMap();
+    }
+
+    private void centerMap(){
+        LatLngBounds catalunya = new LatLngBounds(
+                new LatLng(40.6363, 0.1968), new LatLng(42.4832, 3.2876));
+
+        mMap.setLatLngBoundsForCameraTarget(catalunya);
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(catalunya.getCenter(), 8));
+
+    }
+
+    private void loadMarkRoutes(){
+
+        databaseRoute = FirebaseDatabase.getInstance().getReference(FireBaseReferences.ROUTE_REFERENCE);
+        routes = new ArrayList<>();
+
+        databaseRoute.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                routes.removeAll(routes);
+                for (DataSnapshot routeSnapshot:
+                        dataSnapshot.getChildren()) {
+                    Route route = routeSnapshot.getValue(Route.class);
+                        routes.add(route);
+                }
+
+                for (Route route : routes) {
+                    mMap.addMarker(new MarkerOptions().position(new LatLng(route.getLat(), route.getLng())).title(route.getName()));
+                    Log.i("lat",Double.toString(route.getLat())+ Double.toString(route.getLng()));
+
+                }
+                //    LatLng bcn = new LatLng(41.49, 1.28);
+              //    mMap.addMarker(new MarkerOptions().position(bcn).title("Marker in Barcelona"));
+                //mMap.moveCamera(CameraUpdateFactory.newLatLng(bcn));
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(41.49, 1.28)));
+                mMap.moveCamera(CameraUpdateFactory.zoomTo(5.0f));
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                //TO-DO
+            }
+        });
+
     }
 }
+
+

@@ -61,7 +61,7 @@ public class AllGroupsFragment extends Fragment implements SearchView.OnQueryTex
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.activity_list_all_groups,container,false);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.rvListAllGroups);
-        recyclerView.setHasFixedSize(true);
+     //   recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         return rootView;
     }
@@ -85,6 +85,7 @@ public class AllGroupsFragment extends Fragment implements SearchView.OnQueryTex
         DatabaseReference databaseGroup = FirebaseDatabase.getInstance().getReference(FireBaseReferences.GROUP_REFERENCE);
         groups = new ArrayList<>();
         groupAdapter = new GroupAdapter(groups);
+
         recyclerView.setAdapter(groupAdapter);
 
         // Show database groups in recycler view

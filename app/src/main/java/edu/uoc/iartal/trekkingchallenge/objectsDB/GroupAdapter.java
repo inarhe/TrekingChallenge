@@ -22,9 +22,9 @@ import edu.uoc.iartal.trekkingchallenge.group.ShowGroupActivity;
  */
 public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.GroupViewHolder> {
 
-    private List<Group> groups;
-    private Boolean isVisible = false;
-    private ArrayList<Boolean> isVisibleArray = new ArrayList<>();
+    List<Group> groups;
+    Boolean isVisible = false;
+    ArrayList<Boolean> isVisibleArray = new ArrayList<>();
 
 
     // Object which represents a list item and save view references
@@ -73,16 +73,13 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.GroupViewHol
             viewHolder.textViewIsPublic.setText(R.string.privateGroup);
         }
 
-        Log.i("BEFORE", isVisible.toString());
         if (isVisibleArray.isEmpty()){
             viewHolder.imageButton.setVisibility(View.GONE);
         } else {
             if(isVisibleArray.get(position)){
                 viewHolder.imageButton.setVisibility(View.VISIBLE);
-                Log.i("BUTTON", "visible");
             } else {
                 viewHolder.imageButton.setVisibility(View.GONE);
-                Log.i("BUTTON", "gone");
             }
         }
 

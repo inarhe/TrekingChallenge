@@ -43,6 +43,7 @@ public class ListUsersActivity extends AppCompatActivity implements SearchView.O
     private String idGroup, groupName;
     private Toolbar toolbar;
     private DatabaseReference databaseUser, databaseGroup;
+    private List<User> filteredModelList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -133,10 +134,24 @@ public class ListUsersActivity extends AppCompatActivity implements SearchView.O
     }
 
     public void prepareSelection (View view, int position){
+        Log.i("filter", filteredModelList.toString());
+        Log.i("users", users.toString());
         if (((CheckBox)view).isChecked()){
-            selectedUsers.add(users.get(position));
+            if (!filteredModelList.isEmpty()){
+                selectedUsers.add(filteredModelList.get(position));
+                Log.i("filter", filteredModelList.get(position).toString());
+                Log.i("sel", selectedUsers.toString());
+            } else {
+                selectedUsers.add(users.get(position));
+                Log.i("us", users.toString());
+            }
+
         } else {
-            selectedUsers.remove(users.get(position));
+            if (!filteredModelList.isEmpty()){
+                selectedUsers.remove(filteredModelList.get(position));
+            } else {
+                selectedUsers.remove(users.get(position));
+            }
         }
     }
 
@@ -209,7 +224,7 @@ public class ListUsersActivity extends AppCompatActivity implements SearchView.O
 
     private List<User> filter(List<User> models, String query) {
         query = query.toLowerCase();
-        final List<User> filteredModelList = new ArrayList<>();
+        filteredModelList = new ArrayList<>();
         for (User model : models) {
             final String text = model.getIdUser().toLowerCase();
             if (text.contains(query)) {

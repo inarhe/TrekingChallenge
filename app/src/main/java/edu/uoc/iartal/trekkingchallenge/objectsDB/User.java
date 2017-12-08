@@ -12,6 +12,7 @@ import java.util.Map;
 public class User {
     public String idUser, userName, userMail, userPassword;
     public Map<String, String> groups = new HashMap<>();
+    public Map<String, String> trips = new HashMap<>();
 
     public User() {
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
@@ -61,6 +62,10 @@ public class User {
 
     public Map<String, String> getGroups() {
         return this.groups;
+    }
+
+    public Map<String, String> getTrips() {
+        return this.trips;
     }
 
 }

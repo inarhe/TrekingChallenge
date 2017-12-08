@@ -9,6 +9,7 @@ import android.view.View;
 import com.google.firebase.auth.FirebaseAuth;
 
 import edu.uoc.iartal.trekkingchallenge.group.ListGroupsActivity;
+import edu.uoc.iartal.trekkingchallenge.trip.ListTripsActivity;
 import edu.uoc.iartal.trekkingchallenge.user.AccessActivity;
 import edu.uoc.iartal.trekkingchallenge.user.UserAreaActivity;
 
@@ -41,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
     public void searchActivity (View view){
         // Main search functionality. If user isn't logged, access is forbidden and opens user access activity
         if (firebaseAuth.getCurrentUser()!=null) {
-            startActivity(new Intent(getApplicationContext(),MainActivity.class));
+            startActivity(new Intent(getApplicationContext(),ListRoutesActivity.class));
         } else {
             startActivity(new Intent(getApplicationContext(), AccessActivity.class));
         }
@@ -50,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
     public void tripActivity (View view){
         // Main trip functionality. If user isn't logged, access is forbidden and opens user access activity
         if (firebaseAuth.getCurrentUser()!=null) {
-            startActivity(new Intent(getApplicationContext(),MainActivity.class));
+            startActivity(new Intent(getApplicationContext(),ListTripsActivity.class));
         } else {
             startActivity(new Intent(getApplicationContext(), AccessActivity.class));
         }

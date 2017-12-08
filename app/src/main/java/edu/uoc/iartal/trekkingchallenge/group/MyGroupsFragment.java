@@ -48,7 +48,7 @@ public class MyGroupsFragment extends Fragment implements SearchView.OnQueryText
     private GroupAdapter groupAdapter;
     private ProgressDialog progressDialog;
     private RecyclerView recyclerView;
-    private String currentUser;
+    private String currentUser, currentMail;
     private ImageButton imageButton;
 
     public MyGroupsFragment(){
@@ -71,6 +71,42 @@ public class MyGroupsFragment extends Fragment implements SearchView.OnQueryText
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
+        DatabaseReference databaseUser = FirebaseDatabase.getInstance().getReference(FireBaseReferences.USER_REFERENCE);
+        currentMail = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+        keys = new ArrayList<>();
+
+
+        groupAdapter = new GroupAdapter(groups);
+
+        recyclerView.setAdapter(groupAdapter);
+
+        // Show database groups in recycler view
+        progressDialog.show();
+        databaseUser.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                keys.removeAll(keys);
+                for (DataSnapshot groupSapshot :
+                        dataSnapshot.getChildren()) {
+                    User user = groupSapshot.getValue(User.class);
+                    if (user.getUserMail().equals(currentMail)) {
+                        currentUser = user.getIdUser();
+                        for (String key : user.getGroups().keySet()) {
+                            keys.add(key);
+                        }
+                    }
+
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                //TO-DO
+            }
+        });
+
+
+
         return rootView;
     }
 
@@ -79,48 +115,6 @@ public class MyGroupsFragment extends Fragment implements SearchView.OnQueryText
         super.onViewCreated(view, savedInstanceState);
 
         setHasOptionsMenu(true);
-        DatabaseReference databaseUser = FirebaseDatabase.getInstance().getReference(FireBaseReferences.USER_REFERENCE);
-        String currentMail = FirebaseAuth.getInstance().getCurrentUser().getEmail();
-
-        Query query = databaseUser.orderByChild(FireBaseReferences.USERMAIL_REFERENCE).equalTo(currentMail);
-        progressDialog.show();
-        keys = new ArrayList<>();
-        // Query database to get user information
-        query.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Map<String, String> userGroups;
-                userGroups = dataSnapshot.getValue(User.class).getGroups();
-                currentUser = dataSnapshot.getValue(User.class).getIdUser();
-                keys.removeAll(keys);
-                for (String key : userGroups.keySet()) {
-                    keys.add(key);
-                }
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                //TO-DO
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-                //TO-DO
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-                //TO-DO
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                // Getting Post failed, log a message
-                Log.w("ERROR", "loadUser:onCancelled", databaseError.toException());
-                // ...
-            }
-        });
 
         DatabaseReference databaseGroup = FirebaseDatabase.getInstance().getReference(FireBaseReferences.GROUP_REFERENCE);
         groups = new ArrayList<>();
@@ -139,12 +133,14 @@ public class MyGroupsFragment extends Fragment implements SearchView.OnQueryText
                     Group group = groupSapshot.getValue(Group.class);
                     if (keys.contains(group.getIdGroup())) {
                         groups.add(group);
+
+                        if (group.getUserAdmin().equals(currentUser)) {
+                            groupAdapter.setVisibility(true);
+                        } else {
+                            groupAdapter.setVisibility(false);
+                        }
                     }
-                    if (group.getUserAdmin().equals(currentUser)) {
-                        groupAdapter.setVisibility(true);
-                    } else {
-                        groupAdapter.setVisibility(false);
-                    }
+
                 }
                 groupAdapter.notifyDataSetChanged();
                 progressDialog.dismiss();

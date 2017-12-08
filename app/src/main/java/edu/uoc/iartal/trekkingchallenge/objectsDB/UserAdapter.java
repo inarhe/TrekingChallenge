@@ -55,6 +55,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
 
         @Override
         public void onClick(View v) {
+
             listUsersActivity.prepareSelection(v, getAdapterPosition());
         }
     }
@@ -88,110 +89,8 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
         viewHolder.textViewUserName.setText(users.get(position).getUserName());
         viewHolder.imageViewUser.setImageResource(R.drawable.ic_person);
 
-    //    if(!listUsersActivity.isInActionMode){
-      //      viewHolder.checkBox.setVisibility(View.GONE);
-       // } else {
-            viewHolder.checkBox.setVisibility(View.VISIBLE);
-            viewHolder.checkBox.setChecked(false);
-       // }
-
-
-
-        // When an item is clicked starts show detail group activity
-      /*  viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (v.isSelected()) {
-
-                  //  User user = users.get(position);
-
-                 //   addItemIdToSelectedList(user.getIdUser());
-                } else {
-
-                    User user = users.get(position);
-                    addItemIdToSelectedList(user.getIdUser());
-                }*/
-                //String name = Integer.toString(R.string.listUsersActivity);
-                //Log.i("LISTNAME", name);
-                //User user = users.get(position);
-                //databaseUser.child(user.getIdUser()).child("groups").child(name).setValue("true");
-
-             /*   Query query = databaseGroup.orderByChild(FireBaseReferences.GROUPNAME_REFERENCE).equalTo(name);
-
-                query.addChildEventListener(new ChildEventListener() {
-                    @Override
-                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                        Group group = dataSnapshot.getValue(Group.class);
-
-                        databaseGroup.child(group.getIdGroup()).child(FireBaseReferences.MEMBERSGROUP_REFERENCE).child(user.getAlias()).setValue("true");
-
-                        databaseUser.child(user.getIdUser()).child("groups").child(name).setValue("true");
-                    }
-
-                    @Override
-                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                        //TO-DO
-                    }
-
-                    @Override
-                    public void onChildRemoved(DataSnapshot dataSnapshot) {
-                        //TO-DO
-                    }
-
-                    @Override
-                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-                        //TO-DO
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                        //TO-DO
-                    }
-                });
-              /*  Query query = databaseUser.orderByChild(FireBaseReferences.ALIAS_REFERENCE).equalTo(users.get(position).getAlias());
-
-                // Query database to get user information
-                query.addChildEventListener(new ChildEventListener() {
-                    @Override
-                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                        User user = dataSnapshot.getValue(User.class);
-                        databaseGroup.child(groupKey).child(FireBaseReferences.MEMBERSGROUP_REFERENCE).child(user.getAlias()).setValue("true");
-
-                        databaseUser.child(user.getIdUser()).child("groups").child(name).setValue("true");
-                    }
-
-                    @Override
-                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                        //TO-DO
-                    }
-
-                    @Override
-                    public void onChildRemoved(DataSnapshot dataSnapshot) {
-                        //TO-DO
-                    }
-
-                    @Override
-                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-                        //TO-DO
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                        //TO-DO
-                    }
-                });*/
-              //  Context context = v.getContext();
-
-                /*Intent intent = new Intent(context, ShowGroupActivity.class);
-                intent.putExtra("groupName", users.get(position).getGroupName());
-                intent.putExtra("groupDescription", users.get(position).getGroupDescription());
-                intent.putExtra("members", users.get(position).getNumberOfMembers());
-                intent.putExtra("groupKey", users.get(position).getIdGroup());
-
-                context.startActivity(intent);*/
-
-       //     }
-       // });
+        viewHolder.checkBox.setVisibility(View.VISIBLE);
+        viewHolder.checkBox.setChecked(false);
     }
 
     private void addItemIdToSelectedList(String itemId) {

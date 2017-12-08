@@ -4,7 +4,6 @@
     android:id="@+id/cardViewGroup"
     android:layout_width="match_parent"
     android:layout_height="125dp"
-
     card_view:cardUseCompatPadding="true">
 
     <RelativeLayout

@@ -11,7 +11,7 @@ import java.io.Serializable;
 
 // Route object class
 public class Route implements Parcelable {
-    private String idRoute, name, headerPhoto, season, time, trackLink, meteo;
+    private String idRoute, name, headerPhoto, trackPhoto, profilePhoto, season, time, trackLink, meteo;
     private String type, difficult, distance, description, decline, ascent, region, township;
     private Double lng, lat;
 
@@ -19,12 +19,14 @@ public class Route implements Parcelable {
 
     }
 
-    public Route(String idRoute, String name, String headerPhoto, String season, String time, String trackLink, String meteo, String type,
-                 Double lng, Double lat, String distance, String difficult, String description, String decline, String ascent, String region,
-                 String township) {
+    public Route(String idRoute, String name, String headerPhoto, String trackPhoto, String profilePhoto, String season, String time,
+                 String trackLink, String meteo, String type, Double lng, Double lat, String distance, String difficult, String description,
+                 String decline, String ascent, String region, String township) {
         this.idRoute = idRoute;
         this.name = name;
         this.headerPhoto = headerPhoto;
+        this.trackPhoto = trackPhoto;
+        this.profilePhoto = profilePhoto;
         this.season = season;
         this.time = time;
         this.trackLink = trackLink;
@@ -45,6 +47,8 @@ public class Route implements Parcelable {
         this.idRoute = in.readString();
         this.name = in.readString();
         this.headerPhoto = in.readString();
+        this.trackPhoto = in.readString();
+        this.profilePhoto = in.readString();
         this.season = in.readString();
         this.time = in.readString();
         this.trackLink = in.readString();
@@ -79,16 +83,32 @@ public class Route implements Parcelable {
         return headerPhoto;
     }
 
+    public void setHeaderPhoto(String headerPhoto) {
+        this.headerPhoto = headerPhoto;
+    }
+
+    public String getTrackPhoto() {
+        return trackPhoto;
+    }
+
+    public void setTrackPhoto(String trackPhoto) {
+        this.trackPhoto = trackPhoto;
+    }
+
+    public String getProfilePhoto() {
+        return profilePhoto;
+    }
+
+    public void setProfilePhoto(String profilePhoto) {
+        this.profilePhoto = profilePhoto;
+    }
+
     public String getType() {
         return type;
     }
 
     public void setType(String type) {
         this.type = type;
-    }
-
-    public void setHeaderPhoto(String headerPhoto) {
-        this.headerPhoto = headerPhoto;
     }
 
     public String getSeason() {
@@ -205,6 +225,8 @@ public class Route implements Parcelable {
         dest.writeString(idRoute);
         dest.writeString(name);
         dest.writeString(headerPhoto);
+        dest.writeString(trackPhoto);
+        dest.writeString(profilePhoto);
         dest.writeString(season);
         dest.writeString(time);
         dest.writeString(trackLink);

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="edu.uoc.iartal.trekkingchallenge.ShowTripActivity">
+
+    <include android:id="@+id/showTripToolbar"
+        layout="@layout/toolbar" />
+
+    <TextView
+        android:id="@+id/tvRouteShowTrip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginStart="30dp"
+        android:gravity="center"
+        android:text="@string/routeTrip"
+        android:textStyle="bold"
+        android:textSize="15sp"/>
+
+    <TextView
+        android:id="@+id/tvRouteTrip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/tvRouteShowTrip"
+        android:layout_alignLeft="@+id/tvRouteShowTrip"
+        android:layout_alignStart="@+id/tvRouteShowTrip"/>
+
+    <TextView
+        android:id="@+id/tvDateShowTrip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_alignStart="@+id/tvRouteShowTrip"
+        android:layout_alignLeft="@+id/tvRouteShowTrip"
+        android:layout_below="@+id/tvRouteTrip"
+        android:gravity="center"
+        android:text="@string/dateTrip"
+        android:textStyle="bold"
+        android:textSize="15sp"/>
+
+    <TextView
+        android:id="@+id/tvDateTrip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/tvDateShowTrip"
+        android:layout_alignLeft="@+id/tvRouteShowTrip"
+        android:layout_alignStart="@+id/tvRouteShowTrip"/>
+
+    <TextView
+        android:id="@+id/tvPlaceShowTrip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_alignStart="@+id/tvRouteShowTrip"
+        android:layout_alignLeft="@+id/tvRouteShowTrip"
+        android:layout_below="@+id/tvDateTrip"
+        android:gravity="center"
+        android:text="@string/placeTrip"
+        android:textStyle="bold"
+        android:textSize="15sp"/>
+
+    <TextView
+        android:id="@+id/tvPlaceTrip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/tvPlaceShowTrip"
+        android:layout_alignLeft="@+id/tvRouteShowTrip"
+        android:layout_alignStart="@+id/tvRouteShowTrip"/>
+
+    <TextView
+        android:id="@+id/tvDescShowTrip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_alignStart="@+id/tvRouteShowTrip"
+        android:layout_alignLeft="@+id/tvRouteShowTrip"
+        android:layout_below="@+id/tvPlaceTrip"
+        android:gravity="center"
+        android:text="@string/descTrip"
+        android:textStyle="bold"
+        android:textSize="15sp"/>
+
+    <TextView
+        android:id="@+id/tvDescTrip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/tvDescShowTrip"
+        android:layout_alignLeft="@+id/tvRouteShowTrip"
+        android:layout_alignStart="@+id/tvRouteShowTrip"/>
+
+</RelativeLayout>

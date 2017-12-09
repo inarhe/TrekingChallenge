@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="edu.uoc.iartal.trekkingchallenge.ShowRouteActivity">
+    tools:context="edu.uoc.iartal.trekkingchallenge.route.ShowRouteActivity">
 
     <include android:id="@+id/showRouteToolbar"
         layout="@layout/toolbar" />
@@ -186,8 +186,7 @@
         android:layout_marginStart="25dp"
         android:layout_below="@id/viewDiv2"
         android:layout_toRightOf="@+id/tvAscent"
-        android:layout_toEndOf="@+id/tvAscent"
-        app:srcCompat="@drawable/ic_spring" />
+        android:layout_toEndOf="@+id/tvAscent" />
 
     <TextView
         android:id="@+id/tvSeason"
@@ -254,6 +253,7 @@
         android:drawableEnd="@drawable/ic_next"
         android:drawableStart="@drawable/ic_track"
         android:drawableLeft="@drawable/ic_track"
+        android:onClick="showTracks"
         android:text="@string/tracksButton"
         android:gravity="center"/>
 

@@ -63,6 +63,6 @@
         android:layout_marginRight="50dp"
         android:layout_marginTop="15dp"
         android:onClick="registerActivity"
-        android:text="@string/registerButton"
+        android:text="@string/registerUserButton"
         android:textSize="18sp" />
 </RelativeLayout>

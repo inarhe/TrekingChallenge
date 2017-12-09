@@ -1,4 +1,4 @@
-package edu.uoc.iartal.trekkingchallenge;
+package edu.uoc.iartal.trekkingchallenge.route;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -19,15 +19,28 @@ import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import org.w3c.dom.Text;
+import java.util.ArrayList;
+import java.util.List;
 
+import edu.uoc.iartal.trekkingchallenge.PhotoGalleryActivity;
+import edu.uoc.iartal.trekkingchallenge.R;
+import edu.uoc.iartal.trekkingchallenge.TrackRouteActivity;
+import edu.uoc.iartal.trekkingchallenge.objectsDB.Finished;
 import edu.uoc.iartal.trekkingchallenge.objectsDB.FireBaseReferences;
+import edu.uoc.iartal.trekkingchallenge.objectsDB.Group;
 import edu.uoc.iartal.trekkingchallenge.objectsDB.Route;
+import edu.uoc.iartal.trekkingchallenge.objectsDB.User;
+import edu.uoc.iartal.trekkingchallenge.trip.AddTripActivity;
 import edu.uoc.iartal.trekkingchallenge.user.LoginActivity;
 
 public class ShowRouteActivity extends AppCompatActivity {
@@ -36,21 +49,32 @@ public class ShowRouteActivity extends AppCompatActivity {
     //private String groupKey, name;
     private DatabaseReference databaseRoute;
     private StorageReference storageReference;
-    private ImageView imageViewHeader;
+    private ImageView imageViewHeader, imageViewSeason;
     private TextView textViewType, textViewTime, textViewAscent, textViewDecline,textViewSeason;
     private TextView textViewDifficult, textViewRegion, textViewTownship;
     private Route route;
     private Bundle bundle;
+    private List<Finished> finished;
+    private List<String> keys;
+    private String mail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_route);
 
+        // Get data from item clicked on list groups activity
+        bundle = getIntent().getExtras();
+        route = bundle.getParcelable("route");
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.showRouteToolbar);
         setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setTitle(route.getName());
 
         imageViewHeader = (ImageView) findViewById(R.id.ivRoute);
+        imageViewSeason = (ImageView) findViewById(R.id.icSeason);
         textViewType = (TextView) findViewById(R.id.tvType);
         textViewTime = (TextView) findViewById(R.id.tvTime);
         textViewAscent = (TextView) findViewById(R.id.tvAscent);
@@ -59,22 +83,60 @@ public class ShowRouteActivity extends AppCompatActivity {
         textViewDifficult = (TextView) findViewById(R.id.tvDifficult);
         textViewTownship = (TextView) findViewById(R.id.tvTownShip);
         textViewRegion = (TextView) findViewById(R.id.tvRegion);
+        final TextView textViewCalendar = (TextView) findViewById(R.id.tvCalenadar);
 
         // Get Firebase authentication instance and database group reference
         storageReference = FirebaseStorage.getInstance().getReference();
         firebaseAuth = FirebaseAuth.getInstance();
         databaseRoute = FirebaseDatabase.getInstance().getReference(FireBaseReferences.ROUTE_REFERENCE);
 
-        // Get data from item clicked on list groups activity
-        bundle = getIntent().getExtras();
-        route = bundle.getParcelable("route");
 
 
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setTitle(route.getName());
+        if (route.getSeason().equals(getString(R.string.spring))){
+            imageViewSeason.setImageResource(R.drawable.ic_spring);
+        } else if (route.getSeason().equals(getString(R.string.fall))){
+            imageViewSeason.setImageResource(R.drawable.ic_fall);
+        } else if (route.getSeason().equals(getString(R.string.summer))) {
+            imageViewSeason.setImageResource(R.drawable.ic_summer);
+        } else if (route.getSeason().equals(getString(R.string.winter))) {
+            imageViewSeason.setImageResource(R.drawable.ic_winter);
+        }
 
-      //  textViewDescription.setText(description);
+    /*    mail = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+        keys = new ArrayList<>();
+        DatabaseReference databaseUser = FirebaseDatabase.getInstance().getReference(FireBaseReferences.USER_REFERENCE);
+        databaseUser.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                keys.removeAll(keys);
+                for (DataSnapshot userSnapshot :
+                        dataSnapshot.getChildren()) {
+                    User user = userSnapshot.getValue(User.class);
+                    if (user.getUserMail().equals(mail)) {
+                        String currentUser = user.getIdUser();
+                        for (String key : user.getFinished().keySet()) {
+                            keys.add(key);
+                        }
+                    }
+
+                }
+                for(String key:keys){
+                    if (key.equals(route.getIdRoute())){
+                        textViewCalendar.setText();
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                //TO-DO
+            }
+        });*/
+
+
+
+
+        //  textViewDescription.setText(description);
         //textViewMembers.setText(Integer.toString(members));
 
         if (firebaseAuth.getCurrentUser() == null) {
@@ -111,105 +173,23 @@ public class ShowRouteActivity extends AppCompatActivity {
 
     }
 
-  /*  public void joinGroup () {
-        // Add new group member when join group button is clicked
-        String currentMail = firebaseAuth.getCurrentUser().getEmail();
-        databaseUser = FirebaseDatabase.getInstance().getReference(FireBaseReferences.USER_REFERENCE);
 
-        updateJoins(currentMail);
-        updateMembers();
-
-        finish();
-
-    }
-
-    private void updateJoins(String currentMail){
-        Query query = databaseUser.orderByChild(FireBaseReferences.USERMAIL_REFERENCE).equalTo(currentMail);
-
-        // Query database to get user information
-        query.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                User user = dataSnapshot.getValue(User.class);
-                databaseGroup.child(groupKey).child(FireBaseReferences.MEMBERSGROUP_REFERENCE).child(user.getIdUser()).setValue("true");
-
-                databaseUser.child(user.getIdUser()).child("groups").child(name).setValue("true");
-                //  int members = databaseGroup.child(groupKey).child(FireBaseReferences.NUMBERMEMBERS_REFERENCE);
-                //   Log.i("MEM", Integer.toString(members));
-                //  databaseGroup.child(groupKey).child(FireBaseReferences.NUMBERMEMBERS_REFERENCE).setValue(2);
-                // textViewMembers.setText(members+1);
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                //TO-DO
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-                //TO-DO
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-                //TO-DO
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                //TO-DO
-            }
-        });
-    }
-
-    private void updateMembers(){
-        Log.i("UP MEM", "mec mec");
-        Query query = databaseGroup.orderByChild(FireBaseReferences.GROUPNAME_REFERENCE).equalTo(name);
-        Log.i("UP NAME", name);
-
-        // Query database to get user information
-        query.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                //  Group group = dataSnapshot.getValue(Group.class);
-                //  databaseGroup.child(groupKey).child(FireBaseReferences.MEMBERSGROUP_REFERENCE).child(user.getAlias()).setValue("true");
-
-                // databaseUser.child(user.getIdUser()).child("groups").child(name).setValue("true");
-                int members = dataSnapshot.getValue(Group.class).getNumberOfMembers();
-                databaseGroup.child(groupKey).child(FireBaseReferences.NUMBERMEMBERS_REFERENCE).setValue(members+1);
-                Log.i("MEM", Integer.toString(members));
-
-                // textViewMembers.setText(members+1);
-            }
-
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                //TO-DO
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-                //TO-DO
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-                //TO-DO
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                //TO-DO
-            }
-        });
-    }*/
 
     public void showDetails (View view){
         Intent intent = new Intent(this, DetailRouteActivity.class);
         intent.putExtra("route", route);
       //  intent.putExtra("meteo", route.getMeteo());
 
+        startActivity(intent);
+    }
+
+    /**
+     * Show track and profile images when button is clicked
+     * @param view
+     */
+    public void showTracks (View view) {
+        Intent intent = new Intent(this, TrackRouteActivity.class);
+        intent.putExtra("route", route);
         startActivity(intent);
     }
 
@@ -229,11 +209,11 @@ public class ShowRouteActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_gallery:
-                showPhotoGallery();
+            case R.id.action_finished:
+                routeFinished();
                 return true;
-            case R.id.action_leaveGroup:
-
+            case R.id.action_trip:
+                newTrip();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -244,5 +224,23 @@ public class ShowRouteActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         route = data.getExtras().getParcelable("route");
+    }
+
+    public void routeFinished() {
+        Intent intent = new Intent(this, FinishedRouteActivity.class);
+        intent.putExtra("route", route);
+        startActivity(intent);
+    }
+
+    public void newTrip() {
+        Intent intent = new Intent(this, AddTripActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    public void newChallenge() {
+        //Intent intent = new Intent(this, FinishedRouteActivity.class);
+        //intent.putExtra("route", route);
+        //startActivity(intent);
     }
 }

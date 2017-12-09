@@ -1,4 +1,4 @@
-package edu.uoc.iartal.trekkingchallenge;
+package edu.uoc.iartal.trekkingchallenge.route;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +12,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.uoc.iartal.trekkingchallenge.R;
 import edu.uoc.iartal.trekkingchallenge.objectsDB.Route;
 import edu.uoc.iartal.trekkingchallenge.objectsDB.RouteAdapter;
 

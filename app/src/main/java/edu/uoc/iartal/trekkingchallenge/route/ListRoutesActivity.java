@@ -1,4 +1,4 @@
-package edu.uoc.iartal.trekkingchallenge;
+package edu.uoc.iartal.trekkingchallenge.route;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,32 +9,22 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.CheckBox;
-import android.widget.Toast;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.uoc.iartal.trekkingchallenge.group.ListGroupsActivity;
+import edu.uoc.iartal.trekkingchallenge.R;
 import edu.uoc.iartal.trekkingchallenge.objectsDB.FireBaseReferences;
-import edu.uoc.iartal.trekkingchallenge.objectsDB.Group;
 import edu.uoc.iartal.trekkingchallenge.objectsDB.Route;
 import edu.uoc.iartal.trekkingchallenge.objectsDB.RouteAdapter;
-import edu.uoc.iartal.trekkingchallenge.objectsDB.User;
-import edu.uoc.iartal.trekkingchallenge.objectsDB.UserAdapter;
 
 public class ListRoutesActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
     private static final int ACTIVITY_CODE = 1;

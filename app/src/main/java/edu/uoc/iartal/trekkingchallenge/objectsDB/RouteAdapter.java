@@ -26,10 +26,9 @@ import com.google.firebase.storage.StorageReference;
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.uoc.iartal.trekkingchallenge.ListRoutesActivity;
+import edu.uoc.iartal.trekkingchallenge.route.ListRoutesActivity;
 import edu.uoc.iartal.trekkingchallenge.R;
-import edu.uoc.iartal.trekkingchallenge.ShowRouteActivity;
-import edu.uoc.iartal.trekkingchallenge.group.ShowGroupActivity;
+import edu.uoc.iartal.trekkingchallenge.route.ShowRouteActivity;
 
 /**
  * Created by Ingrid Artal on 25/11/2017.
@@ -116,6 +115,8 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.RouteViewHol
         } else {
             viewHolder.imageViewType.setImageResource(R.drawable.ic_goback);
         }
+
+
 
         String namePhoto = routes.get(position).getHeaderPhoto();
 

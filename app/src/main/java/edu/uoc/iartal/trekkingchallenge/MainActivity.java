@@ -9,6 +9,7 @@ import android.view.View;
 import com.google.firebase.auth.FirebaseAuth;
 
 import edu.uoc.iartal.trekkingchallenge.group.ListGroupsActivity;
+import edu.uoc.iartal.trekkingchallenge.route.ListRoutesActivity;
 import edu.uoc.iartal.trekkingchallenge.trip.ListTripsActivity;
 import edu.uoc.iartal.trekkingchallenge.user.AccessActivity;
 import edu.uoc.iartal.trekkingchallenge.user.UserAreaActivity;

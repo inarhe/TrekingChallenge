@@ -14,52 +14,63 @@
         <ImageView
             android:id="@+id/cvTripPhoto"
             android:cropToPadding="true"
-            android:layout_width="60dp"
-            android:layout_height="75dp"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
+            android:layout_width="55dp"
+            android:layout_height="60dp"
             android:layout_marginRight="16dp"
             android:layout_marginEnd="16dp"
             android:scaleType="centerCrop"
             android:layout_centerVertical="true"/>
 
-            <TextView
-                android:id="@+id/cvTripId"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/cvTripPhoto"
-                android:layout_toEndOf="@+id/cvTripPhoto"
-                android:layout_alignParentTop="true"
-                android:textStyle="bold"
-                android:textSize="22sp"/>
+        <TextView
+            android:id="@+id/cvTripName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/cvTripPhoto"
+            android:layout_toEndOf="@+id/cvTripPhoto"
+            android:layout_alignParentTop="true"
+            android:textStyle="bold"
+            android:textSize="20sp"/>
 
-            <TextView
-                android:id="@+id/cvTripName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/cvTripPhoto"
-                android:layout_toEndOf="@+id/cvTripPhoto"
-                android:layout_below="@+id/cvTripId"/>
+        <TextView
+            android:id="@+id/cvisPublic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_toRightOf="@+id/cvTripPhoto"
+            android:layout_toEndOf="@+id/cvTripPhoto"
+            android:layout_below="@+id/cvTripName"/>
 
-            <TextView
-                android:id="@+id/cvisPublic"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/cvTripPhoto"
-                android:layout_toEndOf="@+id/cvTripPhoto"
-                android:layout_below="@+id/cvTripName"/>
+        <ImageView
+            android:id="@+id/cvIconTripDate"
+            android:src="@drawable/ic_done"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_toRightOf="@+id/cvTripPhoto"
+            android:layout_toEndOf="@+id/cvTripPhoto"
+            android:layout_below="@+id/cvisPublic" />
 
-            <ImageButton
-                android:id="@+id/icDelTripAdmin"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="?android:attr/selectableItemBackground"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true"
-                android:src="@drawable/ic_delete"
-                android:layout_marginTop="40dp"/>
+        <TextView
+            android:id="@+id/cvTripDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/cvIconTripDate"
+            android:layout_toEndOf="@+id/cvIconTripDate"
+            android:layout_below="@+id/cvisPublic"
+            android:gravity="center"
+            android:layout_alignTop="@+id/cvIconTripDate"
+            android:layout_alignBottom="@+id/cvIconTripDate"/>
+
+        <ImageButton
+            android:id="@+id/icDelTripAdmin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?android:attr/selectableItemBackground"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:src="@drawable/ic_delete"
+            android:layout_marginTop="40dp"/>
 
         </RelativeLayout>
 

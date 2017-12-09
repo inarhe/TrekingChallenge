@@ -12,7 +12,7 @@
         android:padding="16dp">
 
         <ImageView
-            android:id="@+id/cvUserPhoto"
+            android:id="@+id/cvGroupPhoto"
             android:cropToPadding="true"
             android:layout_width="40dp"
             android:layout_height="match_parent"
@@ -24,27 +24,27 @@
             android:layout_marginEnd="16dp"/>
 
             <TextView
-                android:id="@+id/cvUserAlias"
+                android:id="@+id/cvGroupName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/cvUserPhoto"
+                android:layout_toRightOf="@+id/cvGroupPhoto"
                 android:layout_alignParentTop="true"
                 android:textStyle="bold"
                 android:textSize="22sp"/>
 
             <TextView
-                android:id="@+id/cvUserName"
+                android:id="@+id/cvGroupDesc"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/cvUserPhoto"
-                android:layout_below="@+id/cvUserAlias"/>
+                android:layout_toRightOf="@+id/cvGroupPhoto"
+                android:layout_below="@+id/cvGroupName"/>
 
             <TextView
                 android:id="@+id/cvisPublic"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/cvUserPhoto"
-                android:layout_below="@+id/cvUserName"/>
+                android:layout_toRightOf="@+id/cvGroupPhoto"
+                android:layout_below="@+id/cvGroupDesc"/>
 
             <ImageButton
                 android:id="@+id/icDelGroupAdmin"

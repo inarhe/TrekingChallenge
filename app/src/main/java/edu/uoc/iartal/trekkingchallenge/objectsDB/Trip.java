@@ -1,11 +1,14 @@
 package edu.uoc.iartal.trekkingchallenge.objectsDB;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by Ingrid Artal on 04/11/2017.
  */
 
 // Group object class
-public class Trip {
+public class Trip implements Parcelable{
     private String idTrip, tripName, tripDescription, date, place, route, userAdmin;
     private Boolean isPublic;
     private int numberOfMembers;
@@ -26,6 +29,16 @@ public class Trip {
         this.isPublic = isPublic;
         this.userAdmin = userAdmin;
         this.numberOfMembers = numberOfMembers;
+    }
+
+    public Trip(Parcel in) {
+        this.idTrip = in.readString();
+        this.tripName = in.readString();
+        this.tripDescription = in.readString();
+        this.date = in.readString();
+        this.place = in.readString();
+        this.route = in.readString();
+        this.userAdmin = in.readString();
     }
 
     public String getIdTrip() {
@@ -99,4 +112,31 @@ public class Trip {
     public void setNumberOfMembers(int numberOfMembers) {
         this.numberOfMembers = numberOfMembers;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(idTrip);
+        dest.writeString(tripName);
+        dest.writeString(tripDescription);
+        dest.writeString(date);
+        dest.writeString(place);
+        dest.writeString(route);
+        dest.writeString(userAdmin);
+    }
+
+    public static final Parcelable.Creator<Trip> CREATOR = new Parcelable.Creator<Trip>() {
+
+        public Trip createFromParcel(Parcel in) {
+            return new Trip(in);
+        }
+
+        public Trip[] newArray(int size) {
+            return new Trip[size];
+        }
+    };
 }

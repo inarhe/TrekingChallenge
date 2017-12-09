@@ -4,7 +4,7 @@
     <string name="registeredText">Ja ets usuari?</string>
     <string name="accessButton">Accedeix</string>
     <string name="noRegisteredText">Encara no ets usuari?</string>
-    <string name="registerButton">Registra\'t</string>
+    <string name="registerUserButton">Registra\'t</string>
     <string name="accessActivity">Accés usuaris</string>
 
     <!--Register activity-->
@@ -36,6 +36,45 @@
     <string name="infoName">Nom:</string>
     <string name="infoMail">Mail:</string>
 
+    <!--Track rotue activity-->
+    <string name="trackTitle">Recorregut de la ruta</string>
+    <string name="profileTitle">Perfil de la ruta</string>
+    <string name="trackDownload">Descarregar track</string>
+    <string name="otherTracks">Altres recorreguts ruta</string>
+    <string name="trackActivity">Recorregut ruta</string>
+
+    <!--Finished route activity-->
+    <string name="finishRouteActivity">Ruta realitzada</string>
+    <string name="titleFinishRoute">Ruta superada!</string>
+    <string name="finishDate">Data realització</string>
+    <string name="finishDist">Distància realitzada</string>
+    <string name="finishTime">Temps realitzat</string>
+    <string name="finishHour">Hores</string>
+    <string name="finishMin">Minuts</string>
+    <string name="distAdvice">Siusplau, introdueix una distància</string>
+    <string name="timeAdvice">Siusplau, introdueix un temps</string>
+    <string name="finishedSaved">Resultat guardat correctament</string>
+    <string name="finishedFailed">No s\'ha pogut guardar el resultat</string>
+    <string name="action_finished">Ruta realitzada</string>
+
+    <!--Show route activity-->
+    <string name="spring">Primavera</string>
+    <string name="fall">Tardor</string>
+    <string name="summer">Estiu</string>
+    <string name="winter">Hivern</string>
+
+    <!--Show trip activity-->
+    <string name="routeTrip">Ruta escollida</string>
+    <string name="dayTrip">Dia planificat</string>
+    <string name="placeTrip">Lloc de sortida</string>
+    <string name="descTrip">Descripció</string>
+
+    <!--Commons-->
+    <string name="notDownloaded">No s\'ha pogut descarregar la imatge</string>
+    <string name="acceptButton">Acceptar</string>
+    <string name="cancelButton">Cancel·lar</string>
+    <string name="registerButton">Registrar</string>
+
 
     <string name="app_name">TrekkingChallenge</string>
     <string name="mapMenuButton">Mapa rutes</string>
@@ -50,17 +89,10 @@
     <string name="textGroupMembers">Nombre d\'integrants:</string>
 
 
-
-
-    <string name="acceptButton">Acceptar</string>
-    <string name="cancelButton">Cancel·lar</string>
-
     <string name="failedAddGroup">El grup no s\'ha creat correctament</string>
 
 
-
     <string name="groupSaved">Grup creat</string>
-
 
 
     <string name="newGroupTitle">Crea un grup</string>

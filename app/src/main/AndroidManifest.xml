@@ -102,25 +102,36 @@
         <activity
             android:name=".MapActivity"
             android:label="@string/title_activity_map" />
-        <activity android:name=".ListRoutesActivity">
+        <activity android:name=".route.ListRoutesActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
         <activity
-            android:name=".ShowRouteActivity"
+            android:name=".route.ShowRouteActivity"
             android:launchMode="singleTop">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ListRoutesActivity" />
+                android:value=".route.ListRoutesActivity" />
         </activity>
-        <activity android:name=".DetailRouteActivity">
+        <activity android:name=".route.DetailRouteActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ShowRouteActivity" />
+                android:value=".route.ShowRouteActivity" />
         </activity>
-        <activity android:name=".SearchRoutesActivity" />
-        <activity android:name=".PhotoGalleryActivity"></activity>
+        <activity android:name=".route.SearchRoutesActivity" />
+        <activity android:name=".PhotoGalleryActivity" />
+        <activity android:name=".TrackRouteActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".route.ShowRouteActivity" />
+        </activity>
+        <activity android:name=".route.FinishedRouteActivity" />
+        <activity android:name=".ShowTripActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".trip.ListTripsActivity" />
+        </activity>
     </application>
 
 </manifest>

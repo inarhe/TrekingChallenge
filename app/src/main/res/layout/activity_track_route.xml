@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="edu.uoc.iartal.trekkingchallenge.TrackRouteActivity">
+
+    <include android:id="@+id/trackRouteToolbar"
+        layout="@layout/toolbar" />
+
+    <TextView
+        android:id="@+id/tvTrack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginTop="75dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginStart="20dp"
+        android:padding="4dp"
+        android:text="@string/trackTitle"
+        android:textStyle="bold"/>
+
+    <ImageView
+        android:id="@+id/ivTrack"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:scaleType="fitCenter"
+        android:cropToPadding="true"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_below="@+id/tvTrack" />
+
+    <TextView
+        android:id="@+id/tvProfile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_below="@id/ivTrack"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginStart="20dp"
+        android:padding="4dp"
+        android:text="@string/profileTitle"
+        android:textStyle="bold"/>
+
+    <ImageView
+        android:id="@+id/ivProfile"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:scaleType="fitCenter"
+        android:cropToPadding="true"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_below="@+id/tvProfile" />
+
+    <TextView
+        android:id="@+id/tvLinkOtherTrack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_below="@id/ivProfile"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginStart="20dp"
+        android:padding="4dp"
+        android:text="@string/otherTracks"/>
+
+    <TextView
+        android:id="@+id/tvLinkTracks"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="6dp"
+        android:autoLink="web"
+        android:gravity="center"
+        android:layout_below="@+id/ivProfile"
+        android:layout_toRightOf="@id/tvLinkOtherTrack"
+        android:layout_toEndOf="@id/tvLinkOtherTrack"
+        android:layout_alignTop="@id/tvLinkOtherTrack"
+        android:layout_alignBottom="@id/tvLinkOtherTrack"/>
+
+    <Button
+        android:id="@+id/bDownloadTrack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#009688"
+        android:textColor="#FFFFFF"
+        android:layout_below="@+id/tvLinkTracks"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:padding="8dp"
+        android:layout_marginTop="25dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginEnd="16dp"
+        android:textStyle="bold"
+        android:text="@string/trackDownload"/>
+
+
+</RelativeLayout>

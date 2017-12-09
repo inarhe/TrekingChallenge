@@ -48,7 +48,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
             imageViewUser = (ImageView) itemView.findViewById(R.id.cvUserPhoto);
             checkBox = (CheckBox) itemView.findViewById(R.id.checkListUser);
             this.listUsersActivity = listUsersActivity;
-            cardView = (CardView)itemView.findViewById(R.id.cardViewGroup);
+            cardView = (CardView)itemView.findViewById(R.id.cardViewUser);
           //  cardView.setOnLongClickListener(listUsersActivity);
             checkBox.setOnClickListener(this);
         }

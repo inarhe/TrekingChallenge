@@ -1,5 +1,8 @@
 package edu.uoc.iartal.trekkingchallenge.objectsDB;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by Ingrid Artal on 04/11/2017.
  */
@@ -9,6 +12,7 @@ public class Group {
     private String idGroup, groupName, groupDescription, userAdmin;
     private Boolean isPublic;
     private int numberOfMembers;
+    public Map<String, String> members = new HashMap<>();
 
     public Group() {
 
@@ -70,6 +74,10 @@ public class Group {
 
     public void setNumberOfMembers(int numberOfMembers) {
         this.numberOfMembers = numberOfMembers;
+    }
+
+    public Map<String, String> getMembers() {
+        return this.members;
     }
 
 }

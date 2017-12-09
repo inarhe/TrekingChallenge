@@ -37,7 +37,11 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".user.AccessActivity" />
         </activity>
-        <activity android:name=".user.AccessActivity" />
+        <activity android:name=".user.AccessActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
         <activity android:name=".user.LoginActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

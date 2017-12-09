@@ -19,6 +19,7 @@ public class AccessActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_access);
 
+        // Set toolbar and actionbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.accessToolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
@@ -26,14 +27,20 @@ public class AccessActivity extends AppCompatActivity {
         actionBar.setTitle(getString(R.string.accessActivity));
     }
 
+    /**
+     * Open register activity when register button is clicked
+     * @param view
+     */
     public void registerActivity (View view){
-        // Open register activity when register button is clicked
         startActivity(new Intent(getApplicationContext(), RegisterActivity.class));
         finish();
     }
 
+    /**
+     * Open login activity when login button is clicked
+     * @param view
+     */
     public void loginActivity (View view){
-        // Open login activity when login button is clicked
         startActivity(new Intent(getApplicationContext(), LoginActivity.class));
         finish();
     }

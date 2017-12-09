@@ -30,4 +30,5 @@ public class FireBaseReferences {
 
     final public static String TRIP_REFERENCE = "trip";
     final public static String MEMBERSTRIP_REFERENCE = "members";
+    final public static String TRIPNAME_REFERENCE = "groupName";
 }

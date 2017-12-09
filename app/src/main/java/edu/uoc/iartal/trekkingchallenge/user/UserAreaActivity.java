@@ -48,90 +48,36 @@ public class UserAreaActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_area);
 
-        // Set toolbar
+        // Set toolbar and actionbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.userToolbar);
         setSupportActionBar(toolbar);
-
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle(getString(R.string.userAreaActivity));
 
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage(getString(R.string.loadingData));
-
         // Get Firebase authentication instance
         firebaseAuth = FirebaseAuth.getInstance();
 
-        textViewIdUser = (TextView) findViewById(R.id.textViewIdUser);
-        textViewUserName = (TextView) findViewById(R.id.textViewUserName);
-        textViewUserMail = (TextView) findViewById(R.id.textViewUserMail);
+        // Initialize progress dialog
+        progressDialog = new ProgressDialog(this);
 
+        // Link layout elements with variables
+        textViewIdUser = (TextView) findViewById(R.id.tvIdUser);
+        textViewUserName = (TextView) findViewById(R.id.tvUserName);
+        textViewUserMail = (TextView) findViewById(R.id.tvUserMail);
+
+        // If user isn't logged, start login activity
         if (firebaseAuth.getCurrentUser() == null) {
-            // If user isn't logged, start login activity
             startActivity(new Intent(getApplicationContext(), LoginActivity.class));
             finish();
         }
-        // Get database user data with current user mail
-        currentMail = firebaseAuth.getCurrentUser().getEmail();
-        databaseUser = FirebaseDatabase.getInstance().getReference(FireBaseReferences.USER_REFERENCE);
-        intent = new Intent(UserAreaActivity.this, EditProfileActivity.class);
-        Query query = databaseUser.orderByChild(FireBaseReferences.USERMAIL_REFERENCE).equalTo(currentMail);
-        progressDialog.show();
-        // Query database to get user information
-        query.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 
-                idUser = dataSnapshot.getValue(User.class).getIdUser();
-                userName = dataSnapshot.getValue(User.class).getUserName();
-                userMail = dataSnapshot.getValue(User.class).getUserMail();
-                userPassword = dataSnapshot.getValue(User.class).getUserPassword();
-                userKey = dataSnapshot.getValue(User.class).getIdUser();
-
-                textViewIdUser.setText(idUser);
-                textViewUserName.setText(userName);
-                textViewUserMail.setText(userMail);
-
-
-                intent.putExtra("idUser", idUser);
-                intent.putExtra("userName", userName);
-                intent.putExtra("userMail", userMail);
-                intent.putExtra("userPassword", userPassword);
-                intent.putExtra("userKey", userKey);
-
-                progressDialog.dismiss();
-
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                //TO-DO
-
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-                //TO-DO
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-                //TO-DO
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                // Getting Post failed, log a message
-                Log.w("ERROR", "loadUser:onCancelled", databaseError.toException());
-                // ...
-            }
-        });
+        // Load user information
+        loadUser();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-
         getMenuInflater().inflate(R.menu.user_area_activity_menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
@@ -140,11 +86,7 @@ public class UserAreaActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_editProfile:
-
-
-
                 startActivityForResult(intent, ACTIVITY_CODE);
-
                 return true;
             case R.id.action_deleteProfile:
                 deleteUserAccount();
@@ -213,8 +155,11 @@ public class UserAreaActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Logout when sign out button is clicked
+     * @param view
+     */
     public void signOut(View view) {
-        // User sign out when sign out button is clicked
         firebaseAuth.signOut();
         finish();
     }
@@ -225,14 +170,71 @@ public class UserAreaActivity extends AppCompatActivity {
         textViewIdUser.setText(data.getStringExtra("idUser"));
         textViewUserName.setText(data.getStringExtra("userName"));
         textViewUserMail.setText(data.getStringExtra("userMail"));
-        Log.i("NYE3", data.getStringExtra("userMail"));
 
         intent.putExtra("idUser", data.getStringExtra("idUser"));
         intent.putExtra("userName", data.getStringExtra("userName"));
         intent.putExtra("userMail", data.getStringExtra("userMail"));
         //NECESSITAT DE PASSAR CONTRASENYA TAMBÉ PER SI CANVIA QUE S'ACTUALITZI AL EDITAR
-
     }
 
+    /**
+     * Load data of current user
+     */
+    private void loadUser(){
 
+        currentMail = firebaseAuth.getCurrentUser().getEmail();
+        databaseUser = FirebaseDatabase.getInstance().getReference(FireBaseReferences.USER_REFERENCE);
+        intent = new Intent(UserAreaActivity.this, EditProfileActivity.class);
+
+        // Show message on progress dialog
+        progressDialog.setMessage(getString(R.string.loadingData));
+        progressDialog.show();
+
+        // Query database to get user information
+        Query query = databaseUser.orderByChild(FireBaseReferences.USERMAIL_REFERENCE).equalTo(currentMail);
+        query.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+
+                idUser = dataSnapshot.getValue(User.class).getIdUser();
+                userName = dataSnapshot.getValue(User.class).getUserName();
+                userMail = dataSnapshot.getValue(User.class).getUserMail();
+                userPassword = dataSnapshot.getValue(User.class).getUserPassword();
+                userKey = dataSnapshot.getValue(User.class).getIdUser();
+
+                textViewIdUser.setText(idUser);
+                textViewUserName.setText(userName);
+                textViewUserMail.setText(userMail);
+
+                intent.putExtra("idUser", idUser);
+                intent.putExtra("userName", userName);
+                intent.putExtra("userMail", userMail);
+                intent.putExtra("userPassword", userPassword);
+                intent.putExtra("userKey", userKey);
+
+                progressDialog.dismiss();
+
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                //TO-DO
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                //TO-DO
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                //TO-DO
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
 }

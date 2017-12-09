@@ -1,31 +1,20 @@
 <resources>
-    <string name="app_name">TrekkingChallenge</string>
-    <string name="mapMenuButton">Mapa rutes</string>
-    <string name="searchMenuButton">Cerca rutes</string>
-    <string name="tripMenuButton">Excursions</string>
-    <string name="challengeMenuButton">Reptes</string>
-    <string name="userMenuButton">Àrea usuari</string>
-    <string name="groupMenuButton">Grups usuaris</string>
-    <string name="registerTitle">Registre d\'usuari</string>
-    <string name="textIdUser">Identificador d\'usuari:</string>
-    <string name="textUserName">Nom:</string>
-    <string name="textUserMail">Mail:</string>
-    <string name="textGroupDescription">Descripció:</string>
-    <string name="textGroupMembers">Nombre d\'integrants:</string>
-    <string name="hintNameUser">Introdueix el nom</string>
-    <string name="hintIdUser">Introdueix l\'identificador d\'usuari</string>
-    <string name="hintMailUser">Introdueix el mail</string>
-    <string name="textPassUser">Contrasenya:</string>
-    <string name="hintPassUser">Introdueix la contrasenya</string>
-    <string name="textPassRepeat">Confrmació contrasenya:</string>
-    <string name="acceptButton">Acceptar</string>
-    <string name="cancelButton">Cancel·lar</string>
+
+    <!--Access activity-->
     <string name="registeredText">Ja ets usuari?</string>
     <string name="accessButton">Accedeix</string>
     <string name="noRegisteredText">Encara no ets usuari?</string>
     <string name="registerButton">Registra\'t</string>
-    <string name="failedAddGroup">El grup no s\'ha creat correctament</string>
+    <string name="accessActivity">Accés usuaris</string>
 
+    <!--Register activity-->
+    <string name="registerTitle">Registre d\'usuari</string>
+    <string name="hintUserName">Nom usuari</string>
+    <string name="hintIdUser">Identificador usuari</string>
+    <string name="hintUserMail">Correu electrònic</string>
+    <string name="hintUserPass">Contrassenya</string>
+    <string name="hintUserPassRep">Confirmació contrassenya</string>
+    <string name="registering">Registrant usuari...</string>
     <string name="nameField">Siusplau, introdueix un nom</string>
     <string name="descriptionField">Siusplau, introdueix una descripció</string>
     <string name="idField">Siusplau, introdueix un identificador</string>
@@ -34,13 +23,46 @@
     <string name="passwordField">Siusplau, introdueix una contrasenya</string>
     <string name="passwordTooShort">La contrasenya no és vàlida</string>
     <string name="samePass">Les contrasenyes no són iguals</string>
-    <string name="registering">Registrant usuari...</string>
-    <string name="logging">Iniciant sessió usuari...</string>
-    <string name="groupSaved">Grup creat</string>
-    <string name="successfulRegister">Usuari registrat correctament</string>
     <string name="failedRegister">No s\'ha pogut registrar l\'usuari, siusplau torna-ho a provar</string>
+    <string name="successfulRegister">Usuari registrat correctament</string>
+
+    <!--Logging activity-->
     <string name="failedLogin">No s\'ha pogut iniciar sessió, siusplau torna-ho a provar</string>
     <string name="loginTitle">Accedeix a TrekkingChallenge</string>
+    <string name="logging">Iniciant sessió usuari...</string>
+    <string name="loginActivity">Inici de sessió</string>
+
+    <!--User area activity-->
+    <string name="infoName">Nom:</string>
+    <string name="infoMail">Mail:</string>
+
+
+    <string name="app_name">TrekkingChallenge</string>
+    <string name="mapMenuButton">Mapa rutes</string>
+    <string name="searchMenuButton">Cerca rutes</string>
+    <string name="tripMenuButton">Excursions</string>
+    <string name="challengeMenuButton">Reptes</string>
+    <string name="userMenuButton">Àrea usuari</string>
+    <string name="groupMenuButton">Grups usuaris</string>
+
+
+    <string name="textGroupDescription">Descripció:</string>
+    <string name="textGroupMembers">Nombre d\'integrants:</string>
+
+
+
+
+    <string name="acceptButton">Acceptar</string>
+    <string name="cancelButton">Cancel·lar</string>
+
+    <string name="failedAddGroup">El grup no s\'ha creat correctament</string>
+
+
+
+    <string name="groupSaved">Grup creat</string>
+
+
+
     <string name="newGroupTitle">Crea un grup</string>
     <string name="newTripTitle">Crea una excursió</string>
     <string name="nameTrip">Nom excursió</string>
@@ -62,8 +84,7 @@
     <string name="mapActivity">Mapa de rutes</string>
     <string name="listGroupsActivity">Grups</string>
     <string name="listRoutesActivity">Llista de rutes</string>
-    <string name="loginActivity">Inici de sessió</string>
-    <string name="accessActivity">Accés usuaris</string>
+
     <string name="addGroupActivity">Nou grup</string>
     <string name="joinGroup">Apunta\'t</string>
     <string name="leaveGroup">Abandona</string>
@@ -79,7 +100,7 @@
     <string name="actionJoinGroup">Uneix-t\'hi</string>
     <string name="actionLeaveGroup">Deixa el grup</string>
     <string name="listUsersActivity">Usuaris</string>
-    <string name="usersInvited">"Usuaris afegits al grup"</string>
+    <string name="usersInvitedGroup">"Usuaris afegits al grup"</string>
 
     <string name="tabAllGroups">"Tots"</string>
     <string name="tabMyGroups">"Els meus"</string>
@@ -134,6 +155,18 @@
     <string name="addTripActivity">Nova excursió</string>
     <string name="tripIsPublic">Excursió pública</string>
     <string name="dateTrip">Data excursió</string>
+    <string name="tripSaved">Excursió creada correctament</string>
+    <string name="failedAddTrip">No s\'ha pogut crear l\'excursió</string>
+    <string name="nameAdvice">Siusplau, introdueix un nom</string>
+    <string name="descAdvice">Siusplau, introdueix una descripció</string>
+    <string name="placeAdvice">Siusplau, introdueix lloc de trobada</string>
+    <string name="publicTrip">Excursió pública</string>
+    <string name="privateTrip">Excursió privada</string>
+    <string name="chooseRoute">Siusplau, selecciona una ruta</string>
+    <string name="usersInvitedTrip">Usuaris afegits a l\'excursió</string>
+
+    <string name="groupDeleted">Grup eliminat</string>
+    <string name="groupNotDeleted">No s\'ha pogut eliminar el grup</string>
 
 
 </resources>

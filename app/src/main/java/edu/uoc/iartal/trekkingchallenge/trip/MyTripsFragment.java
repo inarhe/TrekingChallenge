@@ -202,4 +202,8 @@ public class MyTripsFragment extends Fragment implements SearchView.OnQueryTextL
         }
         return filteredModelList;
     }
+
+    private void removeTrip (View view) {
+
+    }
 }

@@ -6,7 +6,7 @@ package edu.uoc.iartal.trekkingchallenge.objectsDB;
 
 // Group object class
 public class Trip {
-    private String idTrip, tripName, tripDescription, date, place, userAdmin;
+    private String idTrip, tripName, tripDescription, date, place, route, userAdmin;
     private Boolean isPublic;
     private int numberOfMembers;
 
@@ -15,12 +15,14 @@ public class Trip {
     }
 
 
-    public Trip(String idTrip, String tripName, String tripDescription, String date, String place, Boolean isPublic, String userAdmin, int numberOfMembers) {
+    public Trip(String idTrip, String tripName, String tripDescription, String date, String place, String route,
+                Boolean isPublic, String userAdmin, int numberOfMembers) {
         this.idTrip = idTrip;
         this.tripName = tripName;
         this.tripDescription = tripDescription;
         this.date = date;
         this.place = place;
+        this.route = route;
         this.isPublic = isPublic;
         this.userAdmin = userAdmin;
         this.numberOfMembers = numberOfMembers;
@@ -64,6 +66,14 @@ public class Trip {
 
     public void setPlace(String place) {
         this.place = place;
+    }
+
+    public String getRoute() {
+        return route;
+    }
+
+    public void setRoute(String route) {
+        this.route = route;
     }
 
     public String getUserAdmin() {

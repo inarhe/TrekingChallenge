@@ -65,11 +65,11 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
        // Modify content of each list item
         viewHolder.textViewTripName.setText(trips.get(position).getIdTrip());
       //  viewHolder.textViewTripDesc.setText(trips.get(position).getTripDescription());
-        viewHolder.imageViewTrip.setImageResource(R.drawable.ic_people);
+        viewHolder.imageViewTrip.setImageResource(R.drawable.ic_trip);
         if (trips.get(position).getPublic()) {
-            viewHolder.textViewIsPublic.setText(R.string.publicGroup);
+            viewHolder.textViewIsPublic.setText(R.string.publicTrip);
         } else {
-            viewHolder.textViewIsPublic.setText(R.string.privateGroup);
+            viewHolder.textViewIsPublic.setText(R.string.privateTrip);
         }
 
         if (isVisibleArray.isEmpty()){

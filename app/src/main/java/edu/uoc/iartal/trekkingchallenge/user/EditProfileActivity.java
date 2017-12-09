@@ -54,11 +54,11 @@ public class EditProfileActivity extends AppCompatActivity {
         result = new Intent();
         progressDialog = new ProgressDialog(this);
 
-        editTextidUser = (EditText) findViewById(R.id.editTextIdUser);
-        editTextName = (EditText) findViewById(R.id.editTextUserName);
-        editTextMail = (EditText) findViewById(R.id.editTextUserMail);
-        editTextPass = (EditText) findViewById(R.id.editTextUserPass);
-        editTextRepeatPass = (EditText) findViewById(R.id.editTextPassRepeat);
+        editTextidUser = (EditText) findViewById(R.id.etIdUser);
+        editTextName = (EditText) findViewById(R.id.etUserName);
+        editTextMail = (EditText) findViewById(R.id.etUserMail);
+        editTextPass = (EditText) findViewById(R.id.etUserPass);
+        editTextRepeatPass = (EditText) findViewById(R.id.etPassRepeat);
 
         if (firebaseAuth.getCurrentUser() == null) {
             // If user isn't logged, start login activity

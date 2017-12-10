@@ -5,40 +5,65 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="edu.uoc.iartal.trekkingchallenge.ShowTripActivity">
+    tools:context="edu.uoc.iartal.trekkingchallenge.trip.ShowTripActivity">
 
     <include android:id="@+id/showTripToolbar"
         layout="@layout/toolbar" />
+
+    <ImageView
+        android:id="@+id/icRouteShowTrip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginStart="40dp"
+        android:src="@drawable/ic_landscape"/>
 
     <TextView
         android:id="@+id/tvRouteShowTrip"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="100dp"
-        android:layout_marginLeft="30dp"
-        android:layout_marginStart="30dp"
+        android:layout_toRightOf="@+id/icRouteShowTrip"
+        android:layout_toEndOf="@+id/icRouteShowTrip"
+        android:layout_alignTop="@+id/icRouteShowTrip"
+        android:layout_alignBottom="@+id/icRouteShowTrip"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
         android:gravity="center"
         android:text="@string/routeTrip"
         android:textStyle="bold"
-        android:textSize="15sp"/>
+        android:textSize="18sp"/>
 
     <TextView
         android:id="@+id/tvRouteTrip"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:layout_below="@+id/tvRouteShowTrip"
-        android:layout_alignLeft="@+id/tvRouteShowTrip"
-        android:layout_alignStart="@+id/tvRouteShowTrip"/>
+        android:layout_below="@+id/icRouteShowTrip"
+        android:layout_alignLeft="@+id/icRouteShowTrip"
+        android:layout_alignStart="@+id/icRouteShowTrip"
+        android:textSize="15sp"/>
+
+    <ImageView
+        android:id="@+id/icDateShowTrip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_alignLeft="@+id/icRouteShowTrip"
+        android:layout_alignStart="@+id/icRouteShowTrip"
+        android:layout_below="@+id/tvRouteTrip"
+        android:src="@drawable/ic_done"/>
 
     <TextView
         android:id="@+id/tvDateShowTrip"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:layout_alignStart="@+id/tvRouteShowTrip"
-        android:layout_alignLeft="@+id/tvRouteShowTrip"
-        android:layout_below="@+id/tvRouteTrip"
+        android:layout_toRightOf="@+id/icDateShowTrip"
+        android:layout_toEndOf="@+id/icDateShowTrip"
+        android:layout_alignTop="@+id/icDateShowTrip"
+        android:layout_alignBottom="@+id/icDateShowTrip"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
         android:gravity="center"
         android:text="@string/dateTrip"
         android:textStyle="bold"
@@ -49,18 +74,31 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:layout_below="@+id/tvDateShowTrip"
-        android:layout_alignLeft="@+id/tvRouteShowTrip"
-        android:layout_alignStart="@+id/tvRouteShowTrip"/>
+        android:layout_below="@+id/icDateShowTrip"
+        android:layout_alignLeft="@+id/icDateShowTrip"
+        android:layout_alignStart="@+id/icDateShowTrip"
+        android:textSize="15sp"/>
+
+    <ImageView
+        android:id="@+id/icPlaceShowTrip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_alignLeft="@+id/icRouteShowTrip"
+        android:layout_alignStart="@+id/icRouteShowTrip"
+        android:layout_below="@+id/tvDateTrip"
+        android:src="@drawable/ic_flag"/>
 
     <TextView
         android:id="@+id/tvPlaceShowTrip"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:layout_alignStart="@+id/tvRouteShowTrip"
-        android:layout_alignLeft="@+id/tvRouteShowTrip"
-        android:layout_below="@+id/tvDateTrip"
+        android:layout_toRightOf="@+id/icPlaceShowTrip"
+        android:layout_toEndOf="@+id/icPlaceShowTrip"
+        android:layout_alignTop="@+id/icPlaceShowTrip"
+        android:layout_alignBottom="@+id/icPlaceShowTrip"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
         android:gravity="center"
         android:text="@string/placeTrip"
         android:textStyle="bold"
@@ -71,18 +109,31 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:layout_below="@+id/tvPlaceShowTrip"
-        android:layout_alignLeft="@+id/tvRouteShowTrip"
-        android:layout_alignStart="@+id/tvRouteShowTrip"/>
+        android:layout_below="@+id/icPlaceShowTrip"
+        android:layout_alignLeft="@+id/icPlaceShowTrip"
+        android:layout_alignStart="@+id/icPlaceShowTrip"
+        android:textSize="15sp"/>
+
+    <ImageView
+        android:id="@+id/icDescShowTrip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_alignLeft="@+id/icRouteShowTrip"
+        android:layout_alignStart="@+id/icRouteShowTrip"
+        android:layout_below="@+id/tvPlaceTrip"
+        android:src="@drawable/ic_description"/>
 
     <TextView
         android:id="@+id/tvDescShowTrip"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:layout_alignStart="@+id/tvRouteShowTrip"
-        android:layout_alignLeft="@+id/tvRouteShowTrip"
-        android:layout_below="@+id/tvPlaceTrip"
+        android:layout_toRightOf="@+id/icDescShowTrip"
+        android:layout_toEndOf="@+id/icDescShowTrip"
+        android:layout_alignTop="@+id/icDescShowTrip"
+        android:layout_alignBottom="@+id/icDescShowTrip"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
         android:gravity="center"
         android:text="@string/descTrip"
         android:textStyle="bold"
@@ -93,8 +144,48 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
+        android:layout_below="@+id/icDescShowTrip"
+        android:layout_alignLeft="@+id/icDescShowTrip"
+        android:layout_alignStart="@+id/icDescShowTrip"
+        android:textSize="15sp"/>
+
+    <ImageView
+        android:id="@+id/icMembShowTrip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_alignLeft="@+id/icRouteShowTrip"
+        android:layout_alignStart="@+id/icRouteShowTrip"
+        android:layout_below="@+id/tvDescTrip"
+        android:src="@drawable/ic_people"/>
+
+    <TextView
+        android:id="@+id/tvMembShowTrip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/icMembShowTrip"
+        android:layout_toEndOf="@+id/icMembShowTrip"
+        android:layout_alignTop="@+id/icMembShowTrip"
+        android:layout_alignBottom="@+id/icMembShowTrip"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
+        android:gravity="center"
+        android:text="@string/membTrip"
+        android:textStyle="bold"
+        android:textSize="15sp"/>
+
+    <TextView
+        android:id="@+id/tvMembTrip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="6dp"
+        android:layout_marginStart="6dp"
+        android:gravity="center"
         android:layout_below="@+id/tvDescShowTrip"
-        android:layout_alignLeft="@+id/tvRouteShowTrip"
-        android:layout_alignStart="@+id/tvRouteShowTrip"/>
+        android:layout_toRightOf="@+id/tvMembShowTrip"
+        android:layout_toEndOf="@+id/tvMembShowTrip"
+        android:layout_alignTop="@+id/tvMembShowTrip"
+        android:layout_alignBottom="@+id/tvMembShowTrip"
+        android:textSize="15sp"/>
 
 </RelativeLayout>

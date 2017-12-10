@@ -64,10 +64,15 @@
     <string name="winter">Hivern</string>
 
     <!--Show trip activity-->
-    <string name="routeTrip">Ruta escollida</string>
-    <string name="dayTrip">Dia planificat</string>
-    <string name="placeTrip">Lloc de sortida</string>
-    <string name="descTrip">Descripció</string>
+    <string name="routeTrip">Ruta escollida:</string>
+    <string name="dayTrip">Dia planificat:</string>
+    <string name="placeTrip">Lloc de sortida:</string>
+    <string name="descTrip">Descripció:</string>
+    <string name="membTrip">Integrants:</string>
+    <string name="actionJoinTrip">Uneix-t\'hi</string>
+    <string name="actionLeaveTrip">Abandona l\'excursió</string>
+    <string name="tripJoined">T\'has unit a l\'excursió</string>
+    <string name="tripLeft">Segur que vols abandonar l\'excursió?</string>
 
     <!--Commons-->
     <string name="notDownloaded">No s\'ha pogut descarregar la imatge</string>

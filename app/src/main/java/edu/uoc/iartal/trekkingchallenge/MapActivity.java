@@ -19,13 +19,16 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -35,6 +38,7 @@ import java.util.Map;
 import edu.uoc.iartal.trekkingchallenge.objectsDB.FireBaseReferences;
 import edu.uoc.iartal.trekkingchallenge.objectsDB.Group;
 import edu.uoc.iartal.trekkingchallenge.objectsDB.Route;
+import edu.uoc.iartal.trekkingchallenge.route.ShowRouteActivity;
 import edu.uoc.iartal.trekkingchallenge.user.LoginActivity;
 
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
@@ -108,6 +112,46 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         loadMarkRoutes();
         // Create a LatLngBounds that includes Australia.
         centerMap();
+
+        mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(Marker marker) {
+                final String routeName = marker.getTitle();
+                DatabaseReference databaseRoute = FirebaseDatabase.getInstance().getReference(FireBaseReferences.ROUTE_REFERENCE);
+
+                Query query = databaseRoute.orderByChild(FireBaseReferences.ROUTENAME_REFERENCE).equalTo(routeName);
+
+                query.addChildEventListener(new ChildEventListener() {
+                    @Override
+                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                        Route route = dataSnapshot.getValue(Route.class);
+                        Intent intent = new Intent(getApplicationContext(), ShowRouteActivity.class);
+                        intent.putExtra("route", route);
+                        startActivity(intent);
+                    }
+
+                    @Override
+                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+                    }
+
+                    @Override
+                    public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                    }
+
+                    @Override
+                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+            }
+        });
     }
 
     private void centerMap(){
@@ -135,7 +179,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 }
 
                 for (Route route : routes) {
-                    mMap.addMarker(new MarkerOptions().position(new LatLng(route.getLat(), route.getLng())).title(route.getName()));
+                    mMap.addMarker(new MarkerOptions().position(new LatLng(route.getLat(), route.getLng())).title(route.getName()).snippet(route.getTownship()));
                     Log.i("lat",Double.toString(route.getLat())+ Double.toString(route.getLng()));
 
                 }

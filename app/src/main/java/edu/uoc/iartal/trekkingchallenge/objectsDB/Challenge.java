@@ -3,6 +3,9 @@ package edu.uoc.iartal.trekkingchallenge.objectsDB;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by Ingrid Artal on 04/11/2017.
  */
@@ -12,6 +15,7 @@ public class Challenge implements Parcelable{
     private String idChallenge, challengeName, challengeDescription, limitDate, route, userAdmin;
     private Boolean isPublic;
     private int numberOfMembers;
+    private Map<String, String> results = new HashMap<>();
 
     public Challenge() {
 
@@ -36,6 +40,7 @@ public class Challenge implements Parcelable{
         this.route = in.readString();
         this.userAdmin = in.readString();
         this.numberOfMembers = in.readInt();
+        in.readMap(results, String.class.getClassLoader());
     }
 
     public String getIdChallenge() {
@@ -102,6 +107,10 @@ public class Challenge implements Parcelable{
         this.numberOfMembers = numberOfMembers;
     }
 
+    public Map<String, String> getResults() {
+        return this.results;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -116,6 +125,7 @@ public class Challenge implements Parcelable{
         dest.writeString(route);
         dest.writeString(userAdmin);
         dest.writeInt(numberOfMembers);
+        dest.writeMap(results);
     }
 
     public static final Creator<Challenge> CREATOR = new Creator<Challenge>() {

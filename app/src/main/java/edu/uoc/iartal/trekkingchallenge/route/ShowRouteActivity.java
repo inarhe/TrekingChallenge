@@ -35,6 +35,7 @@ import java.util.List;
 import edu.uoc.iartal.trekkingchallenge.PhotoGalleryActivity;
 import edu.uoc.iartal.trekkingchallenge.R;
 import edu.uoc.iartal.trekkingchallenge.TrackRouteActivity;
+import edu.uoc.iartal.trekkingchallenge.challenge.FinishedChallengeActivity;
 import edu.uoc.iartal.trekkingchallenge.objectsDB.Finished;
 import edu.uoc.iartal.trekkingchallenge.objectsDB.FireBaseReferences;
 import edu.uoc.iartal.trekkingchallenge.objectsDB.Group;
@@ -222,6 +223,9 @@ public class ShowRouteActivity extends AppCompatActivity {
             case R.id.action_trip:
                 newTrip();
                 return true;
+            case R.id.action_challenge:
+                newChallenge();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -246,8 +250,8 @@ public class ShowRouteActivity extends AppCompatActivity {
     }
 
     public void newChallenge() {
-        //Intent intent = new Intent(this, FinishedRouteActivity.class);
-        //intent.putExtra("route", route);
-        //startActivity(intent);
+        Intent intent = new Intent(this, FinishedChallengeActivity.class);
+        startActivity(intent);
+        finish();
     }
 }

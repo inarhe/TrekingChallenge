@@ -142,6 +142,8 @@
                 android:value=".route.ShowRouteActivity" />
         </activity>
         <activity android:name=".route.FinishedRouteActivity" />
+
+        <activity android:name=".challenge.FinishedChallengeActivity" />
         <activity android:name=".trip.ShowTripActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

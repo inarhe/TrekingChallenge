@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.uoc.iartal.trekkingchallenge.R;
+import edu.uoc.iartal.trekkingchallenge.challenge.ShowChallengeActivity;
 import edu.uoc.iartal.trekkingchallenge.trip.ShowTripActivity;
 
 /**
@@ -94,7 +95,7 @@ public class ChallengeAdapter extends RecyclerView.Adapter<ChallengeAdapter.Chal
             public void onClick(View v) {
                 Context context = v.getContext();
 
-                Intent intent = new Intent(context, ShowTripActivity.class);
+                Intent intent = new Intent(context, ShowChallengeActivity.class);
                 intent.putExtra("challenge", challenges.get(position));
 
                 context.startActivity(intent);

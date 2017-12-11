@@ -86,6 +86,13 @@
     <string name="rankingChallenge">Rànquing del repte:</string>
 
 
+    <!--Finished challenge activity-->
+    <string name="finishChallengeActivity">Repte realitzat</string>
+    <string name="titleFinishChallenge">Repte superat!</string>
+    <string name="resultsChallenge">Resultats:</string>
+    <string name="action_challengeFinished">Repte realitzat</string>
+
+
     <string name="listChallengesActivity">Reptes</string>
     <string name="hintNameChallenge">Nom del repte</string>
     <string name="hintDescChallenge">Descripció repte</string>

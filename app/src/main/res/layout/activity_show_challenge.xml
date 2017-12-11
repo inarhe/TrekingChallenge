@@ -118,7 +118,7 @@
         android:id="@+id/tvRankingChallenge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="30dp"
         android:layout_below="@+id/tvDescChallenge"
         android:layout_alignLeft="@+id/icDescShowChallenge"
         android:layout_alignStart="@+id/icDescShowChallenge"
@@ -134,7 +134,12 @@
         android:layout_below="@+id/tvRankingChallenge"
         android:layout_alignStart="@+id/icDescShowChallenge"
         android:layout_alignLeft="@+id/icDescShowChallenge"
-        android:layout_marginBottom="25dp">
+        android:verticalScrollbarPosition="right"
+        android:scrollbars="vertical"
+        android:layout_marginRight="30dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginBottom="30dp"
+        android:layout_marginTop="10dp">
 
     </de.codecrafters.tableview.TableView>
 

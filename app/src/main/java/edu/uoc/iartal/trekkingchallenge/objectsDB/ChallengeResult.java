@@ -9,32 +9,33 @@ import android.os.Parcelable;
 
 // Group object class
 public class ChallengeResult implements Parcelable{
-    private String id, distance, time, user, challenge;
+    private String id, distance, hour, minute, user, challenge, date;
     private Boolean isWinner;
-    private int numberOfMembers;
 
     public ChallengeResult() {
 
     }
 
 
-    public ChallengeResult(String id, String distance, String time, String user, String challenge, int numberOfMembers) {
+    public ChallengeResult(String id, String distance, String hour, String minute, String user, String challenge, String date) {
         this.id = id;
         this.distance = distance;
-        this.time = time;
+        this.hour = hour;
+        this.minute = minute;
         this.user = user;
         this.challenge = challenge;
-        this.numberOfMembers = numberOfMembers;
+        this.date = date;
     }
 
     public ChallengeResult(Parcel in) {
         this.id = in.readString();
         this.distance = in.readString();
-        this.time = in.readString();
+        this.hour = in.readString();
+        this.minute = in.readString();
         this.user = in.readString();
         this.challenge = in.readString();
       //  this.isWinner = in.readString();
-        this.numberOfMembers = in.readInt();
+        this.date = in.readString();
     }
 
     public String getId() {
@@ -53,12 +54,20 @@ public class ChallengeResult implements Parcelable{
         this.distance = distance;
     }
 
-    public String getTime() {
-        return time;
+    public String getHour() {
+        return hour;
     }
 
-    public void setTime(String time) {
-        this.time = time;
+    public void setHour(String hour) {
+        this.hour = hour;
+    }
+
+    public String getminute() {
+        return minute;
+    }
+
+    public void setMinute(String minute) {
+        this.minute = minute;
     }
 
     public String getUser() {
@@ -85,12 +94,12 @@ public class ChallengeResult implements Parcelable{
         isWinner = winner;
     }
 
-    public int getNumberOfMembers() {
-        return numberOfMembers;
+    public String getDate() {
+        return date;
     }
 
-    public void setNumberOfMembers(int numberOfMembers) {
-        this.numberOfMembers = numberOfMembers;
+    public void setDate(String date) {
+        this.date = date;
     }
 
     @Override
@@ -102,10 +111,11 @@ public class ChallengeResult implements Parcelable{
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(id);
         dest.writeString(distance);
-        dest.writeString(time);
+        dest.writeString(hour);
+        dest.writeString(minute);
         dest.writeString(user);
         dest.writeString(challenge);
-        dest.writeInt(numberOfMembers);
+        dest.writeString(date);
     }
 
     public static final Creator<ChallengeResult> CREATOR = new Creator<ChallengeResult>() {

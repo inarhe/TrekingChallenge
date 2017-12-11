@@ -5,9 +5,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="edu.uoc.iartal.trekkingchallenge.route.FinishedRouteActivity">
+    tools:context="edu.uoc.iartal.trekkingchallenge.challenge.FinishedChallengeActivity">
 
-    <include android:id="@+id/finishedRouteToolbar"
+    <include android:id="@+id/finishedChallengeToolbar"
         layout="@layout/toolbar" />
 
     <ScrollView
@@ -20,7 +20,7 @@
             android:layout_height="wrap_content">
 
             <ImageView
-                android:id="@+id/icFinishRoute"
+                android:id="@+id/icFinishChallenge"
                 android:layout_width="55dp"
                 android:layout_height="55dp"
                 android:cropToPadding="true"
@@ -31,25 +31,25 @@
                 android:layout_marginStart="50dp"/>
 
             <TextView
-                android:id="@+id/tvFinishRoute"
+                android:id="@+id/tvFinishChallenge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="@string/titleFinishRoute"
+                android:text="@string/titleFinishChallenge"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:layout_marginLeft="20dp"
                 android:layout_marginStart="20dp"
-                android:layout_toRightOf="@+id/icFinishRoute"
-                android:layout_toEndOf="@+id/icFinishRoute"
-                android:layout_alignTop="@+id/icFinishRoute"
-                android:layout_alignBottom="@+id/icFinishRoute"/>
+                android:layout_toRightOf="@+id/icFinishChallenge"
+                android:layout_toEndOf="@+id/icFinishChallenge"
+                android:layout_alignTop="@+id/icFinishChallenge"
+                android:layout_alignBottom="@+id/icFinishChallenge"/>
 
             <ImageView
                 android:id="@+id/icDateFinish"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/icFinishRoute"
+                android:layout_below="@+id/icFinishChallenge"
                 android:layout_marginTop="40dp"
                 android:layout_marginLeft="30dp"
                 android:layout_marginStart="30dp"
@@ -82,11 +82,25 @@
                 android:layout_alignLeft="@+id/icDateFinish"
                 android:layout_alignStart="@+id/icDateFinish"/>
 
+            <TextView
+                android:id="@+id/tvResultChallenge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
+                android:layout_alignLeft="@+id/icDateFinish"
+                android:layout_alignStart="@+id/icDateFinish"
+                android:layout_below="@+id/etDateFinish"
+                android:text="@string/resultsChallenge"
+                android:textStyle="bold"
+                android:textSize="15sp"/>
+
             <ImageView
                 android:id="@+id/icDistFinish"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/etDateFinish"
+                android:layout_below="@+id/tvResultChallenge"
                 android:layout_marginTop="20dp"
                 android:layout_alignLeft="@+id/icDateFinish"
                 android:layout_alignStart="@+id/icDateFinish"

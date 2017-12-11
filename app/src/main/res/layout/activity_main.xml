@@ -71,7 +71,8 @@
         android:layout_alignEnd="@+id/buttonSearchMenu"
         android:layout_alignRight="@+id/buttonSearchMenu"
         android:width="132dp"
-        android:drawableTop="@drawable/ic_fitness_center"
+        android:onClick="challengeActivity"
+        android:drawableTop="@drawable/ic_challenge"
         android:text="@string/challengeMenuButton" />
 
     <Button

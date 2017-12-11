@@ -118,10 +118,6 @@
                 android:layout_marginRight="15dp"
                 android:ems="10"
                 android:inputType="textEmailAddress"
-                android:clickable="false"
-                android:cursorVisible="false"
-                android:focusable="false"
-                android:focusableInTouchMode="false"
                 android:textSize="14sp" />
 
             <TextView

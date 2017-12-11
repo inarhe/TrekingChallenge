@@ -152,6 +152,8 @@ public class RegisterActivity extends AppCompatActivity {
                 });
     }
 
+
+
     public void cancelRegister (View view){
         startActivity(new Intent(getApplicationContext(), MainActivity.class));
         finish();

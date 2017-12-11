@@ -49,7 +49,7 @@ public class ShowRouteActivity extends AppCompatActivity {
     //private String groupKey, name;
     private DatabaseReference databaseRoute;
     private StorageReference storageReference;
-    private ImageView imageViewHeader, imageViewSeason;
+    private ImageView imageViewHeader, imageViewSeason, imageViewType;
     private TextView textViewType, textViewTime, textViewAscent, textViewDecline,textViewSeason;
     private TextView textViewDifficult, textViewRegion, textViewTownship;
     private Route route;
@@ -75,6 +75,7 @@ public class ShowRouteActivity extends AppCompatActivity {
 
         imageViewHeader = (ImageView) findViewById(R.id.ivRoute);
         imageViewSeason = (ImageView) findViewById(R.id.icSeason);
+        imageViewType = (ImageView) findViewById(R.id.icType);
         textViewType = (TextView) findViewById(R.id.tvType);
         textViewTime = (TextView) findViewById(R.id.tvTime);
         textViewAscent = (TextView) findViewById(R.id.tvAscent);
@@ -100,6 +101,12 @@ public class ShowRouteActivity extends AppCompatActivity {
             imageViewSeason.setImageResource(R.drawable.ic_summer);
         } else if (route.getSeason().equals(getString(R.string.winter))) {
             imageViewSeason.setImageResource(R.drawable.ic_winter);
+        }
+
+        if (route.getType().equals(R.string.circular)){
+            imageViewType.setImageResource(R.drawable.ic_circular);
+        } else {
+            imageViewType.setImageResource(R.drawable.ic_goback);
         }
 
     /*    mail = FirebaseAuth.getInstance().getCurrentUser().getEmail();

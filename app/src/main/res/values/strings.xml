@@ -63,6 +63,7 @@
     <string name="summer">Estiu</string>
     <string name="winter">Hivern</string>
 
+
     <!--Show trip activity-->
     <string name="routeTrip">Ruta escollida:</string>
     <string name="dayTrip">Dia planificat:</string>
@@ -73,6 +74,28 @@
     <string name="actionLeaveTrip">Abandona l\'excursió</string>
     <string name="tripJoined">T\'has unit a l\'excursió</string>
     <string name="tripLeft">Segur que vols abandonar l\'excursió?</string>
+
+    <!--Show challenge activity-->
+    <string name="routeChallenge">Ruta escollida:</string>
+    <string name="dateChallenge">Data límit:</string>
+    <string name="descChallenge">Descripció:</string>
+    <string name="actionJoinChallenge">Uneix-t\'hi</string>
+    <string name="actionLeaveChallenge">Abandona el repte</string>
+    <string name="challengeJoined">T\'has unit al repte</string>
+    <string name="challengeLeft">Segur que vols abandonar el repte?</string>
+    <string name="rankingChallenge">Rànquing del repte:</string>
+
+
+    <string name="listChallengesActivity">Reptes</string>
+    <string name="hintNameChallenge">Nom del repte</string>
+    <string name="hintDescChallenge">Descripció repte</string>
+    <string name="addChallengeActivity">Nou repte</string>
+    <string name="challengeIsPublic">Repte públic</string>
+    <string name="challengeSaved">Rrepte creat correctament</string>
+    <string name="failedAddChallenge">No s\'ha pogut crear el repte</string>
+    <string name="publicChallenge">Repte públic</string>
+    <string name="privateChallenge">Repte privat</string>
+    <string name="usersInvitedChallenge">Usuaris afegits al repte</string>
 
     <!--Commons-->
     <string name="notDownloaded">No s\'ha pogut descarregar la imatge</string>
@@ -187,7 +210,7 @@
 
     <string name="listTripsActivity">Excursions</string>
     <string name="hintNameTrip">Nom de l\'excursió</string>
-    <string name="hintDescTrip">Descripció</string>
+    <string name="hintDescTrip">Descripció excursió</string>
     <string name="hintPlaceTrip">Lloc de trobada</string>
     <string name="addTripActivity">Nova excursió</string>
     <string name="tripIsPublic">Excursió pública</string>

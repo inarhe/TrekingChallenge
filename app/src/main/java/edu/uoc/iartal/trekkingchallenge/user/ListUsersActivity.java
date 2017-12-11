@@ -28,6 +28,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.uoc.iartal.trekkingchallenge.challenge.ListChallengesActivity;
 import edu.uoc.iartal.trekkingchallenge.group.ListGroupsActivity;
 import edu.uoc.iartal.trekkingchallenge.objectsDB.FireBaseReferences;
 import edu.uoc.iartal.trekkingchallenge.objectsDB.Group;
@@ -42,9 +43,9 @@ public class ListUsersActivity extends AppCompatActivity implements SearchView.O
     private RecyclerView recyclerView;
     private ArrayList<User> users = new ArrayList<>();
     private ArrayList<User> selectedUsers = new ArrayList<>();
-    private String idGroup, groupName, idTrip, tripName;
+    private String idGroup, groupName, idTrip, tripName, idChallenge, challengeName;
     private Toolbar toolbar;
-    private DatabaseReference databaseUser, databaseGroup, databaseTrip;
+    private DatabaseReference databaseUser, databaseGroup, databaseTrip, databaseChallenge;
     private List<User> filteredModelList = new ArrayList<>();
 
     @Override
@@ -64,6 +65,8 @@ public class ListUsersActivity extends AppCompatActivity implements SearchView.O
         groupName = groupData.getString("groupName");
         idTrip = groupData.getString("idTrip");
         tripName = groupData.getString("tripName");
+        idChallenge = groupData.getString("idChallenge");
+        challengeName = groupData.getString("challengeName");
 
         recyclerView = (RecyclerView) findViewById(R.id.rvListUsers);
         recyclerView.setHasFixedSize(true);
@@ -163,6 +166,7 @@ public class ListUsersActivity extends AppCompatActivity implements SearchView.O
         databaseUser = FirebaseDatabase.getInstance().getReference(FireBaseReferences.USER_REFERENCE);
         databaseGroup = FirebaseDatabase.getInstance().getReference(FireBaseReferences.GROUP_REFERENCE);
         databaseTrip = FirebaseDatabase.getInstance().getReference(FireBaseReferences.TRIP_REFERENCE);
+        databaseChallenge = FirebaseDatabase.getInstance().getReference(FireBaseReferences.CHALLENGE_REFERENCE);
 
         if (!selectedUsers.isEmpty()){
             if (idGroup != null){
@@ -177,6 +181,13 @@ public class ListUsersActivity extends AppCompatActivity implements SearchView.O
                 setTrips();
                 Toast.makeText(ListUsersActivity.this,getString(R.string.usersInvitedTrip),Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(getApplicationContext(), ListTripsActivity.class));
+                finish();
+            }
+
+            if (idChallenge != null){
+                setChallenges();
+                Toast.makeText(ListUsersActivity.this,getString(R.string.usersInvitedChallenge),Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(getApplicationContext(), ListChallengesActivity.class));
                 finish();
             }
 
@@ -258,8 +269,8 @@ public class ListUsersActivity extends AppCompatActivity implements SearchView.O
         }
     }
 
-    private void setTrips (){
-        for (User user : selectedUsers){
+    private void setTrips () {
+        for (User user : selectedUsers) {
             databaseUser.child(user.getIdUser()).child("trips").child(tripName).setValue("true");
             databaseTrip.child(idTrip).child("members").child(user.getIdUser()).setValue("true");
 
@@ -274,7 +285,54 @@ public class ListUsersActivity extends AppCompatActivity implements SearchView.O
 
                     // databaseUser.child(user.getIdUser()).child("groups").child(name).setValue("true");
                     int members = dataSnapshot.getValue(Trip.class).getNumberOfMembers();
-                    databaseTrip.child(idTrip).child(FireBaseReferences.NUMBERMEMBERS_REFERENCE).setValue(members+1);
+                    databaseTrip.child(idTrip).child(FireBaseReferences.NUMBERMEMBERS_REFERENCE).setValue(members + 1);
+                    Log.i("MEM", Integer.toString(members));
+
+                    // textViewMembers.setText(members+1);
+                }
+
+
+                @Override
+                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                    //TO-DO
+                }
+
+                @Override
+                public void onChildRemoved(DataSnapshot dataSnapshot) {
+                    //TO-DO
+                }
+
+                @Override
+                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                    //TO-DO
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    //TO-DO
+                }
+            });
+
+        }
+    }
+
+    private void setChallenges (){
+        for (User user : selectedUsers){
+            databaseUser.child(user.getIdUser()).child("challenges").child(challengeName).setValue("true");
+            databaseChallenge.child(idChallenge).child("members").child(user.getIdUser()).setValue("true");
+
+            Query query = databaseChallenge.orderByChild(FireBaseReferences.CHALLENGENAME_REFERENCE).equalTo(challengeName);
+
+            // Query database to get user information
+            query.addChildEventListener(new ChildEventListener() {
+                @Override
+                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                    //  Group group = dataSnapshot.getValue(Group.class);
+                    //  databaseGroup.child(groupKey).child(FireBaseReferences.MEMBERSGROUP_REFERENCE).child(user.getAlias()).setValue("true");
+
+                    // databaseUser.child(user.getIdUser()).child("groups").child(name).setValue("true");
+                    int members = dataSnapshot.getValue(Trip.class).getNumberOfMembers();
+                    databaseChallenge.child(idChallenge).child(FireBaseReferences.NUMBERMEMBERS_REFERENCE).setValue(members+1);
                     Log.i("MEM", Integer.toString(members));
 
                     // textViewMembers.setText(members+1);

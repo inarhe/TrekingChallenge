@@ -180,7 +180,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
                 for (Route route : routes) {
                     mMap.addMarker(new MarkerOptions().position(new LatLng(route.getLat(), route.getLng())).title(route.getName()).snippet(route.getTownship()));
-                    Log.i("lat",Double.toString(route.getLat())+ Double.toString(route.getLng()));
+
 
                 }
                 //    LatLng bcn = new LatLng(41.49, 1.28);

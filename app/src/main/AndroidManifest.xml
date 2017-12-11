@@ -82,10 +82,20 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
+        <activity android:name=".challenge.ListChallengesActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
         <activity android:name=".trip.AddTripActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".trip.ListTripsActivity" />
+        </activity>
+        <activity android:name=".challenge.AddChallengeActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".challenge.ListChallengesActivity" />
         </activity>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
@@ -136,6 +146,11 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".trip.ListTripsActivity" />
+        </activity>
+        <activity android:name=".challenge.ShowChallengeActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".challenge.ListChallengesActivity" />
         </activity>
     </application>
 

@@ -42,11 +42,20 @@ public class UserAreaActivity extends AppCompatActivity {
     private DatabaseReference databaseUser;
     private Intent intent;
     private ProgressDialog progressDialog;
+    private User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_area);
+
+        // If user isn't logged, start login activity
+        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+            startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+            finish();
+        }
+
+        Log.i("create","ok");
 
         // Set toolbar and actionbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.userToolbar);
@@ -56,7 +65,7 @@ public class UserAreaActivity extends AppCompatActivity {
         actionBar.setTitle(getString(R.string.userAreaActivity));
 
         // Get Firebase authentication instance
-        firebaseAuth = FirebaseAuth.getInstance();
+       // firebaseAuth =
 
         // Initialize progress dialog
         progressDialog = new ProgressDialog(this);
@@ -65,12 +74,6 @@ public class UserAreaActivity extends AppCompatActivity {
         textViewIdUser = (TextView) findViewById(R.id.tvIdUser);
         textViewUserName = (TextView) findViewById(R.id.tvUserName);
         textViewUserMail = (TextView) findViewById(R.id.tvUserMail);
-
-        // If user isn't logged, start login activity
-        if (firebaseAuth.getCurrentUser() == null) {
-            startActivity(new Intent(getApplicationContext(), LoginActivity.class));
-            finish();
-        }
 
         // Load user information
         loadUser();
@@ -86,7 +89,13 @@ public class UserAreaActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_editProfile:
+               // startActivityForResult(intent, ACTIVITY_CODE);
+                loadUser();
+                intent = new Intent(UserAreaActivity.this, EditProfileActivity.class);
+                intent.putExtra("user", user);
+               // startActivity(intent);
                 startActivityForResult(intent, ACTIVITY_CODE);
+               // finish();
                 return true;
             case R.id.action_deleteProfile:
                 deleteUserAccount();
@@ -160,20 +169,28 @@ public class UserAreaActivity extends AppCompatActivity {
      * @param view
      */
     public void signOut(View view) {
-        firebaseAuth.signOut();
+        FirebaseAuth.getInstance().signOut();
         finish();
     }
 
-    @Override
+
+
+       @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        textViewIdUser.setText(data.getStringExtra("idUser"));
-        textViewUserName.setText(data.getStringExtra("userName"));
-        textViewUserMail.setText(data.getStringExtra("userMail"));
+      //  textViewIdUser.setText(adat.getStringExtra("idUser"));
+      //  textViewUserName.setText(data.getStringExtra("userName"));
+      //  textViewUserMail.setText(data.getStringExtra("userMail"));
+         //  user = data.getParcelableExtra("user");
+         //  loadUser();
+           if (data.getStringExtra("userMail") != null){
+               textViewUserMail.setText(data.getStringExtra("userMail"));
+           }
 
-        intent.putExtra("idUser", data.getStringExtra("idUser"));
-        intent.putExtra("userName", data.getStringExtra("userName"));
-        intent.putExtra("userMail", data.getStringExtra("userMail"));
+
+      //  intent.putExtra("idUser", data.getStringExtra("idUser"));
+     //   intent.putExtra("userName", data.getStringExtra("userName"));
+     //   intent.putExtra("userMail", data.getStringExtra("userMail"));
         //NECESSITAT DE PASSAR CONTRASENYA TAMBÉ PER SI CANVIA QUE S'ACTUALITZI AL EDITAR
     }
 
@@ -182,9 +199,9 @@ public class UserAreaActivity extends AppCompatActivity {
      */
     private void loadUser(){
 
-        currentMail = firebaseAuth.getCurrentUser().getEmail();
+        currentMail = FirebaseAuth.getInstance().getCurrentUser().getEmail();
         databaseUser = FirebaseDatabase.getInstance().getReference(FireBaseReferences.USER_REFERENCE);
-        intent = new Intent(UserAreaActivity.this, EditProfileActivity.class);
+
 
         // Show message on progress dialog
         progressDialog.setMessage(getString(R.string.loadingData));
@@ -196,7 +213,16 @@ public class UserAreaActivity extends AppCompatActivity {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 
-                idUser = dataSnapshot.getValue(User.class).getIdUser();
+                user = dataSnapshot.getValue(User.class);
+
+                textViewIdUser.setText(user.getIdUser());
+                textViewUserName.setText(user.getUserName());
+                textViewUserMail.setText(user.getUserMail());
+
+                Log.i("mailadded",user.getUserMail() );
+
+
+                /*idUser = dataSnapshot.getValue(User.class).getIdUser();
                 userName = dataSnapshot.getValue(User.class).getUserName();
                 userMail = dataSnapshot.getValue(User.class).getUserMail();
                 userPassword = dataSnapshot.getValue(User.class).getUserPassword();
@@ -210,7 +236,7 @@ public class UserAreaActivity extends AppCompatActivity {
                 intent.putExtra("userName", userName);
                 intent.putExtra("userMail", userMail);
                 intent.putExtra("userPassword", userPassword);
-                intent.putExtra("userKey", userKey);
+                intent.putExtra("userKey", userKey);*/
 
                 progressDialog.dismiss();
 
@@ -219,6 +245,13 @@ public class UserAreaActivity extends AppCompatActivity {
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                 //TO-DO
+                user = dataSnapshot.getValue(User.class);
+
+                textViewIdUser.setText(user.getIdUser());
+                textViewUserName.setText(user.getUserName());
+                textViewUserMail.setText(user.getUserMail());
+
+                Log.i("mailchanged",user.getUserMail() );
             }
 
             @Override

@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="edu.uoc.iartal.trekkingchallenge.challenge.ShowChallengeActivity">
+
+    <include android:id="@+id/showChallengeToolbar"
+        layout="@layout/toolbar" />
+
+    <ImageView
+        android:id="@+id/icRouteShowChallenge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginStart="40dp"
+        android:src="@drawable/ic_challenge"/>
+
+    <TextView
+        android:id="@+id/tvRouteShowChallenge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/icRouteShowChallenge"
+        android:layout_toEndOf="@+id/icRouteShowChallenge"
+        android:layout_alignTop="@+id/icRouteShowChallenge"
+        android:layout_alignBottom="@+id/icRouteShowChallenge"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
+        android:gravity="center"
+        android:text="@string/routeChallenge"
+        android:textStyle="bold"
+        android:textSize="18sp"/>
+
+    <TextView
+        android:id="@+id/tvRouteChallenge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/icRouteShowChallenge"
+        android:layout_alignLeft="@+id/icRouteShowChallenge"
+        android:layout_alignStart="@+id/icRouteShowChallenge"
+        android:textSize="15sp"/>
+
+    <ImageView
+        android:id="@+id/icDateShowChallenge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_alignLeft="@+id/icRouteShowChallenge"
+        android:layout_alignStart="@+id/icRouteShowChallenge"
+        android:layout_below="@+id/tvRouteChallenge"
+        android:src="@drawable/ic_done"/>
+
+    <TextView
+        android:id="@+id/tvDateShowChallenge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/icDateShowChallenge"
+        android:layout_toEndOf="@+id/icDateShowChallenge"
+        android:layout_alignTop="@+id/icDateShowChallenge"
+        android:layout_alignBottom="@+id/icDateShowChallenge"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
+        android:gravity="center"
+        android:text="@string/dateChallenge"
+        android:textStyle="bold"
+        android:textSize="15sp"/>
+
+    <TextView
+        android:id="@+id/tvDateChallenge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/icDateShowChallenge"
+        android:layout_alignLeft="@+id/icDateShowChallenge"
+        android:layout_alignStart="@+id/icDateShowChallenge"
+        android:textSize="15sp"/>
+
+    <ImageView
+        android:id="@+id/icDescShowChallenge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_alignLeft="@+id/icRouteShowChallenge"
+        android:layout_alignStart="@+id/icRouteShowChallenge"
+        android:layout_below="@+id/tvDateChallenge"
+        android:src="@drawable/ic_description"/>
+
+    <TextView
+        android:id="@+id/tvDescShowChallenge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/icDescShowChallenge"
+        android:layout_toEndOf="@+id/icDescShowChallenge"
+        android:layout_alignTop="@+id/icDescShowChallenge"
+        android:layout_alignBottom="@+id/icDescShowChallenge"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
+        android:gravity="center"
+        android:text="@string/descTrip"
+        android:textStyle="bold"
+        android:textSize="15sp"/>
+
+    <TextView
+        android:id="@+id/tvDescChallenge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/icDescShowChallenge"
+        android:layout_alignLeft="@+id/icDescShowChallenge"
+        android:layout_alignStart="@+id/icDescShowChallenge"
+        android:textSize="15sp"/>
+
+    <TextView
+        android:id="@+id/tvRankingChallenge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/tvDescChallenge"
+        android:layout_alignLeft="@+id/icDescShowChallenge"
+        android:layout_alignStart="@+id/icDescShowChallenge"
+        android:gravity="center"
+        android:text="@string/rankingChallenge"
+        android:textStyle="bold"
+        android:textSize="15sp"/>
+
+    <de.codecrafters.tableview.TableView
+        android:id="@+id/rankingTable"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvRankingChallenge"
+        android:layout_alignStart="@+id/icDescShowChallenge"
+        android:layout_alignLeft="@+id/icDescShowChallenge"
+        android:layout_marginBottom="25dp">
+
+    </de.codecrafters.tableview.TableView>
+
+</RelativeLayout>

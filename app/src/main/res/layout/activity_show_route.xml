@@ -88,8 +88,7 @@
         android:layout_marginEnd="4dp"
         android:layout_below="@id/viewDiv2"
         android:layout_marginLeft="35dp"
-        android:layout_marginStart="35dp"
-        app:srcCompat="@drawable/ic_circular" />
+        android:layout_marginStart="35dp" />
 
     <TextView
         android:id="@+id/tvType"

@@ -8,6 +8,7 @@ import android.view.View;
 
 import com.google.firebase.auth.FirebaseAuth;
 
+import edu.uoc.iartal.trekkingchallenge.challenge.ListChallengesActivity;
 import edu.uoc.iartal.trekkingchallenge.group.ListGroupsActivity;
 import edu.uoc.iartal.trekkingchallenge.route.ListRoutesActivity;
 import edu.uoc.iartal.trekkingchallenge.trip.ListTripsActivity;
@@ -61,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
     public void challengeActivity (View view){
         // Main challenge functionality. If user isn't logged, access is forbidden and opens user access activity
         if (firebaseAuth.getCurrentUser()!=null) {
-            startActivity(new Intent(getApplicationContext(),MainActivity.class));
+            startActivity(new Intent(getApplicationContext(),ListChallengesActivity.class));
         } else {
             startActivity(new Intent(getApplicationContext(), AccessActivity.class));
         }

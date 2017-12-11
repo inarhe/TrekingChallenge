@@ -110,7 +110,7 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.RouteViewHol
         viewHolder.textViewDifficult.setText(routes.get(position).getDifficult());
         viewHolder.textViewRegion.setText(routes.get(position).getRegion());
 
-        if (routes.get(position).getType().equals("Circular")){
+        if (routes.get(position).getType().equals(R.string.circular)){
             viewHolder.imageViewType.setImageResource(R.drawable.ic_circular);
         } else {
             viewHolder.imageViewType.setImageResource(R.drawable.ic_goback);

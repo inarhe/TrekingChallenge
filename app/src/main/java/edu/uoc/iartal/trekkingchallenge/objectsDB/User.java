@@ -1,6 +1,9 @@
 package edu.uoc.iartal.trekkingchallenge.objectsDB;
 
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -9,11 +12,12 @@ import java.util.Map;
  */
 
 // User object class
-public class User {
-    public String idUser, userName, userMail, userPassword;
-    public Map<String, String> groups = new HashMap<>();
-    public Map<String, String> trips = new HashMap<>();
-    public Map<String, String> finished = new HashMap<>();
+public class User implements Parcelable {
+    private String idUser, userName, userMail, userPassword;
+    private Map<String, String> groups = new HashMap<>();
+    private Map<String, String> trips = new HashMap<>();
+    private Map<String, String> finished = new HashMap<>();
+    private Map<String, String> challenges = new HashMap<>();
 
     public User() {
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
@@ -26,6 +30,13 @@ public class User {
         this.userName = userName;
         this.userMail = userMail;
         this.userPassword = userPassword;
+    }
+
+    public User(Parcel in) {
+        this.idUser = in.readString();
+        this.userName = in.readString();
+        this.userMail = in.readString();
+        this.userPassword = in.readString();
     }
 
     public String getIdUser() {
@@ -72,5 +83,33 @@ public class User {
     public Map<String, String> getFinished() {
         return this.finished;
     }
+
+    public Map<String, String> getChallenges() {
+        return this.challenges;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(idUser);
+        dest.writeString(userName);
+        dest.writeString(userMail);
+        dest.writeString(userPassword);
+    }
+
+    public static final Parcelable.Creator<User> CREATOR = new Parcelable.Creator<User>() {
+
+        public User createFromParcel(Parcel in) {
+            return new User(in);
+        }
+
+        public User[] newArray(int size) {
+            return new User[size];
+        }
+    };
 
 }

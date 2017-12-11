@@ -2,13 +2,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="edu.uoc.iartal.trekkingchallenge.trip.AddTripActivity"
+    tools:context="edu.uoc.iartal.trekkingchallenge.challenge.AddChallengeActivity"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center"
     android:orientation="vertical" >
 
-    <include android:id="@+id/addTripToolbar"
+    <include android:id="@+id/addChallengeToolbar"
         layout="@layout/toolbar" />
 
     <ScrollView
@@ -21,20 +21,20 @@
             android:orientation="vertical" >
 
             <android.support.design.widget.TextInputLayout
-                android:id="@+id/nameTripWrapper"
+                android:id="@+id/nameChallengeWrapper"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp">
 
                 <EditText
-                    android:id="@+id/etNameTrip"
+                    android:id="@+id/etNameChallenge"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="16dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginRight="16dp"
                     android:layout_marginEnd="16dp"
-                    android:hint="@string/hintNameTrip" />
+                    android:hint="@string/hintNameChallenge" />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -52,39 +52,21 @@
 
 
             <android.support.design.widget.TextInputLayout
-                android:id="@+id/descTripWrapper"
+                android:id="@+id/descChallengeWrapper"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp">
 
                 <EditText
-                    android:id="@+id/etDescriptionTrip"
+                    android:id="@+id/etDescriptionChallenge"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/hintDescTrip"
+                    android:hint="@string/hintDescChallenge"
                     android:inputType="textMultiLine|textLongMessage"
                     android:layout_marginLeft="16dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginRight="16dp"
                     android:layout_marginEnd="16dp" />
-
-            </android.support.design.widget.TextInputLayout>
-
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/placeWrapper"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp">
-
-                    <EditText
-                        android:id="@+id/etPlace"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/hintPlaceTrip"
-                        android:layout_marginLeft="16dp"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginRight="16dp"
-                        android:layout_marginEnd="16dp"/>
 
             </android.support.design.widget.TextInputLayout>
 
@@ -119,14 +101,14 @@
 
 
             <CheckBox
-                android:id="@+id/cBPublicTrip"
+                android:id="@+id/cBPublicChallenge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="4dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginLeft="16dp"
                 android:layout_marginTop="16dp"
-                android:text="@string/tripIsPublic" />
+                android:text="@string/challengeIsPublic" />
 
 
             <LinearLayout
@@ -137,7 +119,17 @@
                 android:orientation="horizontal">
 
                 <Button
-                    android:id="@+id/acceptTrip"
+                    android:id="@+id/cancelChallenge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:layout_margin="20dp"
+                    android:width="120dp"
+                    android:onClick="cancelChallenge"
+                    android:text="@string/cancelButton" />
+
+                <Button
+                    android:id="@+id/acceptCallenge"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="left"
@@ -145,18 +137,9 @@
                     android:width="120dp"
                     android:background="#009688"
                     android:textColor="#FFFFFF"
-                    android:onClick="addTrip"
+                    android:onClick="addChallenge"
                     android:text="@string/acceptButton" />
 
-                <Button
-                    android:id="@+id/cancelTrip"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="right"
-                    android:layout_margin="20dp"
-                    android:width="120dp"
-                    android:onClick="cancelTrip"
-                    android:text="@string/cancelButton" />
             </LinearLayout>
 
         </LinearLayout>

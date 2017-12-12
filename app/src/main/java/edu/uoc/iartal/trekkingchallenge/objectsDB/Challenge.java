@@ -12,7 +12,7 @@ import java.util.Map;
 
 // Group object class
 public class Challenge implements Parcelable{
-    private String idChallenge, challengeName, challengeDescription, limitDate, route, userAdmin;
+    private String id, challengeName, challengeDescription, limitDate, route, userAdmin;
     private Boolean isPublic;
     private int numberOfMembers;
     private Map<String, String> results = new HashMap<>();
@@ -21,8 +21,8 @@ public class Challenge implements Parcelable{
 
     }
 
-    public Challenge(String idChallenge, String challengeName, String challengeDescription, String limitDate, String route, String userAdmin, Boolean isPublic, int numberOfMembers) {
-        this.idChallenge = idChallenge;
+    public Challenge(String id, String challengeName, String challengeDescription, String limitDate, String route, String userAdmin, Boolean isPublic, int numberOfMembers) {
+        this.id = id;
         this.challengeName = challengeName;
         this.challengeDescription = challengeDescription;
         this.limitDate = limitDate;
@@ -33,7 +33,7 @@ public class Challenge implements Parcelable{
     }
 
     public Challenge(Parcel in) {
-        this.idChallenge = in.readString();
+        this.id = in.readString();
         this.challengeName = in.readString();
         this.challengeDescription = in.readString();
         this.limitDate = in.readString();
@@ -43,12 +43,12 @@ public class Challenge implements Parcelable{
         in.readMap(results, String.class.getClassLoader());
     }
 
-    public String getIdChallenge() {
-        return idChallenge;
+    public String getId() {
+        return id;
     }
 
-    public void setIdChallenge(String idChallenge) {
-        this.idChallenge = idChallenge;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getChallengeName() {
@@ -118,7 +118,7 @@ public class Challenge implements Parcelable{
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(idChallenge);
+        dest.writeString(id);
         dest.writeString(challengeName);
         dest.writeString(challengeDescription);
         dest.writeString(limitDate);

@@ -14,7 +14,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -32,19 +31,13 @@ import edu.uoc.iartal.trekkingchallenge.objectsDB.ChallengeAdapter;
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
 import edu.uoc.iartal.trekkingchallenge.objectsDB.User;
 
-/**
- * Created by Ingrid Artal on 26/11/2017.
- */
-
 public class MyChallengesFragment extends Fragment implements SearchView.OnQueryTextListener{
-
     private List<Challenge> challenges;
-    private List<String> challengesNames;
+    private List<String> challengesIds;
     private ChallengeAdapter challengeAdapter;
     private ProgressDialog progressDialog;
     private RecyclerView recyclerView;
     private String currentUser, currentMail;
-    private ImageButton imageButton;
 
     public MyChallengesFragment(){
 
@@ -54,27 +47,27 @@ public class MyChallengesFragment extends Fragment implements SearchView.OnQuery
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        //Initialize variables
         progressDialog = new ProgressDialog(getActivity());
         progressDialog.setMessage(getString(R.string.loadingData));
 
         DatabaseReference databaseUser = FirebaseDatabase.getInstance().getReference(FireBaseReferences.USER_REFERENCE);
         currentMail = FirebaseAuth.getInstance().getCurrentUser().getEmail();
-        challengesNames = new ArrayList<>();
+        challengesIds = new ArrayList<>();
 
         databaseUser.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                challengesNames.removeAll(challengesNames);
-                for (DataSnapshot challengesSnapshot :
+                challengesIds.clear();
+                for (DataSnapshot userSnapshot :
                         dataSnapshot.getChildren()) {
-                    User user = challengesSnapshot.getValue(User.class);
+                    User user = userSnapshot.getValue(User.class);
                     if (user.getUserMail().equals(currentMail)) {
                         currentUser = user.getIdUser();
                         for (String key : user.getChallenges().keySet()) {
-                            challengesNames.add(key);
+                            challengesIds.add(key);
                         }
                     }
-
                 }
             }
 
@@ -85,55 +78,28 @@ public class MyChallengesFragment extends Fragment implements SearchView.OnQuery
         });
     }
 
+    /**
+     * Define recyclerview that will be show in this view
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.activity_list_my_challenges,container,false);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.rvListMyChallenges);
-        recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-
-   /*     DatabaseReference databaseUser = FirebaseDatabase.getInstance().getReference(FireBaseReferences.USER_REFERENCE);
-        currentMail = FirebaseAuth.getInstance().getCurrentUser().getEmail();
-        challengesNames = new ArrayList<>();
-
-        databaseUser.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                challengesNames.removeAll(challengesNames);
-                for (DataSnapshot challengesSnapshot :
-                        dataSnapshot.getChildren()) {
-                    User user = challengesSnapshot.getValue(User.class);
-                    if (user.getUserMail().equals(currentMail)) {
-                        currentUser = user.getIdUser();
-                        for (String key : user.getChallenges().keySet()) {
-                            challengesNames.add(key);
-                        }
-                    }
-
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                //TO-DO
-            }
-        });*/
-
-
-       // challengeAdapter = new ChallengeAdapter(challenges);
-
-    //    recyclerView.setAdapter(challengeAdapter);
-
-        // Show database groups in recycler view
-      //  progressDialog.show();
-
-
-
 
         return rootView;
     }
 
+    /**
+     * Get database public and private challenges that current user is a member
+     * @param view
+     * @param savedInstanceState
+     */
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -146,7 +112,7 @@ public class MyChallengesFragment extends Fragment implements SearchView.OnQuery
 
         recyclerView.setAdapter(challengeAdapter);
 
-        // Show database groups in recycler view
+        // Get database challenges and notify adapter to show them in recycler view
         progressDialog.show();
         databaseChallenge.addValueEventListener(new ValueEventListener() {
             @Override
@@ -155,16 +121,14 @@ public class MyChallengesFragment extends Fragment implements SearchView.OnQuery
                 for (DataSnapshot tripSnapshot :
                         dataSnapshot.getChildren()) {
                     Challenge challenge = tripSnapshot.getValue(Challenge.class);
-                    if (challengesNames.contains(challenge.getIdChallenge())) {
+                    if (challengesIds.contains(challenge.getId())) {
                         challenges.add(challenge);
-
                         if (challenge.getUserAdmin().equals(currentUser)) {
                             challengeAdapter.setVisibility(true);
                         } else {
                             challengeAdapter.setVisibility(false);
                         }
                     }
-
                 }
                 challengeAdapter.notifyDataSetChanged();
                 progressDialog.dismiss();
@@ -175,14 +139,16 @@ public class MyChallengesFragment extends Fragment implements SearchView.OnQuery
                 //TO-DO
             }
         });
-
     }
 
+    /**
+     * Inflate menu with menu layout information and define search view
+     * @param menu
+     * @param inflater
+     */
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         inflater.inflate(R.menu.menu_list_challenges, menu);
-
         final MenuItem item = menu.findItem(R.id.action_search);
         final SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
         searchView.setOnQueryTextListener(this);
@@ -191,46 +157,51 @@ public class MyChallengesFragment extends Fragment implements SearchView.OnQuery
                 new MenuItemCompat.OnActionExpandListener() {
                     @Override
                     public boolean onMenuItemActionCollapse(MenuItem item) {
-// Do something when collapsed
                         challengeAdapter.setFilter(challenges);
-                        return true; // Return true to collapse action view
+                        // Return true to collapse action view
+                        return true;
                     }
 
                     @Override
                     public boolean onMenuItemActionExpand(MenuItem item) {
-// Do something when expanded
-                        return true; // Return true to expand action view
+                        // Return true to expand action view
+                        return true;
                     }
                 });
     }
-
 
     @Override
     public boolean onQueryTextSubmit(String query) {
         return false;
     }
 
+    /**
+     * Pass new challenge list to Adapter
+     * @param newText
+     * @return
+     */
     @Override
     public boolean onQueryTextChange(String newText) {
         final List<Challenge> filteredModelList = filter(challenges, newText);
-
         challengeAdapter.setFilter(filteredModelList);
         return true;
     }
 
+    /**
+     * Get search result trip list
+     * @param models
+     * @param query
+     * @return
+     */
     private List<Challenge> filter(List<Challenge> models, String query) {
         query = query.toLowerCase();
         final List<Challenge> filteredModelList = new ArrayList<>();
         for (Challenge model : models) {
-            final String text = model.getIdChallenge().toLowerCase();
+            final String text = model.getId().toLowerCase();
             if (text.contains(query)) {
                 filteredModelList.add(model);
             }
         }
         return filteredModelList;
-    }
-
-    private void removeChallenge (View view) {
-
     }
 }

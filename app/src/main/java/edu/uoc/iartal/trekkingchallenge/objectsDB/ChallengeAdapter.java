@@ -16,7 +16,6 @@ import java.util.List;
 
 import edu.uoc.iartal.trekkingchallenge.R;
 import edu.uoc.iartal.trekkingchallenge.challenge.ShowChallengeActivity;
-import edu.uoc.iartal.trekkingchallenge.trip.ShowTripActivity;
 
 /**
  * Created by Ingrid Artal on 12/11/2017.
@@ -67,9 +66,9 @@ public class ChallengeAdapter extends RecyclerView.Adapter<ChallengeAdapter.Chal
     @Override
     public void onBindViewHolder(ChallengeViewHolder viewHolder, final int position) {
        // Modify content of each list item
-        viewHolder.textViewChallengeName.setText(challenges.get(position).getIdChallenge());
+        viewHolder.textViewChallengeName.setText(challenges.get(position).getId());
         viewHolder.textViewChallengeDate.setText(challenges.get(position).getLimitDate());
-      //  viewHolder.textViewTripDesc.setText(trips.get(position).getTripDescription());
+      //  viewHolder.textViewTripDesc.setText(trips.get(position).getDescription());
         viewHolder.imageViewChallenge.setImageResource(R.drawable.ic_challenge);
         if (challenges.get(position).getPublic()) {
             viewHolder.textViewIsPublic.setText(R.string.publicChallenge);

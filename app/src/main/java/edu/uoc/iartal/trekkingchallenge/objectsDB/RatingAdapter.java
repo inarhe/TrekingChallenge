@@ -79,7 +79,7 @@ public class RatingAdapter extends RecyclerView.Adapter<RatingAdapter.RatingView
     @Override
     public void onBindViewHolder(final RatingViewHolder viewHolder, final int position) {
         // Modify content of each list item
-        viewHolder.textViewUser.setText(ratings.get(position).getUser());
+        viewHolder.textViewUser.setText("@" + ratings.get(position).getUser());
         viewHolder.textViewTitle.setText(ratings.get(position).getTitle());
         viewHolder.textViewOpinion.setText(ratings.get(position).getOpinion());
 

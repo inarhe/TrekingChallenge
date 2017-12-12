@@ -3,14 +3,18 @@ package edu.uoc.iartal.trekkingchallenge.route;
 import android.app.Dialog;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,7 +34,6 @@ import java.util.ArrayList;
 
 import edu.uoc.iartal.trekkingchallenge.R;
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
-import edu.uoc.iartal.trekkingchallenge.group.AddGroupActivity;
 import edu.uoc.iartal.trekkingchallenge.objectsDB.Rating;
 import edu.uoc.iartal.trekkingchallenge.objectsDB.RatingAdapter;
 import edu.uoc.iartal.trekkingchallenge.objectsDB.Route;
@@ -43,14 +46,17 @@ public class RatingRouteActivity extends AppCompatActivity {
     private Route route;
     private Dialog rateDialog, commentDialog;
     private DatabaseReference databaseRating, databaseUser, databaseRoute;
-    private String userName, idRate;
+    private String userName, idRate, title, body;
     private RatingAdapter ratingAdapter;
     private RatingBar ratingBar;
+    private Boolean isRated = false;
+    private EditText editTextTitle, editTextBody;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rating_route);
+        Log.i("xreate","ok");
 
         // If user isn't logged, start login activity
         if (FirebaseAuth.getInstance().getCurrentUser() == null) {
@@ -85,10 +91,15 @@ public class RatingRouteActivity extends AppCompatActivity {
         rateDialog.setContentView(R.layout.rating_route_dialog);
         rateDialog.setCancelable(true);
 
-        // Initialize and set comment dialog
-        commentDialog = new Dialog(this);
-        commentDialog.setContentView(R.layout.comment_route_dialog);
-        commentDialog.setCancelable(true);
+        // Define floating button for adding new rating
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fabAddRate);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                searchRating();
+                rateRoute();
+            }
+        });
 
         // Show database route ratings in recycler view
         databaseRating.addValueEventListener(new ValueEventListener() {
@@ -98,7 +109,7 @@ public class RatingRouteActivity extends AppCompatActivity {
                 for (DataSnapshot ratingSnapshot:
                         dataSnapshot.getChildren()) {
                     Rating rate = ratingSnapshot.getValue(Rating.class);
-                    if (rate.getRoute().equals(route.getIdRoute())){
+                    if (rate.getRoute().equals(route.getName())){
                         ratings.add(rate);
                     }
                 }
@@ -113,45 +124,67 @@ public class RatingRouteActivity extends AppCompatActivity {
 
         // Get current user name
         getCurrentUserName();
+        searchRating();
     }
+
+
 
     /**
      * Opens rating dialog when rate button is clicked. Save ratting too.
-     * @param view
      */
-    public void rate(View view){
+    public void rateRoute(){
         // Show rate dialog when rate button is clicked
         rateDialog.show();
-
         // Initialize and set dialog layout elements
         Button registerRateButton = (Button) rateDialog.findViewById(R.id.bAcceptRate);
         Button cancelRateButton = (Button) rateDialog.findViewById(R.id.bCancelRate);
-        ratingBar = (RatingBar)rateDialog.findViewById(R.id.rbRateRoute);
+        ratingBar = (RatingBar) rateDialog.findViewById(R.id.rbRateRoute);
+        ratingBar.setRating(0);
+        editTextTitle = (EditText) rateDialog.findViewById(R.id.etCommentTitle);
+        editTextBody = (EditText) rateDialog.findViewById(R.id.etCommentBody);
         TextView textViewTitleRate = (TextView) rateDialog.findViewById(R.id.tvTitleRate);
         textViewTitleRate.setText(route.getName());
+
+
 
         // Save rating and updates all its dependencies
         registerRateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (idRate == null){
-                    idRate = databaseRating.push().getKey();
-                }
-                Rating newRate = new Rating(idRate, "none", "none", route.getName(), userName, ratingBar.getRating());
+                if (isRated){
+                    Toast.makeText(getApplicationContext(),getString(R.string.alreadyRated),Toast.LENGTH_LONG).show();
+                } else {
+                    String title = editTextTitle.getText().toString().trim();
+                    String body = editTextBody.getText().toString().trim();
 
-                databaseRating.child(idRate).setValue(newRate).addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if(task.isSuccessful()) {
-                            updateRouteDependencies();
-                            updateUserDependencies();
-                            Toast.makeText(getApplicationContext(), getString(R.string.rateSaved), Toast.LENGTH_LONG).show();
-                        } else {
-                            Toast.makeText(getApplicationContext(),getString(R.string.rateNotSaved),Toast.LENGTH_LONG).show();
-                        }
+                    // If some of the input parameters are incorrect or empty, stops the function execution further
+                    if(TextUtils.isEmpty(title)) {
+                        Toast.makeText(getApplicationContext(), getString(R.string.adviceTitle), Toast.LENGTH_LONG).show();
+                        return;
                     }
-                });
-                rateDialog.dismiss();
+
+                    if(TextUtils.isEmpty(body)) {
+                        Toast.makeText(getApplicationContext(), getString(R.string.adviceBody), Toast.LENGTH_LONG).show();
+                        return;
+                    }
+
+                    idRate = databaseRating.push().getKey();
+                    Rating newRate = new Rating(idRate, title, body, route.getName(), userName, ratingBar.getRating());
+
+                    databaseRating.child(idRate).setValue(newRate).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if(task.isSuccessful()) {
+                                updateRouteDependencies();
+                                updateUserDependencies();
+                                Toast.makeText(getApplicationContext(), getString(R.string.rateSaved), Toast.LENGTH_LONG).show();
+                            } else {
+                                Toast.makeText(getApplicationContext(),getString(R.string.rateNotSaved),Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    });
+                    rateDialog.dismiss();
+                }
             }
         });
 
@@ -162,55 +195,6 @@ public class RatingRouteActivity extends AppCompatActivity {
             }
         });
     }
-
-    /**
-     * Opens comment dialog when comment button is clicked. Save comment too.
-     * @param view
-     */
-    public void writeComment(View view){
-        // Show comment dialog when rate button is clicked
-        commentDialog.show();
-
-        // Initialize and set dialog layout elements
-        Button registerRateButton = (Button) rateDialog.findViewById(R.id.bAcceptRate);
-        Button cancelRateButton = (Button) rateDialog.findViewById(R.id.bCancelRate);
-        ratingBar = (RatingBar)rateDialog.findViewById(R.id.rbRateRoute);
-        TextView textViewTitleRate = (TextView) rateDialog.findViewById(R.id.tvTitleRate);
-        textViewTitleRate.setText(route.getName());
-
-        // Save rating and updates all its dependencies
-        registerRateButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (idRate == null){
-                    idRate = databaseRating.push().getKey();
-                }
-                Rating newRate = new Rating(idRate, "none", "none", route.getName(), userName, ratingBar.getRating());
-
-                databaseRating.child(idRate).setValue(newRate).addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if(task.isSuccessful()) {
-                            updateRouteDependencies();
-                            updateUserDependencies();
-                            Toast.makeText(getApplicationContext(), getString(R.string.rateSaved), Toast.LENGTH_LONG).show();
-                        } else {
-                            Toast.makeText(getApplicationContext(),getString(R.string.rateNotSaved),Toast.LENGTH_LONG).show();
-                        }
-                    }
-                });
-                rateDialog.dismiss();
-            }
-        });
-
-        cancelRateButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                rateDialog.dismiss();
-            }
-        });
-    }
-
 
     /**
      * Search the name of current user, to know who is doing the action
@@ -220,7 +204,7 @@ public class RatingRouteActivity extends AppCompatActivity {
         String currentMail = FirebaseAuth.getInstance().getCurrentUser().getEmail();
 
         // Query database to find user who has the current mail
-        Query query = databaseUser.orderByChild(FireBaseReferences.USERMAIL_REFERENCE).equalTo(currentMail);
+        Query query = databaseUser.orderByChild(FireBaseReferences.USER_MAIL_REFERENCE).equalTo(currentMail);
         query.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -253,15 +237,14 @@ public class RatingRouteActivity extends AppCompatActivity {
      * Updates rating list, rate average and number of ratings in the current route object
      */
     private void updateRouteDependencies(){
-        final int numRatings = route.getNumRatings()+1;
-        Float averageRoute = route.getRatingAverage();
-        final Float average = averageRoute + ratingBar.getRating();
-
         databaseRoute.child(route.getIdRoute()).child(FireBaseReferences.ROUTE_RATINGS_REFERENCE).child(idRate).setValue("true")
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if(task.isSuccessful()){
+                    int numRatings = route.getNumRatings()+1;
+                    Float averageRoute = route.getRatingAverage();
+                    Float average = averageRoute + ratingBar.getRating();
                     databaseRoute.child(route.getIdRoute()).child(FireBaseReferences.ROUTE_NUM_RATINGS_REFERENCE).setValue(numRatings);
                     databaseRoute.child(route.getIdRoute()).child(FireBaseReferences.ROUTE_RATING_AVERAGE_REFERENCE).setValue(average/numRatings);
                 }
@@ -275,7 +258,6 @@ public class RatingRouteActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if(task.isSuccessful()){
-
                             Toast.makeText(getApplicationContext(), getString(R.string.rateSaved), Toast.LENGTH_LONG).show();
                         } else {
                             Toast.makeText(getApplicationContext(),getString(R.string.rateNotSaved),Toast.LENGTH_LONG).show();
@@ -284,4 +266,24 @@ public class RatingRouteActivity extends AppCompatActivity {
                 });
 
     }
+
+    private void searchRating(){
+        databaseRating.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot ratingSnapshot : dataSnapshot.getChildren()){
+                    Rating rate = ratingSnapshot.getValue(Rating.class);
+                    if (rate.getRoute().equals(route.getName()) && rate.getUser().equals(userName)){
+                        isRated = true;
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
 }

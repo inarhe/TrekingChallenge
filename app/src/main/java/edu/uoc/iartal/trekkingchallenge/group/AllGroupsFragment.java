@@ -64,7 +64,6 @@ public class AllGroupsFragment extends Fragment implements SearchView.OnQueryTex
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.activity_list_all_groups,container,false);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.rvListAllGroups);
-        recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         return rootView;
     }

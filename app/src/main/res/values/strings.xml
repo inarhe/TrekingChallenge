@@ -79,7 +79,13 @@
     <string name="actionJoinTrip">Uneix-t\'hi</string>
     <string name="actionLeaveTrip">Abandona l\'excursió</string>
     <string name="tripJoined">T\'has unit a l\'excursió</string>
+    <string name="joinTripAsk">Et vols unir a aquesta excursió?</string>
     <string name="tripLeft">Segur que vols abandonar l\'excursió?</string>
+    <string name="tripDeleted">Excursió eliminada </string>
+    <string name="tripNotDeleted">No s\'ha pogut eliminar l\'excursió</string>
+
+    <!--Add trip activity-->
+    <string name="chooseRouteSpinner">- Selecciona la ruta -</string>
 
     <!--Show challenge activity-->
     <string name="routeChallenge">Ruta escollida:</string>
@@ -88,6 +94,7 @@
     <string name="actionJoinChallenge">Uneix-t\'hi</string>
     <string name="actionLeaveChallenge">Abandona el repte</string>
     <string name="challengeJoined">T\'has unit al repte</string>
+    <string name="joinChallengeAsk">Et vols unir a aquest repte?</string>
     <string name="challengeLeft">Segur que vols abandonar el repte?</string>
     <string name="rankingChallenge">Rànquing del repte:</string>
 
@@ -110,14 +117,17 @@
     <string name="privateChallenge">Repte privat</string>
     <string name="usersInvitedChallenge">Usuaris afegits al repte</string>
     
-    <!--Ratin route activity-->
+    <!--Rating route activity-->
     <string name="comment">Comentar</string>
     <string name="rate">Valorar</string>
     <string name="ratingActivity">Valoracions</string>
-    <string name="rateSaved">Puntuació registrada</string>
-    <string name="rateNotSaved">No s\'ha pogut registrar la puntuació</string>
+    <string name="rateSaved">Valoració registrada</string>
+    <string name="rateNotSaved">No s\'ha pogut registrar la valoració</string>
     <string name="hintCommentTitle">Títol del comentari</string>
     <string name="hintCommentBody">Comentari</string>
+    <string name="alreadyRated">Ja has valorat aquesta ruta</string>
+    <string name="adviceTitle">Siusplau, introdueix un títol</string>
+    <string name="adviceBody">Siusplau, introdueix un comentari</string>
 
     <!--Commons-->
     <string name="notDownloaded">No s\'ha pogut descarregar la imatge</string>

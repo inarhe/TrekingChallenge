@@ -9,14 +9,13 @@ public class FireBaseReferences {
     final public static String USER_REFERENCE = "user";
     final public static String IDUSER_REFERENCE = "idUser";
     final public static String USERNAME_REFERENCE = "userName";
-    final public static String USERMAIL_REFERENCE = "userMail";
-    final public static String USERGROUPS_REFERENCE = "groups";
+    final public static String USER_MAIL_REFERENCE = "userMail";
     final public static String USERFINISHED_REFERENCE = "finished";
     final public static String USERRESULT_REFERENCE = "finished";
-    final public static String USERTRIPS_REFERENCE = "trips";
+    final public static String USER_TRIPS_REFERENCE = "trips";
     final public static String USER_GROUPS_REFERENCE = "groups";
     final public static String USER_RATINGS_REFERENCE = "ratings";
-    final public static String USERCHALLENGES_REFERENCE = "challenges";
+    final public static String USER_CHALLENGES_REFERENCE = "challenges";
     final public static String USERPASSWORD_REFERENCE = "userPassword";
 
     final public static String GROUP_REFERENCE = "group";
@@ -54,10 +53,13 @@ public class FireBaseReferences {
     final public static String FINISHEDUSER_REFERENCE = "user";
     final public static String FINISHEDROUTE_REFERENCE = "route";
 
-    final public static String CHALLENGERESULT_REFERENCE = "challengeresult";
+    final public static String CHALLENGERESULT_REFERENCE = "challengeResult";
 
     final public static String RATING_REFERENCE = "rating";
+    final public static String RATING_VALUE_REFERENCE = "value";
+    final public static String RATING_TITLE_REFERENCE = "title";
+    final public static String RATING_OPINION_REFERENCE = "opinion";
 
     final public static String MEMBERS_REFERENCE = "members";
-    final public static String NUMBERMEMBERS_REFERENCE = "numberOfMembers";
+    final public static String NUMBER_OF_MEMBERS_REFERENCE = "numberOfMembers";
 }

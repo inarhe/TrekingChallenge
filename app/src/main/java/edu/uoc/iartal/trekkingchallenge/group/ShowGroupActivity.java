@@ -82,6 +82,11 @@ public class ShowGroupActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
+    /**
+     * Define action when menu option is selected
+     * @param item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -112,7 +117,7 @@ public class ShowGroupActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
                         common.updateJoins(currentMail, getString(R.string.setJoin), databaseGroup, group.getId(), FireBaseReferences.USER_GROUPS_REFERENCE);
-                        databaseGroup.child(group.getId()).child(FireBaseReferences.NUMBERMEMBERS_REFERENCE).setValue(group.getNumberOfMembers()+1);
+                        databaseGroup.child(group.getId()).child(FireBaseReferences.NUMBER_OF_MEMBERS_REFERENCE).setValue(group.getNumberOfMembers()+1);
                         Toast.makeText(getApplicationContext(), getString(R.string.groupJoined), Toast.LENGTH_LONG).show();
                         finish();
                     }
@@ -146,10 +151,8 @@ public class ShowGroupActivity extends AppCompatActivity {
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
-
                         common.updateJoins(currentMail, getString(R.string.setLeave), databaseGroup, group.getId(), FireBaseReferences.USER_GROUPS_REFERENCE);
-                        databaseGroup.child(group.getId()).child(FireBaseReferences.NUMBERMEMBERS_REFERENCE).setValue(group.getNumberOfMembers()-1);
-
+                        databaseGroup.child(group.getId()).child(FireBaseReferences.NUMBER_OF_MEMBERS_REFERENCE).setValue(group.getNumberOfMembers()-1);
                         finish();
                     }
                 });

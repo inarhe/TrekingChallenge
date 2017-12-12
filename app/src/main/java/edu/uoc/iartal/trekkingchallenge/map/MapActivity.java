@@ -35,8 +35,6 @@ import edu.uoc.iartal.trekkingchallenge.user.LoginActivity;
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
-    private FirebaseAuth firebaseAuth;
-    private DatabaseReference databaseRoute;
     private List<Route> routes;
 
     public MapActivity() {
@@ -57,28 +55,25 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        // If user isn't logged, start login activity
+        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+            startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+            finish();
+        }
+
+        // Set toolbar and actionbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.mapToolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle(R.string.mapActivity);
-
-
-        firebaseAuth = FirebaseAuth.getInstance();
-
-        if (firebaseAuth.getCurrentUser() == null) {
-            // If user isn't logged, start login activity
-            startActivity(new Intent(getApplicationContext(), LoginActivity.class));
-            finish();
-        }
     }
 
 
     /**
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
+     * This is where we can add markers or lines, add listeners or move the camera.
      * If Google Play services is not installed on the device, the user will be prompted to install
      * it inside the SupportMapFragment. This method will only be triggered once the user has
      * installed Google Play services and returned to the app.
@@ -87,21 +82,18 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
+        // Define user actions not allowed
         UiSettings uiSettings = mMap.getUiSettings();
         uiSettings.setRotateGesturesEnabled(false);
         uiSettings.setTiltGesturesEnabled(false);
 
+        // Define map type
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 
-        // Add a marker in Barcelona and move the camera
-     /*   LatLng bcn = new LatLng(41.49, 1.28);
-
-        mMap.addMarker(new MarkerOptions().position(bcn).title("Marker in Barcelona"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(bcn));*/
-
-
+        // Set marks of aplication routes
         loadMarkRoutes();
-        // Create a LatLngBounds that includes Australia.
+
+        // Set the map position
         centerMap();
 
         mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
@@ -145,24 +137,29 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         });
     }
 
+    /**
+     * Set map position in Catalunya
+     */
     private void centerMap(){
         LatLngBounds catalunya = new LatLngBounds(
                 new LatLng(40.6363, 0.1968), new LatLng(42.4832, 3.2876));
 
         mMap.setLatLngBoundsForCameraTarget(catalunya);
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(catalunya.getCenter(), 8));
-
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(catalunya.getCenter(), 7));
     }
 
+    /**
+     * Get all database routes and add a map marker for each one
+     */
     private void loadMarkRoutes(){
 
-        databaseRoute = FirebaseDatabase.getInstance().getReference(FireBaseReferences.ROUTE_REFERENCE);
+        DatabaseReference databaseRoute = FirebaseDatabase.getInstance().getReference(FireBaseReferences.ROUTE_REFERENCE);
         routes = new ArrayList<>();
 
         databaseRoute.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                routes.removeAll(routes);
+                routes.clear();
                 for (DataSnapshot routeSnapshot:
                         dataSnapshot.getChildren()) {
                     Route route = routeSnapshot.getValue(Route.class);
@@ -171,14 +168,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
                 for (Route route : routes) {
                     mMap.addMarker(new MarkerOptions().position(new LatLng(route.getLat(), route.getLng())).title(route.getName()).snippet(route.getTownship()));
-
-
                 }
-                //    LatLng bcn = new LatLng(41.49, 1.28);
-              //    mMap.addMarker(new MarkerOptions().position(bcn).title("Marker in Barcelona"));
-                //mMap.moveCamera(CameraUpdateFactory.newLatLng(bcn));
-                mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(41.49, 1.28)));
-                mMap.moveCamera(CameraUpdateFactory.zoomTo(5.0f));
             }
 
             @Override
@@ -186,7 +176,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 //TO-DO
             }
         });
-
     }
 }
 

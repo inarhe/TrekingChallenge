@@ -26,7 +26,6 @@ import com.google.firebase.storage.StorageReference;
 
 import java.util.List;
 
-import edu.uoc.iartal.trekkingchallenge.PhotoGalleryActivity;
 import edu.uoc.iartal.trekkingchallenge.R;
 import edu.uoc.iartal.trekkingchallenge.challenge.FinishedChallengeActivity;
 import edu.uoc.iartal.trekkingchallenge.objectsDB.Finished;

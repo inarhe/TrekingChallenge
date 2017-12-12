@@ -16,7 +16,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -32,18 +31,12 @@ import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
 import edu.uoc.iartal.trekkingchallenge.objectsDB.Trip;
 import edu.uoc.iartal.trekkingchallenge.objectsDB.TripAdapter;
 
-/**
- * Created by Ingrid Artal on 26/11/2017.
- */
-
 public class AllTripsFragment extends Fragment implements SearchView.OnQueryTextListener{
-
     private List<Trip> trips;
     private TripAdapter tripAdapter;
     private ProgressDialog progressDialog;
-    private ImageButton imageButton;
-    private Boolean isVisible = false;
     private RecyclerView recyclerView;
+
     public AllTripsFragment(){
 
     }
@@ -52,28 +45,39 @@ public class AllTripsFragment extends Fragment implements SearchView.OnQueryText
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        //Initialize progress dialog
         progressDialog = new ProgressDialog(getActivity());
         progressDialog.setMessage(getString(R.string.loadingData));
     }
 
+    /**
+     * Define recyclerview that will be show in this view
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.activity_list_all_trips,container,false);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.rvListAllTrips);
-     //   recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         return rootView;
     }
 
+    /**
+     * Get all database public trips
+     * @param view
+     * @param savedInstanceState
+     */
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         setHasOptionsMenu(true);
-       // imageButton = (ImageButton) rootView.findViewById(R.id.icDelGroupAdmin);
 
-        // Floating button for adding new group
+        // Define floating button for adding new trip
         FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fabAddTrip);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,18 +92,17 @@ public class AllTripsFragment extends Fragment implements SearchView.OnQueryText
 
         recyclerView.setAdapter(tripAdapter);
 
-        // Show database groups in recycler view
+        // Get database trips and notify adapter to show them in recycler view
         progressDialog.show();
         databaseTrip.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                trips.removeAll(trips);
+                trips.clear();
                 for (DataSnapshot tripSnapshot:
                         dataSnapshot.getChildren()) {
                     Trip trip = tripSnapshot.getValue(Trip.class);
                     if (trip.getPublic()){
                         trips.add(trip);
-                        //groupAdapter.setVisibility(false);
                     }
                 }
                 tripAdapter.notifyDataSetChanged();
@@ -111,14 +114,16 @@ public class AllTripsFragment extends Fragment implements SearchView.OnQueryText
                 //TO-DO
             }
         });
-
     }
 
+    /**
+     * Inflate menu with menu layout information and define search view
+     * @param menu
+     * @param inflater
+     */
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         inflater.inflate(R.menu.menu_list_trips, menu);
-
         final MenuItem item = menu.findItem(R.id.action_search);
         final SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
         searchView.setOnQueryTextListener(this);
@@ -127,15 +132,15 @@ public class AllTripsFragment extends Fragment implements SearchView.OnQueryText
                 new MenuItemCompat.OnActionExpandListener() {
                     @Override
                     public boolean onMenuItemActionCollapse(MenuItem item) {
-// Do something when collapsed
                         tripAdapter.setFilter(trips);
-                        return true; // Return true to collapse action view
+                        // Return true to collapse action view
+                        return true;
                     }
 
                     @Override
                     public boolean onMenuItemActionExpand(MenuItem item) {
-// Do something when expanded
-                        return true; // Return true to expand action view
+                        // Return true to expand action view
+                        return true;
                     }
                 });
     }
@@ -146,19 +151,29 @@ public class AllTripsFragment extends Fragment implements SearchView.OnQueryText
         return false;
     }
 
+    /**
+     * Pass new trip list to Adapter
+     * @param newText
+     * @return
+     */
     @Override
     public boolean onQueryTextChange(String newText) {
         final List<Trip> filteredModelList = filter(trips, newText);
-
         tripAdapter.setFilter(filteredModelList);
         return true;
     }
 
+    /**
+     * Get search result trip list
+     * @param models
+     * @param query
+     * @return
+     */
     private List<Trip> filter(List<Trip> models, String query) {
         query = query.toLowerCase();
         final List<Trip> filteredModelList = new ArrayList<>();
         for (Trip model : models) {
-            final String text = model.getIdTrip().toLowerCase();
+            final String text = model.getId().toLowerCase();
             if (text.contains(query)) {
                 filteredModelList.add(model);
             }

@@ -11,9 +11,12 @@ public class SplashActivity extends AppCompatActivity {
 
     private final int TIME_SPLASH = 3000;
 
+    /**
+     * First app screen with aplication name and logo
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        // First app screen with aplication name and logo
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 

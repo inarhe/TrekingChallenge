@@ -11,64 +11,76 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 
 import edu.uoc.iartal.trekkingchallenge.R;
+import edu.uoc.iartal.trekkingchallenge.common.CommonFunctionality;
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
 import edu.uoc.iartal.trekkingchallenge.objectsDB.Trip;
-import edu.uoc.iartal.trekkingchallenge.objectsDB.User;
 import edu.uoc.iartal.trekkingchallenge.user.LoginActivity;
 
 public class ShowTripActivity extends AppCompatActivity {
-
-    private DatabaseReference databaseTrip, databaseUser;
+    private DatabaseReference databaseTrip;
     private Trip trip;
+    private CommonFunctionality common;
+    private String currentMail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_trip);
 
-        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
-            // If user isn't logged, start login activity
+        // Set toolbar
+        Toolbar toolbar = (Toolbar) findViewById(R.id.showTripToolbar);
+        setSupportActionBar(toolbar);
+
+        // Get Firebase authentication instance and database trip reference
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        databaseTrip = FirebaseDatabase.getInstance().getReference(FireBaseReferences.TRIP_REFERENCE);
+
+        // If user isn't logged, start login activity
+        if (firebaseAuth.getCurrentUser() == null) {
             startActivity(new Intent(getApplicationContext(), LoginActivity.class));
             finish();
         }
 
-        // Get data from item clicked on list groups activity
-        Bundle bundle = getIntent().getExtras();
-        trip = bundle.getParcelable("trip");
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.showTripToolbar);
-        setSupportActionBar(toolbar);
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setTitle(trip.getTripName());
-
-
-
+        // Link layout elements with variables
         TextView textViewRoute = (TextView) findViewById(R.id.tvRouteTrip);
         TextView textViewDate = (TextView) findViewById(R.id.tvDateTrip);
         TextView textViewPlace = (TextView) findViewById(R.id.tvPlaceTrip);
         TextView textViewDesc = (TextView) findViewById(R.id.tvDescTrip);
         TextView textViewMemb = (TextView) findViewById(R.id.tvMembTrip);
 
+        // Initialize variables
+        common = new CommonFunctionality();
+        currentMail = firebaseAuth.getCurrentUser().getEmail();
 
+        // Get data from item clicked on list trips activity
+        Bundle bundle = getIntent().getExtras();
+        trip = bundle.getParcelable("trip");
+
+        // Set actionbar
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setTitle(trip.getName());
+
+        // Show selected group information in the layout
         textViewRoute.setText(trip.getRoute());
         textViewDate.setText(trip.getDate());
         textViewPlace.setText(trip.getPlace());
-        textViewDesc.setText(trip.getTripDescription());
-        textViewMemb.setText(Integer.toString(trip.getNumberOfMembers()) + " membres");
-
+        textViewDesc.setText(trip.getDescription());
+        textViewMemb.setText(Integer.toString(trip.getNumberOfMembers()) + " " + getString(R.string.members));
     }
 
+    /**
+     * Inflate menu with menu layout information
+     * @param menu
+     * @return
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -76,6 +88,11 @@ public class ShowTripActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
+    /**
+     * Define action when menu option is selected
+     * @param item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -90,49 +107,24 @@ public class ShowTripActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * When the menu option "join trip" is clicked, this method is executed. Add current user to selected trip, add trip to user trips and
+     * updates trip members number
+     */
     public void joinTrip () {
-        // Add new group member when join group button is clicked
+        // Create alert dialog to ask user confirmation
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(getString(R.string.tripJoined));
+        builder.setMessage(getString(R.string.joinTripAsk));
         builder.setCancelable(true);
-
-
-
-        String currentMail = FirebaseAuth.getInstance().getCurrentUser().getEmail();
-
-        updateJoins(currentMail, "join");
-        updateMembers("join");
 
         builder.setPositiveButton(
                 getString(R.string.acceptButton),
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
-                        finish();
-                    }
-                });
-
-        AlertDialog alert11 = builder.create();
-        alert11.show();
-
-    }
-
-    public void leaveTrip () {
-        // Add new group member when join group button is clicked
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(getString(R.string.tripLeft));
-        builder.setCancelable(true);
-
-
-        builder.setPositiveButton(
-                getString(R.string.acceptButton),
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                        String currentMail = FirebaseAuth.getInstance().getCurrentUser().getEmail();
-
-                        updateJoins(currentMail, "leave");
-                        updateMembers("leave");
+                        common.updateJoins(currentMail, getString(R.string.setJoin), databaseTrip, trip.getId(), FireBaseReferences.USER_TRIPS_REFERENCE);
+                        databaseTrip.child(trip.getId()).child(FireBaseReferences.NUMBER_OF_MEMBERS_REFERENCE).setValue(trip.getNumberOfMembers()+1);
+                        Toast.makeText(getApplicationContext(), getString(R.string.tripJoined), Toast.LENGTH_LONG).show();
                         finish();
                     }
                 });
@@ -146,100 +138,41 @@ public class ShowTripActivity extends AppCompatActivity {
                     }
                 });
 
-        AlertDialog alert11 = builder.create();
-        alert11.show();
-
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
     }
 
-    private void updateJoins(String currentMail, final String action){
-        databaseUser = FirebaseDatabase.getInstance().getReference(FireBaseReferences.USER_REFERENCE);
-        databaseTrip = FirebaseDatabase.getInstance().getReference(FireBaseReferences.TRIP_REFERENCE);
-        Query query = databaseUser.orderByChild(FireBaseReferences.USERMAIL_REFERENCE).equalTo(currentMail);
+    /**
+     * When the menu option "leave trip" is clicked, this method is executed. Delete current user from selected trip, delete trip from user trips and
+     * updates trip members number
+     */
+    public void leaveTrip () {
+        // Create alert dialog to ask user confirmation
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(getString(R.string.tripLeft));
+        builder.setCancelable(true);
 
+        builder.setPositiveButton(
+                getString(R.string.acceptButton),
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                        common.updateJoins(currentMail, getString(R.string.setLeave), databaseTrip, trip.getId(), FireBaseReferences.USER_TRIPS_REFERENCE);
+                        databaseTrip.child(trip.getId()).child(FireBaseReferences.NUMBER_OF_MEMBERS_REFERENCE).setValue(trip.getNumberOfMembers()-1);
+                        finish();
+                    }
+                });
 
-        // Query database to get user information
-        query.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                User user = dataSnapshot.getValue(User.class);
+        builder.setNegativeButton(
+                getString(R.string.cancelButton),
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                        finish();
+                    }
+                });
 
-                if (action.equals("join")) {
-                    databaseTrip.child(trip.getIdTrip()).child(FireBaseReferences.MEMBERSTRIP_REFERENCE).child(user.getIdUser()).setValue("true");
-
-                    databaseUser.child(user.getIdUser()).child(FireBaseReferences.USERTRIPS_REFERENCE).child(trip.getIdTrip()).setValue("true");
-                } else {
-                    databaseTrip.child(trip.getIdTrip()).child(FireBaseReferences.MEMBERSTRIP_REFERENCE).child(user.getIdUser()).removeValue();
-                    databaseUser.child(user.getIdUser()).child(FireBaseReferences.USERTRIPS_REFERENCE).child(trip.getIdTrip()).removeValue();
-
-                }
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                //TO-DO
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-                //TO-DO
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-                //TO-DO
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                //TO-DO
-            }
-        });
-    }
-
-    private void updateMembers(final String action){
-
-        Query query = databaseTrip.orderByChild(FireBaseReferences.TRIPNAME_REFERENCE).equalTo(trip.getTripName());
-
-
-        // Query database to get user information
-        query.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                //  Group group = dataSnapshot.getValue(Group.class);
-                //  databaseGroup.child(groupKey).child(FireBaseReferences.MEMBERSGROUP_REFERENCE).child(user.getAlias()).setValue("true");
-
-                // databaseUser.child(user.getIdUser()).child("groups").child(name).setValue("true");
-                int members = dataSnapshot.getValue(Trip.class).getNumberOfMembers();
-
-                if (action.equals("join")) {
-                    databaseTrip.child(trip.getIdTrip()).child(FireBaseReferences.NUMBERMEMBERS_REFERENCE).setValue(members + 1);
-                } else {
-                    databaseTrip.child(trip.getIdTrip()).child(FireBaseReferences.NUMBERMEMBERS_REFERENCE).setValue(members - 1);
-                }
-
-                // textViewMembers.setText(members+1);
-            }
-
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                //TO-DO
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-                //TO-DO
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-                //TO-DO
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                //TO-DO
-            }
-        });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
     }
 }

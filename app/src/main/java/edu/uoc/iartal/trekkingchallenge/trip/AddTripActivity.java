@@ -9,8 +9,8 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
@@ -26,7 +26,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseException;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
@@ -47,45 +46,48 @@ import edu.uoc.iartal.trekkingchallenge.user.ListUsersActivity;
 import edu.uoc.iartal.trekkingchallenge.user.LoginActivity;
 
 public class AddTripActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
-    private static final int ACTIVITY_CODE = 1;
+
     private EditText editTextName, editTextDescription, dateEditText, editTextPlace;
-    private DatabaseReference databaseTrip, databaseUser;
+    private DatabaseReference databaseTrip, databaseUser, databaseRoute;
     private CheckBox checkBox;
-    private String userAdmin, name, idTrip, dateFormat;
-    private FirebaseAuth firebaseAuth;
-    private Intent intent;
+    private String userAdmin;
     private Spinner spinner;
-    private DatePickerDialog datePickerDialog;
     private Calendar dateSelected;
     private SimpleDateFormat sdf;
-    ListUsersActivity listUsersActivity;
     private DatePickerDialog.OnDateSetListener date;
-    ArrayList<User> userMembers = new ArrayList<>();
-    ArrayList<String> nameRoutes = new ArrayList<>();
+    private ArrayList<String> nameRoutes = new ArrayList<>();
     private Context context = this;
     private ArrayAdapter<String> adapter;
     private String route;
+    private Trip trip;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_trip);
 
+        // Set toolbar and actionbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.addTripToolbar);
         setSupportActionBar(toolbar);
-
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle(getString(R.string.addTripActivity));
 
-        // Get Firebase authentication instance
-        firebaseAuth = FirebaseAuth.getInstance();
-        databaseTrip = FirebaseDatabase.getInstance().getReference("trip");
+        // If user isn't logged, start login activity
+        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+            startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+            finish();
+        }
 
-        dateSelected = Calendar.getInstance();
-        dateFormat = "dd.MM.yyyy";
-        sdf = new SimpleDateFormat(dateFormat, Locale.GERMAN);
+        // Hide keyboard until user select edit text
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
+        // Get database references
+        databaseTrip = FirebaseDatabase.getInstance().getReference(FireBaseReferences.TRIP_REFERENCE);
+        databaseUser = FirebaseDatabase.getInstance().getReference(FireBaseReferences.USER_REFERENCE);
+        databaseRoute = FirebaseDatabase.getInstance().getReference(FireBaseReferences.ROUTE_REFERENCE);
+
+        // Link layout elements with variables
         editTextName = (EditText) findViewById(R.id.etNameTrip);
         editTextDescription = (EditText) findViewById(R.id.etDescriptionTrip);
         dateEditText = (EditText) findViewById(R.id.dateEditText);
@@ -93,143 +95,59 @@ public class AddTripActivity extends AppCompatActivity implements AdapterView.On
         checkBox = (CheckBox) findViewById(R.id.cBPublicTrip);
         spinner = (Spinner) findViewById(R.id.spinnerRoute);
 
-        nameRoutes.clear();
-        nameRoutes.add("- Selecciona la ruta -");
+        // Set calendar and date format
+        dateSelected = Calendar.getInstance();
+        String dateFormat = "dd.MM.yyyy";
+        sdf = new SimpleDateFormat(dateFormat, Locale.GERMAN);
+        setDate();
 
-        DatabaseReference databaseRoute = FirebaseDatabase.getInstance().getReference(FireBaseReferences.ROUTE_REFERENCE);
-
-        databaseRoute.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot routeSnapshot : dataSnapshot.getChildren()) {
-                    String nameRoute = routeSnapshot.getValue(Route.class).getName();
-                    nameRoutes.add(nameRoute);
-                }
-                adapter = new ArrayAdapter<String>(getApplicationContext(),R.layout.support_simple_spinner_dropdown_item, nameRoutes);
-                //spinner.setPrompt("Selecciona la ruta");
-                spinner.setAdapter(adapter);
-
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-
-
-        });
-
-
-       // adapter = new ArrayAdapter<String>(getApplicationContext(),R.layout.support_simple_spinner_dropdown_item, nameRoutes);
-        //spinner.setPrompt("Selecciona la ruta");
-       // spinner.setAdapter(adapter);
+        // Get routes to inflate spinner
+        getRoutes();
         spinner.setOnItemSelectedListener(this);
 
+        getUserAdmin();
 
-
-        long currentDate = System.currentTimeMillis();
-        String dateString = sdf.format(currentDate);
-        dateEditText.setText(dateString);
-
-        date = new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                // TODO Auto-generated method stub
-                dateSelected.set(Calendar.YEAR, year);
-                dateSelected.set(Calendar.MONTH, month);
-                dateSelected.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                updateDate();
-            }
-        };
-
-        if (firebaseAuth.getCurrentUser() == null) {
-            // If user isn't logged, start login activity
-            startActivity(new Intent(getApplicationContext(), LoginActivity.class));
-            finish();
-        } else {
-            String mail = firebaseAuth.getCurrentUser().getEmail();
-            databaseUser = FirebaseDatabase.getInstance().getReference(FireBaseReferences.USER_REFERENCE);
-            Query query = databaseUser.orderByChild(FireBaseReferences.USERMAIL_REFERENCE).equalTo(mail);
-
-            // Query database to get user admin information
-            query.addChildEventListener(new ChildEventListener() {
-                @Override
-                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                    userAdmin = dataSnapshot.getValue(User.class).getIdUser();
-                    //   userKey = dataSnapshot.getValue(User.class).getIdUser();
-                }
-
-                @Override
-                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                    //TO-DO
-                }
-
-                @Override
-                public void onChildRemoved(DataSnapshot dataSnapshot) {
-                    //TO-DO
-                }
-
-                @Override
-                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-                    //TO-DO
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                    //TO-DO
-                }
-            });
-        }
-
-
-
-
-
-
+        // Click listener on date edit text to show calendar
         dateEditText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO Auto-generated method stub
-                Log.i("date", "date");
                 new DatePickerDialog(context, date, dateSelected
                         .get(Calendar.YEAR), dateSelected.get(Calendar.MONTH),
                         dateSelected.get(Calendar.DAY_OF_MONTH)).show();
             }
         });
     }
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-       // ((TextView) view).setTextColor(Color.BLACK);
+    /**
+     * Listener of spinner item selected. Save position unless first with default text
+     * @param parent
+     * @param view
+     * @param position
+     * @param id
+     */
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         ((TextView) parent.getChildAt(0)).setTextSize(18);
 
         if (position != 0){
             route = spinner.getSelectedItem().toString();
-            Log.i("spinner",spinner.getSelectedItem().toString() );
         } else {
             route = null;
         }
-
-
     }
 
-
+    @Override
     public void onNothingSelected(AdapterView<?> parent) {
-
+        //TO-DO
     }
 
-
-
-    private void updateDate() {
-        dateEditText.setText(sdf.format(dateSelected.getTime()));
-    }
-
-
-
+    /**
+     * Add trip to database when accept button is clicked
+     * @param view
+     */
     public void addTrip (View view) {
-        // Add group to database when accept button is clicked
+        // Initialize variables with input parameters
         Boolean isPublic = false;
-        name = editTextName.getText().toString().trim();
+        String name = editTextName.getText().toString().trim();
         String description = editTextDescription.getText().toString().trim();
         String date = dateEditText.getText().toString().trim();
         String place = editTextPlace.getText().toString().trim();
@@ -250,7 +168,6 @@ public class AddTripActivity extends AppCompatActivity implements AdapterView.On
             return;
         }
 
-
         if (route==null) {
             Toast.makeText(this, getString(R.string.chooseRoute), Toast.LENGTH_LONG).show();
             return;
@@ -260,58 +177,139 @@ public class AddTripActivity extends AppCompatActivity implements AdapterView.On
             isPublic = true;
         }
 
-        // Add group to firebase database
-      //  idGroup = databaseGroup.push().s.getKey();
-        try {
-           // idTrip = databaseTrip.push().getKey();
-            idTrip = name;
-        } catch (DatabaseException e) {
-            e.printStackTrace();
-        }
-
-
-
-        Trip trip = new Trip(idTrip, name, description, date, place, route, isPublic, userAdmin, 1);
+        // Add trip to firebase database
+        final String idTrip = databaseTrip.push().getKey();
+        trip = new Trip(idTrip, name, description, date, place, route, isPublic, userAdmin, 1);
 
         databaseTrip.child(idTrip).setValue(trip).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if(!task.isSuccessful()) {
-                    Toast.makeText(AddTripActivity.this, getString(R.string.failedAddTrip), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), getString(R.string.failedAddTrip), Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
-        databaseTrip.child(idTrip).child(FireBaseReferences.MEMBERSTRIP_REFERENCE).child(userAdmin).setValue("true");
-
-        databaseUser.child(userAdmin).child(FireBaseReferences.USERTRIPS_REFERENCE).child(trip.getIdTrip()).setValue("true")
+        databaseTrip.child(idTrip).child(FireBaseReferences.MEMBERS_REFERENCE).child(userAdmin).setValue("true");
+        databaseUser.child(userAdmin).child(FireBaseReferences.USER_TRIPS_REFERENCE).child(trip.getId()).setValue("true")
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if(task.isSuccessful()){
                     Toast.makeText(getApplicationContext(), getString(R.string.tripSaved), Toast.LENGTH_LONG).show();
                 } else {
-                    Toast.makeText(AddTripActivity.this,getString(R.string.failedAddTrip),Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(),getString(R.string.failedAddTrip),Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
-
+        // Select users that admin wants in the trip
         inviteUsers();
-
-
     }
 
+    /**
+     * Cancel trip creation when cancel button is clicked. Start main activity
+     * @param view
+     */
     public void cancelTrip (View view) {
         startActivity(new Intent(getApplicationContext(), MainActivity.class));
         finish();
     }
 
+    /**
+     * Show user list and allow invite users to join the new trip
+     */
     private void inviteUsers (){
-        intent = new Intent(getApplicationContext(), ListUsersActivity.class);
-        intent.putExtra("tripName", name);
-        intent.putExtra("idTrip", idTrip);
+        Intent intent = new Intent(getApplicationContext(), ListUsersActivity.class);
+        intent.putExtra("trip", trip);
         startActivity(intent);
         finish();
+    }
+
+    /**
+     * Get database routes to inflate spinner with their names
+     */
+    private void getRoutes(){
+        nameRoutes.clear();
+        nameRoutes.add(getString(R.string.chooseRouteSpinner));
+
+        databaseRoute.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot routeSnapshot : dataSnapshot.getChildren()) {
+                    String nameRoute = routeSnapshot.getValue(Route.class).getName();
+                    nameRoutes.add(nameRoute);
+                }
+                adapter = new ArrayAdapter<>(getApplicationContext(),R.layout.support_simple_spinner_dropdown_item, nameRoutes);
+                spinner.setAdapter(adapter);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            //TO-DO
+            }
+        });
+    }
+
+    /**
+     * Set current date format and DatePickerDialog
+     */
+    private void setDate(){
+        long currentDate = System.currentTimeMillis();
+        String dateString = sdf.format(currentDate);
+        dateEditText.setText(dateString);
+
+        date = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                // TODO Auto-generated method stub
+                dateSelected.set(Calendar.YEAR, year);
+                dateSelected.set(Calendar.MONTH, month);
+                dateSelected.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                updateDate();
+            }
+        };
+    }
+
+    /**
+     * Set current date in layout edit text
+     */
+    private void updateDate() {
+        dateEditText.setText(sdf.format(dateSelected.getTime()));
+    }
+
+    /**
+     * Query database to get current user information and know who is doing the action
+     */
+    private void getUserAdmin(){
+        String mail = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+        Query query = databaseUser.orderByChild(FireBaseReferences.USER_MAIL_REFERENCE).equalTo(mail);
+
+        query.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                userAdmin = dataSnapshot.getValue(User.class).getIdUser();
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                //TO-DO
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                //TO-DO
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                //TO-DO
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                //TO-DO
+            }
+        });
     }
 }

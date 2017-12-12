@@ -83,7 +83,7 @@ public class ListGroupsActivity extends AppCompatActivity {
          */
         @Override
         public int getCount() {
-            // Show 2 total pages.
+            // Show 2 total pages
             return 2;
         }
 

@@ -14,7 +14,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -32,19 +31,13 @@ import edu.uoc.iartal.trekkingchallenge.objectsDB.Trip;
 import edu.uoc.iartal.trekkingchallenge.objectsDB.TripAdapter;
 import edu.uoc.iartal.trekkingchallenge.objectsDB.User;
 
-/**
- * Created by Ingrid Artal on 26/11/2017.
- */
-
 public class MyTripsFragment extends Fragment implements SearchView.OnQueryTextListener{
-
     private List<Trip> trips;
-    private List<String> keys;
+    private List<String> tripsIds;
     private TripAdapter tripAdapter;
     private ProgressDialog progressDialog;
     private RecyclerView recyclerView;
     private String currentUser, currentMail;
-    private ImageButton imageButton;
 
     public MyTripsFragment(){
 
@@ -54,43 +47,28 @@ public class MyTripsFragment extends Fragment implements SearchView.OnQueryTextL
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        //Initialize variables
         progressDialog = new ProgressDialog(getActivity());
         progressDialog.setMessage(getString(R.string.loadingData));
-    }
-
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.activity_list_my_trips,container,false);
-        recyclerView = (RecyclerView) rootView.findViewById(R.id.rvListMyTrips);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         DatabaseReference databaseUser = FirebaseDatabase.getInstance().getReference(FireBaseReferences.USER_REFERENCE);
         currentMail = FirebaseAuth.getInstance().getCurrentUser().getEmail();
-        keys = new ArrayList<>();
+        tripsIds = new ArrayList<>();
 
-
-        tripAdapter = new TripAdapter(trips);
-
-        recyclerView.setAdapter(tripAdapter);
-
-        // Show database groups in recycler view
-        progressDialog.show();
+        // Get current user groups
         databaseUser.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                keys.removeAll(keys);
-                for (DataSnapshot groupSapshot :
+                tripsIds.clear();
+                for (DataSnapshot userSnapshot :
                         dataSnapshot.getChildren()) {
-                    User user = groupSapshot.getValue(User.class);
+                    User user = userSnapshot.getValue(User.class);
                     if (user.getUserMail().equals(currentMail)) {
                         currentUser = user.getIdUser();
-                        for (String key : user.getTrips().keySet()) {
-                            keys.add(key);
+                        for (String name : user.getGroups().keySet()) {
+                            tripsIds.add(name);
                         }
                     }
-
                 }
             }
 
@@ -99,12 +77,30 @@ public class MyTripsFragment extends Fragment implements SearchView.OnQueryTextL
                 //TO-DO
             }
         });
+    }
 
-
+    /**
+     * Define recyclerview that will be show in this view
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.activity_list_my_trips,container,false);
+        recyclerView = (RecyclerView) rootView.findViewById(R.id.rvListMyTrips);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         return rootView;
     }
 
+    /**
+     * Get database public and private trips that current user is a member
+     * @param view
+     * @param savedInstanceState
+     */
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -117,25 +113,23 @@ public class MyTripsFragment extends Fragment implements SearchView.OnQueryTextL
 
         recyclerView.setAdapter(tripAdapter);
 
-        // Show database groups in recycler view
+        // Get database trips and notify adapter to show them in recycler view
         progressDialog.show();
         databaseTrip.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                trips.removeAll(trips);
+                trips.clear();
                 for (DataSnapshot tripSnapshot :
                         dataSnapshot.getChildren()) {
                     Trip trip = tripSnapshot.getValue(Trip.class);
-                    if (keys.contains(trip.getIdTrip())) {
+                    if (tripsIds.contains(trip.getId())) {
                         trips.add(trip);
-
                         if (trip.getUserAdmin().equals(currentUser)) {
                             tripAdapter.setVisibility(true);
                         } else {
                             tripAdapter.setVisibility(false);
                         }
                     }
-
                 }
                 tripAdapter.notifyDataSetChanged();
                 progressDialog.dismiss();
@@ -146,14 +140,16 @@ public class MyTripsFragment extends Fragment implements SearchView.OnQueryTextL
                 //TO-DO
             }
         });
-
     }
 
+    /**
+     * Inflate menu with menu layout information and define search view
+     * @param menu
+     * @param inflater
+     */
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         inflater.inflate(R.menu.menu_list_trips, menu);
-
         final MenuItem item = menu.findItem(R.id.action_search);
         final SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
         searchView.setOnQueryTextListener(this);
@@ -162,46 +158,51 @@ public class MyTripsFragment extends Fragment implements SearchView.OnQueryTextL
                 new MenuItemCompat.OnActionExpandListener() {
                     @Override
                     public boolean onMenuItemActionCollapse(MenuItem item) {
-// Do something when collapsed
                         tripAdapter.setFilter(trips);
-                        return true; // Return true to collapse action view
+                        // Return true to collapse action view
+                        return true;
                     }
 
                     @Override
                     public boolean onMenuItemActionExpand(MenuItem item) {
-// Do something when expanded
-                        return true; // Return true to expand action view
+                        // Return true to expand action view
+                        return true;
                     }
                 });
     }
-
 
     @Override
     public boolean onQueryTextSubmit(String query) {
         return false;
     }
 
+    /**
+     * Pass new trip list to Adapter
+     * @param newText
+     * @return
+     */
     @Override
     public boolean onQueryTextChange(String newText) {
         final List<Trip> filteredModelList = filter(trips, newText);
-
         tripAdapter.setFilter(filteredModelList);
         return true;
     }
 
+    /**
+     * Get search result trip list
+     * @param models
+     * @param query
+     * @return
+     */
     private List<Trip> filter(List<Trip> models, String query) {
         query = query.toLowerCase();
         final List<Trip> filteredModelList = new ArrayList<>();
         for (Trip model : models) {
-            final String text = model.getIdTrip().toLowerCase();
+            final String text = model.getId().toLowerCase();
             if (text.contains(query)) {
                 filteredModelList.add(model);
             }
         }
         return filteredModelList;
-    }
-
-    private void removeTrip (View view) {
-
     }
 }

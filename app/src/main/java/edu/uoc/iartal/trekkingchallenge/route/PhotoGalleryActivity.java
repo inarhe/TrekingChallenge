@@ -1,4 +1,4 @@
-package edu.uoc.iartal.trekkingchallenge;
+package edu.uoc.iartal.trekkingchallenge.route;
 
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -9,6 +9,7 @@ import android.support.v7.widget.Toolbar;
 
 import com.google.firebase.database.DatabaseReference;
 
+import edu.uoc.iartal.trekkingchallenge.R;
 import edu.uoc.iartal.trekkingchallenge.objectsDB.PhotoAdapter;
 import edu.uoc.iartal.trekkingchallenge.objectsDB.Route;
 

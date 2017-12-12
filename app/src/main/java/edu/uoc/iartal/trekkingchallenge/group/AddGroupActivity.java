@@ -69,37 +69,7 @@ public class AddGroupActivity extends AppCompatActivity {
         editTextDescription = (EditText) findViewById(R.id.etDescriptionGroup);
         checkBox = (CheckBox) findViewById(R.id.cBPublicGgroup);
 
-        // Query database to get current user information
-        String currentMail = FirebaseAuth.getInstance().getCurrentUser().getEmail();
-        Query query = databaseUser.orderByChild(FireBaseReferences.USERMAIL_REFERENCE).equalTo(currentMail);
-
-        query.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                userAdmin = dataSnapshot.getValue(User.class).getIdUser();
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                //TO-DO
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-                //TO-DO
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-                //TO-DO
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                //TO-DO
-            }
-        });
-
+        getUserAdmin();
     }
 
     /**
@@ -153,6 +123,7 @@ public class AddGroupActivity extends AppCompatActivity {
             }
         });
 
+        // Select users that admin wants in the group
         inviteUsers();
     }
 
@@ -166,12 +137,47 @@ public class AddGroupActivity extends AppCompatActivity {
     }
 
     /**
-     * Show user list and allows invite users to join the new group
+     * Show user list and allow invite users to join the new group
      */
     private void inviteUsers (){
         Intent intent = new Intent(getApplicationContext(), ListUsersActivity.class);
         intent.putExtra("group", group);
         startActivity(intent);
         finish();
+    }
+
+    /**
+     * Query database to get current user information and know who is doing the action
+     */
+    private void getUserAdmin(){
+        String currentMail = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+        Query query = databaseUser.orderByChild(FireBaseReferences.USER_MAIL_REFERENCE).equalTo(currentMail);
+
+        query.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                userAdmin = dataSnapshot.getValue(User.class).getIdUser();
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                //TO-DO
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                //TO-DO
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                //TO-DO
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                //TO-DO
+            }
+        });
     }
 }

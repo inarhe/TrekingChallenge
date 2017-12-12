@@ -12,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
@@ -28,6 +29,7 @@ import de.codecrafters.tableview.TableView;
 import de.codecrafters.tableview.toolkit.SimpleTableDataAdapter;
 import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter;
 import edu.uoc.iartal.trekkingchallenge.R;
+import edu.uoc.iartal.trekkingchallenge.common.CommonFunctionality;
 import edu.uoc.iartal.trekkingchallenge.objectsDB.Challenge;
 import edu.uoc.iartal.trekkingchallenge.objectsDB.ChallengeResult;
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
@@ -36,99 +38,80 @@ import edu.uoc.iartal.trekkingchallenge.user.LoginActivity;
 
 public class ShowChallengeActivity extends AppCompatActivity {
 
-    private DatabaseReference databaseChallenge, databaseUser;
+    private DatabaseReference databaseChallenge;
     private Challenge challenge;
-    private String[] rankingHeader = {"user","time", "distance"};
-    private String [][] rankingChallenge;
-    private ArrayList<String> resultsId;
-    private String currentMail;
+    private String[] tableHeader = {"user","time", "distance"};
+    private String [][] rankingTable;
+    private ArrayList<String> challengesResultsIds;
     private ArrayList<ChallengeResult> challengeResults;
-    private ChallengeResult challengeRanking;
-    private TableView<String[]> tb;
+    private TableView<String[]> tableView;
+    private CommonFunctionality common;
+    private String currentMail;
+    private ChallengeResult ranking;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_challenge);
 
-        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
-            // If user isn't logged, start login activity
+        // Set toolbar
+        Toolbar toolbar = (Toolbar) findViewById(R.id.showChallengeToolbar);
+        setSupportActionBar(toolbar);
+
+        // Get Firebase authentication instance and database trip reference
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        databaseChallenge = FirebaseDatabase.getInstance().getReference(FireBaseReferences.CHALLENGE_REFERENCE);
+
+        // If user isn't logged, start login activity
+        if (firebaseAuth.getCurrentUser() == null) {
             startActivity(new Intent(getApplicationContext(), LoginActivity.class));
             finish();
         }
+
+        // Link layout elements with variables
+        TextView textViewRoute = (TextView) findViewById(R.id.tvRouteChallenge);
+        TextView textViewDate = (TextView) findViewById(R.id.tvDateChallenge);
+        TextView textViewDesc = (TextView) findViewById(R.id.tvDescChallenge);
+
+        // Link table layout and set table
+        tableView = (TableView<String[]>) findViewById(R.id.rankingTable);
+        tableView.setColumnCount(3);
+        tableView.setHeaderBackgroundColor(Color.parseColor("#E0E0E0"));
+
+        // Initialize variables
+        common = new CommonFunctionality();
+        currentMail = firebaseAuth.getCurrentUser().getEmail();
 
         // Get data from item clicked on list groups activity
         Bundle bundle = getIntent().getExtras();
         challenge = bundle.getParcelable("challenge");
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.showChallengeToolbar);
-        setSupportActionBar(toolbar);
+        // Set actionbar
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle(challenge.getChallengeName());
 
-        tb = (TableView<String[]>) findViewById(R.id.rankingTable);
-        tb.setColumnCount(3);
-        tb.setHeaderBackgroundColor(Color.parseColor("#E0E0E0"));
-
-        DatabaseReference databaseChallenge = FirebaseDatabase.getInstance().getReference(FireBaseReferences.CHALLENGE_REFERENCE);
-        //String currentMail = FirebaseAuth.getInstance().getCurrentUser().getEmail();
-        resultsId = new ArrayList<>();
-
-        for (String key : challenge.getResults().keySet()) {
-            resultsId.add(key);
-        }
-
-        populaterRanking();
-
-
-
-       /* databaseChallenge.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                resultsId.removeAll(resultsId);
-                for (DataSnapshot challengesSnapshot :
-                        dataSnapshot.getChildren()) {
-                    Challenge chall = challengesSnapshot.getValue(Challenge.class);
-                    if (chall.getIdChallenge().equals(challenge.getIdChallenge())) {
-                        for (String key : challenge.getResults().keySet()) {
-                            resultsId.add(key);
-                        }
-                    }
-                }
-                populaterRanking();
-
-                //adapter
-                tb.setHeaderAdapter(new SimpleTableHeaderAdapter(getApplicationContext(),rankingHeader));
-                if (rankingChallenge != null) {
-                    tb.setDataAdapter(new SimpleTableDataAdapter(getApplicationContext(), rankingChallenge));
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                //TO-DO
-            }
-        });*/
-
-        //populate
-
-
-        TextView textViewRoute = (TextView) findViewById(R.id.tvRouteChallenge);
-        TextView textViewDate = (TextView) findViewById(R.id.tvDateChallenge);
-        TextView textViewDesc = (TextView) findViewById(R.id.tvDescChallenge);
-        //TextView textViewMemb = (TextView) findViewById(R.id.tvM);
-
-
+        // Show selected group information in the layout
         textViewRoute.setText(challenge.getRoute());
         textViewDate.setText(challenge.getLimitDate());
         textViewDesc.setText(challenge.getChallengeDescription());
-       // textViewMemb.setText(Integer.toString(trip.getNumberOfMembers()) + " membres");
 
+        challengesResultsIds = new ArrayList<>();
 
+        // Get all the challenge results
+        for (String key : challenge.getResults().keySet()) {
+            challengesResultsIds.add(key);
+        }
 
+        // Fill the table with challenge results
+        populateTableRanking();
     }
 
+    /**
+     * Inflate menu with menu layout information
+     * @param menu
+     * @return
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -136,6 +119,11 @@ public class ShowChallengeActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
+    /**
+     * Define action when menu option is selected
+     * @param item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -153,49 +141,24 @@ public class ShowChallengeActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * When the menu option "join challenge" is clicked, this method is executed. Add current user to selected challenge, add challenge to user
+     * challenges and updates challenge members number
+     */
     public void joinChallenge () {
-        // Add new group member when join group button is clicked
+        // Create alert dialog to ask user confirmation
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(getString(R.string.challengeJoined));
+        builder.setMessage(getString(R.string.joinChallengeAsk));
         builder.setCancelable(true);
-
-
-
-        String currentMail = FirebaseAuth.getInstance().getCurrentUser().getEmail();
-
-        updateJoins(currentMail, "join");
-        updateMembers("join");
 
         builder.setPositiveButton(
                 getString(R.string.acceptButton),
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
-                        finish();
-                    }
-                });
-
-        AlertDialog alert11 = builder.create();
-        alert11.show();
-
-    }
-
-    public void leaveChallenge () {
-        // Add new group member when join group button is clicked
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(getString(R.string.challengeLeft));
-        builder.setCancelable(true);
-
-
-        builder.setPositiveButton(
-                getString(R.string.acceptButton),
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                        String currentMail = FirebaseAuth.getInstance().getCurrentUser().getEmail();
-
-                        updateJoins(currentMail, "leave");
-                        updateMembers("leave");
+                        common.updateJoins(currentMail, getString(R.string.setJoin), databaseChallenge, challenge.getId(), FireBaseReferences.USER_CHALLENGES_REFERENCE);
+                        databaseChallenge.child(challenge.getId()).child(FireBaseReferences.NUMBER_OF_MEMBERS_REFERENCE).setValue(challenge.getNumberOfMembers()+1);
+                        Toast.makeText(getApplicationContext(), getString(R.string.tripJoined), Toast.LENGTH_LONG).show();
                         finish();
                     }
                 });
@@ -209,105 +172,47 @@ public class ShowChallengeActivity extends AppCompatActivity {
                     }
                 });
 
-        AlertDialog alert11 = builder.create();
-        alert11.show();
-
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
     }
 
-    private void updateJoins(String currentMail, final String action){
-        databaseUser = FirebaseDatabase.getInstance().getReference(FireBaseReferences.USER_REFERENCE);
-        databaseChallenge = FirebaseDatabase.getInstance().getReference(FireBaseReferences.CHALLENGE_REFERENCE);
-        Query query = databaseUser.orderByChild(FireBaseReferences.USERMAIL_REFERENCE).equalTo(currentMail);
+    /**
+     * When the menu option "leave challenge" is clicked, this method is executed. Delete current user from selected challenge, delete challenge from user challenges and
+     * updates challenge members number
+     */
+    public void leaveChallenge () {
+        // Create alert dialog to ask user confirmation
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(getString(R.string.challengeLeft));
+        builder.setCancelable(true);
 
+        builder.setPositiveButton(
+                getString(R.string.acceptButton),
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                        common.updateJoins(currentMail, getString(R.string.setLeave), databaseChallenge, challenge.getId(), FireBaseReferences.USER_CHALLENGES_REFERENCE);
+                        databaseChallenge.child(challenge.getId()).child(FireBaseReferences.NUMBER_OF_MEMBERS_REFERENCE).setValue(challenge.getNumberOfMembers()-1);
+                        finish();
+                    }
+                });
 
-        // Query database to get user information
-        query.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                User user = dataSnapshot.getValue(User.class);
+        builder.setNegativeButton(
+                getString(R.string.cancelButton),
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                        finish();
+                    }
+                });
 
-                if (action.equals("join")) {
-                    databaseChallenge.child(challenge.getIdChallenge()).child(FireBaseReferences.MEMBERSCHALLENGE_REFERENCE).child(user.getIdUser()).setValue("true");
-
-                    databaseUser.child(user.getIdUser()).child(FireBaseReferences.USERCHALLENGES_REFERENCE).child(challenge.getIdChallenge()).setValue("true");
-                } else {
-                    databaseChallenge.child(challenge.getIdChallenge()).child(FireBaseReferences.MEMBERSCHALLENGE_REFERENCE).child(user.getIdUser()).removeValue();
-                    databaseUser.child(user.getIdUser()).child(FireBaseReferences.USERCHALLENGES_REFERENCE).child(challenge.getIdChallenge()).removeValue();
-
-                }
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                //TO-DO
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-                //TO-DO
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-                //TO-DO
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                //TO-DO
-            }
-        });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
     }
 
-    private void updateMembers(final String action){
 
-        Query query = databaseChallenge.orderByChild(FireBaseReferences.CHALLENGENAME_REFERENCE).equalTo(challenge.getChallengeName());
-
-
-        // Query database to get user information
-        query.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                //  Group group = dataSnapshot.getValue(Group.class);
-                //  databaseGroup.child(groupKey).child(FireBaseReferences.MEMBERSGROUP_REFERENCE).child(user.getAlias()).setValue("true");
-
-                // databaseUser.child(user.getIdUser()).child("groups").child(name).setValue("true");
-                int members = dataSnapshot.getValue(Challenge.class).getNumberOfMembers();
-
-                if (action.equals("join")) {
-                    databaseChallenge.child(challenge.getIdChallenge()).child(FireBaseReferences.NUMBERMEMBERS_REFERENCE).setValue(members + 1);
-                } else {
-                    databaseChallenge.child(challenge.getIdChallenge()).child(FireBaseReferences.NUMBERMEMBERS_REFERENCE).setValue(members - 1);
-                }
-
-                // textViewMembers.setText(members+1);
-            }
-
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                //TO-DO
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-                //TO-DO
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-                //TO-DO
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                //TO-DO
-            }
-        });
-    }
-
-    private void populaterRanking(){
-        challengeRanking = new ChallengeResult();
+    private void populateTableRanking(){
+        ranking = new ChallengeResult();
         challengeResults = new ArrayList<>();
 
         DatabaseReference databaseResults = FirebaseDatabase.getInstance().getReference(FireBaseReferences.CHALLENGERESULT_REFERENCE);
@@ -315,33 +220,32 @@ public class ShowChallengeActivity extends AppCompatActivity {
         if (databaseResults != null) {
             currentMail = FirebaseAuth.getInstance().getCurrentUser().getEmail();
 
-
             databaseResults.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    challengeResults.removeAll(challengeResults);
+                    challengeResults.clear();
                     for (DataSnapshot challengesSnapshot :
                             dataSnapshot.getChildren()) {
                         ChallengeResult chall = challengesSnapshot.getValue(ChallengeResult.class);
-                        if (resultsId.contains(chall.getId())) {
+                        if (challengesResultsIds.contains(chall.getId())) {
                             challengeResults.add(chall);
                         }
 
                     }
-                    rankingChallenge = new String[challengeResults.size()][3];
+                    rankingTable = new String[challengeResults.size()][3];
 
                     for (int i = 0; i < challengeResults.size(); i++) {
                         ChallengeResult c = challengeResults.get(i);
-                        rankingChallenge[i][0] = c.getUser();
+                        rankingTable[i][0] = c.getUser();
                         String time = c.getHour() + "h" + c.getminute();
-                        rankingChallenge[i][1] = time;
-                        rankingChallenge[i][2] = c.getDistance();
+                        rankingTable[i][1] = time;
+                        rankingTable[i][2] = c.getDistance();
                     }
 
                     //adapter
-                    tb.setHeaderAdapter(new SimpleTableHeaderAdapter(getApplicationContext(),rankingHeader));
-                    if (rankingChallenge != null) {
-                        tb.setDataAdapter(new SimpleTableDataAdapter(getApplicationContext(), rankingChallenge));
+                    tableView.setHeaderAdapter(new SimpleTableHeaderAdapter(getApplicationContext(), tableHeader));
+                    if (rankingTable != null) {
+                        tableView.setDataAdapter(new SimpleTableDataAdapter(getApplicationContext(), rankingTable));
                     }
                 }
 
@@ -351,14 +255,14 @@ public class ShowChallengeActivity extends AppCompatActivity {
                 }
             });
         } else {
-            rankingChallenge = new String[challengeResults.size()][3];
+            rankingTable = new String[challengeResults.size()][3];
 
             for (int i = 0; i < challengeResults.size(); i++) {
                 ChallengeResult c = challengeResults.get(i);
-                rankingChallenge[i][0] = c.getUser();
+                rankingTable[i][0] = c.getUser();
                 String time = c.getHour() + "h" + c.getminute();
-                rankingChallenge[i][1] = time;
-                rankingChallenge[i][2] = c.getDistance();
+                rankingTable[i][1] = time;
+                rankingTable[i][2] = c.getDistance();
             }
         }
 

@@ -34,54 +34,72 @@ public class MainActivity extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
     }
 
+    /**
+     * Main map functionality. If user isn't logged, access is forbidden and opens user access activity
+     * @param view
+     */
     public void mapActivity (View view){
-        // Main map functionality. If user isn't logged, access is forbidden and opens user access activity
-        if (firebaseAuth.getCurrentUser()!=null) {
+        if (firebaseAuth.getCurrentUser() != null) {
             startActivity(new Intent(getApplicationContext(),MapActivity.class));
         } else {
             startActivity(new Intent(getApplicationContext(), AccessActivity.class));
         }
     }
 
+    /**
+     * Main search functionality. If user isn't logged, access is forbidden and opens user access activity
+     * @param view
+     */
     public void searchActivity (View view){
-        // Main search functionality. If user isn't logged, access is forbidden and opens user access activity
-        if (firebaseAuth.getCurrentUser()!=null) {
+        if (firebaseAuth.getCurrentUser() != null) {
             startActivity(new Intent(getApplicationContext(),ListRoutesActivity.class));
         } else {
             startActivity(new Intent(getApplicationContext(), AccessActivity.class));
         }
     }
 
+    /**
+     * Main trip functionality. If user isn't logged, access is forbidden and opens user access activity
+     * @param view
+     */
     public void tripActivity (View view){
-        // Main trip functionality. If user isn't logged, access is forbidden and opens user access activity
-        if (firebaseAuth.getCurrentUser()!=null) {
+        if (firebaseAuth.getCurrentUser() != null) {
             startActivity(new Intent(getApplicationContext(),ListTripsActivity.class));
         } else {
             startActivity(new Intent(getApplicationContext(), AccessActivity.class));
         }
     }
 
+    /**
+     * Main challenge functionality. If user isn't logged, access is forbidden and opens user access activity
+     * @param view
+     */
     public void challengeActivity (View view){
-        // Main challenge functionality. If user isn't logged, access is forbidden and opens user access activity
-        if (firebaseAuth.getCurrentUser()!=null) {
+        if (firebaseAuth.getCurrentUser() != null) {
             startActivity(new Intent(getApplicationContext(),ListChallengesActivity.class));
         } else {
             startActivity(new Intent(getApplicationContext(), AccessActivity.class));
         }
     }
 
+    /**
+     * Main user area functionality. If user isn't logged, access is forbidden and opens user access activity
+     * @param view
+     */
     public void userAreaActivity (View view){
-        // Main user area functionality. If user isn't logged, access is forbidden and opens user access activity
-        if (firebaseAuth.getCurrentUser()!=null) {
+        if (firebaseAuth.getCurrentUser() != null) {
             startActivity(new Intent(getApplicationContext(), UserAreaActivity.class));
         } else {
             startActivity(new Intent(getApplicationContext(), AccessActivity.class));
         }
     }
 
+    /**
+     * Main group functionality. If user isn't logged, access is forbidden and opens user access activity
+     * @param view
+     */
     public void groupActivity (View view){
-        // Main group functionality. If user isn't logged, access is forbidden and opens user access activity
-        if (firebaseAuth.getCurrentUser()!=null) {
+        if (firebaseAuth.getCurrentUser() != null) {
             startActivity(new Intent(getApplicationContext(), ListGroupsActivity.class));
         } else {
             startActivity(new Intent(getApplicationContext(), AccessActivity.class));

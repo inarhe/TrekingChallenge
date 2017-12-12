@@ -3,26 +3,25 @@ package edu.uoc.iartal.trekkingchallenge.objectsDB;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-/**
- * Created by Ingrid Artal on 04/11/2017.
- */
+import java.util.HashMap;
+import java.util.Map;
 
-// Group object class
+// Trip object class. Implements Parcelable to pass trip object between activities
 public class Trip implements Parcelable{
-    private String idTrip, tripName, tripDescription, date, place, route, userAdmin;
+    private String id, name, description, date, place, route, userAdmin;
     private Boolean isPublic;
     private int numberOfMembers;
+    private Map<String, String> members = new HashMap<>();
 
     public Trip() {
 
     }
 
-
-    public Trip(String idTrip, String tripName, String tripDescription, String date, String place, String route,
+    public Trip(String id, String name, String description, String date, String place, String route,
                 Boolean isPublic, String userAdmin, int numberOfMembers) {
-        this.idTrip = idTrip;
-        this.tripName = tripName;
-        this.tripDescription = tripDescription;
+        this.id = id;
+        this.name = name;
+        this.description = description;
         this.date = date;
         this.place = place;
         this.route = route;
@@ -32,9 +31,9 @@ public class Trip implements Parcelable{
     }
 
     public Trip(Parcel in) {
-        this.idTrip = in.readString();
-        this.tripName = in.readString();
-        this.tripDescription = in.readString();
+        this.id = in.readString();
+        this.name = in.readString();
+        this.description = in.readString();
         this.date = in.readString();
         this.place = in.readString();
         this.route = in.readString();
@@ -42,28 +41,28 @@ public class Trip implements Parcelable{
         this.numberOfMembers = in.readInt();
     }
 
-    public String getIdTrip() {
-        return idTrip;
+    public String getId() {
+        return id;
     }
 
-    public void setIdTrip(String idTrip) {
-        this.idTrip = idTrip;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public String getTripName() {
-        return tripName;
+    public String getName() {
+        return name;
     }
 
-    public void setTripName(String tripName) {
-        this.tripName = tripName;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getTripDescription() {
-        return tripDescription;
+    public String getDescription() {
+        return description;
     }
 
-    public void setTripDescription(String tripDescription) {
-        this.tripDescription = tripDescription;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getDate() {
@@ -114,6 +113,10 @@ public class Trip implements Parcelable{
         this.numberOfMembers = numberOfMembers;
     }
 
+    public Map<String, String> getMembers() {
+        return this.members;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -121,9 +124,9 @@ public class Trip implements Parcelable{
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(idTrip);
-        dest.writeString(tripName);
-        dest.writeString(tripDescription);
+        dest.writeString(id);
+        dest.writeString(name);
+        dest.writeString(description);
         dest.writeString(date);
         dest.writeString(place);
         dest.writeString(route);

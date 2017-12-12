@@ -12,15 +12,10 @@ import java.util.regex.Pattern;
 
 import edu.uoc.iartal.trekkingchallenge.objectsDB.User;
 
-/**
- * Created by Ingrid Artal on 22/11/2017.
- */
 
 public class CommonFunctionality {
 
     private static final String EMAIL_PATTERN = "^[a-zA-Z0-9#_~!$&'()*+,;=:.\"(),:;<>@\\[\\]\\\\]+@[a-zA-Z0-9-]+(\\.[a-zA-Z0-9-]+)*$";
-
-    private String userAdmin;
 
     /**
      *  Validate mail format
@@ -42,14 +37,21 @@ public class CommonFunctionality {
      * @return if password is ok
      */
     public boolean validatePassword(String password) {
-
         return password.length() > 5;
     }
 
+    /**
+     * Update joins, when a user wants to join a group, trip or challenge
+     * @param currentMail
+     * @param action
+     * @param databaseObject
+     * @param id
+     * @param objectReference
+     */
     public void updateJoins(String currentMail, final String action, final DatabaseReference databaseObject, final String id, final String objectReference){
         final DatabaseReference databaseUser = FirebaseDatabase.getInstance().getReference(FireBaseReferences.USER_REFERENCE);
 
-        Query query = databaseUser.orderByChild(FireBaseReferences.USERMAIL_REFERENCE).equalTo(currentMail);
+        Query query = databaseUser.orderByChild(FireBaseReferences.USER_MAIL_REFERENCE).equalTo(currentMail);
 
         // Query database to get user information
         query.addChildEventListener(new ChildEventListener() {

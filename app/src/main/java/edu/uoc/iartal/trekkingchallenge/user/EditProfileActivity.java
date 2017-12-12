@@ -168,7 +168,7 @@ public class EditProfileActivity extends AppCompatActivity {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
                     if (task.isSuccessful()) {
-                        databaseUser.child(user.getIdUser()).child(FireBaseReferences.USERMAIL_REFERENCE).setValue(newUserMail);
+                        databaseUser.child(user.getIdUser()).child(FireBaseReferences.USER_MAIL_REFERENCE).setValue(newUserMail);
                        // result.putExtra("user", user);
 
 
@@ -236,7 +236,7 @@ public class EditProfileActivity extends AppCompatActivity {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
                     if (task.isSuccessful()) {
-                        databaseUser.child(userKey).child(FireBaseReferences.USERMAIL_REFERENCE).setValue(userMail);
+                        databaseUser.child(userKey).child(FireBaseReferences.USER_MAIL_REFERENCE).setValue(userMail);
                         result.putExtra("userMail", userMail);
 
 

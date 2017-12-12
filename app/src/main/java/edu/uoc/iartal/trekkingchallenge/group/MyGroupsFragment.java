@@ -41,7 +41,6 @@ public class MyGroupsFragment extends Fragment implements SearchView.OnQueryText
     private ProgressDialog progressDialog;
     private RecyclerView recyclerView;
     private String currentUser, currentMail;
-    private ImageButton imageButton;
 
     public MyGroupsFragment(){
 
@@ -63,7 +62,7 @@ public class MyGroupsFragment extends Fragment implements SearchView.OnQueryText
         databaseUser.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                groupIds.removeAll(groupIds);
+                groupIds.clear();
                 for (DataSnapshot groupSapshot :
                         dataSnapshot.getChildren()) {
                     User user = groupSapshot.getValue(User.class);
@@ -96,7 +95,6 @@ public class MyGroupsFragment extends Fragment implements SearchView.OnQueryText
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.activity_list_my_groups,container,false);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.rvListMyGroups);
-        recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         return rootView;
@@ -146,7 +144,6 @@ public class MyGroupsFragment extends Fragment implements SearchView.OnQueryText
                 //TO-DO
             }
         });
-
     }
 
     /**

@@ -108,7 +108,7 @@ public class FinishedRouteActivity extends AppCompatActivity {
         String mail = FirebaseAuth.getInstance().getCurrentUser().getEmail();
         databaseUser = FirebaseDatabase.getInstance().getReference(FireBaseReferences.USER_REFERENCE);
 
-        Query query = databaseUser.orderByChild(FireBaseReferences.USERMAIL_REFERENCE).equalTo(mail);
+        Query query = databaseUser.orderByChild(FireBaseReferences.USER_MAIL_REFERENCE).equalTo(mail);
 
         // Query database to get user admin information
         query.addChildEventListener(new ChildEventListener() {

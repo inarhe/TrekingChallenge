@@ -10,48 +10,11 @@
     <include android:id="@+id/ratingRouteToolbar"
         layout="@layout/toolbar" />
 
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-
-        <Button
-            android:id="@+id/bComment"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="writeComment"
-            android:layout_marginLeft="50dp"
-            android:layout_marginStart="50dp"
-            android:layout_marginTop="80dp"
-            android:drawableStart="@drawable/ic_opinion_grey"
-            android:drawableLeft="@drawable/ic_opinion_grey"
-            android:drawablePadding="4dp"
-            android:text="@string/comment"
-            android:padding="10dp"/>
-
-        <Button
-            android:id="@+id/bRate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="rate"
-            android:layout_toRightOf="@+id/bComment"
-            android:layout_toEndOf="@+id/bComment"
-            android:layout_marginTop="80dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginStart="15dp"
-            android:drawableStart="@drawable/ic_star"
-            android:drawableLeft="@drawable/ic_star"
-            android:drawablePadding="4dp"
-            android:text="@string/rate"
-            android:padding="10dp"/>
-
-    </RelativeLayout>
-
-
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rvRatings"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="150dp"
+        android:layout_marginTop="@dimen/cast_expanded_controller_control_toolbar_min_height"
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
         android:layout_marginStart="@dimen/activity_horizontal_margin"
         android:layout_marginRight="@dimen/activity_horizontal_margin"
@@ -59,5 +22,13 @@
         android:layout_marginBottom="@dimen/activity_vertical_margin"
         android:clipToPadding="false"
         android:scrollbars="vertical" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fabAddRate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="30dp"
+        android:src="@drawable/ic_opinion_grey" />
 
 </android.support.design.widget.CoordinatorLayout>

@@ -238,7 +238,7 @@ public class ListUsersActivity extends AppCompatActivity implements SearchView.O
 
                     // databaseUser.child(user.getIdUser()).child("groups").child(name).setValue("true");
                     int members = dataSnapshot.getValue(Group.class).getNumberOfMembers();
-                    databaseGroup.child(group.getId()).child(FireBaseReferences.NUMBERMEMBERS_REFERENCE).setValue(members+1);
+                    databaseGroup.child(group.getId()).child(FireBaseReferences.NUMBER_OF_MEMBERS_REFERENCE).setValue(members+1);
                     Log.i("MEM", Integer.toString(members));
 
                     // textViewMembers.setText(members+1);
@@ -285,7 +285,7 @@ public class ListUsersActivity extends AppCompatActivity implements SearchView.O
 
                     // databaseUser.child(user.getIdUser()).child("groups").child(name).setValue("true");
                     int members = dataSnapshot.getValue(Trip.class).getNumberOfMembers();
-                    databaseTrip.child(idTrip).child(FireBaseReferences.NUMBERMEMBERS_REFERENCE).setValue(members + 1);
+                    databaseTrip.child(idTrip).child(FireBaseReferences.NUMBER_OF_MEMBERS_REFERENCE).setValue(members + 1);
                     Log.i("MEM", Integer.toString(members));
 
                     // textViewMembers.setText(members+1);
@@ -332,7 +332,7 @@ public class ListUsersActivity extends AppCompatActivity implements SearchView.O
 
                     // databaseUser.child(user.getIdUser()).child("groups").child(name).setValue("true");
                     int members = dataSnapshot.getValue(Trip.class).getNumberOfMembers();
-                    databaseChallenge.child(idChallenge).child(FireBaseReferences.NUMBERMEMBERS_REFERENCE).setValue(members+1);
+                    databaseChallenge.child(idChallenge).child(FireBaseReferences.NUMBER_OF_MEMBERS_REFERENCE).setValue(members+1);
                     Log.i("MEM", Integer.toString(members));
 
                     // textViewMembers.setText(members+1);

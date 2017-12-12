@@ -108,7 +108,7 @@ public class FinishedChallengeActivity extends AppCompatActivity {
         String mail = FirebaseAuth.getInstance().getCurrentUser().getEmail();
         databaseUser = FirebaseDatabase.getInstance().getReference(FireBaseReferences.USER_REFERENCE);
 
-        Query query = databaseUser.orderByChild(FireBaseReferences.USERMAIL_REFERENCE).equalTo(mail);
+        Query query = databaseUser.orderByChild(FireBaseReferences.USER_MAIL_REFERENCE).equalTo(mail);
 
         // Query database to get user admin information
         query.addChildEventListener(new ChildEventListener() {
@@ -176,7 +176,7 @@ public class FinishedChallengeActivity extends AppCompatActivity {
         //  idGroup = databaseGroup.push().s.getKey();
         try {
             idResult = databaseChallenge.push().getKey();
-            ChallengeResult challengeResult = new ChallengeResult(idResult, finishDist, finishHour, finishMin, user, challenge.getIdChallenge(), finishDate);
+            ChallengeResult challengeResult = new ChallengeResult(idResult, finishDist, finishHour, finishMin, user, challenge.getId(), finishDate);
 
 
             databaseResult.child(idResult).setValue(challengeResult).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -203,7 +203,7 @@ public class FinishedChallengeActivity extends AppCompatActivity {
                         }
                     });
 
-            databaseChallenge.child(challenge.getIdChallenge()).child(FireBaseReferences.CHALLENGEFINISHED_REFERENCE).child(idResult).setValue("true")
+            databaseChallenge.child(challenge.getId()).child(FireBaseReferences.CHALLENGEFINISHED_REFERENCE).child(idResult).setValue("true")
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {

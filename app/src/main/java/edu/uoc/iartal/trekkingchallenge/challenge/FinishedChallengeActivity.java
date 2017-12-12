@@ -32,9 +32,7 @@ import java.util.Locale;
 import edu.uoc.iartal.trekkingchallenge.R;
 import edu.uoc.iartal.trekkingchallenge.objectsDB.Challenge;
 import edu.uoc.iartal.trekkingchallenge.objectsDB.ChallengeResult;
-import edu.uoc.iartal.trekkingchallenge.objectsDB.Finished;
-import edu.uoc.iartal.trekkingchallenge.objectsDB.FireBaseReferences;
-import edu.uoc.iartal.trekkingchallenge.objectsDB.Route;
+import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
 import edu.uoc.iartal.trekkingchallenge.objectsDB.User;
 import edu.uoc.iartal.trekkingchallenge.user.LoginActivity;
 

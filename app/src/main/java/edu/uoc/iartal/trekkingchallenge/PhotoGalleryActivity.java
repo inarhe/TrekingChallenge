@@ -7,18 +7,10 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
-import java.util.ArrayList;
-
-import edu.uoc.iartal.trekkingchallenge.objectsDB.FireBaseReferences;
 import edu.uoc.iartal.trekkingchallenge.objectsDB.PhotoAdapter;
 import edu.uoc.iartal.trekkingchallenge.objectsDB.Route;
-import edu.uoc.iartal.trekkingchallenge.objectsDB.RouteAdapter;
 
 public class PhotoGalleryActivity extends AppCompatActivity {
 

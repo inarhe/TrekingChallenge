@@ -23,7 +23,7 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".SplashActivity"
+            android:name=".common.SplashActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -31,7 +31,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity" />
+        <activity android:name=".common.MainActivity" />
         <activity android:name=".user.RegisterActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -40,7 +40,7 @@
         <activity android:name=".user.AccessActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
+                android:value=".common.MainActivity" />
         </activity>
         <activity android:name=".user.LoginActivity">
             <meta-data
@@ -55,7 +55,7 @@
         <activity android:name=".user.UserAreaActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
+                android:value=".common.MainActivity" />
         </activity>
         <activity android:name=".group.ShowGroupActivity">
             <meta-data
@@ -75,17 +75,17 @@
         <activity android:name=".group.ListGroupsActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
+                android:value=".common.MainActivity" />
         </activity>
         <activity android:name=".trip.ListTripsActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
+                android:value=".common.MainActivity" />
         </activity>
         <activity android:name=".challenge.ListChallengesActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
+                android:value=".common.MainActivity" />
         </activity>
         <activity android:name=".trip.AddTripActivity">
             <meta-data
@@ -110,17 +110,16 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".MapActivity"
+            android:name=".map.MapActivity"
             android:label="@string/title_activity_map">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity">
-            </meta-data>
+                android:value=".common.MainActivity"></meta-data>
         </activity>
         <activity android:name=".route.ListRoutesActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
+                android:value=".common.MainActivity" />
         </activity>
         <activity
             android:name=".route.ShowRouteActivity"
@@ -136,13 +135,12 @@
         </activity>
         <activity android:name=".route.SearchRoutesActivity" />
         <activity android:name=".PhotoGalleryActivity" />
-        <activity android:name=".TrackRouteActivity">
+        <activity android:name=".route.TrackRouteActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".route.ShowRouteActivity" />
         </activity>
         <activity android:name=".route.FinishedRouteActivity" />
-
         <activity android:name=".challenge.FinishedChallengeActivity" />
         <activity android:name=".trip.ShowTripActivity">
             <meta-data
@@ -153,6 +151,11 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".challenge.ListChallengesActivity" />
+        </activity>
+        <activity android:name=".route.RatingRouteActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".route.ShowRouteActivity" />
         </activity>
     </application>
 

@@ -14,14 +14,16 @@ public class Route implements Parcelable {
     private String idRoute, name, headerPhoto, trackPhoto, profilePhoto, season, time, trackLink, meteo;
     private String type, difficult, distance, description, decline, ascent, region, township;
     private Double lng, lat;
+    private Float ratingAverage;
+    private int numRatings;
 
     public Route() {
 
     }
 
     public Route(String idRoute, String name, String headerPhoto, String trackPhoto, String profilePhoto, String season, String time,
-                 String trackLink, String meteo, String type, Double lng, Double lat, String distance, String difficult, String description,
-                 String decline, String ascent, String region, String township) {
+                 String trackLink, String meteo, String type, Double lng, Double lat, Float ratingAverage, String distance, String difficult, String description,
+                 String decline, String ascent, String region, String township, int numRatings) {
         this.idRoute = idRoute;
         this.name = name;
         this.headerPhoto = headerPhoto;
@@ -34,6 +36,7 @@ public class Route implements Parcelable {
         this.type = type;
         this.lng = lng;
         this.lat = lat;
+        this.ratingAverage = ratingAverage;
         this.distance = distance;
         this.difficult = difficult;
         this.description = description;
@@ -41,6 +44,7 @@ public class Route implements Parcelable {
         this.ascent = ascent;
         this.region = region;
         this.township = township;
+        this.numRatings = numRatings;
     }
 
     public Route(Parcel in) {
@@ -54,6 +58,7 @@ public class Route implements Parcelable {
         this.trackLink = in.readString();
         this.meteo = in.readString();
         this.type = in.readString();
+        this.ratingAverage = in.readFloat();
         this.distance = in.readString();
         this.difficult = in.readString();
         this.description = in.readString();
@@ -61,6 +66,7 @@ public class Route implements Parcelable {
         this.ascent = in.readString();
         this.region = in.readString();
         this.township = in.readString();
+        this.numRatings = in.readInt();
     }
 
     public String getIdRoute() {
@@ -159,6 +165,14 @@ public class Route implements Parcelable {
         this.lat = lat;
     }
 
+    public Float getRatingAverage() {
+        return ratingAverage;
+    }
+
+    public void setRatingAverage(Float ratingAverage) {
+        this.ratingAverage = ratingAverage;
+    }
+
     public String getDistance() {
         return distance;
     }
@@ -215,6 +229,14 @@ public class Route implements Parcelable {
         this.township = township;
     }
 
+    public int getNumRatings() {
+        return numRatings;
+    }
+
+    public void setNumRatings(int numRatings) {
+        this.numRatings = numRatings;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -232,6 +254,7 @@ public class Route implements Parcelable {
         dest.writeString(trackLink);
         dest.writeString(meteo);
         dest.writeString(type);
+        dest.writeFloat(ratingAverage);
         dest.writeString(distance);
         dest.writeString(difficult);
         dest.writeString(description);
@@ -239,6 +262,7 @@ public class Route implements Parcelable {
         dest.writeString(ascent);
         dest.writeString(region);
         dest.writeString(township);
+        dest.writeInt(numRatings);
     }
 
     public static final Parcelable.Creator<Route> CREATOR = new Parcelable.Creator<Route>() {

@@ -37,12 +37,11 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
-import edu.uoc.iartal.trekkingchallenge.MainActivity;
+import edu.uoc.iartal.trekkingchallenge.common.MainActivity;
 import edu.uoc.iartal.trekkingchallenge.R;
 import edu.uoc.iartal.trekkingchallenge.objectsDB.Challenge;
-import edu.uoc.iartal.trekkingchallenge.objectsDB.FireBaseReferences;
+import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
 import edu.uoc.iartal.trekkingchallenge.objectsDB.Route;
-import edu.uoc.iartal.trekkingchallenge.objectsDB.Trip;
 import edu.uoc.iartal.trekkingchallenge.objectsDB.User;
 import edu.uoc.iartal.trekkingchallenge.user.ListUsersActivity;
 import edu.uoc.iartal.trekkingchallenge.user.LoginActivity;

@@ -109,6 +109,15 @@
     <string name="publicChallenge">Repte públic</string>
     <string name="privateChallenge">Repte privat</string>
     <string name="usersInvitedChallenge">Usuaris afegits al repte</string>
+    
+    <!--Ratin route activity-->
+    <string name="comment">Comentar</string>
+    <string name="rate">Valorar</string>
+    <string name="ratingActivity">Valoracions</string>
+    <string name="rateSaved">Puntuació registrada</string>
+    <string name="rateNotSaved">No s\'ha pogut registrar la puntuació</string>
+    <string name="hintCommentTitle">Títol del comentari</string>
+    <string name="hintCommentBody">Comentari</string>
 
     <!--Commons-->
     <string name="notDownloaded">No s\'ha pogut descarregar la imatge</string>

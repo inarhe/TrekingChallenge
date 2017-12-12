@@ -30,7 +30,7 @@ import java.util.List;
 
 import edu.uoc.iartal.trekkingchallenge.challenge.ListChallengesActivity;
 import edu.uoc.iartal.trekkingchallenge.group.ListGroupsActivity;
-import edu.uoc.iartal.trekkingchallenge.objectsDB.FireBaseReferences;
+import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
 import edu.uoc.iartal.trekkingchallenge.objectsDB.Group;
 import edu.uoc.iartal.trekkingchallenge.objectsDB.Trip;
 import edu.uoc.iartal.trekkingchallenge.objectsDB.User;

@@ -18,8 +18,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
-import edu.uoc.iartal.trekkingchallenge.CommonFunctionality;
-import edu.uoc.iartal.trekkingchallenge.MainActivity;
+import edu.uoc.iartal.trekkingchallenge.common.CommonFunctionality;
+import edu.uoc.iartal.trekkingchallenge.common.MainActivity;
 import edu.uoc.iartal.trekkingchallenge.R;
 
 /**

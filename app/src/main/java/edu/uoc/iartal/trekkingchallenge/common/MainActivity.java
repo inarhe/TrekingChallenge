@@ -1,4 +1,4 @@
-package edu.uoc.iartal.trekkingchallenge;
+package edu.uoc.iartal.trekkingchallenge.common;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -8,6 +8,8 @@ import android.view.View;
 
 import com.google.firebase.auth.FirebaseAuth;
 
+import edu.uoc.iartal.trekkingchallenge.map.MapActivity;
+import edu.uoc.iartal.trekkingchallenge.R;
 import edu.uoc.iartal.trekkingchallenge.challenge.ListChallengesActivity;
 import edu.uoc.iartal.trekkingchallenge.group.ListGroupsActivity;
 import edu.uoc.iartal.trekkingchallenge.route.ListRoutesActivity;

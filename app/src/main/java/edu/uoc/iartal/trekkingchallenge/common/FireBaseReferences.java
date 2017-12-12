@@ -1,4 +1,4 @@
-package edu.uoc.iartal.trekkingchallenge.objectsDB;
+package edu.uoc.iartal.trekkingchallenge.common;
 
 /**
  * Created by Ingrid Artal on 04/11/2017.
@@ -15,6 +15,7 @@ public class FireBaseReferences {
     final public static String USERRESULT_REFERENCE = "finished";
     final public static String USERTRIPS_REFERENCE = "trips";
     final public static String USER_GROUPS_REFERENCE = "groups";
+    final public static String USER_RATINGS_REFERENCE = "ratings";
     final public static String USERCHALLENGES_REFERENCE = "challenges";
     final public static String USERPASSWORD_REFERENCE = "userPassword";
 
@@ -35,6 +36,9 @@ public class FireBaseReferences {
     final public static String GALLERY_STORAGE = "gallery/";
     final public static String TRACKS_STORAGE = "tracks/";
     final public static String PROFILES_STORAGE = "profiles/";
+    final public static String ROUTE_RATINGS_REFERENCE = "ratings";
+    final public static String ROUTE_RATING_AVERAGE_REFERENCE = "ratingAverage";
+    final public static String ROUTE_NUM_RATINGS_REFERENCE = "numratings";
 
 
     final public static String TRIP_REFERENCE = "trip";
@@ -51,6 +55,8 @@ public class FireBaseReferences {
     final public static String FINISHEDROUTE_REFERENCE = "route";
 
     final public static String CHALLENGERESULT_REFERENCE = "challengeresult";
+
+    final public static String RATING_REFERENCE = "rating";
 
     final public static String MEMBERS_REFERENCE = "members";
     final public static String NUMBERMEMBERS_REFERENCE = "numberOfMembers";

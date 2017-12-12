@@ -1,9 +1,11 @@
-package edu.uoc.iartal.trekkingchallenge;
+package edu.uoc.iartal.trekkingchallenge.common;
 
 import android.content.Intent;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import edu.uoc.iartal.trekkingchallenge.R;
 
 public class SplashActivity extends AppCompatActivity {
 

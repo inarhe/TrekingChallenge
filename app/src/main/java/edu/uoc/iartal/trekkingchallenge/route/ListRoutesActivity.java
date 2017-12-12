@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.uoc.iartal.trekkingchallenge.R;
-import edu.uoc.iartal.trekkingchallenge.objectsDB.FireBaseReferences;
+import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
 import edu.uoc.iartal.trekkingchallenge.objectsDB.Route;
 import edu.uoc.iartal.trekkingchallenge.objectsDB.RouteAdapter;
 
@@ -47,7 +47,7 @@ public class ListRoutesActivity extends AppCompatActivity implements SearchView.
         actionBar.setTitle(getString(R.string.listRoutesActivity));
 
         recyclerView = (RecyclerView) findViewById(R.id.rvListRoutes);
-        recyclerView.setHasFixedSize(true);
+      //  recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         routeAdapter = new RouteAdapter(routes, ListRoutesActivity.this);

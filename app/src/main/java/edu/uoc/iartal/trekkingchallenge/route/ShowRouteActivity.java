@@ -19,28 +19,19 @@ import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import edu.uoc.iartal.trekkingchallenge.PhotoGalleryActivity;
 import edu.uoc.iartal.trekkingchallenge.R;
-import edu.uoc.iartal.trekkingchallenge.TrackRouteActivity;
 import edu.uoc.iartal.trekkingchallenge.challenge.FinishedChallengeActivity;
 import edu.uoc.iartal.trekkingchallenge.objectsDB.Finished;
-import edu.uoc.iartal.trekkingchallenge.objectsDB.FireBaseReferences;
-import edu.uoc.iartal.trekkingchallenge.objectsDB.Group;
+import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
 import edu.uoc.iartal.trekkingchallenge.objectsDB.Route;
-import edu.uoc.iartal.trekkingchallenge.objectsDB.User;
 import edu.uoc.iartal.trekkingchallenge.trip.AddTripActivity;
 import edu.uoc.iartal.trekkingchallenge.user.LoginActivity;
 
@@ -226,6 +217,9 @@ public class ShowRouteActivity extends AppCompatActivity {
             case R.id.action_challenge:
                 newChallenge();
                 return true;
+            case R.id.action_opinion:
+                setOpinion();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -253,5 +247,11 @@ public class ShowRouteActivity extends AppCompatActivity {
         Intent intent = new Intent(this, FinishedChallengeActivity.class);
         startActivity(intent);
         finish();
+    }
+
+    public void setOpinion() {
+        Intent intent = new Intent(this, RatingRouteActivity.class);
+        intent.putExtra("route", route);
+        startActivity(intent);
     }
 }

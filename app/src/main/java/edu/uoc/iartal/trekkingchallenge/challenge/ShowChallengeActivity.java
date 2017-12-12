@@ -30,10 +30,8 @@ import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter;
 import edu.uoc.iartal.trekkingchallenge.R;
 import edu.uoc.iartal.trekkingchallenge.objectsDB.Challenge;
 import edu.uoc.iartal.trekkingchallenge.objectsDB.ChallengeResult;
-import edu.uoc.iartal.trekkingchallenge.objectsDB.FireBaseReferences;
-import edu.uoc.iartal.trekkingchallenge.objectsDB.Trip;
+import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
 import edu.uoc.iartal.trekkingchallenge.objectsDB.User;
-import edu.uoc.iartal.trekkingchallenge.route.FinishedRouteActivity;
 import edu.uoc.iartal.trekkingchallenge.user.LoginActivity;
 
 public class ShowChallengeActivity extends AppCompatActivity {

@@ -1,5 +1,6 @@
 package edu.uoc.iartal.trekkingchallenge.group;
 
+import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -11,7 +12,10 @@ import android.support.v4.view.ViewPager;
 
 import android.os.Bundle;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 import edu.uoc.iartal.trekkingchallenge.R;
+import edu.uoc.iartal.trekkingchallenge.user.LoginActivity;
 
 public class ListGroupsActivity extends AppCompatActivity {
 
@@ -26,6 +30,12 @@ public class ListGroupsActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle(getString(R.string.listGroupsActivity));
+
+        // If user isn't logged, start login activity
+        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+            startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+            finish();
+        }
 
         // Create the adapter that will return a fragment for each of the two primary sections of the activity
         SectionsPagerAdapter mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());

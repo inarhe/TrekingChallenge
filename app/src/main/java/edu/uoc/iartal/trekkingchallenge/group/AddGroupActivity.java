@@ -25,8 +25,8 @@ import com.google.firebase.database.Query;
 
 import edu.uoc.iartal.trekkingchallenge.user.ListUsersActivity;
 import edu.uoc.iartal.trekkingchallenge.user.LoginActivity;
-import edu.uoc.iartal.trekkingchallenge.MainActivity;
-import edu.uoc.iartal.trekkingchallenge.objectsDB.FireBaseReferences;
+import edu.uoc.iartal.trekkingchallenge.common.MainActivity;
+import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
 import edu.uoc.iartal.trekkingchallenge.objectsDB.Group;
 import edu.uoc.iartal.trekkingchallenge.objectsDB.User;
 import edu.uoc.iartal.trekkingchallenge.R;
@@ -51,11 +51,16 @@ public class AddGroupActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle(getString(R.string.addGroupActivity));
 
+        // If user isn't logged, start login activity
+        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+            startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+            finish();
+        }
+
         // Hide keyboard until user select edit text
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
-        // Get Firebase authentication instance and database references
-
+        // Get database references
         databaseGroup = FirebaseDatabase.getInstance().getReference(FireBaseReferences.GROUP_REFERENCE);
         databaseUser = FirebaseDatabase.getInstance().getReference(FireBaseReferences.USER_REFERENCE);
 
@@ -63,12 +68,6 @@ public class AddGroupActivity extends AppCompatActivity {
         editTextName = (EditText) findViewById(R.id.etNameGroup);
         editTextDescription = (EditText) findViewById(R.id.etDescriptionGroup);
         checkBox = (CheckBox) findViewById(R.id.cBPublicGgroup);
-
-        // If user isn't logged, start login activity
-        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
-            startActivity(new Intent(getApplicationContext(), LoginActivity.class));
-            finish();
-        }
 
         // Query database to get current user information
         String currentMail = FirebaseAuth.getInstance().getCurrentUser().getEmail();

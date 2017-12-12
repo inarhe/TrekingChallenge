@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="edu.uoc.iartal.trekkingchallenge.TrackRouteActivity">
+    tools:context="edu.uoc.iartal.trekkingchallenge.route.TrackRouteActivity">
 
     <include android:id="@+id/trackRouteToolbar"
         layout="@layout/toolbar" />

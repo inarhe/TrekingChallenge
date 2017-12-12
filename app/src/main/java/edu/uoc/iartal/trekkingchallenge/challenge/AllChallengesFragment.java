@@ -30,10 +30,7 @@ import java.util.List;
 import edu.uoc.iartal.trekkingchallenge.R;
 import edu.uoc.iartal.trekkingchallenge.objectsDB.Challenge;
 import edu.uoc.iartal.trekkingchallenge.objectsDB.ChallengeAdapter;
-import edu.uoc.iartal.trekkingchallenge.objectsDB.FireBaseReferences;
-import edu.uoc.iartal.trekkingchallenge.objectsDB.Trip;
-import edu.uoc.iartal.trekkingchallenge.objectsDB.TripAdapter;
-import edu.uoc.iartal.trekkingchallenge.trip.AddTripActivity;
+import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
 
 /**
  * Created by Ingrid Artal on 26/11/2017.

@@ -12,11 +12,9 @@
     <string name="hintUserName">Nom usuari</string>
     <string name="hintIdUser">Identificador usuari</string>
     <string name="hintUserMail">Correu electrònic</string>
-    <string name="hintUserPass">Contrassenya</string>
-    <string name="hintUserPassRep">Confirmació contrassenya</string>
+    <string name="hintUserPass">Contrasenya</string>
+    <string name="hintUserPassRep">Confirmació contrasenya</string>
     <string name="registering">Registrant usuari...</string>
-    <string name="nameField">Siusplau, introdueix un nom</string>
-    <string name="descriptionField">Siusplau, introdueix una descripció</string>
     <string name="idField">Siusplau, introdueix un identificador</string>
     <string name="mailField">Siusplau, introdueix un correu electrònic</string>
     <string name="mailFormat">El correu electrònic no és vàlid</string>
@@ -35,6 +33,14 @@
     <!--User area activity-->
     <string name="infoName">Nom:</string>
     <string name="infoMail">Mail:</string>
+
+    <!--List groups activity-->
+    <string name="listGroupsActivity">Grups</string>
+
+    <!--Show groups activity-->
+    <string name="groupJoined">T\'has unit al grup</string>
+    <string name="joinGroupAsk">Et vols unir a aquest grup?</string>
+    <string name="groupLeft">Segur que vols abandonar el grup?</string>
 
     <!--Track rotue activity-->
     <string name="trackTitle">Recorregut de la ruta</string>
@@ -109,6 +115,11 @@
     <string name="acceptButton">Acceptar</string>
     <string name="cancelButton">Cancel·lar</string>
     <string name="registerButton">Registrar</string>
+    <string name="setLeave">leave</string>
+    <string name="setJoin">join</string>
+    <string name="nameField">Siusplau, introdueix un nom</string>
+    <string name="descriptionField">Siusplau, introdueix una descripció</string>
+    <string name="members">membres</string>
 
 
     <string name="app_name">TrekkingChallenge</string>
@@ -134,9 +145,8 @@
     <string name="newTripTitle">Crea una excursió</string>
     <string name="nameTrip">Nom excursió</string>
 
-    <string name="hintNameGroup">Introdueix el nom del grup</string>
-    <string name="hintDescription">Introdueix una descripció</string>
-    <string name="textInviteUsers">Convida a usuaris</string>
+    <string name="hintNameGroup">Nom del grup</string>
+    <string name="hintDescription">Descripció del grup</string>
     <string name="checkIsPublic">Grup públic</string>
 
     <string name="buttonMyHistory">El meu històric</string>
@@ -149,7 +159,7 @@
     <string name="userAreaActivity">Àrea d\'usuari</string>
     <string name="editProfileActivity">Editar perfil</string>
     <string name="mapActivity">Mapa de rutes</string>
-    <string name="listGroupsActivity">Grups</string>
+
     <string name="listRoutesActivity">Llista de rutes</string>
 
     <string name="addGroupActivity">Nou grup</string>

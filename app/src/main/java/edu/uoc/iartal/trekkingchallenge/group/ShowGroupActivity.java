@@ -1,166 +1,80 @@
 package edu.uoc.iartal.trekkingchallenge.group;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 
+import edu.uoc.iartal.trekkingchallenge.CommonFunctionality;
 import edu.uoc.iartal.trekkingchallenge.objectsDB.FireBaseReferences;
 import edu.uoc.iartal.trekkingchallenge.objectsDB.Group;
-import edu.uoc.iartal.trekkingchallenge.objectsDB.User;
 import edu.uoc.iartal.trekkingchallenge.user.LoginActivity;
 import edu.uoc.iartal.trekkingchallenge.R;
 
 public class ShowGroupActivity extends AppCompatActivity {
-    private FirebaseAuth firebaseAuth;
-    private String groupKey, name;
     private DatabaseReference databaseGroup;
-    private DatabaseReference databaseUser;
+    private Group group;
+    private CommonFunctionality common;
+    private String currentMail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_group);
 
+        // Set toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.showGroupToolbar);
         setSupportActionBar(toolbar);
 
-        TextView textViewDescription = (TextView) findViewById(R.id.textViewGroupDescription);
-        TextView textViewMembers = (TextView) findViewById(R.id.textViewNumberMembers);
-
         // Get Firebase authentication instance and database group reference
-        firebaseAuth = FirebaseAuth.getInstance();
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         databaseGroup = FirebaseDatabase.getInstance().getReference(FireBaseReferences.GROUP_REFERENCE);
 
-        // Get data from item clicked on list groups activity
-        Bundle groupData = getIntent().getExtras();
-        name = groupData.getString("groupName");
-        String description = groupData.getString("groupDescription");
-        int members = groupData.getInt("members");
-        groupKey = groupData.getString("groupKey");
-
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setTitle(name);
-
-        textViewDescription.setText(description);
-        textViewMembers.setText(Integer.toString(members));
-
+        // If user isn't logged, start login activity
         if (firebaseAuth.getCurrentUser() == null) {
-            // If user isn't logged, start login activity
             startActivity(new Intent(getApplicationContext(), LoginActivity.class));
             finish();
         }
+
+        // Link layout elements with variables
+        TextView textViewDescription = (TextView) findViewById(R.id.tvGroupDescription);
+        TextView textViewMembers = (TextView) findViewById(R.id.tvNumberMembers);
+
+        // Initialize variables
+        common = new CommonFunctionality();
+        currentMail = firebaseAuth.getCurrentUser().getEmail();
+
+        // Get data from item clicked on list groups activity
+        Bundle bundle = getIntent().getExtras();
+        group = bundle.getParcelable("group");
+
+        // Set actionbar
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setTitle(group.getName());
+
+        // Show selected group information in the layout
+        textViewDescription.setText(group.getDescription());
+        textViewMembers.setText(Integer.toString(group.getNumberOfMembers()) + " " + getString(R.string.members));
     }
 
-    public void joinGroup () {
-        // Add new group member when join group button is clicked
-        String currentMail = firebaseAuth.getCurrentUser().getEmail();
-        databaseUser = FirebaseDatabase.getInstance().getReference(FireBaseReferences.USER_REFERENCE);
-
-        updateJoins(currentMail);
-        updateMembers();
-
-        finish();
-
-    }
-
-    private void updateJoins(String currentMail){
-        Query query = databaseUser.orderByChild(FireBaseReferences.USERMAIL_REFERENCE).equalTo(currentMail);
-
-        // Query database to get user information
-        query.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                User user = dataSnapshot.getValue(User.class);
-                databaseGroup.child(groupKey).child(FireBaseReferences.MEMBERSGROUP_REFERENCE).child(user.getIdUser()).setValue("true");
-
-                databaseUser.child(user.getIdUser()).child("groups").child(name).setValue("true");
-              //  int members = databaseGroup.child(groupKey).child(FireBaseReferences.NUMBERMEMBERS_REFERENCE);
-             //   Log.i("MEM", Integer.toString(members));
-              //  databaseGroup.child(groupKey).child(FireBaseReferences.NUMBERMEMBERS_REFERENCE).setValue(2);
-                // textViewMembers.setText(members+1);
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                //TO-DO
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-                //TO-DO
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-                //TO-DO
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                //TO-DO
-            }
-        });
-    }
-
-    private void updateMembers(){
-        Log.i("UP MEM", "mec mec");
-        Query query = databaseGroup.orderByChild(FireBaseReferences.GROUPNAME_REFERENCE).equalTo(name);
-        Log.i("UP NAME", name);
-
-        // Query database to get user information
-        query.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-              //  Group group = dataSnapshot.getValue(Group.class);
-              //  databaseGroup.child(groupKey).child(FireBaseReferences.MEMBERSGROUP_REFERENCE).child(user.getAlias()).setValue("true");
-
-               // databaseUser.child(user.getIdUser()).child("groups").child(name).setValue("true");
-                  int members = dataSnapshot.getValue(Group.class).getNumberOfMembers();
-                databaseGroup.child(groupKey).child(FireBaseReferences.NUMBERMEMBERS_REFERENCE).setValue(members+1);
-                   Log.i("MEM", Integer.toString(members));
-
-                // textViewMembers.setText(members+1);
-            }
-
-
-           @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                //TO-DO
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-                //TO-DO
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-                //TO-DO
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                //TO-DO
-            }
-        });
-    }
-
+    /**
+     * Inflate menu with menu layout information
+     * @param menu
+     * @return
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -175,10 +89,81 @@ public class ShowGroupActivity extends AppCompatActivity {
                 joinGroup();
                 return true;
             case R.id.action_leaveGroup:
-
+                leaveGroup();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    /**
+     * When the menu option "join group" is clicked, this method is executed. Add current user to selected group, add group to user groups and
+     * updates group members number
+     */
+    private void joinGroup () {
+        // Create alert dialog to ask user confirmation
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(getString(R.string.joinGroupAsk));
+        builder.setCancelable(true);
+
+        builder.setPositiveButton(
+                getString(R.string.acceptButton),
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                        common.updateJoins(currentMail, getString(R.string.setJoin), databaseGroup, group.getId(), FireBaseReferences.USER_GROUPS_REFERENCE);
+                        databaseGroup.child(group.getId()).child(FireBaseReferences.NUMBERMEMBERS_REFERENCE).setValue(group.getNumberOfMembers()+1);
+                        Toast.makeText(getApplicationContext(), getString(R.string.groupJoined), Toast.LENGTH_LONG).show();
+                        finish();
+                    }
+                });
+
+        builder.setNegativeButton(
+                getString(R.string.cancelButton),
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                        finish();
+                    }
+                });
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
+    /**
+     * When the menu option "leave group" is clicked, this method is executed. Delete current user from selected group, delete group from user groups and
+     * updates group members number
+     */
+    public void leaveGroup () {
+        // Create alert dialog to ask user confirmation
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(getString(R.string.groupLeft));
+        builder.setCancelable(true);
+
+        builder.setPositiveButton(
+                getString(R.string.acceptButton),
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+
+                        common.updateJoins(currentMail, getString(R.string.setLeave), databaseGroup, group.getId(), FireBaseReferences.USER_GROUPS_REFERENCE);
+                        databaseGroup.child(group.getId()).child(FireBaseReferences.NUMBERMEMBERS_REFERENCE).setValue(group.getNumberOfMembers()-1);
+
+                        finish();
+                    }
+                });
+
+        builder.setNegativeButton(
+                getString(R.string.cancelButton),
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                        finish();
+                    }
+                });
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
     }
 }

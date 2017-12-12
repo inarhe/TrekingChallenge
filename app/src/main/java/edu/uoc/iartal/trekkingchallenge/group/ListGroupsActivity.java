@@ -1,126 +1,46 @@
 package edu.uoc.iartal.trekkingchallenge.group;
 
 import android.support.design.widget.TabLayout;
-import android.support.v4.view.PagerAdapter;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
-import com.google.firebase.database.DatabaseReference;
-
-import java.util.List;
-
-import edu.uoc.iartal.trekkingchallenge.objectsDB.Group;
 import edu.uoc.iartal.trekkingchallenge.R;
 
 public class ListGroupsActivity extends AppCompatActivity {
-
-    private RecyclerView.Adapter groupAdapter;
-    private List<Group> groups;
-    private DatabaseReference databaseGroup;
-    private RecyclerView recyclerView;
-
-    /**
-     * The {@link android.support.v4.view.PagerAdapter} that will provide
-     * fragments for each of the sections. We use a
-     * {@link FragmentPagerAdapter} derivative, which will keep every
-     * loaded fragment in memory. If this becomes too memory intensive, it
-     * may be best to switch to a
-     * {@link android.support.v4.app.FragmentStatePagerAdapter}.
-     */
-    private SectionsPagerAdapter mSectionsPagerAdapter;
-
-    /**
-     * The {@link ViewPager} that will host the section contents.
-     */
-    private ViewPager mViewPager;
-    private PagerAdapter pagerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_groups);
 
+        // Set toolbar and actionbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.listGroupToolbar);
         setSupportActionBar(toolbar);
-
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle(getString(R.string.listGroupsActivity));
-        // Create the adapter that will return a fragment for each of the three
-        // primary sections of the activity.
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
-        // Set up the ViewPager with the sections adapter.
-        mViewPager = (ViewPager) findViewById(R.id.pagerGroups);
-      /*  pagerAdapter = new PagerAdapter() {
-            @Override
-            public int getCount() {
-                return 0;
-            }
+        // Create the adapter that will return a fragment for each of the two primary sections of the activity
+        SectionsPagerAdapter mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
-            @Override
-            public boolean isViewFromObject(View view, Object object) {
-                return false;
-            }
-        };*/
-        mViewPager.setAdapter(mSectionsPagerAdapter);//(pagerAdapter)
+        // Set up the ViewPager that will host the section contents.
+        ViewPager mViewPager = (ViewPager) findViewById(R.id.pagerGroups);
+        mViewPager.setAdapter(mSectionsPagerAdapter);
 
+        // Set up the TabLayout that will contains all necessary tabs
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
-       // tabLayout.addTab(tabLayout.newTab().setText(R.string.tabAllGroups), true);
-        //tabLayout.addTab(tabLayout.newTab().setText(R.string.tabMyGroups),true);
+
+        // Set up listeners for tab selected and the content it must show
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
-
-
-
-    }
-
-
-    /**
-     * A placeholder fragment containing a simple view.
-     */
-    public static class PlaceholderFragment extends Fragment {
-        /**
-         * The fragment argument representing the section number for this
-         * fragment.
-         */
-        private static final String ARG_SECTION_NUMBER = "section_number";
-
-        public PlaceholderFragment() {
-        }
-
-        /**
-         * Returns a new instance of this fragment for the given section
-         * number.
-         */
-        public static PlaceholderFragment newInstance(int sectionNumber) {
-            PlaceholderFragment fragment = new PlaceholderFragment();
-            Bundle args = new Bundle();
-            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-            fragment.setArguments(args);
-            return fragment;
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-         //   View rootView = inflater.inflate(R.layout.fragment_list_groups2, container, false);
-           // TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-            //textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
-            return null;
-        }
     }
 
     /**
@@ -144,17 +64,24 @@ public class ListGroupsActivity extends AppCompatActivity {
                 case 1:
                     return new MyGroupsFragment();
             }
-
-
             return null;
         }
 
+        /**
+         * Get pages amount
+         * @return number of pages
+         */
         @Override
         public int getCount() {
-            // Show 3 total pages.
+            // Show 2 total pages.
             return 2;
         }
 
+        /**
+         * Define tab name according to its position
+         * @param position
+         * @return tab name
+         */
         @Override
         public CharSequence getPageTitle(int position){
             switch (position){

@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -22,8 +23,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 
-import java.util.ArrayList;
-
 import edu.uoc.iartal.trekkingchallenge.user.ListUsersActivity;
 import edu.uoc.iartal.trekkingchallenge.user.LoginActivity;
 import edu.uoc.iartal.trekkingchallenge.MainActivity;
@@ -33,90 +32,95 @@ import edu.uoc.iartal.trekkingchallenge.objectsDB.User;
 import edu.uoc.iartal.trekkingchallenge.R;
 
 public class AddGroupActivity extends AppCompatActivity {
-    private static final int ACTIVITY_CODE = 1;
     private EditText editTextName, editTextDescription;
     private DatabaseReference databaseGroup, databaseUser;
     private CheckBox checkBox;
-    private String userAdmin, name, idGroup;
-    private FirebaseAuth firebaseAuth;
-    private Intent intent;
-    ListUsersActivity listUsersActivity;
-    ArrayList<User> userMembers = new ArrayList<>();
+    private String userAdmin;
+    private Group group;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_group);
 
+        // Set toolbar and actionbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.addGroupToolbar);
         setSupportActionBar(toolbar);
-
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle(getString(R.string.addGroupActivity));
 
-        // Get Firebase authentication instance
-        firebaseAuth = FirebaseAuth.getInstance();
-        databaseGroup = FirebaseDatabase.getInstance().getReference("group");
+        // Hide keyboard until user select edit text
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
+        // Get Firebase authentication instance and database references
+
+        databaseGroup = FirebaseDatabase.getInstance().getReference(FireBaseReferences.GROUP_REFERENCE);
+        databaseUser = FirebaseDatabase.getInstance().getReference(FireBaseReferences.USER_REFERENCE);
+
+        // Link layout elements with variables
         editTextName = (EditText) findViewById(R.id.etNameGroup);
         editTextDescription = (EditText) findViewById(R.id.etDescriptionGroup);
         checkBox = (CheckBox) findViewById(R.id.cBPublicGgroup);
 
-        if (firebaseAuth.getCurrentUser() == null) {
-            // If user isn't logged, start login activity
+        // If user isn't logged, start login activity
+        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
             startActivity(new Intent(getApplicationContext(), LoginActivity.class));
             finish();
-        } else {
-            String mail = firebaseAuth.getCurrentUser().getEmail();
-            databaseUser = FirebaseDatabase.getInstance().getReference(FireBaseReferences.USER_REFERENCE);
-            Query query = databaseUser.orderByChild(FireBaseReferences.USERMAIL_REFERENCE).equalTo(mail);
-
-            // Query database to get user admin information
-            query.addChildEventListener(new ChildEventListener() {
-                @Override
-                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                    userAdmin = dataSnapshot.getValue(User.class).getIdUser();
-                 //   userKey = dataSnapshot.getValue(User.class).getIdUser();
-                }
-
-                @Override
-                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                    //TO-DO
-                }
-
-                @Override
-                public void onChildRemoved(DataSnapshot dataSnapshot) {
-                    //TO-DO
-                }
-
-                @Override
-                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-                    //TO-DO
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                    //TO-DO
-                }
-            });
         }
+
+        // Query database to get current user information
+        String currentMail = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+        Query query = databaseUser.orderByChild(FireBaseReferences.USERMAIL_REFERENCE).equalTo(currentMail);
+
+        query.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                userAdmin = dataSnapshot.getValue(User.class).getIdUser();
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                //TO-DO
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                //TO-DO
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                //TO-DO
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                //TO-DO
+            }
+        });
+
     }
 
+    /**
+     * Add group to database when accept button is clicked
+     * @param view
+     */
     public void addGroup (View view) {
-        // Add group to database when accept button is clicked
+        // Initialize variables with input parameters
         Boolean isPublic = false;
-        name = editTextName.getText().toString().trim();
+        String name = editTextName.getText().toString().trim();
         String description = editTextDescription.getText().toString().trim();
 
-        // If some of the input parameters are incorrect, stops the function execution further
+        // If some of the input parameters are incorrect, stops execution
         if (TextUtils.isEmpty(name)) {
-            Toast.makeText(this, getString(R.string.hintNameGroup), Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getString(R.string.nameField), Toast.LENGTH_LONG).show();
             return;
         }
 
         if (TextUtils.isEmpty(description)) {
-            Toast.makeText(this, getString(R.string.hintDescription), Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getString(R.string.descriptionField), Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -125,48 +129,49 @@ public class AddGroupActivity extends AppCompatActivity {
         }
 
         // Add group to firebase database
-      //  idGroup = databaseGroup.push().s.getKey();
-        idGroup = name;
-        Group group = new Group(idGroup, name, description, isPublic, userAdmin, 1);
+        final String idGroup = databaseGroup.push().getKey();
+        group = new Group(idGroup, name, description, isPublic, userAdmin, 1);
 
         databaseGroup.child(idGroup).setValue(group).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
-                if(!task.isSuccessful()) {
+                if(task.isSuccessful()) {
+                    databaseGroup.child(idGroup).child(FireBaseReferences.MEMBERS_REFERENCE).child(userAdmin).setValue("true");
+                    databaseUser.child(userAdmin).child(FireBaseReferences.USER_GROUPS_REFERENCE).child(idGroup).setValue("true")
+                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if(task.isSuccessful()){
+                                        Toast.makeText(getApplicationContext(), getString(R.string.groupSaved), Toast.LENGTH_LONG).show();
+                                    } else {
+                                        Toast.makeText(AddGroupActivity.this,getString(R.string.failedAddGroup),Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
+                } else {
                     Toast.makeText(AddGroupActivity.this, getString(R.string.failedAddGroup), Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
-        databaseGroup.child(idGroup).child(FireBaseReferences.MEMBERSGROUP_REFERENCE).child(userAdmin).setValue("true");
-
-        databaseUser.child(userAdmin).child(FireBaseReferences.USERGROUPS_REFERENCE).child(group.getGroupName()).setValue("true")
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if(task.isSuccessful()){
-                    Toast.makeText(getApplicationContext(), getString(R.string.groupSaved), Toast.LENGTH_LONG).show();
-                } else {
-                    Toast.makeText(AddGroupActivity.this,getString(R.string.failedAddGroup),Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
-
         inviteUsers();
-
-
     }
 
+    /**
+     * Cancel grup creation when cancel button is clicked. Start main activity
+     * @param view
+     */
     public void cancelGroup (View view) {
         startActivity(new Intent(getApplicationContext(), MainActivity.class));
         finish();
     }
 
+    /**
+     * Show user list and allows invite users to join the new group
+     */
     private void inviteUsers (){
-        intent = new Intent(getApplicationContext(), ListUsersActivity.class);
-        intent.putExtra("groupName", name);
-        intent.putExtra("idGroup", idGroup);
+        Intent intent = new Intent(getApplicationContext(), ListUsersActivity.class);
+        intent.putExtra("group", group);
         startActivity(intent);
         finish();
     }

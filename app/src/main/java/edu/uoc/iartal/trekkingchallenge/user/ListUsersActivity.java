@@ -43,7 +43,8 @@ public class ListUsersActivity extends AppCompatActivity implements SearchView.O
     private RecyclerView recyclerView;
     private ArrayList<User> users = new ArrayList<>();
     private ArrayList<User> selectedUsers = new ArrayList<>();
-    private String idGroup, groupName, idTrip, tripName, idChallenge, challengeName;
+    private String  idTrip, tripName, idChallenge, challengeName;
+    private Group group;
     private Toolbar toolbar;
     private DatabaseReference databaseUser, databaseGroup, databaseTrip, databaseChallenge;
     private List<User> filteredModelList = new ArrayList<>();
@@ -60,13 +61,12 @@ public class ListUsersActivity extends AppCompatActivity implements SearchView.O
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle(getString(R.string.listUsersActivity));
 
-        Bundle groupData = getIntent().getExtras();
-        idGroup = groupData.getString("idGroup");
-        groupName = groupData.getString("groupName");
-        idTrip = groupData.getString("idTrip");
-        tripName = groupData.getString("tripName");
-        idChallenge = groupData.getString("idChallenge");
-        challengeName = groupData.getString("challengeName");
+        Bundle bundle = getIntent().getExtras();
+        group = bundle.getParcelable("group");
+        idTrip = bundle.getString("idTrip");
+        tripName = bundle.getString("tripName");
+        idChallenge = bundle.getString("idChallenge");
+        challengeName = bundle.getString("challengeName");
 
         recyclerView = (RecyclerView) findViewById(R.id.rvListUsers);
         recyclerView.setHasFixedSize(true);
@@ -169,7 +169,7 @@ public class ListUsersActivity extends AppCompatActivity implements SearchView.O
         databaseChallenge = FirebaseDatabase.getInstance().getReference(FireBaseReferences.CHALLENGE_REFERENCE);
 
         if (!selectedUsers.isEmpty()){
-            if (idGroup != null){
+            if (group.getId() != null){
                 setGroups();
                 Toast.makeText(ListUsersActivity.this,getString(R.string.usersInvitedGroup),Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(getApplicationContext(), ListGroupsActivity.class));
@@ -224,10 +224,10 @@ public class ListUsersActivity extends AppCompatActivity implements SearchView.O
 
     private void setGroups (){
         for (User user : selectedUsers){
-            databaseUser.child(user.getIdUser()).child("groups").child(groupName).setValue("true");
-            databaseGroup.child(idGroup).child("members").child(user.getIdUser()).setValue("true");
+            databaseUser.child(user.getIdUser()).child("groups").child(group.getId()).setValue("true");
+            databaseGroup.child(group.getId()).child("members").child(user.getIdUser()).setValue("true");
 
-            Query query = databaseGroup.orderByChild(FireBaseReferences.GROUPNAME_REFERENCE).equalTo(groupName);
+            Query query = databaseGroup.orderByChild(FireBaseReferences.GROUP_REFERENCE).equalTo(group.getId());
 
             // Query database to get user information
             query.addChildEventListener(new ChildEventListener() {
@@ -238,7 +238,7 @@ public class ListUsersActivity extends AppCompatActivity implements SearchView.O
 
                     // databaseUser.child(user.getIdUser()).child("groups").child(name).setValue("true");
                     int members = dataSnapshot.getValue(Group.class).getNumberOfMembers();
-                    databaseGroup.child(idGroup).child(FireBaseReferences.NUMBERMEMBERS_REFERENCE).setValue(members+1);
+                    databaseGroup.child(group.getId()).child(FireBaseReferences.NUMBERMEMBERS_REFERENCE).setValue(members+1);
                     Log.i("MEM", Integer.toString(members));
 
                     // textViewMembers.setText(members+1);

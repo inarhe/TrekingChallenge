@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,23 +21,17 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
 import edu.uoc.iartal.trekkingchallenge.R;
 import edu.uoc.iartal.trekkingchallenge.group.ShowGroupActivity;
 
-/**
- * Created by Ingrid Artal on 12/11/2017.
- */
+
 public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.GroupViewHolder> {
-
-    List<Group> groups;
-    Boolean isVisible = false;
-    ArrayList<Boolean> isVisibleArray = new ArrayList<>();
-    ArrayList<String> keys = new ArrayList<>();
-
+    private List<Group> groups;
+    private ArrayList<Boolean> isVisibleArray = new ArrayList<>();
+    private ArrayList<String> groupMembers = new ArrayList<>();
 
     // Object which represents a list item and save view references
     public static class GroupViewHolder extends RecyclerView.ViewHolder {
@@ -47,7 +40,7 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.GroupViewHol
         ImageButton buttonDelete;
         CardView cardView;
 
-
+        // Link layout elements to variables
         public GroupViewHolder(View view) {
             super(view);
             textViewGroupName = (TextView) view.findViewById(R.id.cvGroupName);
@@ -56,7 +49,6 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.GroupViewHol
             imageViewGroup = (ImageView) view.findViewById(R.id.cvGroupPhoto);
             buttonDelete = (ImageButton) view.findViewById(R.id.icDelGroupAdmin);
             cardView = (CardView) view.findViewById(R.id.cardViewGroup);
-
         }
     }
 
@@ -73,22 +65,27 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.GroupViewHol
     public GroupViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         // Inflates new list item
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.card_view_group, viewGroup, false);
-
         return new GroupViewHolder(view);
     }
 
+    /**
+     * Modify content of each list item
+     * @param viewHolder
+     * @param position
+     */
     @Override
     public void onBindViewHolder(GroupViewHolder viewHolder, final int position) {
-       // Modify content of each list item
-        viewHolder.textViewGroupName.setText(groups.get(position).getIdGroup());
-        viewHolder.textViewGroupDesc.setText(groups.get(position).getGroupDescription());
+        viewHolder.textViewGroupName.setText(groups.get(position).getName());
+        viewHolder.textViewGroupDesc.setText(groups.get(position).getDescription());
         viewHolder.imageViewGroup.setImageResource(R.drawable.ic_people);
+
         if (groups.get(position).getIsPublic()) {
             viewHolder.textViewIsPublic.setText(R.string.publicGroup);
         } else {
             viewHolder.textViewIsPublic.setText(R.string.privateGroup);
         }
 
+        // Show delete button only if current user is group admin
         if (isVisibleArray.isEmpty()){
             viewHolder.buttonDelete.setVisibility(View.GONE);
         } else {
@@ -99,47 +96,42 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.GroupViewHol
             }
         }
 
-
-        // When an item is clicked starts show detail group activity
-
+        // When cardview is clicked starts show detail group activity
         viewHolder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Context context = v.getContext();
 
                 Intent intent = new Intent(context, ShowGroupActivity.class);
-                intent.putExtra("groupName", groups.get(position).getGroupName());
-                intent.putExtra("groupDescription", groups.get(position).getGroupDescription());
-                intent.putExtra("members", groups.get(position).getNumberOfMembers());
-                intent.putExtra("groupKey", groups.get(position).getIdGroup());
+                intent.putExtra("group", groups.get(position));
 
                 context.startActivity(intent);
             }
         });
 
+        // When delete button is clicked, delete group and all its members dependencies
         viewHolder.buttonDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                keys.removeAll(keys);
-                final String id = groups.get(position).getIdGroup();
-                final String name = groups.get(position).getGroupName();
+                //Initialize variables
+                groupMembers.clear();
+                final String id = groups.get(position).getId();
+                final String name = groups.get(position).getName();
                 final Context context = v.getContext();
                 DatabaseReference databaseGroup = FirebaseDatabase.getInstance().getReference(FireBaseReferences.GROUP_REFERENCE);
 
+                // Get names of group members
                 databaseGroup.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
 
                         for (DataSnapshot groupSnapshot : dataSnapshot.getChildren()) {
                             Group group = groupSnapshot.getValue(Group.class);
-
-                            if (group.getIdGroup().equals(id)) {
-                                for (String key : group.getMembers().keySet()) {
-                                    keys.add(key);
+                            if (group.getId().equals(id)) {
+                                for (String name : group.getMembers().keySet()) {
+                                    groupMembers.add(name);
                                 }
-
                             }
-
                         }
                     }
 
@@ -149,38 +141,41 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.GroupViewHol
                     }
                 });
 
-                databaseGroup.child(groups.get(position).getGroupName()).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                // Delete selected group and update members groups
+                databaseGroup.child(groups.get(position).getId()).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
-                            Toast.makeText(context , R.string.groupDeleted, Toast.LENGTH_SHORT).show();
                             DatabaseReference databaseUser = FirebaseDatabase.getInstance().getReference(FireBaseReferences.USER_REFERENCE);
-                            for (String user:keys){
-                                databaseUser.child(user).child("groups").child(name).removeValue();
+                            for (String user:groupMembers){
+                                databaseUser.child(user).child(FireBaseReferences.USER_GROUPS_REFERENCE).child(id).removeValue();
                             }
-
+                            Toast.makeText(context , R.string.groupDeleted, Toast.LENGTH_SHORT).show();
                         } else {
-
                             Toast.makeText(context, R.string.groupNotDeleted, Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
-
             }
         });
     }
 
+    /**
+     * Define visibility of delete button for each element
+     * @param visible
+     */
     public void setVisibility(Boolean visible){
         if (visible){
             isVisibleArray.add(true);
         } else {
             isVisibleArray.add(false);
         }
-     //   Log.i("VISIBLE",isVisible.toString());
-
-     //   this.notifyDataSetChanged();
     }
 
+    /**
+     * Updates group list with search result
+     * @param filterGroups
+     */
     public void setFilter(List<Group> filterGroups) {
         groups = new ArrayList<>();
         groups.addAll(filterGroups);

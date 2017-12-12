@@ -1,55 +1,62 @@
 package edu.uoc.iartal.trekkingchallenge.objectsDB;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by Ingrid Artal on 04/11/2017.
- */
 
-// Group object class
-public class Group {
-    private String idGroup, groupName, groupDescription, userAdmin;
+// Group object class. Implements Parcelable to pass group object between activities
+public class Group implements Parcelable {
+    private String id, name, description, userAdmin;
     private Boolean isPublic;
     private int numberOfMembers;
-    public Map<String, String> members = new HashMap<>();
+    private Map<String, String> members = new HashMap<>();
 
     public Group() {
 
     }
 
-
-    public Group(String idGroup, String groupName, String groupDescription, Boolean isPublic, String userAdmin, int numberOfMembers) {
-        this.idGroup = idGroup;
-        this.groupName = groupName;
-        this.groupDescription = groupDescription;
+    public Group(String id, String name, String description, Boolean isPublic, String userAdmin, int numberOfMembers) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
         this.isPublic = isPublic;
         this.userAdmin = userAdmin;
         this.numberOfMembers = numberOfMembers;
     }
 
-    public String getIdGroup() {
-        return idGroup;
+    public Group(Parcel in) {
+        this.id = in.readString();
+        this.name = in.readString();
+        this.description = in.readString();
+        this.userAdmin = in.readString();
+        this.numberOfMembers = in.readInt();
     }
 
-    public void setIdGroup(String idGroup) {
-        this.idGroup = idGroup;
+    public String getId() {
+        return id;
     }
 
-    public String getGroupName() {
-        return groupName;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public void setGroupName(String groupName) {
-        this.groupName = groupName;
+    public String getName() {
+        return name;
     }
 
-    public String getGroupDescription() {
-        return groupDescription;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public void setGroupDescription(String groupDescription) {
-        this.groupDescription = groupDescription;
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Boolean getIsPublic() {
@@ -79,5 +86,30 @@ public class Group {
     public Map<String, String> getMembers() {
         return this.members;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(name);
+        dest.writeString(description);
+        dest.writeString(userAdmin);
+        dest.writeInt(numberOfMembers);
+    }
+
+    public static final Parcelable.Creator<Group> CREATOR = new Parcelable.Creator<Group>() {
+
+        public Group createFromParcel(Parcel in) {
+            return new Group(in);
+        }
+
+        public Group[] newArray(int size) {
+            return new Group[size];
+        }
+    };
 
 }

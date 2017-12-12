@@ -16,7 +16,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -32,18 +31,14 @@ import edu.uoc.iartal.trekkingchallenge.objectsDB.Group;
 import edu.uoc.iartal.trekkingchallenge.objectsDB.GroupAdapter;
 import edu.uoc.iartal.trekkingchallenge.R;
 
-/**
- * Created by Ingrid Artal on 26/11/2017.
- */
 
 public class AllGroupsFragment extends Fragment implements SearchView.OnQueryTextListener{
-
     private List<Group> groups;
     private GroupAdapter groupAdapter;
     private ProgressDialog progressDialog;
-    private ImageButton imageButton;
-    private Boolean isVisible = false;
     private RecyclerView recyclerView;
+
+
     public AllGroupsFragment(){
 
     }
@@ -52,28 +47,40 @@ public class AllGroupsFragment extends Fragment implements SearchView.OnQueryTex
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        //Initialize progress dialog
         progressDialog = new ProgressDialog(getActivity());
         progressDialog.setMessage(getString(R.string.loadingData));
     }
 
+    /**
+     * Define recyclerview that will be show in this view
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.activity_list_all_groups,container,false);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.rvListAllGroups);
-     //   recyclerView.setHasFixedSize(true);
+        recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         return rootView;
     }
 
+    /**
+     * Get all database public groups
+     * @param view
+     * @param savedInstanceState
+     */
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         setHasOptionsMenu(true);
-       // imageButton = (ImageButton) rootView.findViewById(R.id.icDelGroupAdmin);
 
-        // Floating button for adding new group
+        // Define floating button for adding new group
         FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fabAddGroup);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,18 +95,17 @@ public class AllGroupsFragment extends Fragment implements SearchView.OnQueryTex
 
         recyclerView.setAdapter(groupAdapter);
 
-        // Show database groups in recycler view
+        // Get database groups and notify adapter to show them in recycler view
         progressDialog.show();
         databaseGroup.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                groups.removeAll(groups);
-                for (DataSnapshot groupSapshot:
+                groups.clear();
+                for (DataSnapshot groupSnapshot:
                         dataSnapshot.getChildren()) {
-                    Group group = groupSapshot.getValue(Group.class);
+                    Group group = groupSnapshot.getValue(Group.class);
                     if (group.getIsPublic()){
                         groups.add(group);
-                        //groupAdapter.setVisibility(false);
                     }
                 }
                 groupAdapter.notifyDataSetChanged();
@@ -111,14 +117,16 @@ public class AllGroupsFragment extends Fragment implements SearchView.OnQueryTex
                 //TO-DO
             }
         });
-
     }
 
+    /**
+     * Inflate menu with menu layout information and define search view
+     * @param menu
+     * @param inflater
+     */
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         inflater.inflate(R.menu.menu_list_groups, menu);
-
         final MenuItem item = menu.findItem(R.id.action_search);
         final SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
         searchView.setOnQueryTextListener(this);
@@ -127,15 +135,15 @@ public class AllGroupsFragment extends Fragment implements SearchView.OnQueryTex
                 new MenuItemCompat.OnActionExpandListener() {
                     @Override
                     public boolean onMenuItemActionCollapse(MenuItem item) {
-// Do something when collapsed
                         groupAdapter.setFilter(groups);
-                        return true; // Return true to collapse action view
+                        // Return true to collapse action view
+                        return true;
                     }
 
                     @Override
                     public boolean onMenuItemActionExpand(MenuItem item) {
-// Do something when expanded
-                        return true; // Return true to expand action view
+                        // Return true to expand action view
+                        return true;
                     }
                 });
     }
@@ -146,19 +154,29 @@ public class AllGroupsFragment extends Fragment implements SearchView.OnQueryTex
         return false;
     }
 
+    /**
+     * Pass new group list to Adapter
+     * @param newText
+     * @return
+     */
     @Override
     public boolean onQueryTextChange(String newText) {
         final List<Group> filteredModelList = filter(groups, newText);
-
         groupAdapter.setFilter(filteredModelList);
         return true;
     }
 
+    /**
+     * Get search result group list
+     * @param models
+     * @param query
+     * @return
+     */
     private List<Group> filter(List<Group> models, String query) {
         query = query.toLowerCase();
         final List<Group> filteredModelList = new ArrayList<>();
         for (Group model : models) {
-            final String text = model.getIdGroup().toLowerCase();
+            final String text = model.getId().toLowerCase();
             if (text.contains(query)) {
                 filteredModelList.add(model);
             }

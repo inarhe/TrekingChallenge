@@ -14,6 +14,7 @@ public class FireBaseReferences {
     final public static String USERFINISHED_REFERENCE = "finished";
     final public static String USERRESULT_REFERENCE = "finished";
     final public static String USERTRIPS_REFERENCE = "trips";
+    final public static String USER_GROUPS_REFERENCE = "groups";
     final public static String USERCHALLENGES_REFERENCE = "challenges";
     final public static String USERPASSWORD_REFERENCE = "userPassword";
 
@@ -23,7 +24,7 @@ public class FireBaseReferences {
     final public static String GROUPDESCRIPTION_REFERENCE = "groupDescription";
     final public static String PUBLICGROUP_REFERENCE = "isPublic";
     final public static String MEMBERSGROUP_REFERENCE = "members";
-    final public static String NUMBERMEMBERS_REFERENCE = "numberOfMembers";
+
     final public static String USERADMIN_REFERENCE = "userAdmin";
 
     final public static String ROUTE_REFERENCE = "route";
@@ -50,4 +51,7 @@ public class FireBaseReferences {
     final public static String FINISHEDROUTE_REFERENCE = "route";
 
     final public static String CHALLENGERESULT_REFERENCE = "challengeresult";
+
+    final public static String MEMBERS_REFERENCE = "members";
+    final public static String NUMBERMEMBERS_REFERENCE = "numberOfMembers";
 }

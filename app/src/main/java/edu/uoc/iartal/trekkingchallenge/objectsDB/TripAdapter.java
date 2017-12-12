@@ -105,8 +105,8 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
             @Override
             public void onClick(View v) {
                 keys.removeAll(keys);
-                final String id = groups.get(position).getIdGroup();
-                final String name = groups.get(position).getGroupName();
+                final String id = groups.get(position).getId();
+                final String name = groups.get(position).getName();
                 final Context context = v.getContext();
                 DatabaseReference databaseGroup = FirebaseDatabase.getInstance().getReference(FireBaseReferences.GROUP_REFERENCE);
 
@@ -117,7 +117,7 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
                         for (DataSnapshot groupSnapshot : dataSnapshot.getChildren()) {
                             Group group = groupSnapshot.getValue(Group.class);
 
-                            if (group.getIdGroup().equals(id)) {
+                            if (group.getId().equals(id)) {
                                 for (String key : group.getMembers().keySet()) {
                                     keys.add(key);
                                 }
@@ -133,7 +133,7 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
                     }
                 });
 
-                databaseGroup.child(groups.get(position).getGroupName()).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                databaseGroup.child(groups.get(position).getName()).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {

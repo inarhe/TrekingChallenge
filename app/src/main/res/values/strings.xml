@@ -1,5 +1,6 @@
 <resources>
 
+    <!--USER OBJECT-->
     <!--Access activity-->
     <string name="registeredText">Ja ets usuari?</string>
     <string name="accessButton">Accedeix</string>
@@ -29,20 +30,62 @@
     <string name="loginTitle">Accedeix a TrekkingChallenge</string>
     <string name="logging">Iniciant sessió usuari...</string>
     <string name="loginActivity">Inici de sessió</string>
+    <string name="loginButton">Accedir</string>
 
     <!--User area activity-->
     <string name="infoName">Nom:</string>
     <string name="infoMail">Mail:</string>
+    <string name="actionEditProfile">Editar perfil</string>
+    <string name="actionDeleteProfile">Eliminar perfil</string>
+    <string name="actionUserHistory">El meu històric</string>
+    <string name="buttonSignOut">Tancar sessió</string>
+    <string name="userSignOut">Sessió tancada</string>
+    <string name="userAccountDeleted">Compte esborrat</string>
+    <string name="userAreaActivity">Àrea d\'usuari</string>
+    <string name="deleteUserConfirmation">Estàs segur que vols eliminar el compte d\'usuari?</string>
+
+    <!--Edit profile activity-->
+    <string name="editProfileActivity">Editar perfil</string>
+    <string name="confirmEditProfile">Perfil d\'usuari modificat</string>
+
+    <!--List users activity-->
+    <string name="usersInvitedTrip">Usuaris afegits a l\'excursió</string>
+    <string name="actionDone">Fet</string>
+    <string name="listUsersActivity">Usuaris</string>
+    <string name="usersInvitedGroup">"Usuaris afegits al grup"</string>
+
+    <!--GROUP OBJECT-->
+    <!--Group adapter-->
+    <string name="groupDeleted">Grup eliminat</string>
+    <string name="groupNotDeleted">No s\'ha pogut eliminar el grup</string>
+    <string name="publicGroup">Grup públic</string>
+    <string name="privateGroup">Grup privat</string>
 
     <!--List groups activity-->
     <string name="listGroupsActivity">Grups</string>
+    <string name="tabAllGroups">"Tots"</string>
+    <string name="tabMyGroups">"Els meus"</string>
 
     <!--Show groups activity-->
     <string name="groupJoined">T\'has unit al grup</string>
     <string name="joinGroupAsk">Et vols unir a aquest grup?</string>
     <string name="groupLeft">Segur que vols abandonar el grup?</string>
     <string name="groupAskDeleted">Segur que vols eliminar el grup?</string>
+    <string name="textGroupDescription">Descripció:</string>
+    <string name="textGroupMembers">Nombre d\'integrants:</string>
+    <string name="actionJoinGroup">Uneix-t\'hi</string>
+    <string name="actionLeaveGroup">Deixa el grup</string>
 
+    <!--Add groups activity-->
+    <string name="failedAddGroup">El grup no s\'ha creat correctament</string>
+    <string name="groupSaved">Grup creat</string>
+    <string name="hintNameGroup">Nom del grup</string>
+    <string name="hintDescription">Descripció del grup</string>
+    <string name="checkIsPublic">Grup públic</string>
+    <string name="addGroupActivity">Nou grup</string>
+
+
+    <!--ROUTE OBJECT-->
     <!--Track rotue activity-->
     <string name="trackTitle">Recorregut de la ruta</string>
     <string name="profileTitle">Perfil de la ruta</string>
@@ -70,7 +113,50 @@
     <string name="summer">Estiu</string>
     <string name="winter">Hivern</string>
     <string name="imageNotDonwloaded">Imatge no descarregada</string>
+    <string name="action_gallery">Galeria de fotos</string>
+    <string name="action_trip">Crea una excursió</string>
+    <string name="action_chall">Crea un repte</string>
+    <string name="action_opinion">Opinions</string>
+    <string name="detailsButton">Informació detallada</string>
+    <string name="tracksButton">Recorregut i perfil de la ruta</string>
+    <string name="region">Comarca:</string>
+    <string name="township">Municipi:</string>
 
+    <!--Search route activity-->
+    <string name="advancedSearch">Cerca avançada</string>
+    <string name="difficult">Difícil</string>
+    <string name="moderate">Moderat</string>
+    <string name="easy">Fàcil</string>
+    <string name="all">Qualsevol</string>
+    <string name="difficultRoute">Dificultat ruta</string>
+    <string name="lessCheck">Less</string>
+    <string name="middleCheck">Middle</string>
+    <string name="highCheck">High</string>
+    <string name="lessKm"> &lt;10km</string>
+    <string name="middleKm"> 10km/15km</string>
+    <string name="highKm"> &gt;15km</string>
+    <string name="distanceRoute">Distància ruta</string>
+    <string name="typeRoute">Tipus de recorregut</string>
+    <string name="circular">Circular</string>
+    <string name="goBack">Anada/Tornada</string>
+    <string name="search">Buscar</string>
+
+    <!--Detail route activity-->
+    <string name="infoDetail">Informació detallada:</string>
+    <string name="infoMeteo">Meteorologia:</string>
+    <string name="startPlace">Lloc de sortida:</string>
+
+    <!--List routes activity-->
+    <string name="listRoutesActivity">Llista de rutes</string>
+
+    <!--Photo gallery activity-->
+    <string name="photoGallery">Galeria de fotos</string>
+
+
+    <!--TRIP OBJECT-->
+    <!--Trip adapter-->
+    <string name="publicTrip">Excursió pública</string>
+    <string name="privateTrip">Excursió privada</string>
 
     <!--Show trip activity-->
     <string name="routeTrip">Ruta escollida:</string>
@@ -86,10 +172,26 @@
     <string name="tripAskDeleted">Segur que vols eliminar l\'excursió??</string>
     <string name="tripDeleted">Excursió eliminada </string>
     <string name="tripNotDeleted">No s\'ha pogut eliminar l\'excursió</string>
+    <string name="dateTrip">Data excursió</string>
 
     <!--Add trip activity-->
     <string name="chooseRouteSpinner">- Selecciona la ruta -</string>
+    <string name="hintNameTrip">Nom de l\'excursió</string>
+    <string name="hintDescTrip">Descripció excursió</string>
+    <string name="hintPlaceTrip">Lloc de trobada</string>
+    <string name="addTripActivity">Nova excursió</string>
+    <string name="tripIsPublic">Excursió pública</string>
+    <string name="tripSaved">Excursió creada correctament</string>
+    <string name="failedAddTrip">No s\'ha pogut crear l\'excursió</string>
+    <string name="placeAdvice">Siusplau, introdueix lloc de trobada</string>
 
+    <!--List trips activity-->
+    <string name="listTripsActivity">Excursions</string>
+    <string name="tabAllTrips">"Totes"</string>
+    <string name="tabMyTrips">"Les meves"</string>
+
+
+    <!--CHALLENGE OBJECT-->
     <!--Show challenge activity-->
     <string name="routeChallenge">Ruta escollida:</string>
     <string name="dateChallenge">Data límit:</string>
@@ -104,14 +206,13 @@
     <string name="challengeDeleted">Repte eliminat</string>
     <string name="challengeNotDeleted">No s\'ha pogut eliminar el repte</string>
 
-
     <!--Finished challenge activity-->
     <string name="finishChallengeActivity">Repte realitzat</string>
     <string name="titleFinishChallenge">Repte superat!</string>
     <string name="resultsChallenge">Resultats:</string>
     <string name="action_challengeFinished">Registra resultat</string>
 
-
+    <!--Add challenge activity-->
     <string name="listChallengesActivity">Reptes</string>
     <string name="hintNameChallenge">Nom del repte</string>
     <string name="hintDescChallenge">Descripció repte</string>
@@ -122,7 +223,13 @@
     <string name="publicChallenge">Repte públic</string>
     <string name="privateChallenge">Repte privat</string>
     <string name="usersInvitedChallenge">Usuaris afegits al repte</string>
-    
+
+    <!--List challenges activity-->
+    <string name="tabAllChallenges">"Totes"</string>
+    <string name="tabMyChallenges">"Les meves"</string>
+
+
+    <!--RATING OBJECT-->
     <!--Rating route activity-->
     <string name="comment">Comentar</string>
     <string name="rate">Valorar</string>
@@ -135,7 +242,15 @@
     <string name="adviceTitle">Siusplau, introdueix un títol</string>
     <string name="adviceBody">Siusplau, introdueix un comentari</string>
 
+
+    <!--MAP OBJECT-->
+    <!--Map activity-->
+    <string name="mapActivity">Mapa de rutes</string>
+
+
+    <!--COMMONS FOR OBJECTS-->
     <!--Commons-->
+    <string name="app_name">TrekkingChallenge</string>
     <string name="notDownloaded">No s\'ha pogut descarregar la imatge</string>
     <string name="acceptButton">Acceptar</string>
     <string name="cancelButton">Cancel·lar</string>
@@ -145,130 +260,21 @@
     <string name="nameField">Siusplau, introdueix un nom</string>
     <string name="descriptionField">Siusplau, introdueix una descripció</string>
     <string name="members">membres</string>
+    <string name="nameAdvice">Siusplau, introdueix un nom</string>
+    <string name="descAdvice">Siusplau, introdueix una descripció</string>
+    <string name="chooseRoute">Siusplau, selecciona una ruta</string>
+    <string name="loadingData">Carregant dades...</string>
+    <string name="actionSearch">Buscar</string>
 
+    <!--Manifest-->
+    <string name="title_activity_map">Map</string>
 
-    <string name="app_name">TrekkingChallenge</string>
+    <!--Main Activity-->
     <string name="mapMenuButton">Mapa rutes</string>
-    <string name="searchMenuButton">Cerca rutes</string>
+    <string name="routesMenuButton">Llista rutes</string>
     <string name="tripMenuButton">Excursions</string>
     <string name="challengeMenuButton">Reptes</string>
     <string name="userMenuButton">Àrea usuari</string>
     <string name="groupMenuButton">Grups usuaris</string>
-
-
-    <string name="textGroupDescription">Descripció:</string>
-    <string name="textGroupMembers">Nombre d\'integrants:</string>
-
-
-    <string name="failedAddGroup">El grup no s\'ha creat correctament</string>
-
-
-    <string name="groupSaved">Grup creat</string>
-
-
-    <string name="newGroupTitle">Crea un grup</string>
-    <string name="newTripTitle">Crea una excursió</string>
-    <string name="nameTrip">Nom excursió</string>
-
-    <string name="hintNameGroup">Nom del grup</string>
-    <string name="hintDescription">Descripció del grup</string>
-    <string name="checkIsPublic">Grup públic</string>
-
-    <string name="buttonMyHistory">El meu històric</string>
-    <string name="actionEditProfile">Editar perfil</string>
-    <string name="actionDeleteProfile">Eliminar perfil</string>
-    <string name="actionUserHistory">El meu històric</string>
-    <string name="buttonSignOut">Tancar sessió</string>
-    <string name="userSignOut">Sessió tancada</string>
-    <string name="userAccountDeleted">Compte esborrat</string>
-    <string name="userAreaActivity">Àrea d\'usuari</string>
-    <string name="editProfileActivity">Editar perfil</string>
-    <string name="mapActivity">Mapa de rutes</string>
-
-    <string name="listRoutesActivity">Llista de rutes</string>
-
-    <string name="addGroupActivity">Nou grup</string>
-    <string name="joinGroup">Apunta\'t</string>
-    <string name="leaveGroup">Abandona</string>
-    <string name="idUserExists">L\'identificador d\'usuari ja existeix</string>
-    <string name="mailUserExists">El correu electrònic ja existeix</string>
-    <string name="deleteUserConfirmation">Estàs segur que vols eliminar el compte d\'usuari?</string>
-    <string name="alertConfirm">Confirmació</string>
-    <string name="confirmEditProfile">Perfil d\'usuari modificat</string>
-    <string name="loginButton">Accedir</string>
-
-    <string name="actionSearch">Buscar</string>
-    <string name="actionDone">Fet</string>
-    <string name="actionJoinGroup">Uneix-t\'hi</string>
-    <string name="actionLeaveGroup">Deixa el grup</string>
-    <string name="listUsersActivity">Usuaris</string>
-    <string name="usersInvitedGroup">"Usuaris afegits al grup"</string>
-
-    <string name="tabAllGroups">"Tots"</string>
-    <string name="tabMyGroups">"Els meus"</string>
-    <string name="title_activity_list_groups2">Grups</string>
-    <string name="action_settings">Settings</string>
-    <string name="section_format">Hello World from section: %1$d</string>
-
-    <string name="loadingData">Carregant dades...</string>
-    <string name="title_activity_caca">caca</string>
-    <string name="tab_text_1">Tab 1</string>
-    <string name="tab_text_2">Tab 2</string>
-    <string name="tab_text_3">Tab 3</string>
-
-    <string name="publicGroup">Grup públic</string>
-    <string name="privateGroup">Grup privat</string>
-    <string name="title_activity_map">Map</string>
-
-    <string name="action_gallery">Galeria de fotos</string>
-    <string name="action_trip">Crea una excursió</string>
-    <string name="action_chall">Crea un repte</string>
-    <string name="action_opinion">Opinions</string>
-    <string name="detailsButton">Informació detallada</string>
-    <string name="tracksButton">Recorregut i perfil de la ruta</string>
-    <string name="region">Comarca:</string>
-    <string name="township">Municipi:</string>
-
-    <string name="infoDetail">Informació detallada</string>
-    <string name="infoMeteo">Meteorologia</string>
-
-    <string name="advancedSearch">Cerca avançada</string>
-    <string name="difficult">Difícil</string>
-    <string name="moderate">Moderat</string>
-    <string name="easy">Fàcil</string>
-    <string name="all">Qualsevol</string>
-    <string name="difficultRoute">Dificultat ruta</string>
-    <string name="lessKm"> &lt;10km</string>
-    <string name="middleKm"> 10km/15km</string>
-    <string name="highKm"> &gt;15km</string>
-    <string name="distanceRoute">Distància ruta</string>
-    <string name="typeRoute">Tipus de recorregut</string>
-    <string name="circular">Circular</string>
-    <string name="goBack">Anada/Tornada</string>
-    <string name="search">Buscar</string>
-
-    <string name="photoGallery">Galeria de fotos</string>
-
-
-    <string name="listTripsActivity">Excursions</string>
-    <string name="hintNameTrip">Nom de l\'excursió</string>
-    <string name="hintDescTrip">Descripció excursió</string>
-    <string name="hintPlaceTrip">Lloc de trobada</string>
-    <string name="addTripActivity">Nova excursió</string>
-    <string name="tripIsPublic">Excursió pública</string>
-    <string name="dateTrip">Data excursió</string>
-    <string name="tripSaved">Excursió creada correctament</string>
-    <string name="failedAddTrip">No s\'ha pogut crear l\'excursió</string>
-    <string name="nameAdvice">Siusplau, introdueix un nom</string>
-    <string name="descAdvice">Siusplau, introdueix una descripció</string>
-    <string name="placeAdvice">Siusplau, introdueix lloc de trobada</string>
-    <string name="publicTrip">Excursió pública</string>
-    <string name="privateTrip">Excursió privada</string>
-    <string name="chooseRoute">Siusplau, selecciona una ruta</string>
-    <string name="usersInvitedTrip">Usuaris afegits a l\'excursió</string>
-
-    <string name="groupDeleted">Grup eliminat</string>
-    <string name="groupNotDeleted">No s\'ha pogut eliminar el grup</string>
-
 
 </resources>

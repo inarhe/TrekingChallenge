@@ -96,9 +96,9 @@ public class ListGroupsActivity extends AppCompatActivity {
         public CharSequence getPageTitle(int position){
             switch (position){
                 case 0:
-                    return "TOTS";
+                    return getString(R.string.tabAllGroups);
                 case 1:
-                    return "ELS MEUS";
+                    return getString(R.string.tabMyGroups);
             }
             return null;
         }

@@ -39,9 +39,9 @@ import java.util.Locale;
 import edu.uoc.iartal.trekkingchallenge.common.MainActivity;
 import edu.uoc.iartal.trekkingchallenge.R;
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
-import edu.uoc.iartal.trekkingchallenge.objectsDB.Route;
-import edu.uoc.iartal.trekkingchallenge.objectsDB.Trip;
-import edu.uoc.iartal.trekkingchallenge.objectsDB.User;
+import edu.uoc.iartal.trekkingchallenge.objects.Route;
+import edu.uoc.iartal.trekkingchallenge.objects.Trip;
+import edu.uoc.iartal.trekkingchallenge.objects.User;
 import edu.uoc.iartal.trekkingchallenge.user.ListUsersActivity;
 import edu.uoc.iartal.trekkingchallenge.user.LoginActivity;
 

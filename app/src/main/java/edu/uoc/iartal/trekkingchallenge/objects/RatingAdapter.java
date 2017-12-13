@@ -1,4 +1,4 @@
-package edu.uoc.iartal.trekkingchallenge.objectsDB;
+package edu.uoc.iartal.trekkingchallenge.objects;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;

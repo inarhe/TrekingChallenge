@@ -28,8 +28,8 @@ import de.codecrafters.tableview.toolkit.SimpleTableDataAdapter;
 import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter;
 import edu.uoc.iartal.trekkingchallenge.R;
 import edu.uoc.iartal.trekkingchallenge.common.CommonFunctionality;
-import edu.uoc.iartal.trekkingchallenge.objectsDB.Challenge;
-import edu.uoc.iartal.trekkingchallenge.objectsDB.ChallengeResult;
+import edu.uoc.iartal.trekkingchallenge.objects.Challenge;
+import edu.uoc.iartal.trekkingchallenge.objects.ChallengeResult;
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
 import edu.uoc.iartal.trekkingchallenge.user.LoginActivity;
 
@@ -111,7 +111,7 @@ public class ShowChallengeActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.show_challenge_menu, menu);
+        inflater.inflate(R.menu.menu_show_challenge, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -270,7 +270,7 @@ public class ShowChallengeActivity extends AppCompatActivity {
             rankingTable[i][0] = result.getUser();
             String time = result.getHour() + "h" + result.getminute();
             rankingTable[i][1] = time;
-            rankingTable[i][2] = result.getDistance();
+            rankingTable[i][2] = (result.getDistance()).toString();
         }
     }
 }

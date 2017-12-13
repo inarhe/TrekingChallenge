@@ -25,7 +25,7 @@ import com.google.firebase.storage.StorageReference;
 import edu.uoc.iartal.trekkingchallenge.R;
 import edu.uoc.iartal.trekkingchallenge.challenge.FinishedChallengeActivity;
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
-import edu.uoc.iartal.trekkingchallenge.objectsDB.Route;
+import edu.uoc.iartal.trekkingchallenge.objects.Route;
 import edu.uoc.iartal.trekkingchallenge.trip.AddTripActivity;
 import edu.uoc.iartal.trekkingchallenge.user.LoginActivity;
 
@@ -151,7 +151,7 @@ public class ShowRouteActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.show_route_menu, menu);
+        inflater.inflate(R.menu.menu_show_route, menu);
         return super.onCreateOptionsMenu(menu);
     }
 

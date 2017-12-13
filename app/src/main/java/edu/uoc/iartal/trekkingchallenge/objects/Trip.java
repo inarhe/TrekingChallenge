@@ -1,4 +1,4 @@
-package edu.uoc.iartal.trekkingchallenge.objectsDB;
+package edu.uoc.iartal.trekkingchallenge.objects;
 
 import android.os.Parcel;
 import android.os.Parcelable;

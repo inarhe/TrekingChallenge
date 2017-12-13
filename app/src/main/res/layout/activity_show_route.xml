@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="edu.uoc.iartal.trekkingchallenge.route.ShowRouteActivity">
+    tools:context=".route.ShowRouteActivity">
 
     <include android:id="@+id/showRouteToolbar"
         layout="@layout/toolbar" />
@@ -15,7 +15,7 @@
         android:layout_width="match_parent"
         android:scaleType="fitCenter"
         android:cropToPadding="true"
-        android:layout_height="200dp"
+        android:layout_height="175dp"
         android:layout_marginBottom="8dp"
         android:layout_marginTop="60dp" />
 
@@ -226,7 +226,7 @@
     <View
         android:id="@+id/viewDiv3"
         style="@style/Divider"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="10dp"
         android:layout_below="@id/icDifficult" />
 
     <Button
@@ -234,7 +234,7 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_below="@id/viewDiv3"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="10dp"
         android:drawableEnd="@drawable/ic_next"
         android:drawableLeft="@drawable/ic_info"
         android:drawableRight="@drawable/ic_next"

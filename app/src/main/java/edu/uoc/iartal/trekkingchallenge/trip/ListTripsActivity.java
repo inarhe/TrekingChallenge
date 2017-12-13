@@ -95,9 +95,9 @@ public class ListTripsActivity extends AppCompatActivity {
         public CharSequence getPageTitle(int position){
             switch (position){
                 case 0:
-                    return "TOTES";
+                    return getString(R.string.tabAllTrips);
                 case 1:
-                    return "LES MEVES";
+                    return getString(R.string.tabMyTrips);
             }
             return null;
         }

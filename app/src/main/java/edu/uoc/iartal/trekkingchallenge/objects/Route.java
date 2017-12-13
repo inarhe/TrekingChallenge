@@ -1,13 +1,11 @@
-package edu.uoc.iartal.trekkingchallenge.objectsDB;
+package edu.uoc.iartal.trekkingchallenge.objects;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.io.Serializable;
-
 // Route object class. Implements Parcelable to pass route object between activities
 public class Route implements Parcelable {
-    private String idRoute, name, headerPhoto, trackPhoto, profilePhoto, season, time, trackLink, meteo;
+    private String idRoute, name, headerPhoto, trackPhoto, profilePhoto, season, startPlace, time, trackLink, meteo;
     private String type, difficult, distance, description, decline, ascent, region, township;
     private Double lng, lat;
     private Float ratingAverage;
@@ -17,7 +15,7 @@ public class Route implements Parcelable {
 
     }
 
-    public Route(String idRoute, String name, String headerPhoto, String trackPhoto, String profilePhoto, String season, String time,
+    public Route(String idRoute, String name, String headerPhoto, String trackPhoto, String startPplace, String profilePhoto, String season, String time,
                  String trackLink, String meteo, String type, Double lng, Double lat, Float ratingAverage, String distance, String difficult, String description,
                  String decline, String ascent, String region, String township, int numRatings) {
         this.idRoute = idRoute;
@@ -25,6 +23,7 @@ public class Route implements Parcelable {
         this.headerPhoto = headerPhoto;
         this.trackPhoto = trackPhoto;
         this.profilePhoto = profilePhoto;
+        this.startPlace = startPplace;
         this.season = season;
         this.time = time;
         this.trackLink = trackLink;
@@ -49,6 +48,7 @@ public class Route implements Parcelable {
         this.headerPhoto = in.readString();
         this.trackPhoto = in.readString();
         this.profilePhoto = in.readString();
+        this.startPlace = in.readString();
         this.season = in.readString();
         this.time = in.readString();
         this.trackLink = in.readString();
@@ -135,6 +135,14 @@ public class Route implements Parcelable {
 
     public void setTrackLink(String trackLink) {
         this.trackLink = trackLink;
+    }
+
+    public String getStartPlace() {
+        return startPlace;
+    }
+
+    public void setStartPlace(String startPlace) {
+        this.startPlace = startPlace;
     }
 
     public String getMeteo() {
@@ -245,6 +253,7 @@ public class Route implements Parcelable {
         dest.writeString(headerPhoto);
         dest.writeString(trackPhoto);
         dest.writeString(profilePhoto);
+        dest.writeString(startPlace);
         dest.writeString(season);
         dest.writeString(time);
         dest.writeString(trackLink);

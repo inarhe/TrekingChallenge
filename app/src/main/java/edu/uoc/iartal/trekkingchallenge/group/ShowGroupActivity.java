@@ -19,7 +19,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import edu.uoc.iartal.trekkingchallenge.common.CommonFunctionality;
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
-import edu.uoc.iartal.trekkingchallenge.objectsDB.Group;
+import edu.uoc.iartal.trekkingchallenge.objects.Group;
 import edu.uoc.iartal.trekkingchallenge.user.LoginActivity;
 import edu.uoc.iartal.trekkingchallenge.R;
 
@@ -78,7 +78,7 @@ public class ShowGroupActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.show_group_menu, menu);
+        inflater.inflate(R.menu.menu_show_group, menu);
         return super.onCreateOptionsMenu(menu);
     }
 

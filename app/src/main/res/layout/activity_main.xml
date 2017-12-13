@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -17,7 +18,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="100dp"
         android:text="@string/app_name"
-        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textSize="25sp"
         android:textStyle="bold"/>
 
     <Button
@@ -28,9 +29,10 @@
         android:layout_alignParentStart="true"
         android:layout_below="@+id/textMainMenu"
         android:onClick="mapActivity"
-        android:layout_marginLeft="32dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="60dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="40dp"
+        android:height="75dp"
         android:width="132dp"
         android:drawableTop="@drawable/ic_map"
         android:text="@string/mapMenuButton" />
@@ -43,12 +45,13 @@
         android:layout_alignBottom="@+id/buttonMapMenu"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_marginEnd="30dp"
-        android:layout_marginRight="30dp"
+        android:layout_marginEnd="40dp"
+        android:layout_marginRight="40dp"
         android:onClick="searchActivity"
+        android:height="75dp"
         android:width="132dp"
         android:drawableTop="@drawable/ic_search"
-        android:text="@string/searchMenuButton" />
+        android:text="@string/routesMenuButton" />
 
     <Button
         android:id="@+id/buttonTripMenu"
@@ -59,6 +62,7 @@
         android:layout_below="@+id/buttonMapMenu"
         android:layout_marginTop="49dp"
         android:onClick="tripActivity"
+        android:height="75dp"
         android:width="132dp"
         android:drawableTop="@drawable/ic_landscape"
         android:text="@string/tripMenuButton" />
@@ -70,6 +74,7 @@
         android:layout_alignBottom="@+id/buttonTripMenu"
         android:layout_alignEnd="@+id/buttonSearchMenu"
         android:layout_alignRight="@+id/buttonSearchMenu"
+        android:height="75dp"
         android:width="132dp"
         android:onClick="challengeActivity"
         android:drawableTop="@drawable/ic_challenge"
@@ -83,6 +88,7 @@
         android:layout_alignStart="@+id/buttonTripMenu"
         android:layout_below="@+id/buttonTripMenu"
         android:layout_marginTop="48dp"
+        android:height="75dp"
         android:width="132dp"
         android:onClick="userAreaActivity"
         android:drawableTop="@drawable/ic_person"
@@ -95,6 +101,7 @@
         android:layout_alignBottom="@+id/buttonUserMenu"
         android:layout_alignEnd="@+id/buttonChallengeMenu"
         android:layout_alignRight="@+id/buttonChallengeMenu"
+        android:height="75dp"
         android:width="132dp"
         android:drawableTop="@drawable/ic_people"
         android:onClick="groupActivity"

@@ -20,7 +20,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import edu.uoc.iartal.trekkingchallenge.R;
 import edu.uoc.iartal.trekkingchallenge.common.CommonFunctionality;
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
-import edu.uoc.iartal.trekkingchallenge.objectsDB.Trip;
+import edu.uoc.iartal.trekkingchallenge.objects.Trip;
 import edu.uoc.iartal.trekkingchallenge.user.LoginActivity;
 
 public class ShowTripActivity extends AppCompatActivity {
@@ -84,7 +84,7 @@ public class ShowTripActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.show_trip_menu, menu);
+        inflater.inflate(R.menu.menu_show_trip, menu);
         return super.onCreateOptionsMenu(menu);
     }
 

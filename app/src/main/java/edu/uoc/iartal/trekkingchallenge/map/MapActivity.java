@@ -28,7 +28,7 @@ import java.util.List;
 
 import edu.uoc.iartal.trekkingchallenge.R;
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
-import edu.uoc.iartal.trekkingchallenge.objectsDB.Route;
+import edu.uoc.iartal.trekkingchallenge.objects.Route;
 import edu.uoc.iartal.trekkingchallenge.route.ShowRouteActivity;
 import edu.uoc.iartal.trekkingchallenge.user.LoginActivity;
 
@@ -102,7 +102,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 final String routeName = marker.getTitle();
                 DatabaseReference databaseRoute = FirebaseDatabase.getInstance().getReference(FireBaseReferences.ROUTE_REFERENCE);
 
-                Query query = databaseRoute.orderByChild(FireBaseReferences.ROUTENAME_REFERENCE).equalTo(routeName);
+                Query query = databaseRoute.orderByChild(FireBaseReferences.ROUTE_NAME_REFERENCE).equalTo(routeName);
 
                 query.addChildEventListener(new ChildEventListener() {
                     @Override

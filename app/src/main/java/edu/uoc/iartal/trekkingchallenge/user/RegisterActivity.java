@@ -23,7 +23,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import edu.uoc.iartal.trekkingchallenge.common.CommonFunctionality;
 import edu.uoc.iartal.trekkingchallenge.common.MainActivity;
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
-import edu.uoc.iartal.trekkingchallenge.objectsDB.User;
+import edu.uoc.iartal.trekkingchallenge.objects.User;
 import edu.uoc.iartal.trekkingchallenge.R;
 
 

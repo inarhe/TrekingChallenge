@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="edu.uoc.iartal.trekkingchallenge.challenge.FinishedChallengeActivity">
+    tools:context=".challenge.FinishedChallengeActivity">
 
     <include android:id="@+id/finishedChallengeToolbar"
         layout="@layout/toolbar" />
@@ -26,7 +25,7 @@
                 android:cropToPadding="true"
                 android:scaleType="centerCrop"
                 android:src="@drawable/ic_finished"
-                android:layout_marginTop="40dp"
+                android:layout_marginTop="25dp"
                 android:layout_marginLeft="50dp"
                 android:layout_marginStart="50dp"/>
 
@@ -50,9 +49,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/icFinishChallenge"
-                android:layout_marginTop="40dp"
-                android:layout_marginLeft="30dp"
-                android:layout_marginStart="30dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginLeft="@dimen/activity_vertical_margin"
+                android:layout_marginStart="@dimen/activity_vertical_margin"
                 android:src="@drawable/ic_done"/>
 
             <TextView
@@ -75,23 +74,25 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:focusable="false"
+                android:inputType="date"
                 android:layout_below="@+id/icDateFinish"
-                android:layout_marginTop="8dp"
-                android:layout_marginRight="30dp"
-                android:layout_marginEnd="30dp"
-                android:layout_alignLeft="@+id/icDateFinish"
-                android:layout_alignStart="@+id/icDateFinish"/>
+                android:layout_marginTop="4dp"
+                android:layout_marginLeft="@dimen/activity_vertical_margin"
+                android:layout_marginStart="@dimen/activity_vertical_margin"
+                android:layout_marginRight="@dimen/activity_vertical_margin"
+                android:layout_marginEnd="@dimen/activity_vertical_margin" />
 
             <TextView
                 android:id="@+id/tvResultChallenge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:layout_marginLeft="10dp"
-                android:layout_marginStart="10dp"
+                android:layout_marginLeft="@dimen/activity_vertical_margin"
+                android:layout_marginStart="@dimen/activity_vertical_margin"
                 android:layout_alignLeft="@+id/icDateFinish"
                 android:layout_alignStart="@+id/icDateFinish"
                 android:layout_below="@+id/etDateFinish"
+                android:layout_marginTop="10dp"
                 android:text="@string/resultsChallenge"
                 android:textStyle="bold"
                 android:textSize="15sp"/>
@@ -101,7 +102,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/tvResultChallenge"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="10dp"
                 android:layout_alignLeft="@+id/icDateFinish"
                 android:layout_alignStart="@+id/icDateFinish"
                 android:src="@drawable/ic_circular"/>
@@ -126,18 +127,19 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/icDistFinish"
-                android:layout_marginTop="8dp"
-                android:layout_marginRight="30dp"
-                android:layout_marginEnd="30dp"
-                android:layout_alignLeft="@+id/icDistFinish"
-                android:layout_alignStart="@+id/icDistFinish"/>
+                android:layout_marginTop="4dp"
+                android:inputType="text"
+                android:layout_marginLeft="@dimen/activity_vertical_margin"
+                android:layout_marginStart="@dimen/activity_vertical_margin"
+                android:layout_marginRight="@dimen/activity_vertical_margin"
+                android:layout_marginEnd="@dimen/activity_vertical_margin"/>
 
             <ImageView
                 android:id="@+id/icTimeFinish"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/etDistFinish"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="10dp"
                 android:layout_alignLeft="@+id/icDistFinish"
                 android:layout_alignStart="@+id/icDistFinish"
                 android:src="@drawable/ic_time"/>
@@ -174,10 +176,11 @@
 
             <EditText
                 android:id="@+id/etHourFinish"
-                android:layout_width="50dp"
+                android:layout_width="70dp"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/icTimeFinish"
                 android:gravity="center"
+                android:inputType="text"
                 android:layout_toRightOf="@+id/tvHourFinish"
                 android:layout_toEndOf="@+id/tvHourFinish"
                 android:layout_alignTop="@+id/tvHourFinish"
@@ -201,10 +204,11 @@
 
             <EditText
                 android:id="@+id/etMinFinish"
-                android:layout_width="50dp"
+                android:layout_width="70dp"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/icTimeFinish"
                 android:gravity="center"
+                android:inputType="text"
                 android:layout_toRightOf="@+id/tvMinFinish"
                 android:layout_toEndOf="@+id/tvMinFinish"
                 android:layout_alignTop="@+id/tvMinFinish"
@@ -242,8 +246,6 @@
                 android:onClick="registerFinish"
                 android:text="@string/registerButton"
                 android:textSize="14sp" />
-
         </RelativeLayout>
     </ScrollView>
-
 </RelativeLayout>

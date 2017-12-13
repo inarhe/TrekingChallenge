@@ -11,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.support.v7.widget.SearchView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -25,9 +24,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
-import edu.uoc.iartal.trekkingchallenge.objectsDB.Group;
-import edu.uoc.iartal.trekkingchallenge.objectsDB.GroupAdapter;
-import edu.uoc.iartal.trekkingchallenge.objectsDB.User;
+import edu.uoc.iartal.trekkingchallenge.objects.Group;
+import edu.uoc.iartal.trekkingchallenge.objects.GroupAdapter;
+import edu.uoc.iartal.trekkingchallenge.objects.User;
 import edu.uoc.iartal.trekkingchallenge.R;
 
 import android.view.MenuInflater;

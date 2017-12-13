@@ -31,10 +31,10 @@ import java.util.Locale;
 
 import edu.uoc.iartal.trekkingchallenge.R;
 import edu.uoc.iartal.trekkingchallenge.common.CommonFunctionality;
-import edu.uoc.iartal.trekkingchallenge.objectsDB.Challenge;
-import edu.uoc.iartal.trekkingchallenge.objectsDB.ChallengeResult;
+import edu.uoc.iartal.trekkingchallenge.objects.Challenge;
+import edu.uoc.iartal.trekkingchallenge.objects.ChallengeResult;
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
-import edu.uoc.iartal.trekkingchallenge.objectsDB.User;
+import edu.uoc.iartal.trekkingchallenge.objects.User;
 import edu.uoc.iartal.trekkingchallenge.user.LoginActivity;
 
 public class FinishedChallengeActivity extends AppCompatActivity {

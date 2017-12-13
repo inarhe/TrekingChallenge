@@ -9,7 +9,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,7 +29,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
-import edu.uoc.iartal.trekkingchallenge.objectsDB.User;
+import edu.uoc.iartal.trekkingchallenge.objects.User;
 import edu.uoc.iartal.trekkingchallenge.R;
 
 public class UserAreaActivity extends AppCompatActivity {
@@ -78,7 +77,7 @@ public class UserAreaActivity extends AppCompatActivity {
      */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.user_area_activity_menu, menu);
+        getMenuInflater().inflate(R.menu.menu_user_area, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -167,6 +166,7 @@ public class UserAreaActivity extends AppCompatActivity {
      */
     public void signOut(View view) {
         FirebaseAuth.getInstance().signOut();
+        Toast.makeText(this, R.string.userSignOut, Toast.LENGTH_SHORT).show();
         finish();
     }
 

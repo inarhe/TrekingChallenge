@@ -26,10 +26,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.uoc.iartal.trekkingchallenge.R;
-import edu.uoc.iartal.trekkingchallenge.objectsDB.Challenge;
-import edu.uoc.iartal.trekkingchallenge.objectsDB.ChallengeAdapter;
+import edu.uoc.iartal.trekkingchallenge.objects.Challenge;
+import edu.uoc.iartal.trekkingchallenge.objects.ChallengeAdapter;
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
-import edu.uoc.iartal.trekkingchallenge.objectsDB.User;
+import edu.uoc.iartal.trekkingchallenge.objects.User;
 
 public class MyChallengesFragment extends Fragment implements SearchView.OnQueryTextListener{
     private List<Challenge> challenges;

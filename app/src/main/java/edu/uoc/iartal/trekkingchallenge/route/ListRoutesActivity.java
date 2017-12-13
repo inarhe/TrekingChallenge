@@ -12,6 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -23,8 +24,9 @@ import java.util.List;
 
 import edu.uoc.iartal.trekkingchallenge.R;
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
-import edu.uoc.iartal.trekkingchallenge.objectsDB.Route;
-import edu.uoc.iartal.trekkingchallenge.objectsDB.RouteAdapter;
+import edu.uoc.iartal.trekkingchallenge.objects.Route;
+import edu.uoc.iartal.trekkingchallenge.objects.RouteAdapter;
+import edu.uoc.iartal.trekkingchallenge.user.LoginActivity;
 
 public class ListRoutesActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
     private static final int ACTIVITY_CODE = 1;
@@ -39,32 +41,37 @@ public class ListRoutesActivity extends AppCompatActivity implements SearchView.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_routes);
 
+        // If user isn't logged, start login activity
+        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+            startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+            finish();
+        }
+
+        // Set toolbar and actionbar
         toolbar = (Toolbar) findViewById(R.id.listRouteToolbar);
         setSupportActionBar(toolbar);
-
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle(getString(R.string.listRoutesActivity));
 
+        // Initialize and set recycler view and its adapter
         recyclerView = (RecyclerView) findViewById(R.id.rvListRoutes);
-      //  recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
         routeAdapter = new RouteAdapter(routes, ListRoutesActivity.this);
         recyclerView.setAdapter(routeAdapter);
 
+        // Database reference
         databaseRoutes = FirebaseDatabase.getInstance().getReference(FireBaseReferences.ROUTE_REFERENCE);
 
         // Show database users in recycler view
         databaseRoutes.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                routes.removeAll(routes);
+                routes.clear();
                 for (DataSnapshot routeSnapshot:
                         dataSnapshot.getChildren()) {
                     Route route = routeSnapshot.getValue(Route.class);
                         routes.add(route);
-
                 }
                 routeAdapter.notifyDataSetChanged();
             }
@@ -76,11 +83,14 @@ public class ListRoutesActivity extends AppCompatActivity implements SearchView.
         });
     }
 
+    /**
+     * Inflate menu with menu layout information and define search view
+     * @param menu
+     * @return
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_list_routes, menu);
-
         final MenuItem item = menu.findItem(R.id.action_searchRoutes);
         final SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
         searchView.setOnQueryTextListener(this);
@@ -89,15 +99,15 @@ public class ListRoutesActivity extends AppCompatActivity implements SearchView.
                 new MenuItemCompat.OnActionExpandListener() {
                     @Override
                     public boolean onMenuItemActionCollapse(MenuItem item) {
-// Do something when collapsed
                         routeAdapter.setFilter(routes);
-                        return true; // Return true to collapse action view
+                        // Return true to collapse action view
+                        return true;
                     }
 
                     @Override
                     public boolean onMenuItemActionExpand(MenuItem item) {
-// Do something when expanded
-                        return true; // Return true to expand action view
+                        // Return true to expand action view
+                        return true;
                     }
                 });
         return true;
@@ -109,14 +119,24 @@ public class ListRoutesActivity extends AppCompatActivity implements SearchView.
         return false;
     }
 
+    /**
+     * Pass new route list to Adapter
+     * @param newText
+     * @return
+     */
     @Override
     public boolean onQueryTextChange(String newText) {
         final List<Route> filteredModelList = filter(routes, newText);
-
         routeAdapter.setFilter(filteredModelList);
         return true;
     }
 
+    /**
+     * Get route list search result
+     * @param models
+     * @param query
+     * @return
+     */
     private List<Route> filter(List<Route> models, String query) {
         query = query.toLowerCase();
         final List<Route> filteredModelList = new ArrayList<>();
@@ -130,6 +150,11 @@ public class ListRoutesActivity extends AppCompatActivity implements SearchView.
         return filteredModelList;
     }
 
+    /**
+     * Define action when menu option is selected
+     * @param item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -137,21 +162,21 @@ public class ListRoutesActivity extends AppCompatActivity implements SearchView.
                 Intent intent = new Intent(this, SearchRoutesActivity.class);
                 intent.putExtra("routes",routes);
                 startActivityForResult(intent,ACTIVITY_CODE);
-               // finish();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
+    // Get result from advanced search activity when it has finished
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        ArrayList<Route> filterRoutes = new ArrayList<>();
-       //  Bundle bundle = getIntent().getExtras();
-        filterRoutes = data.getParcelableArrayListExtra("routes");
-        routeAdapter.setFilter(filterRoutes);
-
+        ArrayList<Route> filterRoutes;
+        if (resultCode == RESULT_OK) {
+            filterRoutes = data.getParcelableArrayListExtra("routes");
+            routeAdapter.setFilter(filterRoutes);
+        }
     }
 }

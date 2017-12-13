@@ -28,11 +28,11 @@ import java.util.List;
 import edu.uoc.iartal.trekkingchallenge.challenge.ListChallengesActivity;
 import edu.uoc.iartal.trekkingchallenge.group.ListGroupsActivity;
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
-import edu.uoc.iartal.trekkingchallenge.objectsDB.Challenge;
-import edu.uoc.iartal.trekkingchallenge.objectsDB.Group;
-import edu.uoc.iartal.trekkingchallenge.objectsDB.Trip;
-import edu.uoc.iartal.trekkingchallenge.objectsDB.User;
-import edu.uoc.iartal.trekkingchallenge.objectsDB.UserAdapter;
+import edu.uoc.iartal.trekkingchallenge.objects.Challenge;
+import edu.uoc.iartal.trekkingchallenge.objects.Group;
+import edu.uoc.iartal.trekkingchallenge.objects.Trip;
+import edu.uoc.iartal.trekkingchallenge.objects.User;
+import edu.uoc.iartal.trekkingchallenge.objects.UserAdapter;
 import edu.uoc.iartal.trekkingchallenge.R;
 import edu.uoc.iartal.trekkingchallenge.trip.ListTripsActivity;
 
@@ -110,7 +110,7 @@ public class ListUsersActivity extends AppCompatActivity implements SearchView.O
      */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.list_users_menu, menu);
+        getMenuInflater().inflate(R.menu.menu_list_users, menu);
 
         final MenuItem item = menu.findItem(R.id.action_searchUser);
         final SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);

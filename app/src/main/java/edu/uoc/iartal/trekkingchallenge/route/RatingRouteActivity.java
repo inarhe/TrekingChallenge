@@ -11,7 +11,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -34,19 +33,19 @@ import java.util.ArrayList;
 
 import edu.uoc.iartal.trekkingchallenge.R;
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
-import edu.uoc.iartal.trekkingchallenge.objectsDB.Rating;
-import edu.uoc.iartal.trekkingchallenge.objectsDB.RatingAdapter;
-import edu.uoc.iartal.trekkingchallenge.objectsDB.Route;
-import edu.uoc.iartal.trekkingchallenge.objectsDB.User;
+import edu.uoc.iartal.trekkingchallenge.objects.Rating;
+import edu.uoc.iartal.trekkingchallenge.objects.RatingAdapter;
+import edu.uoc.iartal.trekkingchallenge.objects.Route;
+import edu.uoc.iartal.trekkingchallenge.objects.User;
 import edu.uoc.iartal.trekkingchallenge.user.LoginActivity;
 
 public class RatingRouteActivity extends AppCompatActivity {
 
     private ArrayList<Rating> ratings = new ArrayList<>();
     private Route route;
-    private Dialog rateDialog, commentDialog;
+    private Dialog rateDialog;
     private DatabaseReference databaseRating, databaseUser, databaseRoute;
-    private String userName, idRate, title, body;
+    private String userName, idRate;
     private RatingAdapter ratingAdapter;
     private RatingBar ratingBar;
     private Boolean isRated = false;
@@ -56,7 +55,6 @@ public class RatingRouteActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rating_route);
-        Log.i("xreate","ok");
 
         // If user isn't logged, start login activity
         if (FirebaseAuth.getInstance().getCurrentUser() == null) {
@@ -124,17 +122,17 @@ public class RatingRouteActivity extends AppCompatActivity {
 
         // Get current user name
         getCurrentUserName();
+        // Search user ratings
         searchRating();
     }
 
-
-
     /**
-     * Opens rating dialog when rate button is clicked. Save ratting too.
+     * Opens rating dialog when rate button is clicked. Save ratting and comment too.
      */
     public void rateRoute(){
         // Show rate dialog when rate button is clicked
         rateDialog.show();
+
         // Initialize and set dialog layout elements
         Button registerRateButton = (Button) rateDialog.findViewById(R.id.bAcceptRate);
         Button cancelRateButton = (Button) rateDialog.findViewById(R.id.bCancelRate);
@@ -145,15 +143,15 @@ public class RatingRouteActivity extends AppCompatActivity {
         TextView textViewTitleRate = (TextView) rateDialog.findViewById(R.id.tvTitleRate);
         textViewTitleRate.setText(route.getName());
 
-
-
         // Save rating and updates all its dependencies
         registerRateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Only one user rating
                 if (isRated){
                     Toast.makeText(getApplicationContext(),getString(R.string.alreadyRated),Toast.LENGTH_LONG).show();
                 } else {
+                    // Get comment from input parameter values
                     String title = editTextTitle.getText().toString().trim();
                     String body = editTextBody.getText().toString().trim();
 
@@ -168,6 +166,7 @@ public class RatingRouteActivity extends AppCompatActivity {
                         return;
                     }
 
+                    // Add rating to database
                     idRate = databaseRating.push().getKey();
                     Rating newRate = new Rating(idRate, title, body, route.getName(), userName, ratingBar.getRating());
 
@@ -188,6 +187,7 @@ public class RatingRouteActivity extends AppCompatActivity {
             }
         });
 
+        // Dialog cancel button listener. Rating is not saved when this button is clicked
         cancelRateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -252,6 +252,9 @@ public class RatingRouteActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Updates rating list in the current user object
+     */
     private void updateUserDependencies(){
         databaseUser.child(userName).child(FireBaseReferences.USER_RATINGS_REFERENCE).child(idRate).setValue("true")
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -264,9 +267,11 @@ public class RatingRouteActivity extends AppCompatActivity {
                         }
                     }
                 });
-
     }
 
+    /**
+     * Search if current user has already rated the current route
+     */
     private void searchRating(){
         databaseRating.addValueEventListener(new ValueEventListener() {
             @Override
@@ -285,5 +290,4 @@ public class RatingRouteActivity extends AppCompatActivity {
             }
         });
     }
-
 }

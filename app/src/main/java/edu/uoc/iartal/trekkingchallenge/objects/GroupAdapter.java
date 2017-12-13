@@ -1,4 +1,4 @@
-package edu.uoc.iartal.trekkingchallenge.objectsDB;
+package edu.uoc.iartal.trekkingchallenge.objects;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -28,51 +28,50 @@ import java.util.List;
 
 import edu.uoc.iartal.trekkingchallenge.R;
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
-import edu.uoc.iartal.trekkingchallenge.trip.ShowTripActivity;
+import edu.uoc.iartal.trekkingchallenge.group.ShowGroupActivity;
 
 
-public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder> {
-
-    private List<Trip> trips;
+public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.GroupViewHolder> {
+    private List<Group> groups;
     private ArrayList<Boolean> isVisibleArray = new ArrayList<>();
-    private ArrayList<String> tripMembers = new ArrayList<>();
-    private DatabaseReference databaseTrip;
-    private String idTrip;
+    private ArrayList<String> groupMembers = new ArrayList<>();
+    private DatabaseReference databaseGroup;
+    private String idGroup;
     private Context context;
 
     // Object which represents a list item and save view references
-    public static class TripViewHolder extends RecyclerView.ViewHolder {
-        TextView textViewTripName, textViewTripDate, textViewIsPublic;
-        ImageView imageViewTrip;
+    public static class GroupViewHolder extends RecyclerView.ViewHolder {
+        TextView textViewGroupName, textViewGroupDesc, textViewIsPublic;
+        ImageView imageViewGroup;
         ImageButton buttonDelete;
         CardView cardView;
 
         // Link layout elements to variables
-        public TripViewHolder(View view) {
+        public GroupViewHolder(View view) {
             super(view);
-            textViewTripName = (TextView) view.findViewById(R.id.cvTripName);
-            textViewTripDate = (TextView) view.findViewById(R.id.cvTripDate);
+            textViewGroupName = (TextView) view.findViewById(R.id.cvGroupName);
+            textViewGroupDesc = (TextView) view.findViewById(R.id.cvGroupDesc);
             textViewIsPublic = (TextView) view.findViewById(R.id.cvisPublic);
-            imageViewTrip = (ImageView) view.findViewById(R.id.cvTripPhoto);
-            buttonDelete = (ImageButton) view.findViewById(R.id.icDelTripAdmin);
-            cardView = (CardView) view.findViewById(R.id.cardViewTrip);
+            imageViewGroup = (ImageView) view.findViewById(R.id.cvGroupPhoto);
+            buttonDelete = (ImageButton) view.findViewById(R.id.icDelGroupAdmin);
+            cardView = (CardView) view.findViewById(R.id.cardViewGroup);
         }
     }
 
-    public TripAdapter(List<Trip> trips) {
-        this.trips = trips;
+    public GroupAdapter(List<Group> groups) {
+        this.groups = groups;
     }
 
     @Override
     public int getItemCount() {
-        return trips.size();
+        return groups.size();
     }
 
     @Override
-    public TripViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+    public GroupViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         // Inflates new list item
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.card_view_trip, viewGroup, false);
-        return new TripViewHolder(view);
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.card_view_group, viewGroup, false);
+        return new GroupViewHolder(view);
     }
 
     /**
@@ -81,18 +80,18 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
      * @param position
      */
     @Override
-    public void onBindViewHolder(TripViewHolder viewHolder, final int position) {
-        viewHolder.textViewTripName.setText(trips.get(position).getName());
-        viewHolder.textViewTripDate.setText(trips.get(position).getDate());
-        viewHolder.imageViewTrip.setImageResource(R.drawable.ic_trip);
+    public void onBindViewHolder(GroupViewHolder viewHolder, final int position) {
+        viewHolder.textViewGroupName.setText(groups.get(position).getName());
+        viewHolder.textViewGroupDesc.setText(groups.get(position).getDescription());
+        viewHolder.imageViewGroup.setImageResource(R.drawable.ic_people);
 
-        if (trips.get(position).getPublic()) {
-            viewHolder.textViewIsPublic.setText(R.string.publicTrip);
+        if (groups.get(position).getIsPublic()) {
+            viewHolder.textViewIsPublic.setText(R.string.publicGroup);
         } else {
-            viewHolder.textViewIsPublic.setText(R.string.privateTrip);
+            viewHolder.textViewIsPublic.setText(R.string.privateGroup);
         }
 
-        // Show delete button only if current user is trip admin
+        // Show delete button only if current user is group admin
         if (isVisibleArray.isEmpty()){
             viewHolder.buttonDelete.setVisibility(View.GONE);
         } else {
@@ -103,27 +102,27 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
             }
         }
 
-        // When cardview is clicked starts show detail trip activity
+        // When cardview is clicked starts show detail group activity
         viewHolder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Context context = v.getContext();
 
-                Intent intent = new Intent(context, ShowTripActivity.class);
-                intent.putExtra("trip", trips.get(position));
+                Intent intent = new Intent(context, ShowGroupActivity.class);
+                intent.putExtra("group", groups.get(position));
 
                 context.startActivity(intent);
             }
         });
 
-        // When delete button is clicked, delete trip and all its members dependencies
+        // When delete button is clicked, delete group and all its members dependencies
         viewHolder.buttonDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Get trip members
+                // Get group members
                 getMembers(position, v);
-                // Delete trip and its dependencies
-                deleteTrip(position);
+                // Delete group and its dependencies
+                deleteGroup(position);
             }
         });
     }
@@ -141,36 +140,36 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
     }
 
     /**
-     * Updates trip list with search result
-     * @param filterTrips
+     * Updates group list with search result
+     * @param filterGroups
      */
-    public void setFilter(List<Trip> filterTrips) {
-        trips = new ArrayList<>();
-        trips.addAll(filterTrips);
+    public void setFilter(List<Group> filterGroups) {
+        groups = new ArrayList<>();
+        groups.addAll(filterGroups);
         notifyDataSetChanged();
     }
 
     /**
-     * Get names of trip members
+     * Get names of group members
      * @param position
      * @param v
      */
     private void getMembers(int position, View v){
-        tripMembers.clear();
-        idTrip = trips.get(position).getId();
-        final String name = trips.get(position).getName();
+        groupMembers.clear();
+        idGroup = groups.get(position).getId();
+        final String name = groups.get(position).getName();
         context = v.getContext();
-        databaseTrip = FirebaseDatabase.getInstance().getReference(FireBaseReferences.TRIP_REFERENCE);
+        databaseGroup = FirebaseDatabase.getInstance().getReference(FireBaseReferences.GROUP_REFERENCE);
 
-        // Get names of trip members
-        databaseTrip.addValueEventListener(new ValueEventListener() {
+        // Get names of group members
+        databaseGroup.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot tripSnapshot : dataSnapshot.getChildren()) {
-                    Trip trip = tripSnapshot.getValue(Trip.class);
-                    if (trip.getId().equals(idTrip)) {
-                        for (String name : trip.getMembers().keySet()) {
-                            tripMembers.add(name);
+                for (DataSnapshot groupSnapshot : dataSnapshot.getChildren()) {
+                    Group group = groupSnapshot.getValue(Group.class);
+                    if (group.getId().equals(idGroup)) {
+                        for (String name : group.getMembers().keySet()) {
+                            groupMembers.add(name);
                         }
                     }
                 }
@@ -184,13 +183,13 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
     }
 
     /**
-     * Delete selected trip and update trips list of each member
+     * Delete selected group and update groups list of each member
      * @param position
      */
-    private void deleteTrip(final int position){
+    private void deleteGroup(final int position){
         // Create alert dialog to ask user confirmation
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setMessage(context.getResources().getString(R.string.tripAskDeleted));
+        builder.setMessage(context.getResources().getString(R.string.groupAskDeleted));
         builder.setCancelable(true);
 
         builder.setPositiveButton(
@@ -198,19 +197,19 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
-                        databaseTrip.child(trips.get(position).getId()).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                        databaseGroup.child(groups.get(position).getId()).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 if (task.isSuccessful()) {
                                     DatabaseReference databaseUser = FirebaseDatabase.getInstance().getReference(FireBaseReferences.USER_REFERENCE);
-                                    for (String user:tripMembers){
-                                        databaseUser.child(user).child(FireBaseReferences.USER_TRIPS_REFERENCE).child(idTrip).removeValue();
+                                    for (String user:groupMembers){
+                                        databaseUser.child(user).child(FireBaseReferences.USER_GROUPS_REFERENCE).child(idGroup).removeValue();
                                     }
-                                    Toast.makeText(context , R.string.tripDeleted, Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(context , R.string.groupDeleted, Toast.LENGTH_SHORT).show();
                                     isVisibleArray.remove(position);
                                     notifyDataSetChanged();
                                 } else {
-                                    Toast.makeText(context, R.string.tripNotDeleted, Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(context, R.string.groupNotDeleted, Toast.LENGTH_SHORT).show();
                                 }
                             }
                         });

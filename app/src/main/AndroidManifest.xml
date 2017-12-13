@@ -22,81 +22,174 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
+        <!--Common activities-->
         <activity
             android:name=".common.SplashActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity android:name=".common.MainActivity" />
+
+
+        <!--User activities-->
         <activity android:name=".user.RegisterActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".user.AccessActivity" />
         </activity>
+
         <activity android:name=".user.AccessActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".common.MainActivity" />
         </activity>
+
         <activity android:name=".user.LoginActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".user.AccessActivity" />
         </activity>
-        <activity android:name=".group.AddGroupActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".group.ListGroupsActivity" />
-        </activity>
+
         <activity android:name=".user.UserAreaActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".common.MainActivity" />
         </activity>
-        <activity android:name=".group.ShowGroupActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".group.ListGroupsActivity" />
-        </activity>
+
         <activity android:name=".user.EditProfileActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".user.UserAreaActivity" />
         </activity>
+
         <activity android:name=".user.ListUsersActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".group.ListGroupsActivity" />
         </activity>
+
+
+        <!--Group activities-->
+        <activity android:name=".group.AddGroupActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".group.ListGroupsActivity" />
+        </activity>
+
+        <activity android:name=".group.ShowGroupActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".group.ListGroupsActivity" />
+        </activity>
+
         <activity android:name=".group.ListGroupsActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".common.MainActivity" />
         </activity>
+
+        <!--Trip activities-->
         <activity android:name=".trip.ListTripsActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".common.MainActivity" />
         </activity>
-        <activity android:name=".challenge.ListChallengesActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".common.MainActivity" />
-        </activity>
+
         <activity android:name=".trip.AddTripActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".trip.ListTripsActivity" />
         </activity>
+
+        <activity android:name=".trip.ShowTripActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".trip.ListTripsActivity" />
+        </activity>
+
+
+        <!--Challenge activities-->
+        <activity android:name=".challenge.ListChallengesActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".common.MainActivity" />
+        </activity>
+
         <activity android:name=".challenge.AddChallengeActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".challenge.ListChallengesActivity" />
         </activity>
+
+        <activity android:name=".challenge.FinishedChallengeActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".challenge.ShowChallengeActivity" />
+        </activity>
+
+        <activity
+            android:name=".challenge.ShowChallengeActivity"
+            android:launchMode="singleTop">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".challenge.ListChallengesActivity" />
+        </activity>
+
+        <!--Route activities-->
+        <activity android:name=".route.ListRoutesActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".common.MainActivity" />
+        </activity>
+
+        <activity
+            android:name=".route.ShowRouteActivity"
+            android:launchMode="singleTop">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".route.ListRoutesActivity" />
+        </activity>
+
+        <activity android:name=".route.DetailRouteActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".route.ShowRouteActivity" />
+        </activity>
+
+        <activity android:name=".route.SearchRoutesActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".route.ListRoutesActivity" />
+        </activity>
+
+        <activity android:name=".route.PhotoGalleryActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".route.ShowRouteActivity" />
+        </activity>
+
+        <activity android:name=".route.TrackRouteActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".route.ShowRouteActivity" />
+        </activity>
+
+        <activity android:name=".route.FinishedRouteActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".route.ShowRouteActivity" />
+        </activity>
+
+        <activity android:name=".route.RatingRouteActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".route.ShowRouteActivity" />
+        </activity>
+
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -109,54 +202,16 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
+        <!--Map activity-->
         <activity
             android:name=".map.MapActivity"
             android:label="@string/title_activity_map">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".common.MainActivity"></meta-data>
+                android:value=".common.MainActivity">
+            </meta-data>
         </activity>
-        <activity android:name=".route.ListRoutesActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".common.MainActivity" />
-        </activity>
-        <activity
-            android:name=".route.ShowRouteActivity"
-            android:launchMode="singleTop">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".route.ListRoutesActivity" />
-        </activity>
-        <activity android:name=".route.DetailRouteActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".route.ShowRouteActivity" />
-        </activity>
-        <activity android:name=".route.SearchRoutesActivity" />
-        <activity android:name=".route.PhotoGalleryActivity" />
-        <activity android:name=".route.TrackRouteActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".route.ShowRouteActivity" />
-        </activity>
-        <activity android:name=".route.FinishedRouteActivity" />
-        <activity android:name=".challenge.FinishedChallengeActivity" />
-        <activity android:name=".trip.ShowTripActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".trip.ListTripsActivity" />
-        </activity>
-        <activity android:name=".challenge.ShowChallengeActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".challenge.ListChallengesActivity" />
-        </activity>
-        <activity android:name=".route.RatingRouteActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".route.ShowRouteActivity" />
-        </activity>
+
     </application>
 
 </manifest>

@@ -27,8 +27,8 @@ import edu.uoc.iartal.trekkingchallenge.user.ListUsersActivity;
 import edu.uoc.iartal.trekkingchallenge.user.LoginActivity;
 import edu.uoc.iartal.trekkingchallenge.common.MainActivity;
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
-import edu.uoc.iartal.trekkingchallenge.objectsDB.Group;
-import edu.uoc.iartal.trekkingchallenge.objectsDB.User;
+import edu.uoc.iartal.trekkingchallenge.objects.Group;
+import edu.uoc.iartal.trekkingchallenge.objects.User;
 import edu.uoc.iartal.trekkingchallenge.R;
 
 public class AddGroupActivity extends AppCompatActivity {

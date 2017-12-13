@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="edu.uoc.iartal.trekkingchallenge.route.TrackRouteActivity">
+    tools:context=".route.TrackRouteActivity">
 
     <include android:id="@+id/trackRouteToolbar"
         layout="@layout/toolbar" />
@@ -16,9 +15,10 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:layout_marginTop="75dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginStart="20dp"
+        android:layout_marginLeft="@dimen/activity_vertical_margin"
+        android:layout_marginStart="@dimen/activity_vertical_margin"
         android:padding="4dp"
+        android:textSize="15sp"
         android:text="@string/trackTitle"
         android:textStyle="bold"/>
 
@@ -28,10 +28,10 @@
         android:layout_height="150dp"
         android:scaleType="fitCenter"
         android:cropToPadding="true"
-        android:layout_marginLeft="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="@dimen/activity_vertical_margin"
+        android:layout_marginStart="@dimen/activity_vertical_margin"
+        android:layout_marginRight="@dimen/activity_vertical_margin"
+        android:layout_marginEnd="@dimen/activity_vertical_margin"
         android:layout_below="@+id/tvTrack" />
 
     <TextView
@@ -41,9 +41,10 @@
         android:gravity="center"
         android:layout_below="@id/ivTrack"
         android:layout_marginTop="10dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginStart="20dp"
+        android:layout_marginLeft="@dimen/activity_vertical_margin"
+        android:layout_marginStart="@dimen/activity_vertical_margin"
         android:padding="4dp"
+        android:textSize="15sp"
         android:text="@string/profileTitle"
         android:textStyle="bold"/>
 
@@ -53,10 +54,10 @@
         android:layout_height="150dp"
         android:scaleType="fitCenter"
         android:cropToPadding="true"
-        android:layout_marginLeft="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="@dimen/activity_vertical_margin"
+        android:layout_marginStart="@dimen/activity_vertical_margin"
+        android:layout_marginRight="@dimen/activity_vertical_margin"
+        android:layout_marginEnd="@dimen/activity_vertical_margin"
         android:layout_below="@+id/tvProfile" />
 
     <TextView
@@ -66,9 +67,11 @@
         android:gravity="center"
         android:layout_below="@id/ivProfile"
         android:layout_marginTop="10dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginStart="20dp"
+        android:layout_marginLeft="@dimen/activity_vertical_margin"
+        android:layout_marginStart="@dimen/activity_vertical_margin"
         android:padding="4dp"
+        android:textStyle="bold"
+        android:textSize="15sp"
         android:text="@string/otherTracks"/>
 
     <TextView
@@ -95,10 +98,9 @@
         android:layout_alignParentEnd="true"
         android:padding="8dp"
         android:layout_marginTop="25dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_vertical_margin"
+        android:layout_marginEnd="@dimen/activity_vertical_margin"
         android:textStyle="bold"
         android:text="@string/trackDownload"/>
-
-
 </RelativeLayout>

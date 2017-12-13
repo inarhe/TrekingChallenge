@@ -13,5 +13,4 @@
         android:title="@string/actionLeaveTrip"
         android:orderInCategory="100"
         app:showAsAction="never"/>
-
 </menu>

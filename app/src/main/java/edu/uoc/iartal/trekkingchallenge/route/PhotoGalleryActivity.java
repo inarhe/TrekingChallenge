@@ -10,8 +10,8 @@ import android.support.v7.widget.Toolbar;
 import com.google.firebase.database.DatabaseReference;
 
 import edu.uoc.iartal.trekkingchallenge.R;
-import edu.uoc.iartal.trekkingchallenge.objectsDB.PhotoAdapter;
-import edu.uoc.iartal.trekkingchallenge.objectsDB.Route;
+import edu.uoc.iartal.trekkingchallenge.objects.PhotoAdapter;
+import edu.uoc.iartal.trekkingchallenge.objects.Route;
 
 public class PhotoGalleryActivity extends AppCompatActivity {
 

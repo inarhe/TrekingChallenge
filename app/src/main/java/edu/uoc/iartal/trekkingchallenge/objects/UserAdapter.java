@@ -1,4 +1,4 @@
-package edu.uoc.iartal.trekkingchallenge.objectsDB;
+package edu.uoc.iartal.trekkingchallenge.objects;
 
 import android.content.Context;
 import android.support.v7.widget.CardView;
@@ -10,15 +10,10 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-
 import edu.uoc.iartal.trekkingchallenge.R;
-import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
 import edu.uoc.iartal.trekkingchallenge.user.ListUsersActivity;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder> {

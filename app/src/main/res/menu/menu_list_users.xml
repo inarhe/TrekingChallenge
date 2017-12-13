@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".user.UserAreaActivity">
+    tools:context=".user.ListUsersActivity">
 
     <item
         android:id="@+id/action_searchUser"
@@ -17,5 +17,4 @@
         android:title="@string/actionDone"
         android:icon="@drawable/ic_check"
         app:showAsAction="ifRoom" />
-
 </menu>

@@ -24,7 +24,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
 import edu.uoc.iartal.trekkingchallenge.R;
-import edu.uoc.iartal.trekkingchallenge.objectsDB.User;
+import edu.uoc.iartal.trekkingchallenge.objects.User;
 
 public class EditProfileActivity extends AppCompatActivity {
 
@@ -137,12 +137,12 @@ public class EditProfileActivity extends AppCompatActivity {
 
         // Check idUser parameter and update database if its necessary
         if (!(user.getIdUser()).equals(newIdUser)){
-            databaseUser.child(user.getIdUser()).child(FireBaseReferences.IDUSER_REFERENCE).setValue(newIdUser);
+            databaseUser.child(user.getIdUser()).child(FireBaseReferences.USER_ID_REFERENCE).setValue(newIdUser);
         }
 
         // Check user name parameter and update database if its necessary
         if ((!(user.getUserName()).equals(newUserName))){
-            databaseUser.child(user.getIdUser()).child(FireBaseReferences.USERNAME_REFERENCE).setValue(newUserName);
+            databaseUser.child(user.getIdUser()).child(FireBaseReferences.USER_NAME_REFERENCE).setValue(newUserName);
         }
 
         // Check user mail parameter and update database if its necessary

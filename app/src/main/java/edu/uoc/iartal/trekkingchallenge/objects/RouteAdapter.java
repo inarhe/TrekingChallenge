@@ -1,4 +1,4 @@
-package edu.uoc.iartal.trekkingchallenge.objectsDB;
+package edu.uoc.iartal.trekkingchallenge.objects;
 
 import android.content.Context;
 import android.content.Intent;

@@ -10,7 +10,7 @@ import android.widget.TextView;
 import com.google.firebase.auth.FirebaseAuth;
 
 import edu.uoc.iartal.trekkingchallenge.R;
-import edu.uoc.iartal.trekkingchallenge.objectsDB.Route;
+import edu.uoc.iartal.trekkingchallenge.objects.Route;
 import edu.uoc.iartal.trekkingchallenge.user.LoginActivity;
 
 public class DetailRouteActivity extends AppCompatActivity {
@@ -42,5 +42,7 @@ public class DetailRouteActivity extends AppCompatActivity {
         textViewDetails.setText(route.getDescription());
         TextView textViewMeteo = (TextView) findViewById(R.id.tvMeteo);
         textViewMeteo.setText(route.getMeteo());
+        TextView textViewStartPlace = (TextView) findViewById(R.id.tvStartPlace);
+        textViewStartPlace.setText(route.getStartPlace());
     }
 }

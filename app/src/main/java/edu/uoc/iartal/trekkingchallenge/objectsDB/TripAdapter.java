@@ -1,8 +1,10 @@
 package edu.uoc.iartal.trekkingchallenge.objectsDB;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -80,7 +82,7 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
      */
     @Override
     public void onBindViewHolder(TripViewHolder viewHolder, final int position) {
-        viewHolder.textViewTripName.setText(trips.get(position).getId());
+        viewHolder.textViewTripName.setText(trips.get(position).getName());
         viewHolder.textViewTripDate.setText(trips.get(position).getDate());
         viewHolder.imageViewTrip.setImageResource(R.drawable.ic_trip);
 
@@ -101,7 +103,7 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
             }
         }
 
-        // // When cardview is clicked starts show detail trip activity
+        // When cardview is clicked starts show detail trip activity
         viewHolder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -160,7 +162,7 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
         context = v.getContext();
         databaseTrip = FirebaseDatabase.getInstance().getReference(FireBaseReferences.TRIP_REFERENCE);
 
-        // Get names of group members
+        // Get names of trip members
         databaseTrip.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -182,25 +184,48 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
     }
 
     /**
-     * Delete selected group and update groups list of each member
+     * Delete selected trip and update trips list of each member
      * @param position
      */
     private void deleteTrip(final int position){
-        databaseTrip.child(trips.get(position).getId()).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()) {
-                    DatabaseReference databaseUser = FirebaseDatabase.getInstance().getReference(FireBaseReferences.USER_REFERENCE);
-                    for (String user:tripMembers){
-                        databaseUser.child(user).child(FireBaseReferences.USER_TRIPS_REFERENCE).child(idTrip).removeValue();
+        // Create alert dialog to ask user confirmation
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setMessage(context.getResources().getString(R.string.tripAskDeleted));
+        builder.setCancelable(true);
+
+        builder.setPositiveButton(
+                context.getResources().getString(R.string.acceptButton),
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                        databaseTrip.child(trips.get(position).getId()).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    DatabaseReference databaseUser = FirebaseDatabase.getInstance().getReference(FireBaseReferences.USER_REFERENCE);
+                                    for (String user:tripMembers){
+                                        databaseUser.child(user).child(FireBaseReferences.USER_TRIPS_REFERENCE).child(idTrip).removeValue();
+                                    }
+                                    Toast.makeText(context , R.string.tripDeleted, Toast.LENGTH_SHORT).show();
+                                    isVisibleArray.remove(position);
+                                    notifyDataSetChanged();
+                                } else {
+                                    Toast.makeText(context, R.string.tripNotDeleted, Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
                     }
-                    Toast.makeText(context , R.string.tripDeleted, Toast.LENGTH_SHORT).show();
-                    isVisibleArray.remove(position);
-                    notifyDataSetChanged();
-                } else {
-                    Toast.makeText(context, R.string.tripNotDeleted, Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+                });
+
+        builder.setNegativeButton(
+                context.getResources().getString(R.string.cancelButton),
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
     }
 }

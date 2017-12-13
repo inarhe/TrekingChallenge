@@ -37,9 +37,6 @@ public class UserAreaActivity extends AppCompatActivity {
 
     private static final int ACTIVITY_CODE = 1;
     private TextView textViewUserName, textViewUserMail, textViewIdUser;
-    private FirebaseAuth firebaseAuth;
-    private String idUser, userName, userMail, userPassword, userKey, currentMail;
-    private DatabaseReference databaseUser;
     private Intent intent;
     private ProgressDialog progressDialog;
     private User user;
@@ -55,17 +52,12 @@ public class UserAreaActivity extends AppCompatActivity {
             finish();
         }
 
-        Log.i("create","ok");
-
         // Set toolbar and actionbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.userToolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle(getString(R.string.userAreaActivity));
-
-        // Get Firebase authentication instance
-       // firebaseAuth =
 
         // Initialize progress dialog
         progressDialog = new ProgressDialog(this);
@@ -79,40 +71,46 @@ public class UserAreaActivity extends AppCompatActivity {
         loadUser();
     }
 
+    /**
+     * Inflate menu with menu layout information
+     * @param menu
+     * @return
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.user_area_activity_menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
+    /**
+     * Define action when menu option is selected
+     * @param item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_editProfile:
-               // startActivityForResult(intent, ACTIVITY_CODE);
                 loadUser();
                 intent = new Intent(UserAreaActivity.this, EditProfileActivity.class);
                 intent.putExtra("user", user);
-               // startActivity(intent);
                 startActivityForResult(intent, ACTIVITY_CODE);
-               // finish();
                 return true;
             case R.id.action_deleteProfile:
                 deleteUserAccount();
                 return true;
             case R.id.action_userHistory:
-
+                //TO-DO
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
-
-
-
+    /**
+     * Delete user account when delete button is clicked
+     */
     public void deleteUserAccount(){
-        // Delete user account when delete button is clicked
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(getString(R.string.deleteUserConfirmation));
         builder.setCancelable(true);
@@ -123,16 +121,16 @@ public class UserAreaActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
 
-                        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                        final FirebaseUser userFirebase = FirebaseAuth.getInstance().getCurrentUser();
                         AuthCredential credential = EmailAuthProvider
-                                .getCredential(userMail, userPassword);
+                                .getCredential(user.getUserMail(), user.getUserPassword());
 
-                        if (user != null){
-                            user.reauthenticate(credential)
+                        if (userFirebase != null){
+                            userFirebase.reauthenticate(credential)
                                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
-                                            user.delete()
+                                            userFirebase.delete()
                                                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                                                         @Override
                                                         public void onComplete(@NonNull Task<Void> task) {
@@ -159,9 +157,8 @@ public class UserAreaActivity extends AppCompatActivity {
                     }
                 });
 
-        AlertDialog alert11 = builder.create();
-        alert11.show();
-
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
     }
 
     /**
@@ -175,33 +172,24 @@ public class UserAreaActivity extends AppCompatActivity {
 
 
 
-       @Override
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-      //  textViewIdUser.setText(adat.getStringExtra("idUser"));
-      //  textViewUserName.setText(data.getStringExtra("userName"));
-      //  textViewUserMail.setText(data.getStringExtra("userMail"));
-         //  user = data.getParcelableExtra("user");
-         //  loadUser();
-           if (data.getStringExtra("userMail") != null){
-               textViewUserMail.setText(data.getStringExtra("userMail"));
-           }
 
-
-      //  intent.putExtra("idUser", data.getStringExtra("idUser"));
-     //   intent.putExtra("userName", data.getStringExtra("userName"));
-     //   intent.putExtra("userMail", data.getStringExtra("userMail"));
-        //NECESSITAT DE PASSAR CONTRASENYA TAMBÉ PER SI CANVIA QUE S'ACTUALITZI AL EDITAR
+        //user = data.getParcelableExtra("user");
+        //loadUser();
+        if (data.getStringExtra("userMail") != null) {
+            textViewUserMail.setText(data.getStringExtra("userMail"));
+        }
     }
 
     /**
      * Load data of current user
      */
     private void loadUser(){
-
-        currentMail = FirebaseAuth.getInstance().getCurrentUser().getEmail();
-        databaseUser = FirebaseDatabase.getInstance().getReference(FireBaseReferences.USER_REFERENCE);
-
+        //Initialize variables
+        String currentMail = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+        DatabaseReference databaseUser = FirebaseDatabase.getInstance().getReference(FireBaseReferences.USER_REFERENCE);
 
         // Show message on progress dialog
         progressDialog.setMessage(getString(R.string.loadingData));
@@ -212,46 +200,17 @@ public class UserAreaActivity extends AppCompatActivity {
         query.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-
                 user = dataSnapshot.getValue(User.class);
-
                 textViewIdUser.setText(user.getIdUser());
                 textViewUserName.setText(user.getUserName());
                 textViewUserMail.setText(user.getUserMail());
 
-                Log.i("mailadded",user.getUserMail() );
-
-
-                /*idUser = dataSnapshot.getValue(User.class).getIdUser();
-                userName = dataSnapshot.getValue(User.class).getUserName();
-                userMail = dataSnapshot.getValue(User.class).getUserMail();
-                userPassword = dataSnapshot.getValue(User.class).getUserPassword();
-                userKey = dataSnapshot.getValue(User.class).getIdUser();
-
-                textViewIdUser.setText(idUser);
-                textViewUserName.setText(userName);
-                textViewUserMail.setText(userMail);
-
-                intent.putExtra("idUser", idUser);
-                intent.putExtra("userName", userName);
-                intent.putExtra("userMail", userMail);
-                intent.putExtra("userPassword", userPassword);
-                intent.putExtra("userKey", userKey);*/
-
                 progressDialog.dismiss();
-
             }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                 //TO-DO
-                user = dataSnapshot.getValue(User.class);
-
-                textViewIdUser.setText(user.getIdUser());
-                textViewUserName.setText(user.getUserName());
-                textViewUserMail.setText(user.getUserMail());
-
-                Log.i("mailchanged",user.getUserMail() );
             }
 
             @Override

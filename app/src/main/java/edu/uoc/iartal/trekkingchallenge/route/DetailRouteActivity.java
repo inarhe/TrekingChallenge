@@ -5,50 +5,42 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.view.MenuItem;
 import android.widget.TextView;
+
+import com.google.firebase.auth.FirebaseAuth;
 
 import edu.uoc.iartal.trekkingchallenge.R;
 import edu.uoc.iartal.trekkingchallenge.objectsDB.Route;
+import edu.uoc.iartal.trekkingchallenge.user.LoginActivity;
 
 public class DetailRouteActivity extends AppCompatActivity {
 
-    private TextView textViewDetails, textViewMeteo;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_route);
 
+        // If user isn't logged, start login activity
+        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+            startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+            finish();
+        }
+
+        // Set toolbar and actionbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.detailRouteToolbar);
         setSupportActionBar(toolbar);
-
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle(getString(R.string.infoDetail));
 
+        // Get data from show route activity
         Bundle bundle = getIntent().getExtras();
         Route route = bundle.getParcelable("route");
-        //String details = bundle.getString("details");
-       // String meteo = bundle.getString("meteo");
 
-        textViewDetails = (TextView) findViewById(R.id.textArea_information);
+        // Link layout elements with variables and set values
+        TextView textViewDetails = (TextView) findViewById(R.id.textArea_information);
         textViewDetails.setText(route.getDescription());
-        textViewMeteo = (TextView) findViewById(R.id.tvMeteo);
-      //  textViewMeteo.setMovementMethod(LinkMovementMethod.getInstance());
+        TextView textViewMeteo = (TextView) findViewById(R.id.tvMeteo);
         textViewMeteo.setText(route.getMeteo());
-
-        Intent result = new Intent(this, ShowRouteActivity.class);
-        result.putExtra("route", route);
-        setResult(RESULT_OK, result);
-
-    }
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        switch (item.getItemId()){
-        //    case R.id.home:
-          //      NavUtils.navigateUpFromSameTask(this);
-        }
-        return super.onOptionsItemSelected(item);
     }
 }

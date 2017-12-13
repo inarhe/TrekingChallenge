@@ -166,7 +166,7 @@ public class AllGroupsFragment extends Fragment implements SearchView.OnQueryTex
     }
 
     /**
-     * Get search result group list
+     * Get group list search result
      * @param models
      * @param query
      * @return

@@ -6,7 +6,6 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +21,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,31 +29,24 @@ import edu.uoc.iartal.trekkingchallenge.route.ListRoutesActivity;
 import edu.uoc.iartal.trekkingchallenge.R;
 import edu.uoc.iartal.trekkingchallenge.route.ShowRouteActivity;
 
-/**
- * Created by Ingrid Artal on 25/11/2017.
- */
 public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.RouteViewHolder> {
 
     private ArrayList<Route> routes = new ArrayList<>();
-    ListRoutesActivity listRoutesActivity;
-    Context context;
-    private Uri downloadUri;
-
-    //private List<String> selectedItemIdList;
-    DatabaseReference databaseRoute;
+    private ListRoutesActivity listRoutesActivity;
+    private Context context;
+    private DatabaseReference databaseRoute;
     private StorageReference storageReference;
 
     // Object which represents a list item and save view references
-    public static class RouteViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public static class RouteViewHolder extends RecyclerView.ViewHolder {
         TextView textViewRouteName, textViewDistance, textViewTime, textViewDifficult, textViewRegion;
         ImageView imageViewRoute, imageViewType;
-       // CheckBox checkBox;
         ListRoutesActivity listRoutesActivity;
         CardView cardView;
 
+        // Link layout elements to variables
         public RouteViewHolder(View itemView, ListRoutesActivity listRoutesActivity) {
             super(itemView);
-
             textViewRouteName = (TextView) itemView.findViewById(R.id.cvRouteName);
             textViewDistance = (TextView) itemView.findViewById(R.id.cvDistance);
             textViewTime = (TextView) itemView.findViewById(R.id.cvTime);
@@ -63,16 +54,8 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.RouteViewHol
             textViewRegion = (TextView) itemView.findViewById(R.id.cvRegion);
             imageViewRoute = (ImageView) itemView.findViewById(R.id.cvRoutePhoto);
             imageViewType = (ImageView) itemView.findViewById(R.id.cvIconType);
-           // checkBox = (CheckBox) itemView.findViewById(R.id.checkListUser);
             this.listRoutesActivity = listRoutesActivity;
             cardView = (CardView)itemView.findViewById(R.id.cardViewRoute);
-          //  cardView.setOnLongClickListener(listUsersActivity);
-           // checkBox.setOnClickListener(this);
-        }
-
-        @Override
-        public void onClick(View v) {
-           // listRoutesActivity.prepareSelection(v, getAdapterPosition());
         }
     }
 
@@ -87,10 +70,9 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.RouteViewHol
         return routes.size();
     }
 
-
-
     @Override
     public RouteViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+        // Get database and storage references
         databaseRoute = FirebaseDatabase.getInstance().getReference(FireBaseReferences.ROUTE_REFERENCE);
         storageReference = FirebaseStorage.getInstance().getReference();
 
@@ -99,29 +81,28 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.RouteViewHol
         return new RouteViewHolder(view, listRoutesActivity);
     }
 
+    /**
+     * Modify content of each list item
+     * @param viewHolder
+     * @param position
+     */
     @Override
     public void onBindViewHolder(final RouteViewHolder viewHolder, final int position) {
-       // databaseUser = FirebaseDatabase.getInstance().getReference(FireBaseReferences.USER_REFERENCE);
-
-       // storageReference
-        // Modify content of each list item
         viewHolder.textViewRouteName.setText(routes.get(position).getName());
         viewHolder.textViewDistance.setText(routes.get(position).getDistance() + " km");
         viewHolder.textViewTime.setText(routes.get(position).getTime());
         viewHolder.textViewDifficult.setText(routes.get(position).getDifficult());
         viewHolder.textViewRegion.setText(routes.get(position).getRegion());
 
-        if (routes.get(position).getType().equals(R.string.circular)){
+        // Show icon according to route type
+        if (routes.get(position).getType().equals(context.getResources().getString(R.string.circular))){
             viewHolder.imageViewType.setImageResource(R.drawable.ic_circular);
         } else {
             viewHolder.imageViewType.setImageResource(R.drawable.ic_goback);
         }
 
-
-
+        // Get header photo name, download it and set into list route
         String namePhoto = routes.get(position).getHeaderPhoto();
-
-        Log.i("url",storageReference.child(FireBaseReferences.HEADERS_STORAGE + namePhoto).getDownloadUrl().toString());
         storageReference.child(FireBaseReferences.HEADERS_STORAGE + namePhoto).getDownloadUrl()
                 .addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
@@ -131,13 +112,12 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.RouteViewHol
                 }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Toast.makeText(context, "image not dowloaded", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, R.string.imageNotDonwloaded, Toast.LENGTH_SHORT).show();
             }
         });
 
-
-        // When an item is clicked starts show detail group activity
-        viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+        // When cardview is clicked starts show detail route activity
+        viewHolder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Context context = v.getContext();
@@ -148,15 +128,15 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.RouteViewHol
                 context.startActivity(intent);
             }
         });
-
-
     }
 
-
-    public void setFilter(List<Route> filterUsers) {
+    /**
+     * Updates route list with search result
+     * @param filterRoutes
+     */
+    public void setFilter(List<Route> filterRoutes) {
         routes = new ArrayList<>();
-        routes.addAll(filterUsers);
+        routes.addAll(filterRoutes);
         notifyDataSetChanged();
     }
-
 }

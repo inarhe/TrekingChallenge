@@ -14,6 +14,7 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -97,6 +98,7 @@ public class AddChallengeActivity extends AppCompatActivity implements AdapterVi
         dateSelected = Calendar.getInstance();
         String dateFormat = "dd.MM.yyyy";
         sdf = new SimpleDateFormat(dateFormat, Locale.GERMAN);
+        setDate();
 
         // Get routes to inflate spinner
         getRoutes();
@@ -168,7 +170,7 @@ public class AddChallengeActivity extends AppCompatActivity implements AdapterVi
             isPublic = true;
         }
 
-        /// Add trip to firebase database
+        // Add challenge to firebase database
         final String idChallenge = databaseChallenge.push().getKey();
         challenge = new Challenge(idChallenge, name, description, date, route, userAdmin, isPublic, 1);
 
@@ -182,7 +184,6 @@ public class AddChallengeActivity extends AppCompatActivity implements AdapterVi
         });
 
         databaseChallenge.child(idChallenge).child(FireBaseReferences.MEMBERS_REFERENCE).child(userAdmin).setValue("true");
-
         databaseUser.child(userAdmin).child(FireBaseReferences.USER_CHALLENGES_REFERENCE).child(challenge.getId()).setValue("true")
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
@@ -209,7 +210,7 @@ public class AddChallengeActivity extends AppCompatActivity implements AdapterVi
     }
 
     /**
-     * Show user list and allow invite users to join the new trip
+     * Show user list and allow invite users to join the new challenge
      */
     private void inviteUsers (){
         Intent intent = new Intent(getApplicationContext(), ListUsersActivity.class);
@@ -241,6 +242,32 @@ public class AddChallengeActivity extends AppCompatActivity implements AdapterVi
                 //TO-DO
             }
         });
+    }
+
+    /**
+     * Set current date format and DatePickerDialog
+     */
+    private void setDate(){
+        long currentDate = System.currentTimeMillis();
+        String dateString = sdf.format(currentDate);
+        dateEditText.setText(dateString);
+
+        date = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                dateSelected.set(Calendar.YEAR, year);
+                dateSelected.set(Calendar.MONTH, month);
+                dateSelected.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                updateDate();
+            }
+        };
+    }
+
+    /**
+     * Set current date in layout edit text
+     */
+    private void updateDate() {
+        dateEditText.setText(sdf.format(dateSelected.getTime()));
     }
 
     /**

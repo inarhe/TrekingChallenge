@@ -9,9 +9,6 @@ import android.view.View;
 
 import edu.uoc.iartal.trekkingchallenge.R;
 
-/**
- * Created by Ingrid Artal on 04/11/2017.
- */
 
 public class AccessActivity extends AppCompatActivity {
 

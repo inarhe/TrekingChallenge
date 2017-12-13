@@ -5,11 +5,7 @@ import android.os.Parcelable;
 
 import java.io.Serializable;
 
-/**
- * Created by Ingrid Artal on 30/11/2017.
- */
-
-// Route object class
+// Route object class. Implements Parcelable to pass route object between activities
 public class Route implements Parcelable {
     private String idRoute, name, headerPhoto, trackPhoto, profilePhoto, season, time, trackLink, meteo;
     private String type, difficult, distance, description, decline, ascent, region, township;

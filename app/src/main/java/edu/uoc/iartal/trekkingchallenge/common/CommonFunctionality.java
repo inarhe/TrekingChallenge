@@ -1,5 +1,11 @@
 package edu.uoc.iartal.trekkingchallenge.common;
 
+import android.content.Context;
+import android.support.annotation.NonNull;
+import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -10,6 +16,7 @@ import com.google.firebase.database.Query;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import edu.uoc.iartal.trekkingchallenge.R;
 import edu.uoc.iartal.trekkingchallenge.objectsDB.User;
 
 
@@ -89,6 +96,29 @@ public class CommonFunctionality {
             }
         });
     }
+
+    /**
+     * Update route results and challenge results in all dependencies
+     * @param databaseObject
+     * @param child
+     * @param reference
+     * @param result
+     * @param context
+     */
+    public void updateResults (DatabaseReference databaseObject, String child, String reference, String result, final Context context){
+        databaseObject.child(child).child(reference).child(result).setValue("true")
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if(task.isSuccessful()){
+                            Toast.makeText(context, context.getResources().getString(R.string.finishedSaved), Toast.LENGTH_LONG).show();
+                        } else {
+                            Toast.makeText(context, context.getResources().getString(R.string.finishedFailed),Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+    }
+
 
 
 

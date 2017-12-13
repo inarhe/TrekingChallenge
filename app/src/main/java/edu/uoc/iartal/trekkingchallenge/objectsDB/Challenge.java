@@ -6,25 +6,22 @@ import android.os.Parcelable;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by Ingrid Artal on 04/11/2017.
- */
-
-// Group object class
+// Challenge object class. Implements Parcelable to pass challenge object between activities
 public class Challenge implements Parcelable{
-    private String id, challengeName, challengeDescription, limitDate, route, userAdmin;
+    private String id, name, description, limitDate, route, userAdmin;
     private Boolean isPublic;
     private int numberOfMembers;
     private Map<String, String> results = new HashMap<>();
+    private Map<String, String> members = new HashMap<>();
 
     public Challenge() {
 
     }
 
-    public Challenge(String id, String challengeName, String challengeDescription, String limitDate, String route, String userAdmin, Boolean isPublic, int numberOfMembers) {
+    public Challenge(String id, String name, String description, String limitDate, String route, String userAdmin, Boolean isPublic, int numberOfMembers) {
         this.id = id;
-        this.challengeName = challengeName;
-        this.challengeDescription = challengeDescription;
+        this.name = name;
+        this.description = description;
         this.limitDate = limitDate;
         this.route = route;
         this.userAdmin = userAdmin;
@@ -34,8 +31,8 @@ public class Challenge implements Parcelable{
 
     public Challenge(Parcel in) {
         this.id = in.readString();
-        this.challengeName = in.readString();
-        this.challengeDescription = in.readString();
+        this.name = in.readString();
+        this.description = in.readString();
         this.limitDate = in.readString();
         this.route = in.readString();
         this.userAdmin = in.readString();
@@ -51,20 +48,20 @@ public class Challenge implements Parcelable{
         this.id = id;
     }
 
-    public String getChallengeName() {
-        return challengeName;
+    public String getName() {
+        return name;
     }
 
-    public void setChallengeName(String challengeName) {
-        this.challengeName = challengeName;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getChallengeDescription() {
-        return challengeDescription;
+    public String getDescription() {
+        return description;
     }
 
-    public void setChallengeDescription(String challengeDescription) {
-        this.challengeDescription = challengeDescription;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getLimitDate() {
@@ -111,6 +108,10 @@ public class Challenge implements Parcelable{
         return this.results;
     }
 
+    public Map<String, String> getMembers() {
+        return this.members;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -119,8 +120,8 @@ public class Challenge implements Parcelable{
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(id);
-        dest.writeString(challengeName);
-        dest.writeString(challengeDescription);
+        dest.writeString(name);
+        dest.writeString(description);
         dest.writeString(limitDate);
         dest.writeString(route);
         dest.writeString(userAdmin);

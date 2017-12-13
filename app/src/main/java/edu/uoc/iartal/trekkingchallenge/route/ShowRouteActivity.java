@@ -19,71 +19,60 @@ import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import java.util.List;
-
 import edu.uoc.iartal.trekkingchallenge.R;
 import edu.uoc.iartal.trekkingchallenge.challenge.FinishedChallengeActivity;
-import edu.uoc.iartal.trekkingchallenge.objectsDB.Finished;
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
 import edu.uoc.iartal.trekkingchallenge.objectsDB.Route;
 import edu.uoc.iartal.trekkingchallenge.trip.AddTripActivity;
 import edu.uoc.iartal.trekkingchallenge.user.LoginActivity;
 
 public class ShowRouteActivity extends AppCompatActivity {
-    private static final int ACTIVITY_CODE = 1;
-    private FirebaseAuth firebaseAuth;
-    //private String groupKey, name;
-    private DatabaseReference databaseRoute;
     private StorageReference storageReference;
-    private ImageView imageViewHeader, imageViewSeason, imageViewType;
-    private TextView textViewType, textViewTime, textViewAscent, textViewDecline,textViewSeason;
-    private TextView textViewDifficult, textViewRegion, textViewTownship;
+    private ImageView imageViewHeader;
     private Route route;
-    private Bundle bundle;
-    private List<Finished> finished;
-    private List<String> keys;
-    private String mail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_route);
 
-        // Get data from item clicked on list groups activity
-        bundle = getIntent().getExtras();
+        // If user isn't logged, start login activity
+        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+            startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+            finish();
+        }
+
+        // Get data from item clicked on list routes activity
+        Bundle bundle = getIntent().getExtras();
         route = bundle.getParcelable("route");
 
+        // Set toolbar and actionbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.showRouteToolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle(route.getName());
 
-        imageViewHeader = (ImageView) findViewById(R.id.ivRoute);
-        imageViewSeason = (ImageView) findViewById(R.id.icSeason);
-        imageViewType = (ImageView) findViewById(R.id.icType);
-        textViewType = (TextView) findViewById(R.id.tvType);
-        textViewTime = (TextView) findViewById(R.id.tvTime);
-        textViewAscent = (TextView) findViewById(R.id.tvAscent);
-        textViewDecline = (TextView) findViewById(R.id.tvDecline);
-        textViewSeason = (TextView) findViewById(R.id.tvSeason);
-        textViewDifficult = (TextView) findViewById(R.id.tvDifficult);
-        textViewTownship = (TextView) findViewById(R.id.tvTownShip);
-        textViewRegion = (TextView) findViewById(R.id.tvRegion);
-        final TextView textViewCalendar = (TextView) findViewById(R.id.tvCalenadar);
-
-        // Get Firebase authentication instance and database group reference
+        // Get storage and database references
         storageReference = FirebaseStorage.getInstance().getReference();
-        firebaseAuth = FirebaseAuth.getInstance();
-        databaseRoute = FirebaseDatabase.getInstance().getReference(FireBaseReferences.ROUTE_REFERENCE);
 
+        // Link layout elements with variables
+        imageViewHeader = (ImageView) findViewById(R.id.ivRoute);
+        ImageView imageViewSeason = (ImageView) findViewById(R.id.icSeason);
+        ImageView imageViewType = (ImageView) findViewById(R.id.icType);
+        TextView textViewType = (TextView) findViewById(R.id.tvType);
+        TextView textViewTime = (TextView) findViewById(R.id.tvTime);
+        TextView textViewAscent = (TextView) findViewById(R.id.tvAscent);
+        TextView textViewDecline = (TextView) findViewById(R.id.tvDecline);
+        TextView textViewSeason = (TextView) findViewById(R.id.tvSeason);
+        TextView textViewDifficult = (TextView) findViewById(R.id.tvDifficult);
+        TextView textViewTownship = (TextView) findViewById(R.id.tvTownShip);
+        TextView textViewRegion = (TextView) findViewById(R.id.tvRegion);
 
-
+        // Set season icon according to route season
         if (route.getSeason().equals(getString(R.string.spring))){
             imageViewSeason.setImageResource(R.drawable.ic_spring);
         } else if (route.getSeason().equals(getString(R.string.fall))){
@@ -94,57 +83,15 @@ public class ShowRouteActivity extends AppCompatActivity {
             imageViewSeason.setImageResource(R.drawable.ic_winter);
         }
 
-        if (route.getType().equals(R.string.circular)){
+        // Set type icon according to route season
+        if (route.getType().equals(getString(R.string.circular))){
             imageViewType.setImageResource(R.drawable.ic_circular);
         } else {
             imageViewType.setImageResource(R.drawable.ic_goback);
         }
 
-    /*    mail = FirebaseAuth.getInstance().getCurrentUser().getEmail();
-        keys = new ArrayList<>();
-        DatabaseReference databaseUser = FirebaseDatabase.getInstance().getReference(FireBaseReferences.USER_REFERENCE);
-        databaseUser.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                keys.removeAll(keys);
-                for (DataSnapshot userSnapshot :
-                        dataSnapshot.getChildren()) {
-                    User user = userSnapshot.getValue(User.class);
-                    if (user.getUserMail().equals(mail)) {
-                        String currentUser = user.getIdUser();
-                        for (String key : user.getFinished().keySet()) {
-                            keys.add(key);
-                        }
-                    }
-
-                }
-                for(String key:keys){
-                    if (key.equals(route.getIdRoute())){
-                        textViewCalendar.setText();
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                //TO-DO
-            }
-        });*/
-
-
-
-
-        //  textViewDescription.setText(description);
-        //textViewMembers.setText(Integer.toString(members));
-
-        if (firebaseAuth.getCurrentUser() == null) {
-            // If user isn't logged, start login activity
-            startActivity(new Intent(getApplicationContext(), LoginActivity.class));
-            finish();
-        }
-
+        // Get header photo name, download it and set into show route
         String namePhoto = route.getHeaderPhoto();
-
         storageReference.child(FireBaseReferences.HEADERS_STORAGE + namePhoto).getDownloadUrl()
                 .addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
@@ -154,10 +101,11 @@ public class ShowRouteActivity extends AppCompatActivity {
                 }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Toast.makeText(ShowRouteActivity.this, "image not dowloaded", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ShowRouteActivity.this, R.string.imageNotDonwloaded, Toast.LENGTH_LONG).show();
             }
         });
 
+        // Show selected route information in the layout
         textViewType.setText(route.getDistance() + " km");
         textViewTime.setText(route.getTime());
         textViewAscent.setText(route.getAscent());
@@ -166,18 +114,15 @@ public class ShowRouteActivity extends AppCompatActivity {
         textViewDifficult.setText(route.getDifficult());
         textViewRegion.setText(getString(R.string.region) + "  " + route.getRegion());
         textViewTownship.setText(getString(R.string.township) + "  " + route.getTownship());
-
-
-
     }
 
-
-
+    /**
+     * Starts detail information route activity when button is clicked
+     * @param view
+     */
     public void showDetails (View view){
         Intent intent = new Intent(this, DetailRouteActivity.class);
         intent.putExtra("route", route);
-      //  intent.putExtra("meteo", route.getMeteo());
-
         startActivity(intent);
     }
 
@@ -191,12 +136,18 @@ public class ShowRouteActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    //TO-DO
     public void showPhotoGallery () {
         Intent intent = new Intent (this, PhotoGalleryActivity.class);
         intent.putExtra("route", route);
         startActivity(intent);
     }
 
+    /**
+     * Inflate menu with menu layout information
+     * @param menu
+     * @return
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -204,6 +155,11 @@ public class ShowRouteActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
+    /**
+     * Define action when menu option is selected
+     * @param item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -224,30 +180,36 @@ public class ShowRouteActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        route = data.getExtras().getParcelable("route");
-    }
-
+    /**
+     * Starts finished route activity when menu option is selected
+     */
     public void routeFinished() {
         Intent intent = new Intent(this, FinishedRouteActivity.class);
         intent.putExtra("route", route);
         startActivity(intent);
     }
 
+    /**
+     * Starts new trip activity when menu option is selected
+     */
     public void newTrip() {
         Intent intent = new Intent(this, AddTripActivity.class);
         startActivity(intent);
         finish();
     }
 
+    /**
+     * Starts new challenge activity when menu option is selected
+     */
     public void newChallenge() {
         Intent intent = new Intent(this, FinishedChallengeActivity.class);
         startActivity(intent);
         finish();
     }
 
+    /**
+     * Starts opinion activity when menu option is selected
+     */
     public void setOpinion() {
         Intent intent = new Intent(this, RatingRouteActivity.class);
         intent.putExtra("route", route);

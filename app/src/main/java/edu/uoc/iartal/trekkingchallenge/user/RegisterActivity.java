@@ -26,9 +26,6 @@ import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
 import edu.uoc.iartal.trekkingchallenge.objectsDB.User;
 import edu.uoc.iartal.trekkingchallenge.R;
 
-/**
- * Created by Ingrid Artal on 04/11/2017.
- */
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -150,10 +147,11 @@ public class RegisterActivity extends AppCompatActivity {
                 });
     }
 
-
-
+    /**
+     * Cancel user registration if cancel button is clicked. Starts Main activity
+     * @param view
+     */
     public void cancelRegister (View view){
-        startActivity(new Intent(getApplicationContext(), MainActivity.class));
         finish();
     }
 }

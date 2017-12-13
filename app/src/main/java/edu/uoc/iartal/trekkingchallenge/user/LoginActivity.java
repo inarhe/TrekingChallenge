@@ -22,9 +22,6 @@ import edu.uoc.iartal.trekkingchallenge.common.CommonFunctionality;
 import edu.uoc.iartal.trekkingchallenge.common.MainActivity;
 import edu.uoc.iartal.trekkingchallenge.R;
 
-/**
- * Created by Ingrid Artal on 05/11/2017.
- */
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -33,7 +30,6 @@ public class LoginActivity extends AppCompatActivity {
     private ProgressDialog progressDialog;
 
 
-    //@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);

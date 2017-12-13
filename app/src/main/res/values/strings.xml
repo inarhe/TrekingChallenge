@@ -41,6 +41,7 @@
     <string name="groupJoined">T\'has unit al grup</string>
     <string name="joinGroupAsk">Et vols unir a aquest grup?</string>
     <string name="groupLeft">Segur que vols abandonar el grup?</string>
+    <string name="groupAskDeleted">Segur que vols eliminar el grup?</string>
 
     <!--Track rotue activity-->
     <string name="trackTitle">Recorregut de la ruta</string>
@@ -68,6 +69,7 @@
     <string name="fall">Tardor</string>
     <string name="summer">Estiu</string>
     <string name="winter">Hivern</string>
+    <string name="imageNotDonwloaded">Imatge no descarregada</string>
 
 
     <!--Show trip activity-->
@@ -81,6 +83,7 @@
     <string name="tripJoined">T\'has unit a l\'excursió</string>
     <string name="joinTripAsk">Et vols unir a aquesta excursió?</string>
     <string name="tripLeft">Segur que vols abandonar l\'excursió?</string>
+    <string name="tripAskDeleted">Segur que vols eliminar l\'excursió??</string>
     <string name="tripDeleted">Excursió eliminada </string>
     <string name="tripNotDeleted">No s\'ha pogut eliminar l\'excursió</string>
 
@@ -96,14 +99,17 @@
     <string name="challengeJoined">T\'has unit al repte</string>
     <string name="joinChallengeAsk">Et vols unir a aquest repte?</string>
     <string name="challengeLeft">Segur que vols abandonar el repte?</string>
+    <string name="challengeAskDeleted">Segur que vols eliminar el repte?</string>
     <string name="rankingChallenge">Rànquing del repte:</string>
+    <string name="challengeDeleted">Repte eliminat</string>
+    <string name="challengeNotDeleted">No s\'ha pogut eliminar el repte</string>
 
 
     <!--Finished challenge activity-->
     <string name="finishChallengeActivity">Repte realitzat</string>
     <string name="titleFinishChallenge">Repte superat!</string>
     <string name="resultsChallenge">Resultats:</string>
-    <string name="action_challengeFinished">Repte realitzat</string>
+    <string name="action_challengeFinished">Registra resultat</string>
 
 
     <string name="listChallengesActivity">Reptes</string>

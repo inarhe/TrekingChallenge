@@ -3,10 +3,8 @@ package edu.uoc.iartal.trekkingchallenge.objectsDB;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-/**
- * Created by Ingrid Artal on 12/12/2017.
- */
 
+// Rating object class. Implements Parcelable to pass rating object between activities
 public class Rating implements Parcelable{
     private String id, title, opinion, route, user;
     private Float value;

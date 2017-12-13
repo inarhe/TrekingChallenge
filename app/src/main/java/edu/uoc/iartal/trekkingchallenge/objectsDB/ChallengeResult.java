@@ -3,21 +3,19 @@ package edu.uoc.iartal.trekkingchallenge.objectsDB;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-/**
- * Created by Ingrid Artal on 04/11/2017.
- */
 
-// Group object class
+// ChallengeResult object class. Implements Parcelable to pass ChallengeResult object between activities
 public class ChallengeResult implements Parcelable{
-    private String id, distance, hour, minute, user, challenge, date;
+    private String id, user, challenge, date;
+    private int hour, minute;
+    private Double distance;
     private Boolean isWinner;
 
     public ChallengeResult() {
 
     }
 
-
-    public ChallengeResult(String id, String distance, String hour, String minute, String user, String challenge, String date) {
+    public ChallengeResult(String id, Double distance, int hour, int minute, String user, String challenge, String date) {
         this.id = id;
         this.distance = distance;
         this.hour = hour;
@@ -29,12 +27,11 @@ public class ChallengeResult implements Parcelable{
 
     public ChallengeResult(Parcel in) {
         this.id = in.readString();
-        this.distance = in.readString();
-        this.hour = in.readString();
-        this.minute = in.readString();
+        this.distance = in.readDouble();
+        this.hour = in.readInt();
+        this.minute = in.readInt();
         this.user = in.readString();
         this.challenge = in.readString();
-      //  this.isWinner = in.readString();
         this.date = in.readString();
     }
 
@@ -46,27 +43,27 @@ public class ChallengeResult implements Parcelable{
         this.id = id;
     }
 
-    public String getDistance() {
+    public Double getDistance() {
         return distance;
     }
 
-    public void setDistance(String distance) {
+    public void setDistance(Double distance) {
         this.distance = distance;
     }
 
-    public String getHour() {
+    public int getHour() {
         return hour;
     }
 
-    public void setHour(String hour) {
+    public void setHour(int hour) {
         this.hour = hour;
     }
 
-    public String getminute() {
+    public int getminute() {
         return minute;
     }
 
-    public void setMinute(String minute) {
+    public void setMinute(int minute) {
         this.minute = minute;
     }
 
@@ -110,9 +107,9 @@ public class ChallengeResult implements Parcelable{
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(id);
-        dest.writeString(distance);
-        dest.writeString(hour);
-        dest.writeString(minute);
+        dest.writeDouble(distance);
+        dest.writeInt(hour);
+        dest.writeInt(minute);
         dest.writeString(user);
         dest.writeString(challenge);
         dest.writeString(date);

@@ -15,12 +15,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -33,7 +31,6 @@ import edu.uoc.iartal.trekkingchallenge.common.CommonFunctionality;
 import edu.uoc.iartal.trekkingchallenge.objectsDB.Challenge;
 import edu.uoc.iartal.trekkingchallenge.objectsDB.ChallengeResult;
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
-import edu.uoc.iartal.trekkingchallenge.objectsDB.User;
 import edu.uoc.iartal.trekkingchallenge.user.LoginActivity;
 
 public class ShowChallengeActivity extends AppCompatActivity {
@@ -47,7 +44,6 @@ public class ShowChallengeActivity extends AppCompatActivity {
     private TableView<String[]> tableView;
     private CommonFunctionality common;
     private String currentMail;
-    private ChallengeResult ranking;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,16 +85,16 @@ public class ShowChallengeActivity extends AppCompatActivity {
         // Set actionbar
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setTitle(challenge.getChallengeName());
+        actionBar.setTitle(challenge.getName());
 
         // Show selected group information in the layout
         textViewRoute.setText(challenge.getRoute());
         textViewDate.setText(challenge.getLimitDate());
-        textViewDesc.setText(challenge.getChallengeDescription());
+        textViewDesc.setText(challenge.getDescription());
 
         challengesResultsIds = new ArrayList<>();
 
-        // Get all the challenge results
+        // Get all challenge results
         for (String key : challenge.getResults().keySet()) {
             challengesResultsIds.add(key);
         }
@@ -158,7 +154,7 @@ public class ShowChallengeActivity extends AppCompatActivity {
                         dialog.cancel();
                         common.updateJoins(currentMail, getString(R.string.setJoin), databaseChallenge, challenge.getId(), FireBaseReferences.USER_CHALLENGES_REFERENCE);
                         databaseChallenge.child(challenge.getId()).child(FireBaseReferences.NUMBER_OF_MEMBERS_REFERENCE).setValue(challenge.getNumberOfMembers()+1);
-                        Toast.makeText(getApplicationContext(), getString(R.string.tripJoined), Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), getString(R.string.challengeJoined), Toast.LENGTH_LONG).show();
                         finish();
                     }
                 });
@@ -211,16 +207,18 @@ public class ShowChallengeActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * Search challenge results of current challenge to fill the ranking table
+     */
     private void populateTableRanking(){
-        ranking = new ChallengeResult();
         challengeResults = new ArrayList<>();
 
-        DatabaseReference databaseResults = FirebaseDatabase.getInstance().getReference(FireBaseReferences.CHALLENGERESULT_REFERENCE);
+        DatabaseReference databaseChallResults = FirebaseDatabase.getInstance().getReference(FireBaseReferences.CHALLENGERESULT_REFERENCE);
 
-        if (databaseResults != null) {
+        if (databaseChallResults != null) {
             currentMail = FirebaseAuth.getInstance().getCurrentUser().getEmail();
 
-            databaseResults.addValueEventListener(new ValueEventListener() {
+            databaseChallResults.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     challengeResults.clear();
@@ -230,19 +228,11 @@ public class ShowChallengeActivity extends AppCompatActivity {
                         if (challengesResultsIds.contains(chall.getId())) {
                             challengeResults.add(chall);
                         }
-
-                    }
-                    rankingTable = new String[challengeResults.size()][3];
-
-                    for (int i = 0; i < challengeResults.size(); i++) {
-                        ChallengeResult c = challengeResults.get(i);
-                        rankingTable[i][0] = c.getUser();
-                        String time = c.getHour() + "h" + c.getminute();
-                        rankingTable[i][1] = time;
-                        rankingTable[i][2] = c.getDistance();
                     }
 
-                    //adapter
+                    fillTable();
+
+                    //Set table header adapter and data adapter
                     tableView.setHeaderAdapter(new SimpleTableHeaderAdapter(getApplicationContext(), tableHeader));
                     if (rankingTable != null) {
                         tableView.setDataAdapter(new SimpleTableDataAdapter(getApplicationContext(), rankingTable));
@@ -254,25 +244,33 @@ public class ShowChallengeActivity extends AppCompatActivity {
                     //TO-DO
                 }
             });
-        } else {
-            rankingTable = new String[challengeResults.size()][3];
-
-            for (int i = 0; i < challengeResults.size(); i++) {
-                ChallengeResult c = challengeResults.get(i);
-                rankingTable[i][0] = c.getUser();
-                String time = c.getHour() + "h" + c.getminute();
-                rankingTable[i][1] = time;
-                rankingTable[i][2] = c.getDistance();
-            }
         }
 
 
 
     }
 
+    /**
+     * Starts register challenge results activity when option menu is selected
+     */
     public void challengeFinished() {
         Intent intent = new Intent(this, FinishedChallengeActivity.class);
         intent.putExtra("challenge", challenge);
         startActivity(intent);
+    }
+
+    /**
+     * Fill table with challenge results
+     */
+    private void fillTable(){
+        rankingTable = new String[challengeResults.size()][3];
+
+        for (int i = 0; i < challengeResults.size(); i++) {
+            ChallengeResult result = challengeResults.get(i);
+            rankingTable[i][0] = result.getUser();
+            String time = result.getHour() + "h" + result.getminute();
+            rankingTable[i][1] = time;
+            rankingTable[i][2] = result.getDistance();
+        }
     }
 }

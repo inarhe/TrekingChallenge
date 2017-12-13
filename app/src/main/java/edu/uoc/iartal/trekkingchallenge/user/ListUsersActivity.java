@@ -9,7 +9,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.SearchView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,12 +16,10 @@ import android.widget.CheckBox;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -31,6 +28,7 @@ import java.util.List;
 import edu.uoc.iartal.trekkingchallenge.challenge.ListChallengesActivity;
 import edu.uoc.iartal.trekkingchallenge.group.ListGroupsActivity;
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
+import edu.uoc.iartal.trekkingchallenge.objectsDB.Challenge;
 import edu.uoc.iartal.trekkingchallenge.objectsDB.Group;
 import edu.uoc.iartal.trekkingchallenge.objectsDB.Trip;
 import edu.uoc.iartal.trekkingchallenge.objectsDB.User;
@@ -43,8 +41,9 @@ public class ListUsersActivity extends AppCompatActivity implements SearchView.O
     private RecyclerView recyclerView;
     private ArrayList<User> users = new ArrayList<>();
     private ArrayList<User> selectedUsers = new ArrayList<>();
-    private String  idTrip, tripName, idChallenge, challengeName;
     private Group group;
+    private Trip trip;
+    private Challenge challenge;
     private Toolbar toolbar;
     private DatabaseReference databaseUser, databaseGroup, databaseTrip, databaseChallenge;
     private List<User> filteredModelList = new ArrayList<>();
@@ -54,41 +53,45 @@ public class ListUsersActivity extends AppCompatActivity implements SearchView.O
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_users);
 
-        toolbar = (Toolbar) findViewById(R.id.listUserToolbar);
+        // Set toolbar and actionbar
+        Toolbar toolbar = (Toolbar) findViewById(R.id.listUserToolbar);
         setSupportActionBar(toolbar);
-
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle(getString(R.string.listUsersActivity));
 
+        // If user isn't logged, start login activity
+        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+            startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+            finish();
+        }
+        // Get database references
+        databaseUser = FirebaseDatabase.getInstance().getReference(FireBaseReferences.USER_REFERENCE);
+
+        // Get data from previous activity
         Bundle bundle = getIntent().getExtras();
         group = bundle.getParcelable("group");
-        idTrip = bundle.getString("idTrip");
-        tripName = bundle.getString("tripName");
-        idChallenge = bundle.getString("idChallenge");
-        challengeName = bundle.getString("challengeName");
+        trip = bundle.getParcelable("trip");
+        challenge = bundle.getParcelable("challenge");
 
+        // Set recycler view and user adapter
         recyclerView = (RecyclerView) findViewById(R.id.rvListUsers);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
         userAdapter = new UserAdapter(users, ListUsersActivity.this);
         recyclerView.setAdapter(userAdapter);
-
-        databaseUser = FirebaseDatabase.getInstance().getReference(FireBaseReferences.USER_REFERENCE);
 
         // Show database users in recycler view
         databaseUser.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                users.removeAll(users);
+                users.clear();
                 for (DataSnapshot userSnapshot:
                         dataSnapshot.getChildren()) {
                     User user = userSnapshot.getValue(User.class);
                     if (!user.getUserMail().equals(FirebaseAuth.getInstance().getCurrentUser().getEmail())){
                         users.add(user);
                     }
-
                 }
                 userAdapter.notifyDataSetChanged();
             }
@@ -100,9 +103,13 @@ public class ListUsersActivity extends AppCompatActivity implements SearchView.O
         });
     }
 
+    /**
+     * Inflate menu with menu layout information and define search view
+     * @param menu
+     * @return
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.list_users_menu, menu);
 
         final MenuItem item = menu.findItem(R.id.action_searchUser);
@@ -113,21 +120,25 @@ public class ListUsersActivity extends AppCompatActivity implements SearchView.O
                 new MenuItemCompat.OnActionExpandListener() {
                     @Override
                     public boolean onMenuItemActionCollapse(MenuItem item) {
-// Do something when collapsed
-                      //  userAdapter.setFil
                         userAdapter.setFilter(users);
-                        return true; // Return true to collapse action view
+                        // Return true to collapse action view
+                        return true;
                     }
 
                     @Override
                     public boolean onMenuItemActionExpand(MenuItem item) {
-// Do something when expanded
-                        return true; // Return true to expand action view
+                        // Return true to expand action view
+                        return true;
                     }
                 });
         return true;
     }
 
+    /**
+     * Define action when menu option is selected
+     * @param item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -140,19 +151,18 @@ public class ListUsersActivity extends AppCompatActivity implements SearchView.O
         }
     }
 
+    /**
+     * Get selected user from total list or result search list
+     * @param view
+     * @param position
+     */
     public void prepareSelection (View view, int position){
-      //  Log.i("filter", filteredModelList.toString());
-      //  Log.i("users", users.toString());
         if (((CheckBox)view).isChecked()){
             if (!filteredModelList.isEmpty()){
                 selectedUsers.add(filteredModelList.get(position));
-      //          Log.i("filter", filteredModelList.get(position).toString());
-      //          Log.i("sel", selectedUsers.toString());
             } else {
                 selectedUsers.add(users.get(position));
-       //         Log.i("us", users.toString());
             }
-
         } else {
             if (!filteredModelList.isEmpty()){
                 selectedUsers.remove(filteredModelList.get(position));
@@ -162,6 +172,9 @@ public class ListUsersActivity extends AppCompatActivity implements SearchView.O
         }
     }
 
+    /**
+     * Updates invited users groups list, trips list or challenge list
+     */
     private void inviteUsers(){
         databaseUser = FirebaseDatabase.getInstance().getReference(FireBaseReferences.USER_REFERENCE);
         databaseGroup = FirebaseDatabase.getInstance().getReference(FireBaseReferences.GROUP_REFERENCE);
@@ -169,29 +182,26 @@ public class ListUsersActivity extends AppCompatActivity implements SearchView.O
         databaseChallenge = FirebaseDatabase.getInstance().getReference(FireBaseReferences.CHALLENGE_REFERENCE);
 
         if (!selectedUsers.isEmpty()){
-            if (group.getId() != null){
+            if (group != null){
                 setGroups();
                 Toast.makeText(ListUsersActivity.this,getString(R.string.usersInvitedGroup),Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(getApplicationContext(), ListGroupsActivity.class));
                 finish();
-
             }
 
-            if (idTrip != null){
+            if (trip != null){
                 setTrips();
                 Toast.makeText(ListUsersActivity.this,getString(R.string.usersInvitedTrip),Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(getApplicationContext(), ListTripsActivity.class));
                 finish();
             }
 
-            if (idChallenge != null){
+            if (challenge != null){
                 setChallenges();
                 Toast.makeText(ListUsersActivity.this,getString(R.string.usersInvitedChallenge),Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(getApplicationContext(), ListChallengesActivity.class));
                 finish();
             }
-
-
         }
     }
 
@@ -200,19 +210,28 @@ public class ListUsersActivity extends AppCompatActivity implements SearchView.O
         return false;
     }
 
+    /**
+     * Pass new user list to Adapter
+     * @param newText
+     * @return
+     */
     @Override
     public boolean onQueryTextChange(String newText) {
         filteredModelList.clear();
         filteredModelList = filter(users, newText);
-
         userAdapter.setFilter(filteredModelList);
         return true;
     }
 
+    /**
+     * Get user list search result
+     * @param models
+     * @param query
+     * @return
+     */
     private List<User> filter(List<User> models, String query) {
         query = query.toLowerCase();
         filteredModelList.clear();
-       // filteredModelList = new ArrayList<>();
         for (User model : models) {
             final String text = model.getIdUser().toLowerCase();
             if (text.contains(query)) {
@@ -222,144 +241,36 @@ public class ListUsersActivity extends AppCompatActivity implements SearchView.O
         return filteredModelList;
     }
 
+    /**
+     * Updates group list of all invited users and members of new group
+     */
     private void setGroups (){
         for (User user : selectedUsers){
-            databaseUser.child(user.getIdUser()).child("groups").child(group.getId()).setValue("true");
-            databaseGroup.child(group.getId()).child("members").child(user.getIdUser()).setValue("true");
-
-            Query query = databaseGroup.orderByChild(FireBaseReferences.GROUP_REFERENCE).equalTo(group.getId());
-
-            // Query database to get user information
-            query.addChildEventListener(new ChildEventListener() {
-                @Override
-                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                    //  Group group = dataSnapshot.getValue(Group.class);
-                    //  databaseGroup.child(groupKey).child(FireBaseReferences.MEMBERSGROUP_REFERENCE).child(user.getAlias()).setValue("true");
-
-                    // databaseUser.child(user.getIdUser()).child("groups").child(name).setValue("true");
-                    int members = dataSnapshot.getValue(Group.class).getNumberOfMembers();
-                    databaseGroup.child(group.getId()).child(FireBaseReferences.NUMBER_OF_MEMBERS_REFERENCE).setValue(members+1);
-                    Log.i("MEM", Integer.toString(members));
-
-                    // textViewMembers.setText(members+1);
-                }
-
-
-                @Override
-                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                    //TO-DO
-                }
-
-                @Override
-                public void onChildRemoved(DataSnapshot dataSnapshot) {
-                    //TO-DO
-                }
-
-                @Override
-                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-                    //TO-DO
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                    //TO-DO
-                }
-            });
-
+            databaseUser.child(user.getIdUser()).child(FireBaseReferences.USER_GROUPS_REFERENCE).child(group.getId()).setValue("true");
+            databaseGroup.child(group.getId()).child(FireBaseReferences.MEMBERS_REFERENCE).child(user.getIdUser()).setValue("true");
+            databaseGroup.child(group.getId()).child(FireBaseReferences.NUMBER_OF_MEMBERS_REFERENCE).setValue(group.getNumberOfMembers()+1);
         }
     }
 
+    /**
+     * Updates trip list of all invited users and members of new trip
+     */
     private void setTrips () {
         for (User user : selectedUsers) {
-            databaseUser.child(user.getIdUser()).child("trips").child(tripName).setValue("true");
-            databaseTrip.child(idTrip).child("members").child(user.getIdUser()).setValue("true");
-
-            Query query = databaseTrip.orderByChild(FireBaseReferences.TRIPNAME_REFERENCE).equalTo(tripName);
-
-            // Query database to get user information
-            query.addChildEventListener(new ChildEventListener() {
-                @Override
-                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                    //  Group group = dataSnapshot.getValue(Group.class);
-                    //  databaseGroup.child(groupKey).child(FireBaseReferences.MEMBERSGROUP_REFERENCE).child(user.getAlias()).setValue("true");
-
-                    // databaseUser.child(user.getIdUser()).child("groups").child(name).setValue("true");
-                    int members = dataSnapshot.getValue(Trip.class).getNumberOfMembers();
-                    databaseTrip.child(idTrip).child(FireBaseReferences.NUMBER_OF_MEMBERS_REFERENCE).setValue(members + 1);
-                    Log.i("MEM", Integer.toString(members));
-
-                    // textViewMembers.setText(members+1);
-                }
-
-
-                @Override
-                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                    //TO-DO
-                }
-
-                @Override
-                public void onChildRemoved(DataSnapshot dataSnapshot) {
-                    //TO-DO
-                }
-
-                @Override
-                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-                    //TO-DO
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                    //TO-DO
-                }
-            });
-
+            databaseUser.child(user.getIdUser()).child(FireBaseReferences.USER_TRIPS_REFERENCE).child(trip.getId()).setValue("true");
+            databaseTrip.child(trip.getId()).child(FireBaseReferences.MEMBERS_REFERENCE).child(user.getIdUser()).setValue("true");
+            databaseTrip.child(trip.getId()).child(FireBaseReferences.NUMBER_OF_MEMBERS_REFERENCE).setValue(trip.getNumberOfMembers() + 1);
         }
     }
 
+    /**
+     * Updates challenge list of all invited users and members of new challenge
+     */
     private void setChallenges (){
         for (User user : selectedUsers){
-            databaseUser.child(user.getIdUser()).child("challenges").child(challengeName).setValue("true");
-            databaseChallenge.child(idChallenge).child("members").child(user.getIdUser()).setValue("true");
-
-            Query query = databaseChallenge.orderByChild(FireBaseReferences.CHALLENGENAME_REFERENCE).equalTo(challengeName);
-
-            // Query database to get user information
-            query.addChildEventListener(new ChildEventListener() {
-                @Override
-                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                    //  Group group = dataSnapshot.getValue(Group.class);
-                    //  databaseGroup.child(groupKey).child(FireBaseReferences.MEMBERSGROUP_REFERENCE).child(user.getAlias()).setValue("true");
-
-                    // databaseUser.child(user.getIdUser()).child("groups").child(name).setValue("true");
-                    int members = dataSnapshot.getValue(Trip.class).getNumberOfMembers();
-                    databaseChallenge.child(idChallenge).child(FireBaseReferences.NUMBER_OF_MEMBERS_REFERENCE).setValue(members+1);
-                    Log.i("MEM", Integer.toString(members));
-
-                    // textViewMembers.setText(members+1);
-                }
-
-
-                @Override
-                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                    //TO-DO
-                }
-
-                @Override
-                public void onChildRemoved(DataSnapshot dataSnapshot) {
-                    //TO-DO
-                }
-
-                @Override
-                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-                    //TO-DO
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                    //TO-DO
-                }
-            });
-
+            databaseUser.child(user.getIdUser()).child(FireBaseReferences.USER_CHALLENGES_REFERENCE).child(challenge.getId()).setValue("true");
+            databaseChallenge.child(challenge.getId()).child(FireBaseReferences.MEMBERS_REFERENCE).child(user.getIdUser()).setValue("true");
+            databaseChallenge.child(challenge.getId()).child(FireBaseReferences.NUMBER_OF_MEMBERS_REFERENCE).setValue(challenge.getNumberOfMembers()+1);
         }
     }
 }

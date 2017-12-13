@@ -7,22 +7,20 @@ import android.os.Parcelable;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by Ingrid Artal on 04/11/2017.
- */
 
-// User object class
+// User object class. Implements Parcelable to pass user object between activities
 public class User implements Parcelable {
     private String idUser, userName, userMail, userPassword;
     private Map<String, String> groups = new HashMap<>();
     private Map<String, String> trips = new HashMap<>();
     private Map<String, String> finished = new HashMap<>();
     private Map<String, String> challenges = new HashMap<>();
+    private Map<String, String> ratings = new HashMap<>();
+    private Map<String, String> challengesResults = new HashMap<>();
 
     public User() {
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
     }
-
 
 
     public User(String idUser, String userName, String userMail, String userPassword) {
@@ -71,7 +69,6 @@ public class User implements Parcelable {
         this.userPassword = userPassword;
     }
 
-
     public Map<String, String> getGroups() {
         return this.groups;
     }
@@ -86,6 +83,14 @@ public class User implements Parcelable {
 
     public Map<String, String> getChallenges() {
         return this.challenges;
+    }
+
+    public Map<String, String> getRatings() {
+        return this.ratings;
+    }
+
+    public Map<String, String> getChallengesResults() {
+        return this.challengesResults;
     }
 
     @Override

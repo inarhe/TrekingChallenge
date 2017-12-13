@@ -1,8 +1,10 @@
 package edu.uoc.iartal.trekkingchallenge.objectsDB;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -185,21 +187,44 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.GroupViewHol
      * @param position
      */
     private void deleteGroup(final int position){
-        databaseGroup.child(groups.get(position).getId()).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()) {
-                    DatabaseReference databaseUser = FirebaseDatabase.getInstance().getReference(FireBaseReferences.USER_REFERENCE);
-                    for (String user:groupMembers){
-                        databaseUser.child(user).child(FireBaseReferences.USER_GROUPS_REFERENCE).child(idGroup).removeValue();
+        // Create alert dialog to ask user confirmation
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setMessage(context.getResources().getString(R.string.groupAskDeleted));
+        builder.setCancelable(true);
+
+        builder.setPositiveButton(
+                context.getResources().getString(R.string.acceptButton),
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                        databaseGroup.child(groups.get(position).getId()).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    DatabaseReference databaseUser = FirebaseDatabase.getInstance().getReference(FireBaseReferences.USER_REFERENCE);
+                                    for (String user:groupMembers){
+                                        databaseUser.child(user).child(FireBaseReferences.USER_GROUPS_REFERENCE).child(idGroup).removeValue();
+                                    }
+                                    Toast.makeText(context , R.string.groupDeleted, Toast.LENGTH_SHORT).show();
+                                    isVisibleArray.remove(position);
+                                    notifyDataSetChanged();
+                                } else {
+                                    Toast.makeText(context, R.string.groupNotDeleted, Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
                     }
-                    Toast.makeText(context , R.string.groupDeleted, Toast.LENGTH_SHORT).show();
-                    isVisibleArray.remove(position);
-                    notifyDataSetChanged();
-                } else {
-                    Toast.makeText(context, R.string.groupNotDeleted, Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+                });
+
+        builder.setNegativeButton(
+                context.getResources().getString(R.string.cancelButton),
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
     }
 }

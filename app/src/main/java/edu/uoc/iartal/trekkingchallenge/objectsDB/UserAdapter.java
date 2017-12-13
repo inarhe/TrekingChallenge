@@ -21,17 +21,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-/**
- * Created by Ingrid Artal on 25/11/2017.
- */
 public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder> {
 
     private ArrayList<User> users = new ArrayList<>();
-    ListUsersActivity listUsersActivity;
-    Context context;
-
-    private List<String> selectedItemIdList;
-    DatabaseReference databaseUser, databaseGroup;
+    private ListUsersActivity listUsersActivity;
+    private Context context;
 
     // Object which represents a list item and save view references
     public static class UserViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -41,22 +35,20 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
         ListUsersActivity listUsersActivity;
         CardView cardView;
 
+        // Link layout elements to variables
         public UserViewHolder(View itemView, ListUsersActivity listUsersActivity) {
             super(itemView);
-
             textViewUserAlias = (TextView) itemView.findViewById(R.id.cvUserAlias);
             textViewUserName = (TextView) itemView.findViewById(R.id.cvUserName);
             imageViewUser = (ImageView) itemView.findViewById(R.id.cvUserPhoto);
             checkBox = (CheckBox) itemView.findViewById(R.id.checkListUser);
             this.listUsersActivity = listUsersActivity;
             cardView = (CardView)itemView.findViewById(R.id.cardViewUser);
-          //  cardView.setOnLongClickListener(listUsersActivity);
             checkBox.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
-
             listUsersActivity.prepareSelection(v, getAdapterPosition());
         }
     }
@@ -81,34 +73,25 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
         return new UserViewHolder(view, listUsersActivity);
     }
 
+    /**
+     * Modify content of each list item
+     * @param viewHolder
+     * @param position
+     */
     @Override
     public void onBindViewHolder(final UserViewHolder viewHolder, final int position) {
-        databaseUser = FirebaseDatabase.getInstance().getReference(FireBaseReferences.USER_REFERENCE);
-        databaseGroup = FirebaseDatabase.getInstance().getReference(FireBaseReferences.GROUP_REFERENCE);
         // Modify content of each list item
         viewHolder.textViewUserAlias.setText(users.get(position).getIdUser());
         viewHolder.textViewUserName.setText(users.get(position).getUserName());
         viewHolder.imageViewUser.setImageResource(R.drawable.ic_person);
-
         viewHolder.checkBox.setVisibility(View.VISIBLE);
         viewHolder.checkBox.setChecked(false);
     }
 
-    private void addItemIdToSelectedList(String itemId) {
-        if (!selectedItemIdList.contains(itemId)){
-            selectedItemIdList.add(itemId);
-        } else {
-            Iterator<String> strId = selectedItemIdList.iterator();
-            while (strId.hasNext()){
-                String listItemId = strId.next();
-                if(listItemId == itemId){
-                    strId.remove();
-                }
-            }
-
-        }
-    }
-
+    /**
+     * Updates users list with search result
+     * @param filterUsers
+     */
     public void setFilter(List<User> filterUsers) {
         users = new ArrayList<>();
         users.addAll(filterUsers);

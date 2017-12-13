@@ -175,7 +175,7 @@ public class AllGroupsFragment extends Fragment implements SearchView.OnQueryTex
         query = query.toLowerCase();
         final List<Group> filteredModelList = new ArrayList<>();
         for (Group model : models) {
-            final String text = model.getId().toLowerCase();
+            final String text = model.getName().toLowerCase();
             if (text.contains(query)) {
                 filteredModelList.add(model);
             }

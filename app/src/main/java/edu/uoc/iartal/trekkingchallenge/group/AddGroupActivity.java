@@ -79,7 +79,7 @@ public class AddGroupActivity extends AppCompatActivity {
     public void addGroup (View view) {
         // Initialize variables with input parameters
         Boolean isPublic = false;
-        String name = editTextName.getText().toString().trim();
+        final String name = editTextName.getText().toString().trim();
         String description = editTextDescription.getText().toString().trim();
 
         // If some of the input parameters are incorrect, stops execution

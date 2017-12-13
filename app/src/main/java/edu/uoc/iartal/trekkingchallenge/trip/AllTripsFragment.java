@@ -173,7 +173,7 @@ public class AllTripsFragment extends Fragment implements SearchView.OnQueryText
         query = query.toLowerCase();
         final List<Trip> filteredModelList = new ArrayList<>();
         for (Trip model : models) {
-            final String text = model.getId().toLowerCase();
+            final String text = model.getName().toLowerCase();
             if (text.contains(query)) {
                 filteredModelList.add(model);
             }

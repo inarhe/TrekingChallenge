@@ -107,7 +107,7 @@ public class RatingRouteActivity extends AppCompatActivity {
                 for (DataSnapshot ratingSnapshot:
                         dataSnapshot.getChildren()) {
                     Rating rate = ratingSnapshot.getValue(Rating.class);
-                    if (rate.getRoute().equals(route.getName())){
+                    if (rate.getRoute().equals(route.getIdRoute())){
                         ratings.add(rate);
                     }
                 }
@@ -142,6 +142,8 @@ public class RatingRouteActivity extends AppCompatActivity {
         editTextBody = (EditText) rateDialog.findViewById(R.id.etCommentBody);
         TextView textViewTitleRate = (TextView) rateDialog.findViewById(R.id.tvTitleRate);
         textViewTitleRate.setText(route.getName());
+        editTextTitle.setText("");
+        editTextBody.setText("");
 
         // Save rating and updates all its dependencies
         registerRateButton.setOnClickListener(new View.OnClickListener() {
@@ -168,7 +170,7 @@ public class RatingRouteActivity extends AppCompatActivity {
 
                     // Add rating to database
                     idRate = databaseRating.push().getKey();
-                    Rating newRate = new Rating(idRate, title, body, route.getName(), userName, ratingBar.getRating());
+                    Rating newRate = new Rating(idRate, title, body, route.getIdRoute(), userName, ratingBar.getRating());
 
                     databaseRating.child(idRate).setValue(newRate).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override

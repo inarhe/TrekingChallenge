@@ -76,7 +76,7 @@ public class FinishedRouteActivity extends AppCompatActivity {
 
         // Get database references
         databaseUser = FirebaseDatabase.getInstance().getReference(FireBaseReferences.USER_REFERENCE);
-        databaseRoute = FirebaseDatabase.getInstance().getReference(FireBaseReferences.ROUTE_FINISHED_REFERENCE);
+        databaseRoute = FirebaseDatabase.getInstance().getReference(FireBaseReferences.ROUTE_REFERENCE);
         databaseFinished = FirebaseDatabase.getInstance().getReference(FireBaseReferences.FINISHED_REFERENCE);
 
         // Link layout elements with variables

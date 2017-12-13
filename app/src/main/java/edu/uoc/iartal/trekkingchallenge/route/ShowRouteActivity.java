@@ -23,6 +23,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import edu.uoc.iartal.trekkingchallenge.R;
+import edu.uoc.iartal.trekkingchallenge.challenge.AddChallengeActivity;
 import edu.uoc.iartal.trekkingchallenge.challenge.FinishedChallengeActivity;
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
 import edu.uoc.iartal.trekkingchallenge.objects.Route;
@@ -202,7 +203,7 @@ public class ShowRouteActivity extends AppCompatActivity {
      * Starts new challenge activity when menu option is selected
      */
     public void newChallenge() {
-        Intent intent = new Intent(this, FinishedChallengeActivity.class);
+        Intent intent = new Intent(this, AddChallengeActivity.class);
         startActivity(intent);
         finish();
     }

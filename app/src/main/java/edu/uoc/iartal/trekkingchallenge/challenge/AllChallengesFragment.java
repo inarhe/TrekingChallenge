@@ -174,7 +174,7 @@ public class AllChallengesFragment extends Fragment implements SearchView.OnQuer
         query = query.toLowerCase();
         final List<Challenge> filteredModelList = new ArrayList<>();
         for (Challenge model : models) {
-            final String text = model.getId().toLowerCase();
+            final String text = model.getName().toLowerCase();
             if (text.contains(query)) {
                 filteredModelList.add(model);
             }

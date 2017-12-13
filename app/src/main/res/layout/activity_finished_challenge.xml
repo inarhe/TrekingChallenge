@@ -122,17 +122,30 @@
                 android:textStyle="bold"
                 android:textSize="15sp"/>
 
+            <TextView
+                android:id="@+id/tvDistResult"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_below="@+id/icDistFinish"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_alignLeft="@+id/icDistFinish"
+                android:layout_alignStart="@+id/icDistFinish"
+                android:text="@string/km"
+                android:textStyle="bold"
+                android:textSize="15sp"/>
+
             <EditText
                 android:id="@+id/etDistFinish"
-                android:layout_width="match_parent"
+                android:layout_width="70dp"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/icDistFinish"
-                android:layout_marginTop="4dp"
-                android:inputType="text"
-                android:layout_marginLeft="@dimen/activity_vertical_margin"
-                android:layout_marginStart="@dimen/activity_vertical_margin"
-                android:layout_marginRight="@dimen/activity_vertical_margin"
-                android:layout_marginEnd="@dimen/activity_vertical_margin"/>
+                android:gravity="center"
+                android:inputType="numberDecimal"
+                android:layout_toRightOf="@+id/tvDistResult"
+                android:layout_toEndOf="@+id/tvDistResult" />
 
             <ImageView
                 android:id="@+id/icTimeFinish"
@@ -180,11 +193,9 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/icTimeFinish"
                 android:gravity="center"
-                android:inputType="text"
+                android:inputType="number"
                 android:layout_toRightOf="@+id/tvHourFinish"
-                android:layout_toEndOf="@+id/tvHourFinish"
-                android:layout_alignTop="@+id/tvHourFinish"
-                android:layout_alignBottom="@+id/tvHourFinish"/>
+                android:layout_toEndOf="@+id/tvHourFinish" />
 
             <TextView
                 android:id="@+id/tvMinFinish"
@@ -208,11 +219,9 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/icTimeFinish"
                 android:gravity="center"
-                android:inputType="text"
+                android:inputType="number"
                 android:layout_toRightOf="@+id/tvMinFinish"
-                android:layout_toEndOf="@+id/tvMinFinish"
-                android:layout_alignTop="@+id/tvMinFinish"
-                android:layout_alignBottom="@+id/tvMinFinish"/>
+                android:layout_toEndOf="@+id/tvMinFinish" />
 
             <Button
                 android:id="@+id/bCancelFinish"

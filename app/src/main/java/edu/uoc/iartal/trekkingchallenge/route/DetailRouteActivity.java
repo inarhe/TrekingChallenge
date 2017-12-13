@@ -31,7 +31,7 @@ public class DetailRouteActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setTitle(getString(R.string.infoDetail));
+        actionBar.setTitle(getString(R.string.titleDetail));
 
         // Get data from show route activity
         Bundle bundle = getIntent().getExtras();

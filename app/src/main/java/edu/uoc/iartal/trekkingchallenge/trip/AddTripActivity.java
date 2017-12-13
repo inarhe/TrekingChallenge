@@ -240,7 +240,7 @@ public class AddTripActivity extends AppCompatActivity implements AdapterView.On
                     String nameRoute = routeSnapshot.getValue(Route.class).getName();
                     nameRoutes.add(nameRoute);
                 }
-                adapter = new ArrayAdapter<>(getApplicationContext(),R.layout.support_simple_spinner_dropdown_item, nameRoutes);
+                adapter = new ArrayAdapter<>(getBaseContext(),R.layout.support_simple_spinner_dropdown_item, nameRoutes);
                 spinner.setAdapter(adapter);
             }
 

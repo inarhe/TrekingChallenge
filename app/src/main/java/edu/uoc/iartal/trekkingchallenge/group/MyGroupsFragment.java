@@ -39,7 +39,8 @@ public class MyGroupsFragment extends Fragment implements SearchView.OnQueryText
     private GroupAdapter groupAdapter;
     private ProgressDialog progressDialog;
     private RecyclerView recyclerView;
-    private String currentUser, currentMail;
+    private String currentUserName, currentMail;
+    private User currentUser;
 
     public MyGroupsFragment(){
 
@@ -57,21 +58,17 @@ public class MyGroupsFragment extends Fragment implements SearchView.OnQueryText
         currentMail = FirebaseAuth.getInstance().getCurrentUser().getEmail();
         groupIds = new ArrayList<>();
 
-        // Get current user groups
+        // Get current user
         databaseUser.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                groupIds.clear();
-                for (DataSnapshot groupSapshot :
+                for (DataSnapshot userSnapshot :
                         dataSnapshot.getChildren()) {
-                    User user = groupSapshot.getValue(User.class);
+                    User user = userSnapshot.getValue(User.class);
                     if (user.getUserMail().equals(currentMail)) {
-                        currentUser = user.getIdUser();
-                        for (String name : user.getGroups().keySet()) {
-                            groupIds.add(name);
-                        }
+                        currentUser = user;
+                        currentUserName = user.getIdUser();
                     }
-
                 }
             }
 
@@ -122,12 +119,19 @@ public class MyGroupsFragment extends Fragment implements SearchView.OnQueryText
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 groups.clear();
+                groupIds.clear();
+
+                // Get user groups
+                for (String name : currentUser.getGroups().keySet()) {
+                    groupIds.add(name);
+                }
+
                 for (DataSnapshot groupSnapshot :
                         dataSnapshot.getChildren()) {
                     Group group = groupSnapshot.getValue(Group.class);
                     if (groupIds.contains(group.getId())) {
                         groups.add(group);
-                        if (group.getUserAdmin().equals(currentUser)) {
+                        if (group.getUserAdmin().equals(currentUserName)) {
                             groupAdapter.setVisibility(true);
                         } else {
                             groupAdapter.setVisibility(false);
@@ -202,7 +206,7 @@ public class MyGroupsFragment extends Fragment implements SearchView.OnQueryText
         query = query.toLowerCase();
         final List<Group> filteredModelList = new ArrayList<>();
         for (Group model : models) {
-            final String text = model.getId().toLowerCase();
+            final String text = model.getName().toLowerCase();
             if (text.contains(query)) {
                 filteredModelList.add(model);
             }

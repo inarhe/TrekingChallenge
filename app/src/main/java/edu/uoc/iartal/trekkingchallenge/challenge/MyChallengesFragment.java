@@ -37,7 +37,8 @@ public class MyChallengesFragment extends Fragment implements SearchView.OnQuery
     private ChallengeAdapter challengeAdapter;
     private ProgressDialog progressDialog;
     private RecyclerView recyclerView;
-    private String currentUser, currentMail;
+    private String currentUserName, currentMail;
+    private User currentUser;
 
     public MyChallengesFragment(){
 
@@ -55,18 +56,16 @@ public class MyChallengesFragment extends Fragment implements SearchView.OnQuery
         currentMail = FirebaseAuth.getInstance().getCurrentUser().getEmail();
         challengesIds = new ArrayList<>();
 
+        // Get current user
         databaseUser.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                challengesIds.clear();
                 for (DataSnapshot userSnapshot :
                         dataSnapshot.getChildren()) {
                     User user = userSnapshot.getValue(User.class);
                     if (user.getUserMail().equals(currentMail)) {
-                        currentUser = user.getIdUser();
-                        for (String key : user.getChallenges().keySet()) {
-                            challengesIds.add(key);
-                        }
+                        currentUser = user;
+                        currentUserName = user.getIdUser();
                     }
                 }
             }
@@ -117,13 +116,20 @@ public class MyChallengesFragment extends Fragment implements SearchView.OnQuery
         databaseChallenge.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                challenges.removeAll(challenges);
+                challenges.clear();
+                challengesIds.clear();
+
+                // Get user challenges
+                for (String name : currentUser.getChallenges().keySet()) {
+                    challengesIds.add(name);
+                }
+
                 for (DataSnapshot tripSnapshot :
                         dataSnapshot.getChildren()) {
                     Challenge challenge = tripSnapshot.getValue(Challenge.class);
                     if (challengesIds.contains(challenge.getId())) {
                         challenges.add(challenge);
-                        if (challenge.getUserAdmin().equals(currentUser)) {
+                        if (challenge.getUserAdmin().equals(currentUserName)) {
                             challengeAdapter.setVisibility(true);
                         } else {
                             challengeAdapter.setVisibility(false);
@@ -197,7 +203,7 @@ public class MyChallengesFragment extends Fragment implements SearchView.OnQuery
         query = query.toLowerCase();
         final List<Challenge> filteredModelList = new ArrayList<>();
         for (Challenge model : models) {
-            final String text = model.getId().toLowerCase();
+            final String text = model.getName().toLowerCase();
             if (text.contains(query)) {
                 filteredModelList.add(model);
             }

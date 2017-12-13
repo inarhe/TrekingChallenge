@@ -37,7 +37,8 @@ public class MyTripsFragment extends Fragment implements SearchView.OnQueryTextL
     private TripAdapter tripAdapter;
     private ProgressDialog progressDialog;
     private RecyclerView recyclerView;
-    private String currentUser, currentMail;
+    private String currentUserName, currentMail;
+    private User currentUser;
 
     public MyTripsFragment(){
 
@@ -55,19 +56,16 @@ public class MyTripsFragment extends Fragment implements SearchView.OnQueryTextL
         currentMail = FirebaseAuth.getInstance().getCurrentUser().getEmail();
         tripsIds = new ArrayList<>();
 
-        // Get current user groups
+        // Get current user
         databaseUser.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                tripsIds.clear();
                 for (DataSnapshot userSnapshot :
                         dataSnapshot.getChildren()) {
                     User user = userSnapshot.getValue(User.class);
                     if (user.getUserMail().equals(currentMail)) {
-                        currentUser = user.getIdUser();
-                        for (String name : user.getGroups().keySet()) {
-                            tripsIds.add(name);
-                        }
+                        currentUser = user;
+                        currentUserName = user.getIdUser();
                     }
                 }
             }
@@ -119,12 +117,19 @@ public class MyTripsFragment extends Fragment implements SearchView.OnQueryTextL
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 trips.clear();
+                tripsIds.clear();
+
+                // Get user trips
+                for (String name : currentUser.getTrips().keySet()) {
+                    tripsIds.add(name);
+                }
+
                 for (DataSnapshot tripSnapshot :
                         dataSnapshot.getChildren()) {
                     Trip trip = tripSnapshot.getValue(Trip.class);
                     if (tripsIds.contains(trip.getId())) {
                         trips.add(trip);
-                        if (trip.getUserAdmin().equals(currentUser)) {
+                        if (trip.getUserAdmin().equals(currentUserName)) {
                             tripAdapter.setVisibility(true);
                         } else {
                             tripAdapter.setVisibility(false);
@@ -198,7 +203,7 @@ public class MyTripsFragment extends Fragment implements SearchView.OnQueryTextL
         query = query.toLowerCase();
         final List<Trip> filteredModelList = new ArrayList<>();
         for (Trip model : models) {
-            final String text = model.getId().toLowerCase();
+            final String text = model.getName().toLowerCase();
             if (text.contains(query)) {
                 filteredModelList.add(model);
             }

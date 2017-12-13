@@ -38,7 +38,6 @@ import edu.uoc.iartal.trekkingchallenge.trip.ListTripsActivity;
 
 public class ListUsersActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
     private UserAdapter userAdapter;
-    private RecyclerView recyclerView;
     private ArrayList<User> users = new ArrayList<>();
     private ArrayList<User> selectedUsers = new ArrayList<>();
     private Group group;
@@ -75,7 +74,7 @@ public class ListUsersActivity extends AppCompatActivity implements SearchView.O
         challenge = bundle.getParcelable("challenge");
 
         // Set recycler view and user adapter
-        recyclerView = (RecyclerView) findViewById(R.id.rvListUsers);
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rvListUsers);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         userAdapter = new UserAdapter(users, ListUsersActivity.this);

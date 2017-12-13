@@ -41,7 +41,7 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.GroupViewHol
 
     // Object which represents a list item and save view references
     public static class GroupViewHolder extends RecyclerView.ViewHolder {
-        TextView textViewGroupName, textViewGroupDesc, textViewIsPublic;
+        TextView textViewGroupName, textViewIsPublic;
         ImageView imageViewGroup;
         ImageButton buttonDelete;
         CardView cardView;
@@ -50,7 +50,6 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.GroupViewHol
         public GroupViewHolder(View view) {
             super(view);
             textViewGroupName = (TextView) view.findViewById(R.id.cvGroupName);
-            textViewGroupDesc = (TextView) view.findViewById(R.id.cvGroupDesc);
             textViewIsPublic = (TextView) view.findViewById(R.id.cvisPublic);
             imageViewGroup = (ImageView) view.findViewById(R.id.cvGroupPhoto);
             buttonDelete = (ImageButton) view.findViewById(R.id.icDelGroupAdmin);
@@ -82,7 +81,6 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.GroupViewHol
     @Override
     public void onBindViewHolder(GroupViewHolder viewHolder, final int position) {
         viewHolder.textViewGroupName.setText(groups.get(position).getName());
-        viewHolder.textViewGroupDesc.setText(groups.get(position).getDescription());
         viewHolder.imageViewGroup.setImageResource(R.drawable.ic_people);
 
         if (groups.get(position).getIsPublic()) {

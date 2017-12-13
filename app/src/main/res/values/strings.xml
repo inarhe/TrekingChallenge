@@ -20,7 +20,7 @@
     <string name="mailField">Siusplau, introdueix un correu electrònic</string>
     <string name="mailFormat">El correu electrònic no és vàlid</string>
     <string name="passwordField">Siusplau, introdueix una contrasenya</string>
-    <string name="passwordTooShort">La contrasenya no és vàlida</string>
+    <string name="passwordTooShort">La contrasenya no pot ser inferior a 6 caràcters</string>
     <string name="samePass">Les contrasenyes no són iguals</string>
     <string name="failedRegister">No s\'ha pogut registrar l\'usuari, siusplau torna-ho a provar</string>
     <string name="successfulRegister">Usuari registrat correctament</string>
@@ -87,10 +87,10 @@
 
     <!--ROUTE OBJECT-->
     <!--Track rotue activity-->
-    <string name="trackTitle">Recorregut de la ruta</string>
-    <string name="profileTitle">Perfil de la ruta</string>
+    <string name="trackTitle">Recorregut de la ruta:</string>
+    <string name="profileTitle">Perfil de la ruta:</string>
     <string name="trackDownload">Descarregar track</string>
-    <string name="otherTracks">Altres recorreguts ruta</string>
+    <string name="otherTracks">Altres recorreguts ruta:</string>
     <string name="trackActivity">Recorregut ruta</string>
 
     <!--Finished route activity-->
@@ -143,6 +143,7 @@
 
     <!--Detail route activity-->
     <string name="infoDetail">Informació detallada:</string>
+    <string name="titleDetail">Informació detallada</string>
     <string name="infoMeteo">Meteorologia:</string>
     <string name="startPlace">Lloc de sortida:</string>
 
@@ -223,10 +224,11 @@
     <string name="publicChallenge">Repte públic</string>
     <string name="privateChallenge">Repte privat</string>
     <string name="usersInvitedChallenge">Usuaris afegits al repte</string>
+    <string name="limitDate">Data límit:</string>
 
     <!--List challenges activity-->
-    <string name="tabAllChallenges">"Totes"</string>
-    <string name="tabMyChallenges">"Les meves"</string>
+    <string name="tabAllChallenges">"Tots"</string>
+    <string name="tabMyChallenges">"Els meus"</string>
 
 
     <!--RATING OBJECT-->
@@ -265,6 +267,7 @@
     <string name="chooseRoute">Siusplau, selecciona una ruta</string>
     <string name="loadingData">Carregant dades...</string>
     <string name="actionSearch">Buscar</string>
+    <string name="km">km</string>
 
     <!--Manifest-->
     <string name="title_activity_map">Map</string>

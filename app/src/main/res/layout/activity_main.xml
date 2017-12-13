@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="edu.uoc.iartal.trekkingchallenge.common.MainActivity">
+    tools:context="edu.uoc.iartal.trekkingchallenge.common.MainActivity"
+    android:background="@drawable/background">
 
     <include android:id="@+id/mainToolbar"
         layout="@layout/toolbar" />
@@ -18,7 +18,8 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="100dp"
         android:text="@string/app_name"
-        android:textSize="25sp"
+        android:textColor="#FFFF"
+        android:textSize="30sp"
         android:textStyle="bold"/>
 
     <Button
@@ -50,7 +51,7 @@
         android:onClick="searchActivity"
         android:height="75dp"
         android:width="132dp"
-        android:drawableTop="@drawable/ic_search"
+        android:drawableTop="@drawable/ic_landscape"
         android:text="@string/routesMenuButton" />
 
     <Button
@@ -64,7 +65,7 @@
         android:onClick="tripActivity"
         android:height="75dp"
         android:width="132dp"
-        android:drawableTop="@drawable/ic_landscape"
+        android:drawableTop="@drawable/ic_trip"
         android:text="@string/tripMenuButton" />
 
     <Button

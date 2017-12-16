@@ -38,6 +38,7 @@ public class Challenge implements Parcelable{
         this.userAdmin = in.readString();
         this.numberOfMembers = in.readInt();
         in.readMap(results, String.class.getClassLoader());
+        in.readMap(members, String.class.getClassLoader());
     }
 
     public String getId() {
@@ -127,6 +128,7 @@ public class Challenge implements Parcelable{
         dest.writeString(userAdmin);
         dest.writeInt(numberOfMembers);
         dest.writeMap(results);
+        dest.writeMap(members);
     }
 
     public static final Creator<Challenge> CREATOR = new Creator<Challenge>() {

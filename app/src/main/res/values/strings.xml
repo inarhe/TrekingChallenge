@@ -75,6 +75,8 @@
     <string name="textGroupMembers">Nombre d\'integrants:</string>
     <string name="actionJoinGroup">Uneix-t\'hi</string>
     <string name="actionLeaveGroup">Deixa el grup</string>
+    <string name="alreadyInGroup">Ja formes part del grup</string>
+    <string name="noMemberGroup">No formes part d\'aquest grup</string>
 
     <!--Add groups activity-->
     <string name="failedAddGroup">El grup no s\'ha creat correctament</string>
@@ -174,6 +176,8 @@
     <string name="tripDeleted">Excursió eliminada </string>
     <string name="tripNotDeleted">No s\'ha pogut eliminar l\'excursió</string>
     <string name="dateTrip">Data excursió</string>
+    <string name="alreadyInTrip">Ja formes part de l\'excursió</string>
+    <string name="noMemberTrip">No formes part d\'aquesta excursió</string>
 
     <!--Add trip activity-->
     <string name="chooseRouteSpinner">- Selecciona la ruta -</string>
@@ -206,6 +210,8 @@
     <string name="rankingChallenge">Rànquing del repte:</string>
     <string name="challengeDeleted">Repte eliminat</string>
     <string name="challengeNotDeleted">No s\'ha pogut eliminar el repte</string>
+    <string name="alreadyInChallenge">Ja formes part del repte</string>
+    <string name="noMemberChallenge">No formes part d\'aquest repte</string>
 
     <!--Finished challenge activity-->
     <string name="finishChallengeActivity">Repte realitzat</string>

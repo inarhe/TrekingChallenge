@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -14,6 +15,7 @@ import android.view.ViewGroup;
 import android.support.v7.widget.SearchView;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -35,12 +37,10 @@ import android.view.MenuItem;
 
 public class MyGroupsFragment extends Fragment implements SearchView.OnQueryTextListener{
     private List<Group> groups;
-    private List<String> groupIds;
     private GroupAdapter groupAdapter;
     private ProgressDialog progressDialog;
     private RecyclerView recyclerView;
     private String currentUserName, currentMail;
-    private User currentUser;
 
     public MyGroupsFragment(){
 
@@ -56,7 +56,7 @@ public class MyGroupsFragment extends Fragment implements SearchView.OnQueryText
 
         DatabaseReference databaseUser = FirebaseDatabase.getInstance().getReference(FireBaseReferences.USER_REFERENCE);
         currentMail = FirebaseAuth.getInstance().getCurrentUser().getEmail();
-        groupIds = new ArrayList<>();
+        groups = new ArrayList<>();
 
         // Get current user
         databaseUser.addValueEventListener(new ValueEventListener() {
@@ -66,7 +66,6 @@ public class MyGroupsFragment extends Fragment implements SearchView.OnQueryText
                         dataSnapshot.getChildren()) {
                     User user = userSnapshot.getValue(User.class);
                     if (user.getUserMail().equals(currentMail)) {
-                        currentUser = user;
                         currentUserName = user.getIdUser();
                     }
                 }
@@ -93,6 +92,8 @@ public class MyGroupsFragment extends Fragment implements SearchView.OnQueryText
         recyclerView = (RecyclerView) rootView.findViewById(R.id.rvListMyGroups);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
+        groups.clear();
+
         return rootView;
     }
 
@@ -108,38 +109,49 @@ public class MyGroupsFragment extends Fragment implements SearchView.OnQueryText
         setHasOptionsMenu(true);
 
         DatabaseReference databaseGroup = FirebaseDatabase.getInstance().getReference(FireBaseReferences.GROUP_REFERENCE);
-        groups = new ArrayList<>();
+
         groupAdapter = new GroupAdapter(groups);
 
         recyclerView.setAdapter(groupAdapter);
 
-        // Get database groups and notify adapter to show them in recycler view
+        // Get user groups and notify adapter to show them in recycler view
         progressDialog.show();
-        databaseGroup.addValueEventListener(new ValueEventListener() {
+        databaseGroup.addChildEventListener(new ChildEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                groups.clear();
-                groupIds.clear();
-
-                // Get user groups
-                for (String name : currentUser.getGroups().keySet()) {
-                    groupIds.add(name);
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Group group = dataSnapshot.getValue(Group.class);
+                if (group.getMembers().containsKey(currentUserName)){
+                        addGroup(group);
                 }
+                groupAdapter.notifyDataSetChanged();
+                progressDialog.dismiss();
+            }
 
-                for (DataSnapshot groupSnapshot :
-                        dataSnapshot.getChildren()) {
-                    Group group = groupSnapshot.getValue(Group.class);
-                    if (groupIds.contains(group.getId())) {
-                        groups.add(group);
-                        if (group.getUserAdmin().equals(currentUserName)) {
-                            groupAdapter.setVisibility(true);
-                        } else {
-                            groupAdapter.setVisibility(false);
-                        }
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                // Get user groups
+                Group group = dataSnapshot.getValue(Group.class);
+                if (group.getMembers().containsKey(currentUserName)){
+                    if (!groups.contains(group)){
+                        addGroup(group);
+                    }
+                } else {
+                    if (groups.contains(group)){
+                        groups.remove(group);
                     }
                 }
                 groupAdapter.notifyDataSetChanged();
                 progressDialog.dismiss();
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                //TO-DO
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                //TO-DO
             }
 
             @Override
@@ -212,5 +224,18 @@ public class MyGroupsFragment extends Fragment implements SearchView.OnQueryText
             }
         }
         return filteredModelList;
+    }
+
+    /**
+     * Add user group to the list
+     * @param group
+     */
+    private void addGroup(Group group) {
+        groups.add(group);
+        if (group.getUserAdmin().equals(currentUserName)) {
+            groupAdapter.setVisibility(true);
+        } else {
+            groupAdapter.setVisibility(false);
+        }
     }
 }

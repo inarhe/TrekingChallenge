@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -27,18 +28,17 @@ import java.util.List;
 
 import edu.uoc.iartal.trekkingchallenge.R;
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
+import edu.uoc.iartal.trekkingchallenge.objects.Group;
 import edu.uoc.iartal.trekkingchallenge.objects.Trip;
 import edu.uoc.iartal.trekkingchallenge.objects.TripAdapter;
 import edu.uoc.iartal.trekkingchallenge.objects.User;
 
 public class MyTripsFragment extends Fragment implements SearchView.OnQueryTextListener{
     private List<Trip> trips;
-    private List<String> tripsIds;
     private TripAdapter tripAdapter;
     private ProgressDialog progressDialog;
     private RecyclerView recyclerView;
     private String currentUserName, currentMail;
-    private User currentUser;
 
     public MyTripsFragment(){
 
@@ -54,7 +54,7 @@ public class MyTripsFragment extends Fragment implements SearchView.OnQueryTextL
 
         DatabaseReference databaseUser = FirebaseDatabase.getInstance().getReference(FireBaseReferences.USER_REFERENCE);
         currentMail = FirebaseAuth.getInstance().getCurrentUser().getEmail();
-        tripsIds = new ArrayList<>();
+        trips = new ArrayList<>();
 
         // Get current user
         databaseUser.addValueEventListener(new ValueEventListener() {
@@ -64,7 +64,6 @@ public class MyTripsFragment extends Fragment implements SearchView.OnQueryTextL
                         dataSnapshot.getChildren()) {
                     User user = userSnapshot.getValue(User.class);
                     if (user.getUserMail().equals(currentMail)) {
-                        currentUser = user;
                         currentUserName = user.getIdUser();
                     }
                 }
@@ -91,6 +90,8 @@ public class MyTripsFragment extends Fragment implements SearchView.OnQueryTextL
         recyclerView = (RecyclerView) rootView.findViewById(R.id.rvListMyTrips);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
+        trips.clear();
+
         return rootView;
     }
 
@@ -106,38 +107,49 @@ public class MyTripsFragment extends Fragment implements SearchView.OnQueryTextL
         setHasOptionsMenu(true);
 
         DatabaseReference databaseTrip = FirebaseDatabase.getInstance().getReference(FireBaseReferences.TRIP_REFERENCE);
-        trips = new ArrayList<>();
+
         tripAdapter = new TripAdapter(trips);
 
         recyclerView.setAdapter(tripAdapter);
 
         // Get database trips and notify adapter to show them in recycler view
         progressDialog.show();
-        databaseTrip.addValueEventListener(new ValueEventListener() {
+        databaseTrip.addChildEventListener(new ChildEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                trips.clear();
-                tripsIds.clear();
-
-                // Get user trips
-                for (String name : currentUser.getTrips().keySet()) {
-                    tripsIds.add(name);
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Trip trip = dataSnapshot.getValue(Trip.class);
+                if (trip.getMembers().containsKey(currentUserName)){
+                    addTrip(trip);
                 }
+                tripAdapter.notifyDataSetChanged();
+                progressDialog.dismiss();
+            }
 
-                for (DataSnapshot tripSnapshot :
-                        dataSnapshot.getChildren()) {
-                    Trip trip = tripSnapshot.getValue(Trip.class);
-                    if (tripsIds.contains(trip.getId())) {
-                        trips.add(trip);
-                        if (trip.getUserAdmin().equals(currentUserName)) {
-                            tripAdapter.setVisibility(true);
-                        } else {
-                            tripAdapter.setVisibility(false);
-                        }
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                // Get user trips
+                Trip trip = dataSnapshot.getValue(Trip.class);
+                if (trip.getMembers().containsKey(currentUserName)){
+                    if (!trips.contains(trip)){
+                        addTrip(trip);
+                    }
+                } else {
+                    if (trips.contains(trip)){
+                        trips.remove(trip);
                     }
                 }
                 tripAdapter.notifyDataSetChanged();
                 progressDialog.dismiss();
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                //TO-DO
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                //TO-DO
             }
 
             @Override
@@ -209,5 +221,18 @@ public class MyTripsFragment extends Fragment implements SearchView.OnQueryTextL
             }
         }
         return filteredModelList;
+    }
+
+    /**
+     * Add user trip to the list
+     * @param trip
+     */
+    private void addTrip(Trip trip) {
+        trips.add(trip);
+        if (trip.getUserAdmin().equals(currentUserName)) {
+            tripAdapter.setVisibility(true);
+        } else {
+            tripAdapter.setVisibility(false);
+        }
     }
 }

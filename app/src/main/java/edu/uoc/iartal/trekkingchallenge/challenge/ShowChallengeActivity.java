@@ -31,6 +31,7 @@ import edu.uoc.iartal.trekkingchallenge.common.CommonFunctionality;
 import edu.uoc.iartal.trekkingchallenge.objects.Challenge;
 import edu.uoc.iartal.trekkingchallenge.objects.ChallengeResult;
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
+import edu.uoc.iartal.trekkingchallenge.objects.User;
 import edu.uoc.iartal.trekkingchallenge.user.LoginActivity;
 
 public class ShowChallengeActivity extends AppCompatActivity {
@@ -43,7 +44,7 @@ public class ShowChallengeActivity extends AppCompatActivity {
     private ArrayList<ChallengeResult> challengeResults;
     private TableView<String[]> tableView;
     private CommonFunctionality common;
-    private String currentMail;
+    private String currentMail, currentUserName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,8 +55,9 @@ public class ShowChallengeActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.showChallengeToolbar);
         setSupportActionBar(toolbar);
 
-        // Get Firebase authentication instance and database trip reference
+        // Get Firebase authentication instance and database references
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        DatabaseReference databaseUser = FirebaseDatabase.getInstance().getReference(FireBaseReferences.USER_REFERENCE);
         databaseChallenge = FirebaseDatabase.getInstance().getReference(FireBaseReferences.CHALLENGE_REFERENCE);
 
         // If user isn't logged, start login activity
@@ -91,6 +93,25 @@ public class ShowChallengeActivity extends AppCompatActivity {
         textViewRoute.setText(challenge.getRoute());
         textViewDate.setText(challenge.getLimitDate());
         textViewDesc.setText(challenge.getDescription());
+
+        // Get current user name
+        databaseUser.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot userSnapshot :
+                        dataSnapshot.getChildren()) {
+                    User user = userSnapshot.getValue(User.class);
+                    if (user.getUserMail().equals(currentMail)) {
+                        currentUserName = user.getIdUser();
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                //TO-DO
+            }
+        });
 
         challengesResultsIds = new ArrayList<>();
 
@@ -138,10 +159,16 @@ public class ShowChallengeActivity extends AppCompatActivity {
     }
 
     /**
-     * When the menu option "join challenge" is clicked, this method is executed. Add current user to selected challenge, add challenge to user
+     * When the menu option "join challenge" is clicked, this method is executed. Check group members, add current user to selected challenge, add challenge to user
      * challenges and updates challenge members number
      */
     public void joinChallenge () {
+        // Check if user is a challenge member
+        if (checkIsMember()){
+            Toast.makeText(getApplicationContext(), R.string.alreadyInGroup, Toast.LENGTH_LONG).show();
+            return;
+        }
+
         // Create alert dialog to ask user confirmation
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(getString(R.string.joinChallengeAsk));
@@ -152,8 +179,7 @@ public class ShowChallengeActivity extends AppCompatActivity {
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
-                        common.updateJoins(currentMail, getString(R.string.setJoin), databaseChallenge, challenge.getId(), FireBaseReferences.USER_CHALLENGES_REFERENCE);
-                        databaseChallenge.child(challenge.getId()).child(FireBaseReferences.NUMBER_OF_MEMBERS_REFERENCE).setValue(challenge.getNumberOfMembers()+1);
+                        common.updateJoins(currentMail, getString(R.string.setJoin), databaseChallenge, challenge.getId(), challenge.getNumberOfMembers(), FireBaseReferences.USER_CHALLENGES_REFERENCE);
                         Toast.makeText(getApplicationContext(), getString(R.string.challengeJoined), Toast.LENGTH_LONG).show();
                         finish();
                     }
@@ -173,10 +199,16 @@ public class ShowChallengeActivity extends AppCompatActivity {
     }
 
     /**
-     * When the menu option "leave challenge" is clicked, this method is executed. Delete current user from selected challenge, delete challenge from user challenges and
+     * When the menu option "leave challenge" is clicked, this method is executed. Check group members, delete current user from selected challenge, delete challenge from user challenges and
      * updates challenge members number
      */
     public void leaveChallenge () {
+        // Check if user is a challenge member
+        if (!checkIsMember()){
+            Toast.makeText(getApplicationContext(), R.string.noMemberGroup, Toast.LENGTH_LONG).show();
+            return;
+        }
+
         // Create alert dialog to ask user confirmation
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(getString(R.string.challengeLeft));
@@ -187,8 +219,7 @@ public class ShowChallengeActivity extends AppCompatActivity {
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
-                        common.updateJoins(currentMail, getString(R.string.setLeave), databaseChallenge, challenge.getId(), FireBaseReferences.USER_CHALLENGES_REFERENCE);
-                        databaseChallenge.child(challenge.getId()).child(FireBaseReferences.NUMBER_OF_MEMBERS_REFERENCE).setValue(challenge.getNumberOfMembers()-1);
+                        common.updateJoins(currentMail, getString(R.string.setLeave), databaseChallenge, challenge.getId(), challenge.getNumberOfMembers(), FireBaseReferences.USER_CHALLENGES_REFERENCE);
                         finish();
                     }
                 });
@@ -204,6 +235,15 @@ public class ShowChallengeActivity extends AppCompatActivity {
 
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
+    }
+
+    /**
+     * Starts register challenge results activity when option menu is selected
+     */
+    public void challengeFinished() {
+        Intent intent = new Intent(this, FinishedChallengeActivity.class);
+        intent.putExtra("challenge", challenge);
+        startActivity(intent);
     }
 
 
@@ -251,15 +291,6 @@ public class ShowChallengeActivity extends AppCompatActivity {
     }
 
     /**
-     * Starts register challenge results activity when option menu is selected
-     */
-    public void challengeFinished() {
-        Intent intent = new Intent(this, FinishedChallengeActivity.class);
-        intent.putExtra("challenge", challenge);
-        startActivity(intent);
-    }
-
-    /**
      * Fill table with challenge results
      */
     private void fillTable(){
@@ -272,5 +303,16 @@ public class ShowChallengeActivity extends AppCompatActivity {
             rankingTable[i][1] = time;
             rankingTable[i][2] = (result.getDistance()).toString();
         }
+    }
+
+    /**
+     * Check if current user is a member of the challenge object
+     * @return
+     */
+    private Boolean checkIsMember(){
+        ArrayList<String> members = new ArrayList<>();
+        members.addAll(challenge.getMembers().keySet());
+
+        return members.contains(currentUserName);
     }
 }

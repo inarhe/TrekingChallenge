@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -29,16 +30,16 @@ import edu.uoc.iartal.trekkingchallenge.R;
 import edu.uoc.iartal.trekkingchallenge.objects.Challenge;
 import edu.uoc.iartal.trekkingchallenge.objects.ChallengeAdapter;
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
+import edu.uoc.iartal.trekkingchallenge.objects.Group;
+import edu.uoc.iartal.trekkingchallenge.objects.Trip;
 import edu.uoc.iartal.trekkingchallenge.objects.User;
 
 public class MyChallengesFragment extends Fragment implements SearchView.OnQueryTextListener{
     private List<Challenge> challenges;
-    private List<String> challengesIds;
     private ChallengeAdapter challengeAdapter;
     private ProgressDialog progressDialog;
     private RecyclerView recyclerView;
     private String currentUserName, currentMail;
-    private User currentUser;
 
     public MyChallengesFragment(){
 
@@ -54,7 +55,7 @@ public class MyChallengesFragment extends Fragment implements SearchView.OnQuery
 
         DatabaseReference databaseUser = FirebaseDatabase.getInstance().getReference(FireBaseReferences.USER_REFERENCE);
         currentMail = FirebaseAuth.getInstance().getCurrentUser().getEmail();
-        challengesIds = new ArrayList<>();
+        challenges = new ArrayList<>();
 
         // Get current user
         databaseUser.addValueEventListener(new ValueEventListener() {
@@ -64,7 +65,6 @@ public class MyChallengesFragment extends Fragment implements SearchView.OnQuery
                         dataSnapshot.getChildren()) {
                     User user = userSnapshot.getValue(User.class);
                     if (user.getUserMail().equals(currentMail)) {
-                        currentUser = user;
                         currentUserName = user.getIdUser();
                     }
                 }
@@ -91,6 +91,8 @@ public class MyChallengesFragment extends Fragment implements SearchView.OnQuery
         recyclerView = (RecyclerView) rootView.findViewById(R.id.rvListMyChallenges);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
+        challenges.clear();
+
         return rootView;
     }
 
@@ -106,38 +108,49 @@ public class MyChallengesFragment extends Fragment implements SearchView.OnQuery
         setHasOptionsMenu(true);
 
         DatabaseReference databaseChallenge = FirebaseDatabase.getInstance().getReference(FireBaseReferences.CHALLENGE_REFERENCE);
-        challenges = new ArrayList<>();
+
         challengeAdapter = new ChallengeAdapter(challenges);
 
         recyclerView.setAdapter(challengeAdapter);
 
         // Get database challenges and notify adapter to show them in recycler view
         progressDialog.show();
-        databaseChallenge.addValueEventListener(new ValueEventListener() {
+        databaseChallenge.addChildEventListener(new ChildEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                challenges.clear();
-                challengesIds.clear();
-
-                // Get user challenges
-                for (String name : currentUser.getChallenges().keySet()) {
-                    challengesIds.add(name);
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Challenge challenge = dataSnapshot.getValue(Challenge.class);
+                if (challenge.getMembers().containsKey(currentUserName)){
+                    addChallenge(challenge);
                 }
+                challengeAdapter.notifyDataSetChanged();
+                progressDialog.dismiss();
+            }
 
-                for (DataSnapshot tripSnapshot :
-                        dataSnapshot.getChildren()) {
-                    Challenge challenge = tripSnapshot.getValue(Challenge.class);
-                    if (challengesIds.contains(challenge.getId())) {
-                        challenges.add(challenge);
-                        if (challenge.getUserAdmin().equals(currentUserName)) {
-                            challengeAdapter.setVisibility(true);
-                        } else {
-                            challengeAdapter.setVisibility(false);
-                        }
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                // Get user challenges
+                Challenge challenge = dataSnapshot.getValue(Challenge.class);
+                if (challenge.getMembers().containsKey(currentUserName)){
+                    if (!challenges.contains(challenge)){
+                        addChallenge(challenge);
+                    }
+                } else {
+                    if (challenges.contains(challenge)){
+                        challenges.remove(challenge);
                     }
                 }
                 challengeAdapter.notifyDataSetChanged();
                 progressDialog.dismiss();
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                //TO-DO
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                //TO-DO
             }
 
             @Override
@@ -209,5 +222,18 @@ public class MyChallengesFragment extends Fragment implements SearchView.OnQuery
             }
         }
         return filteredModelList;
+    }
+
+    /**
+     * Add user challenge to the list
+     * @param challenge
+     */
+    private void addChallenge(Challenge challenge) {
+        challenges.add(challenge);
+        if (challenge.getUserAdmin().equals(currentUserName)) {
+            challengeAdapter.setVisibility(true);
+        } else {
+            challengeAdapter.setVisibility(false);
+        }
     }
 }

@@ -39,6 +39,7 @@ public class Trip implements Parcelable{
         this.route = in.readString();
         this.userAdmin = in.readString();
         this.numberOfMembers = in.readInt();
+        in.readMap(members, String.class.getClassLoader());
     }
 
     public String getId() {
@@ -132,6 +133,7 @@ public class Trip implements Parcelable{
         dest.writeString(route);
         dest.writeString(userAdmin);
         dest.writeInt(numberOfMembers);
+        dest.writeMap(members);
     }
 
     public static final Parcelable.Creator<Trip> CREATOR = new Parcelable.Creator<Trip>() {

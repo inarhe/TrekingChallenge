@@ -36,8 +36,6 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
     private List<Trip> trips;
     private ArrayList<Boolean> isVisibleArray = new ArrayList<>();
     private ArrayList<String> tripMembers = new ArrayList<>();
-    private DatabaseReference databaseTrip;
-    private String idTrip;
     private Context context;
 
     // Object which represents a list item and save view references
@@ -121,7 +119,9 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
             @Override
             public void onClick(View v) {
                 // Get trip members
-                getMembers(position, v);
+                getMembers(position);
+                context = v.getContext();
+
                 // Delete trip and its dependencies
                 deleteTrip(position);
             }
@@ -153,34 +153,11 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
     /**
      * Get names of trip members
      * @param position
-     * @param v
      */
-    private void getMembers(int position, View v){
+    private void getMembers(int position){
         tripMembers.clear();
-        idTrip = trips.get(position).getId();
-        final String name = trips.get(position).getName();
-        context = v.getContext();
-        databaseTrip = FirebaseDatabase.getInstance().getReference(FireBaseReferences.TRIP_REFERENCE);
-
-        // Get names of trip members
-        databaseTrip.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot tripSnapshot : dataSnapshot.getChildren()) {
-                    Trip trip = tripSnapshot.getValue(Trip.class);
-                    if (trip.getId().equals(idTrip)) {
-                        for (String name : trip.getMembers().keySet()) {
-                            tripMembers.add(name);
-                        }
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                //TO-DO
-            }
-        });
+        Trip trip = trips.get(position);
+        tripMembers.addAll(trip.getMembers().keySet());
     }
 
     /**
@@ -198,15 +175,17 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
+                        DatabaseReference databaseTrip = FirebaseDatabase.getInstance().getReference(FireBaseReferences.TRIP_REFERENCE);
                         databaseTrip.child(trips.get(position).getId()).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 if (task.isSuccessful()) {
                                     DatabaseReference databaseUser = FirebaseDatabase.getInstance().getReference(FireBaseReferences.USER_REFERENCE);
                                     for (String user:tripMembers){
-                                        databaseUser.child(user).child(FireBaseReferences.USER_TRIPS_REFERENCE).child(idTrip).removeValue();
+                                        databaseUser.child(user).child(FireBaseReferences.USER_TRIPS_REFERENCE).child(trips.get(position).getId()).removeValue();
                                     }
                                     Toast.makeText(context , R.string.tripDeleted, Toast.LENGTH_SHORT).show();
+                                    trips.remove(position);
                                     isVisibleArray.remove(position);
                                     notifyDataSetChanged();
                                 } else {

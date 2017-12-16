@@ -35,8 +35,6 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.GroupViewHol
     private List<Group> groups;
     private ArrayList<Boolean> isVisibleArray = new ArrayList<>();
     private ArrayList<String> groupMembers = new ArrayList<>();
-    private DatabaseReference databaseGroup;
-    private String idGroup;
     private Context context;
 
     // Object which represents a list item and save view references
@@ -118,7 +116,9 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.GroupViewHol
             @Override
             public void onClick(View v) {
                 // Get group members
-                getMembers(position, v);
+                getMembers(position);
+                context = v.getContext();
+
                 // Delete group and its dependencies
                 deleteGroup(position);
             }
@@ -150,34 +150,11 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.GroupViewHol
     /**
      * Get names of group members
      * @param position
-     * @param v
      */
-    private void getMembers(int position, View v){
+    private void getMembers(int position){
         groupMembers.clear();
-        idGroup = groups.get(position).getId();
-        final String name = groups.get(position).getName();
-        context = v.getContext();
-        databaseGroup = FirebaseDatabase.getInstance().getReference(FireBaseReferences.GROUP_REFERENCE);
-
-        // Get names of group members
-        databaseGroup.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot groupSnapshot : dataSnapshot.getChildren()) {
-                    Group group = groupSnapshot.getValue(Group.class);
-                    if (group.getId().equals(idGroup)) {
-                        for (String name : group.getMembers().keySet()) {
-                            groupMembers.add(name);
-                        }
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                //TO-DO
-            }
-        });
+        Group group = groups.get(position);
+        groupMembers.addAll(group.getMembers().keySet());
     }
 
     /**
@@ -195,15 +172,17 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.GroupViewHol
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
+                        DatabaseReference databaseGroup = FirebaseDatabase.getInstance().getReference(FireBaseReferences.GROUP_REFERENCE);
                         databaseGroup.child(groups.get(position).getId()).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 if (task.isSuccessful()) {
                                     DatabaseReference databaseUser = FirebaseDatabase.getInstance().getReference(FireBaseReferences.USER_REFERENCE);
                                     for (String user:groupMembers){
-                                        databaseUser.child(user).child(FireBaseReferences.USER_GROUPS_REFERENCE).child(idGroup).removeValue();
+                                        databaseUser.child(user).child(FireBaseReferences.USER_GROUPS_REFERENCE).child(groups.get(position).getId()).removeValue();
                                     }
                                     Toast.makeText(context , R.string.groupDeleted, Toast.LENGTH_SHORT).show();
+                                    groups.remove(position);
                                     isVisibleArray.remove(position);
                                     notifyDataSetChanged();
                                 } else {

@@ -5,6 +5,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.method.ScrollingMovementMethod;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -39,6 +40,7 @@ public class DetailRouteActivity extends AppCompatActivity {
 
         // Link layout elements with variables and set values
         TextView textViewDetails = (TextView) findViewById(R.id.textArea_information);
+        textViewDetails.setMovementMethod(new ScrollingMovementMethod());
         textViewDetails.setText(route.getDescription());
         TextView textViewMeteo = (TextView) findViewById(R.id.tvMeteo);
         textViewMeteo.setText(route.getMeteo());

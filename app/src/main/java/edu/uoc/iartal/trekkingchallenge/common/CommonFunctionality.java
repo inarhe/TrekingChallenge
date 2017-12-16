@@ -55,7 +55,7 @@ public class CommonFunctionality {
      * @param id
      * @param objectReference
      */
-    public void updateJoins(String currentMail, final String action, final DatabaseReference databaseObject, final String id, final String objectReference){
+    public void updateJoins(String currentMail, final String action, final DatabaseReference databaseObject, final String id, final int numberOfMembers, final String objectReference){
         final DatabaseReference databaseUser = FirebaseDatabase.getInstance().getReference(FireBaseReferences.USER_REFERENCE);
 
         Query query = databaseUser.orderByChild(FireBaseReferences.USER_MAIL_REFERENCE).equalTo(currentMail);
@@ -69,9 +69,11 @@ public class CommonFunctionality {
                 if (action.equals("join")) {
                     databaseObject.child(id).child(FireBaseReferences.MEMBERS_REFERENCE).child(user.getIdUser()).setValue("true");
                     databaseUser.child(user.getIdUser()).child(objectReference).child(id).setValue("true");
+                    databaseObject.child(id).child(FireBaseReferences.NUMBER_OF_MEMBERS_REFERENCE).setValue(numberOfMembers+1);
                 } else {
                     databaseObject.child(id).child(FireBaseReferences.MEMBERS_REFERENCE).child(user.getIdUser()).removeValue();
                     databaseUser.child(user.getIdUser()).child(objectReference).child(id).removeValue();
+                    databaseObject.child(id).child(FireBaseReferences.NUMBER_OF_MEMBERS_REFERENCE).setValue(numberOfMembers-1);
                 }
             }
 
@@ -118,10 +120,5 @@ public class CommonFunctionality {
                     }
                 });
     }
-
-
-
-
-
 
 }

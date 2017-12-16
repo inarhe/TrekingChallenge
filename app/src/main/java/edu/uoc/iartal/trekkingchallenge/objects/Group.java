@@ -33,6 +33,7 @@ public class Group implements Parcelable {
         this.description = in.readString();
         this.userAdmin = in.readString();
         this.numberOfMembers = in.readInt();
+        in.readMap(members, String.class.getClassLoader());
     }
 
     public String getId() {
@@ -99,6 +100,7 @@ public class Group implements Parcelable {
         dest.writeString(description);
         dest.writeString(userAdmin);
         dest.writeInt(numberOfMembers);
+        dest.writeMap(members);
     }
 
     public static final Parcelable.Creator<Group> CREATOR = new Parcelable.Creator<Group>() {
@@ -112,4 +114,15 @@ public class Group implements Parcelable {
         }
     };
 
+    // Method to compare two group objects
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Group){
+            Group groupObject = (Group) obj;
+            if (groupObject.getId().equals(this.id)){
+                return true;
+            }
+        }
+        return false;
+    }
 }

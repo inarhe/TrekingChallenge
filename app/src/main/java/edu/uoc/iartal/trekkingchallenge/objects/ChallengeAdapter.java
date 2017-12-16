@@ -35,8 +35,6 @@ public class ChallengeAdapter extends RecyclerView.Adapter<ChallengeAdapter.Chal
     private List<Challenge> challenges;
     private ArrayList<Boolean> isVisibleArray = new ArrayList<>();
     private ArrayList<String> challengeMembers = new ArrayList<>();
-    private DatabaseReference databaseChallenge;
-    private String idChallenge;
     private Context context;
 
 
@@ -120,9 +118,11 @@ public class ChallengeAdapter extends RecyclerView.Adapter<ChallengeAdapter.Chal
         viewHolder.buttonDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Get trip members
-                getMembers(position, v);
-                // Delete trip and its dependencies
+                // Get challenge members
+                getMembers(position);
+                context = v.getContext();
+
+                // Delete challenge and its dependencies
                 deleteChallenge(position);
             }
         });
@@ -153,34 +153,11 @@ public class ChallengeAdapter extends RecyclerView.Adapter<ChallengeAdapter.Chal
     /**
      * Get names of challenge members
      * @param position
-     * @param v
      */
-    private void getMembers(int position, View v){
+    private void getMembers(int position){
         challengeMembers.clear();
-        idChallenge = challenges.get(position).getId();
-        final String name = challenges.get(position).getName();
-        context = v.getContext();
-        databaseChallenge = FirebaseDatabase.getInstance().getReference(FireBaseReferences.CHALLENGE_REFERENCE);
-
-        // Get names of challenge members
-        databaseChallenge.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot challSnapshot : dataSnapshot.getChildren()) {
-                    Challenge challenge = challSnapshot.getValue(Challenge.class);
-                    if (challenge.getId().equals(idChallenge)) {
-                        for (String name : challenge.getMembers().keySet()) {
-                            challengeMembers.add(name);
-                        }
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                //TO-DO
-            }
-        });
+        Challenge challenge = challenges.get(position);
+        challengeMembers.addAll(challenge.getMembers().keySet());
     }
 
     /**
@@ -198,15 +175,17 @@ public class ChallengeAdapter extends RecyclerView.Adapter<ChallengeAdapter.Chal
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
+                        DatabaseReference databaseChallenge = FirebaseDatabase.getInstance().getReference(FireBaseReferences.CHALLENGE_REFERENCE);
                         databaseChallenge.child(challenges.get(position).getId()).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 if (task.isSuccessful()) {
                                     DatabaseReference databaseUser = FirebaseDatabase.getInstance().getReference(FireBaseReferences.USER_REFERENCE);
                                     for (String user:challengeMembers){
-                                        databaseUser.child(user).child(FireBaseReferences.USER_TRIPS_REFERENCE).child(idChallenge).removeValue();
+                                        databaseUser.child(user).child(FireBaseReferences.USER_TRIPS_REFERENCE).child(challenges.get(position).getId()).removeValue();
                                     }
                                     Toast.makeText(context , R.string.challengeDeleted, Toast.LENGTH_SHORT).show();
+                                    challenges.remove(position);
                                     isVisibleArray.remove(position);
                                     notifyDataSetChanged();
                                 } else {

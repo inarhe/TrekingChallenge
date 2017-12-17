@@ -27,8 +27,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.uoc.iartal.trekkingchallenge.R;
+import edu.uoc.iartal.trekkingchallenge.challenge.EditChallengeActivity;
 import edu.uoc.iartal.trekkingchallenge.challenge.ShowChallengeActivity;
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
+import edu.uoc.iartal.trekkingchallenge.group.EditGroupActivity;
 
 public class ChallengeAdapter extends RecyclerView.Adapter<ChallengeAdapter.ChallengeViewHolder> {
 
@@ -42,7 +44,7 @@ public class ChallengeAdapter extends RecyclerView.Adapter<ChallengeAdapter.Chal
     public static class ChallengeViewHolder extends RecyclerView.ViewHolder {
         TextView textViewChallengeName, textViewChallengeDate, textViewIsPublic;
         ImageView imageViewChallenge;
-        ImageButton buttonDelete;
+        ImageButton buttonDelete, buttonEdit;
         CardView cardView;
 
         // Link layout elements to variables
@@ -53,6 +55,7 @@ public class ChallengeAdapter extends RecyclerView.Adapter<ChallengeAdapter.Chal
             textViewIsPublic = (TextView) view.findViewById(R.id.cvisPublic);
             imageViewChallenge = (ImageView) view.findViewById(R.id.cvChallengePhoto);
             buttonDelete = (ImageButton) view.findViewById(R.id.icDelChallengeAdmin);
+            buttonEdit = (ImageButton) view.findViewById(R.id.icEditChallengeAdmin);
             cardView = (CardView) view.findViewById(R.id.cardViewChallenge);
         }
     }
@@ -93,11 +96,14 @@ public class ChallengeAdapter extends RecyclerView.Adapter<ChallengeAdapter.Chal
         // Show delete button only if current user is challenge admin
         if (isVisibleArray.isEmpty()){
             viewHolder.buttonDelete.setVisibility(View.GONE);
+            viewHolder.buttonEdit.setVisibility(View.GONE);
         } else {
             if(isVisibleArray.get(position)){
                 viewHolder.buttonDelete.setVisibility(View.VISIBLE);
+                viewHolder.buttonEdit.setVisibility(View.VISIBLE);
             } else {
                 viewHolder.buttonDelete.setVisibility(View.GONE);
+                viewHolder.buttonEdit.setVisibility(View.GONE);
             }
         }
 
@@ -124,6 +130,19 @@ public class ChallengeAdapter extends RecyclerView.Adapter<ChallengeAdapter.Chal
 
                 // Delete challenge and its dependencies
                 deleteChallenge(position);
+            }
+        });
+
+        // When edit button is clicked, starts edit detail challenge activity
+        viewHolder.buttonEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Context context = v.getContext();
+
+                Intent intent = new Intent(context, EditChallengeActivity.class);
+                intent.putExtra("challenge", challenges.get(position));
+
+                context.startActivity(intent);
             }
         });
     }

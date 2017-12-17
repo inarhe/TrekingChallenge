@@ -136,6 +136,18 @@ public class Trip implements Parcelable{
         dest.writeMap(members);
     }
 
+    // Method to compare two trip objects
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Trip){
+            Trip tripObject = (Trip) obj;
+            if (tripObject.getId().equals(this.id)){
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static final Parcelable.Creator<Trip> CREATOR = new Parcelable.Creator<Trip>() {
 
         public Trip createFromParcel(Parcel in) {

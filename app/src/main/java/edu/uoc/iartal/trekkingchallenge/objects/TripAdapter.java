@@ -28,6 +28,8 @@ import java.util.List;
 
 import edu.uoc.iartal.trekkingchallenge.R;
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
+import edu.uoc.iartal.trekkingchallenge.group.EditGroupActivity;
+import edu.uoc.iartal.trekkingchallenge.trip.EditTripActivity;
 import edu.uoc.iartal.trekkingchallenge.trip.ShowTripActivity;
 
 
@@ -42,7 +44,7 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
     public static class TripViewHolder extends RecyclerView.ViewHolder {
         TextView textViewTripName, textViewTripDate, textViewIsPublic;
         ImageView imageViewTrip;
-        ImageButton buttonDelete;
+        ImageButton buttonDelete, buttonEdit;
         CardView cardView;
 
         // Link layout elements to variables
@@ -53,6 +55,7 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
             textViewIsPublic = (TextView) view.findViewById(R.id.cvisPublic);
             imageViewTrip = (ImageView) view.findViewById(R.id.cvTripPhoto);
             buttonDelete = (ImageButton) view.findViewById(R.id.icDelTripAdmin);
+            buttonEdit = (ImageButton) view.findViewById(R.id.icEditTripAdmin);
             cardView = (CardView) view.findViewById(R.id.cardViewTrip);
         }
     }
@@ -93,11 +96,14 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
         // Show delete button only if current user is trip admin
         if (isVisibleArray.isEmpty()){
             viewHolder.buttonDelete.setVisibility(View.GONE);
+            viewHolder.buttonEdit.setVisibility(View.GONE);
         } else {
             if(isVisibleArray.get(position)){
                 viewHolder.buttonDelete.setVisibility(View.VISIBLE);
+                viewHolder.buttonEdit.setVisibility(View.VISIBLE);
             } else {
                 viewHolder.buttonDelete.setVisibility(View.GONE);
+                viewHolder.buttonEdit.setVisibility(View.GONE);
             }
         }
 
@@ -124,6 +130,19 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
 
                 // Delete trip and its dependencies
                 deleteTrip(position);
+            }
+        });
+
+        // When edit button is clicked, starts edit detail trip activity
+        viewHolder.buttonEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Context context = v.getContext();
+
+                Intent intent = new Intent(context, EditTripActivity.class);
+                intent.putExtra("trip", trips.get(position));
+
+                context.startActivity(intent);
             }
         });
     }

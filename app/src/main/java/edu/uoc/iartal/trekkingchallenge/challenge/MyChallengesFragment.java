@@ -133,6 +133,13 @@ public class MyChallengesFragment extends Fragment implements SearchView.OnQuery
                 if (challenge.getMembers().containsKey(currentUserName)){
                     if (!challenges.contains(challenge)){
                         addChallenge(challenge);
+                    } else {
+                        int i = challenges.indexOf(challenge);
+                        Challenge challengeArray = challenges.get(i);
+                        if (!challengeArray.getName().equals(challenge.getName()) || !challengeArray.getDescription().equals(challenge.getDescription())
+                                || !challengeArray.getLimitDate().equals(challenge.getLimitDate()) ){
+                            challenges.set(i, challenge);
+                        }
                     }
                 } else {
                     if (challenges.contains(challenge)){

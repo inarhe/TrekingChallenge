@@ -16,6 +16,7 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -48,6 +49,7 @@ import edu.uoc.iartal.trekkingchallenge.user.LoginActivity;
 public class AddChallengeActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
 
     private EditText editTextName, editTextDescription, dateEditText;
+    private ImageView buttonCalendar;
     private DatabaseReference databaseChallenge, databaseUser, databaseRoute;
     private CheckBox checkBox;
     private String userAdmin;
@@ -93,6 +95,7 @@ public class AddChallengeActivity extends AppCompatActivity implements AdapterVi
         dateEditText = (EditText) findViewById(R.id.dateEditText);
         checkBox = (CheckBox) findViewById(R.id.cBPublicChallenge);
         spinner = (Spinner) findViewById(R.id.spinnerRoute);
+        buttonCalendar = (ImageView) findViewById(R.id.bDate);
 
         // Set calendar and date format
         dateSelected = Calendar.getInstance();
@@ -106,8 +109,8 @@ public class AddChallengeActivity extends AppCompatActivity implements AdapterVi
 
         getUserAdmin();
 
-        // Click listener on date edit text to show calendar
-        dateEditText.setOnClickListener(new View.OnClickListener() {
+        // Click listener on calendar icon text to show calendar
+        buttonCalendar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 new DatePickerDialog(context, date, dateSelected

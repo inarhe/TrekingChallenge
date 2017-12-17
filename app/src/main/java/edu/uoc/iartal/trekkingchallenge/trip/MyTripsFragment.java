@@ -132,6 +132,12 @@ public class MyTripsFragment extends Fragment implements SearchView.OnQueryTextL
                 if (trip.getMembers().containsKey(currentUserName)){
                     if (!trips.contains(trip)){
                         addTrip(trip);
+                    } else {
+                        int i = trips.indexOf(trip);
+                        Trip tripArray = trips.get(i);
+                        if (!tripArray.getName().equals(trip.getName()) || !tripArray.getDescription().equals(trip.getDescription())){
+                            trips.set(i, trip);
+                        }
                     }
                 } else {
                     if (trips.contains(trip)){

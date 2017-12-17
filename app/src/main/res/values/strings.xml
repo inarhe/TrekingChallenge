@@ -35,7 +35,7 @@
     <!--User area activity-->
     <string name="infoName">Nom:</string>
     <string name="infoMail">Mail:</string>
-    <string name="actionEditProfile">Editar perfil</string>
+    <string name="actionEditProfile">Modificar perfil</string>
     <string name="actionDeleteProfile">Eliminar perfil</string>
     <string name="actionUserHistory">El meu històric</string>
     <string name="buttonSignOut">Tancar sessió</string>
@@ -45,7 +45,7 @@
     <string name="deleteUserConfirmation">Estàs segur que vols eliminar el compte d\'usuari?</string>
 
     <!--Edit profile activity-->
-    <string name="editProfileActivity">Editar perfil</string>
+    <string name="editProfileActivity">Modificar perfil</string>
     <string name="confirmEditProfile">Perfil d\'usuari modificat</string>
 
     <!--List users activity-->
@@ -85,6 +85,12 @@
     <string name="hintDescription">Descripció del grup</string>
     <string name="checkIsPublic">Grup públic</string>
     <string name="addGroupActivity">Nou grup</string>
+
+    <!--Edit group activity-->
+    <string name="textNameGroup">Nom del grup:</string>
+    <string name="editGroupActivityName">Modificar grup</string>
+    <string name="editGroupOk">Grup modificat correctament</string>
+    <string name="editGroupFail">No s\'ha pogut modificar el grup</string>
 
 
     <!--ROUTE OBJECT-->
@@ -195,6 +201,12 @@
     <string name="tabAllTrips">"Totes"</string>
     <string name="tabMyTrips">"Les meves"</string>
 
+    <!--Edit trip activity-->
+    <string name="textNameTrip">Nom de l\'excursió:</string>
+    <string name="editTripActivityName">Modificar excursió</string>
+    <string name="editTripOk">Excursió modificada correctament</string>
+    <string name="editTripFail">No s\'ha pogut modificar l\'excursió</string>
+
 
     <!--CHALLENGE OBJECT-->
     <!--Show challenge activity-->
@@ -236,6 +248,12 @@
     <string name="tabAllChallenges">"Tots"</string>
     <string name="tabMyChallenges">"Els meus"</string>
 
+    <!--Edit challenge activity-->
+    <string name="textNameChallenge">Nom del repte:</string>
+    <string name="editChallengeActivityName">Modificar repte</string>
+    <string name="editChallengeOk">Repte modificat correctament</string>
+    <string name="editChallengeFail">No s\'ha pogut modificar el repte</string>
+
 
     <!--RATING OBJECT-->
     <!--Rating route activity-->
@@ -274,6 +292,7 @@
     <string name="loadingData">Carregant dades...</string>
     <string name="actionSearch">Buscar</string>
     <string name="km">km</string>
+    <string name="updating">Actualitzant dades</string>
 
     <!--Manifest-->
     <string name="title_activity_map">Map</string>

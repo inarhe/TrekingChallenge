@@ -17,15 +17,13 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.uoc.iartal.trekkingchallenge.group.EditGroupActivity;
 import edu.uoc.iartal.trekkingchallenge.R;
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
 import edu.uoc.iartal.trekkingchallenge.group.ShowGroupActivity;
@@ -41,7 +39,7 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.GroupViewHol
     public static class GroupViewHolder extends RecyclerView.ViewHolder {
         TextView textViewGroupName, textViewIsPublic;
         ImageView imageViewGroup;
-        ImageButton buttonDelete;
+        ImageButton buttonDelete, buttonEdit;
         CardView cardView;
 
         // Link layout elements to variables
@@ -51,6 +49,7 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.GroupViewHol
             textViewIsPublic = (TextView) view.findViewById(R.id.cvisPublic);
             imageViewGroup = (ImageView) view.findViewById(R.id.cvGroupPhoto);
             buttonDelete = (ImageButton) view.findViewById(R.id.icDelGroupAdmin);
+            buttonEdit = (ImageButton) view.findViewById(R.id.icEditGroupAdmin);
             cardView = (CardView) view.findViewById(R.id.cardViewGroup);
         }
     }
@@ -90,11 +89,14 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.GroupViewHol
         // Show delete button only if current user is group admin
         if (isVisibleArray.isEmpty()){
             viewHolder.buttonDelete.setVisibility(View.GONE);
+            viewHolder.buttonEdit.setVisibility(View.GONE);
         } else {
             if(isVisibleArray.get(position)){
                 viewHolder.buttonDelete.setVisibility(View.VISIBLE);
+                viewHolder.buttonEdit.setVisibility(View.VISIBLE);
             } else {
                 viewHolder.buttonDelete.setVisibility(View.GONE);
+                viewHolder.buttonEdit.setVisibility(View.GONE);
             }
         }
 
@@ -121,6 +123,19 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.GroupViewHol
 
                 // Delete group and its dependencies
                 deleteGroup(position);
+            }
+        });
+
+        // When edit button is clicked, starts edit detail group activity
+        viewHolder.buttonEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Context context = v.getContext();
+
+                Intent intent = new Intent(context, EditGroupActivity.class);
+                intent.putExtra("group", groups.get(position));
+
+                context.startActivity(intent);
             }
         });
     }

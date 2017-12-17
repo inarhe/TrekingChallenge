@@ -63,6 +63,19 @@
             android:layout_alignBottom="@+id/cvIconTripDate"/>
 
         <ImageButton
+            android:id="@+id/icEditTripAdmin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?android:attr/selectableItemBackground"
+            android:layout_toLeftOf="@+id/icDelTripAdmin"
+            android:layout_toStartOf="@+id/icDelTripAdmin"
+            android:layout_alignTop="@+id/icDelTripAdmin"
+            android:layout_alignBottom="@+id/icDelTripAdmin"
+            android:layout_marginRight="4dp"
+            android:layout_marginEnd="4dp"
+            android:src="@drawable/ic_edit" />
+
+        <ImageButton
             android:id="@+id/icDelTripAdmin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

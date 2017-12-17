@@ -34,7 +34,6 @@ import edu.uoc.iartal.trekkingchallenge.R;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
-
 public class MyGroupsFragment extends Fragment implements SearchView.OnQueryTextListener{
     private List<Group> groups;
     private GroupAdapter groupAdapter;
@@ -129,11 +128,17 @@ public class MyGroupsFragment extends Fragment implements SearchView.OnQueryText
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                // Get user groups
+                // Get user groups and check if some group has been updated
                 Group group = dataSnapshot.getValue(Group.class);
                 if (group.getMembers().containsKey(currentUserName)){
                     if (!groups.contains(group)){
                         addGroup(group);
+                    } else {
+                        int i = groups.indexOf(group);
+                        Group groupArray = groups.get(i);
+                        if (!groupArray.getName().equals(group.getName()) || !groupArray.getDescription().equals(group.getDescription())){
+                            groups.set(i, group);
+                        }
                     }
                 } else {
                     if (groups.contains(group)){
@@ -189,7 +194,6 @@ public class MyGroupsFragment extends Fragment implements SearchView.OnQueryText
                     }
                 });
     }
-
 
     @Override
     public boolean onQueryTextSubmit(String query) {

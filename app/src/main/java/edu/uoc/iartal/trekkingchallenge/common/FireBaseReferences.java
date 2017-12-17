@@ -20,6 +20,8 @@ public class FireBaseReferences {
 
     // Group references
     final public static String GROUP_REFERENCE = "group";
+    final public static String GROUP_NAME_REFERENCE = "name";
+    final public static String GROUP_DESCRIPTION_REFERENCE = "description";
 
     // Route references
     final public static String ROUTE_REFERENCE = "route";
@@ -35,10 +37,15 @@ public class FireBaseReferences {
 
     // Trip references
     final public static String TRIP_REFERENCE = "trip";
+    final public static String TRIP_NAME_REFERENCE = "name";
+    final public static String TRIP_DESCRIPTION_REFERENCE = "description";
 
     // Challenge references
     final public static String CHALLENGE_REFERENCE = "challenge";
     final public static String CHALLENGE_FINISHED_REFERENCE = "results";
+    final public static String CHALLENGE_NAME_REFERENCE = "name";
+    final public static String CHALLENGE_DESCRIPTION_REFERENCE = "description";
+    final public static String CHALLENGE_DATE_REFERENCE = "limitDate";
 
     // Finished route references
     final public static String FINISHED_REFERENCE = "finished";

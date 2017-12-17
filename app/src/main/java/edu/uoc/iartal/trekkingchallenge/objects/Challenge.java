@@ -131,6 +131,18 @@ public class Challenge implements Parcelable{
         dest.writeMap(members);
     }
 
+    // Method to compare two challenge objects
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Challenge){
+            Challenge challengeObject = (Challenge) obj;
+            if (challengeObject.getId().equals(this.id)){
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static final Creator<Challenge> CREATOR = new Creator<Challenge>() {
 
         public Challenge createFromParcel(Parcel in) {

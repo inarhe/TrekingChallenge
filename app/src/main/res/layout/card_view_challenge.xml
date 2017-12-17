@@ -63,6 +63,19 @@
             android:layout_alignBottom="@+id/cvIconChallengeDate"/>
 
         <ImageButton
+            android:id="@+id/icEditChallengeAdmin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?android:attr/selectableItemBackground"
+            android:layout_toLeftOf="@+id/icDelChallengeAdmin"
+            android:layout_toStartOf="@+id/icDelChallengeAdmin"
+            android:layout_alignTop="@+id/icDelChallengeAdmin"
+            android:layout_alignBottom="@+id/icDelChallengeAdmin"
+            android:layout_marginRight="4dp"
+            android:layout_marginEnd="4dp"
+            android:src="@drawable/ic_edit" />
+
+        <ImageButton
             android:id="@+id/icDelChallengeAdmin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

@@ -103,17 +103,6 @@ public class Group implements Parcelable {
         dest.writeMap(members);
     }
 
-    public static final Parcelable.Creator<Group> CREATOR = new Parcelable.Creator<Group>() {
-
-        public Group createFromParcel(Parcel in) {
-            return new Group(in);
-        }
-
-        public Group[] newArray(int size) {
-            return new Group[size];
-        }
-    };
-
     // Method to compare two group objects
     @Override
     public boolean equals(Object obj) {
@@ -125,4 +114,15 @@ public class Group implements Parcelable {
         }
         return false;
     }
+
+    public static final Parcelable.Creator<Group> CREATOR = new Parcelable.Creator<Group>() {
+
+        public Group createFromParcel(Parcel in) {
+            return new Group(in);
+        }
+
+        public Group[] newArray(int size) {
+            return new Group[size];
+        }
+    };
 }

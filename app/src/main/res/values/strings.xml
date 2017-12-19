@@ -85,6 +85,7 @@
     <string name="hintDescription">Descripció del grup</string>
     <string name="checkIsPublic">Grup públic</string>
     <string name="addGroupActivity">Nou grup</string>
+    <string name="groupAlreadyExists">El grup ja existeix</string>
 
     <!--Edit group activity-->
     <string name="textNameGroup">Nom del grup:</string>
@@ -195,6 +196,7 @@
     <string name="tripSaved">Excursió creada correctament</string>
     <string name="failedAddTrip">No s\'ha pogut crear l\'excursió</string>
     <string name="placeAdvice">Siusplau, introdueix lloc de trobada</string>
+    <string name="tripAlreadyExists">L\'excursió ja existeix</string>
 
     <!--List trips activity-->
     <string name="listTripsActivity">Excursions</string>

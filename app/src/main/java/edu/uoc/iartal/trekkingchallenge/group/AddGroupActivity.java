@@ -22,6 +22,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import edu.uoc.iartal.trekkingchallenge.user.ListUsersActivity;
 import edu.uoc.iartal.trekkingchallenge.user.LoginActivity;
@@ -35,8 +36,9 @@ public class AddGroupActivity extends AppCompatActivity {
     private EditText editTextName, editTextDescription;
     private DatabaseReference databaseGroup, databaseUser;
     private CheckBox checkBox;
-    private String userAdmin;
+    private String userAdmin, name, description;
     private Group group;
+    private Boolean isPublic, groupExists = false;
 
 
     @Override
@@ -78,9 +80,9 @@ public class AddGroupActivity extends AppCompatActivity {
      */
     public void addGroup (View view) {
         // Initialize variables with input parameters
-        Boolean isPublic = false;
-        final String name = editTextName.getText().toString().trim();
-        String description = editTextDescription.getText().toString().trim();
+        isPublic = false;
+        name = editTextName.getText().toString().trim();
+        description = editTextDescription.getText().toString().trim();
 
         // If some of the input parameters are incorrect, stops execution
         if (TextUtils.isEmpty(name)) {
@@ -97,34 +99,55 @@ public class AddGroupActivity extends AppCompatActivity {
             isPublic = true;
         }
 
-        // Add group to firebase database
-        final String idGroup = databaseGroup.push().getKey();
-        group = new Group(idGroup, name, description, isPublic, userAdmin, 1);
-
-        databaseGroup.child(idGroup).setValue(group).addOnCompleteListener(new OnCompleteListener<Void>() {
+        databaseGroup.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if(task.isSuccessful()) {
-                    databaseGroup.child(idGroup).child(FireBaseReferences.MEMBERS_REFERENCE).child(userAdmin).setValue("true");
-                    databaseUser.child(userAdmin).child(FireBaseReferences.USER_GROUPS_REFERENCE).child(idGroup).setValue("true")
-                            .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    if(task.isSuccessful()){
-                                        Toast.makeText(getApplicationContext(), getString(R.string.groupSaved), Toast.LENGTH_LONG).show();
-                                    } else {
-                                        Toast.makeText(AddGroupActivity.this,getString(R.string.failedAddGroup),Toast.LENGTH_SHORT).show();
-                                    }
-                                }
-                            });
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot groupSnapshot : dataSnapshot.getChildren()){
+                    Group group = groupSnapshot.getValue(Group.class);
+                    if (group.getName().equals(name)){
+                        groupExists = true;
+                    }
+                }
+
+                if (!groupExists){
+                    // Add group to firebase database
+                    final String idGroup = databaseGroup.push().getKey();
+                    group = new Group(idGroup, name, description, isPublic, userAdmin, 1);
+
+                    databaseGroup.child(idGroup).setValue(group).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if(task.isSuccessful()) {
+                                databaseGroup.child(idGroup).child(FireBaseReferences.MEMBERS_REFERENCE).child(userAdmin).setValue("true");
+                                databaseUser.child(userAdmin).child(FireBaseReferences.USER_GROUPS_REFERENCE).child(idGroup).setValue("true")
+                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                if(task.isSuccessful()){
+                                                    Toast.makeText(getApplicationContext(), R.string.groupSaved, Toast.LENGTH_LONG).show();
+                                                } else {
+                                                    Toast.makeText(AddGroupActivity.this,R.string.failedAddGroup,Toast.LENGTH_LONG).show();
+                                                }
+                                            }
+                                        });
+                            } else {
+                                Toast.makeText(AddGroupActivity.this, R.string.failedAddGroup, Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+
+                    // Select users that admin wants in the group
+                    inviteUsers();
                 } else {
-                    Toast.makeText(AddGroupActivity.this, getString(R.string.failedAddGroup), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddGroupActivity.this,R.string.groupAlreadyExists,Toast.LENGTH_LONG).show();
                 }
             }
-        });
 
-        // Select users that admin wants in the group
-        inviteUsers();
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     /**

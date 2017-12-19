@@ -40,6 +40,8 @@ import java.util.Locale;
 import edu.uoc.iartal.trekkingchallenge.common.MainActivity;
 import edu.uoc.iartal.trekkingchallenge.R;
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
+import edu.uoc.iartal.trekkingchallenge.group.AddGroupActivity;
+import edu.uoc.iartal.trekkingchallenge.objects.Group;
 import edu.uoc.iartal.trekkingchallenge.objects.Route;
 import edu.uoc.iartal.trekkingchallenge.objects.Trip;
 import edu.uoc.iartal.trekkingchallenge.objects.User;
@@ -52,7 +54,7 @@ public class AddTripActivity extends AppCompatActivity implements AdapterView.On
     private ImageView buttonCalendar;
     private DatabaseReference databaseTrip, databaseUser, databaseRoute;
     private CheckBox checkBox;
-    private String userAdmin;
+    private String userAdmin, name, description, place, tripDate;
     private Spinner spinner;
     private Calendar dateSelected;
     private SimpleDateFormat sdf;
@@ -62,6 +64,7 @@ public class AddTripActivity extends AppCompatActivity implements AdapterView.On
     private ArrayAdapter<String> adapter;
     private String route;
     private Trip trip;
+    private Boolean isPublic, tripExists = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -149,11 +152,11 @@ public class AddTripActivity extends AppCompatActivity implements AdapterView.On
      */
     public void addTrip (View view) {
         // Initialize variables with input parameters
-        Boolean isPublic = false;
-        String name = editTextName.getText().toString().trim();
-        String description = editTextDescription.getText().toString().trim();
-        String date = dateEditText.getText().toString().trim();
-        String place = editTextPlace.getText().toString().trim();
+        isPublic = false;
+        name = editTextName.getText().toString().trim();
+        description = editTextDescription.getText().toString().trim();
+        tripDate = dateEditText.getText().toString().trim();
+        place = editTextPlace.getText().toString().trim();
 
         // If some of the input parameters are incorrect, stops the function execution further
         if (TextUtils.isEmpty(name)) {
@@ -180,34 +183,55 @@ public class AddTripActivity extends AppCompatActivity implements AdapterView.On
             isPublic = true;
         }
 
-        // Add trip to firebase database
-        final String idTrip = databaseTrip.push().getKey();
-        trip = new Trip(idTrip, name, description, date, place, route, isPublic, userAdmin, 1);
-
-        databaseTrip.child(idTrip).setValue(trip).addOnCompleteListener(new OnCompleteListener<Void>() {
+        databaseTrip.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if(!task.isSuccessful()) {
-                    Toast.makeText(getApplicationContext(), getString(R.string.failedAddTrip), Toast.LENGTH_SHORT).show();
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot tripSnapshot : dataSnapshot.getChildren()){
+                    Trip trip = tripSnapshot.getValue(Trip.class);
+                    if (trip.getName().equals(name)){
+                        tripExists = true;
+                    }
                 }
-            }
-        });
 
-        databaseTrip.child(idTrip).child(FireBaseReferences.MEMBERS_REFERENCE).child(userAdmin).setValue("true");
-        databaseUser.child(userAdmin).child(FireBaseReferences.USER_TRIPS_REFERENCE).child(trip.getId()).setValue("true")
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if(task.isSuccessful()){
-                    Toast.makeText(getApplicationContext(), getString(R.string.tripSaved), Toast.LENGTH_LONG).show();
+                if (!tripExists){
+                    // Add trip to firebase database
+                    final String idTrip = databaseTrip.push().getKey();
+                    trip = new Trip(idTrip, name, description, tripDate, place, route, isPublic, userAdmin, 1);
+
+                    databaseTrip.child(idTrip).setValue(trip).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if(!task.isSuccessful()) {
+                                Toast.makeText(getApplicationContext(), getString(R.string.failedAddTrip), Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    });
+
+                    databaseTrip.child(idTrip).child(FireBaseReferences.MEMBERS_REFERENCE).child(userAdmin).setValue("true");
+                    databaseUser.child(userAdmin).child(FireBaseReferences.USER_TRIPS_REFERENCE).child(trip.getId()).setValue("true")
+                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if(task.isSuccessful()){
+                                        Toast.makeText(getApplicationContext(), getString(R.string.tripSaved), Toast.LENGTH_LONG).show();
+                                    } else {
+                                        Toast.makeText(getApplicationContext(),getString(R.string.failedAddTrip),Toast.LENGTH_LONG).show();
+                                    }
+                                }
+                            });
+
+                    // Select users that admin wants in the trip
+                    inviteUsers();
                 } else {
-                    Toast.makeText(getApplicationContext(),getString(R.string.failedAddTrip),Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddTripActivity.this, R.string.tripAlreadyExists,Toast.LENGTH_LONG).show();
                 }
             }
-        });
 
-        // Select users that admin wants in the trip
-        inviteUsers();
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     /**

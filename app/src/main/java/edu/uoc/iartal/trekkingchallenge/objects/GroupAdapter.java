@@ -46,7 +46,7 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.GroupViewHol
         public GroupViewHolder(View view) {
             super(view);
             textViewGroupName = (TextView) view.findViewById(R.id.cvGroupName);
-            textViewIsPublic = (TextView) view.findViewById(R.id.cvisPublic);
+            textViewIsPublic = (TextView) view.findViewById(R.id.cvIsPublic);
             imageViewGroup = (ImageView) view.findViewById(R.id.cvGroupPhoto);
             buttonDelete = (ImageButton) view.findViewById(R.id.icDelGroupAdmin);
             buttonEdit = (ImageButton) view.findViewById(R.id.icEditGroupAdmin);

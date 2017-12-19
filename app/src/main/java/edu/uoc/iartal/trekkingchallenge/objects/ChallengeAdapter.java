@@ -17,11 +17,8 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +27,6 @@ import edu.uoc.iartal.trekkingchallenge.R;
 import edu.uoc.iartal.trekkingchallenge.challenge.EditChallengeActivity;
 import edu.uoc.iartal.trekkingchallenge.challenge.ShowChallengeActivity;
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
-import edu.uoc.iartal.trekkingchallenge.group.EditGroupActivity;
 
 public class ChallengeAdapter extends RecyclerView.Adapter<ChallengeAdapter.ChallengeViewHolder> {
 
@@ -38,7 +34,6 @@ public class ChallengeAdapter extends RecyclerView.Adapter<ChallengeAdapter.Chal
     private ArrayList<Boolean> isVisibleArray = new ArrayList<>();
     private ArrayList<String> challengeMembers = new ArrayList<>();
     private Context context;
-
 
     // Object which represents a list item and save view references
     public static class ChallengeViewHolder extends RecyclerView.ViewHolder {
@@ -52,7 +47,7 @@ public class ChallengeAdapter extends RecyclerView.Adapter<ChallengeAdapter.Chal
             super(view);
             textViewChallengeName = (TextView) view.findViewById(R.id.cvChallengeName);
             textViewChallengeDate = (TextView) view.findViewById(R.id.cvChallengeDate);
-            textViewIsPublic = (TextView) view.findViewById(R.id.cvisPublic);
+            textViewIsPublic = (TextView) view.findViewById(R.id.cvIsPublic);
             imageViewChallenge = (ImageView) view.findViewById(R.id.cvChallengePhoto);
             buttonDelete = (ImageButton) view.findViewById(R.id.icDelChallengeAdmin);
             buttonEdit = (ImageButton) view.findViewById(R.id.icEditChallengeAdmin);
@@ -201,14 +196,14 @@ public class ChallengeAdapter extends RecyclerView.Adapter<ChallengeAdapter.Chal
                                 if (task.isSuccessful()) {
                                     DatabaseReference databaseUser = FirebaseDatabase.getInstance().getReference(FireBaseReferences.USER_REFERENCE);
                                     for (String user:challengeMembers){
-                                        databaseUser.child(user).child(FireBaseReferences.USER_TRIPS_REFERENCE).child(challenges.get(position).getId()).removeValue();
+                                        databaseUser.child(user).child(FireBaseReferences.USER_CHALLENGES_REFERENCE).child(challenges.get(position).getId()).removeValue();
                                     }
                                     Toast.makeText(context , R.string.challengeDeleted, Toast.LENGTH_SHORT).show();
                                     challenges.remove(position);
                                     isVisibleArray.remove(position);
                                     notifyDataSetChanged();
                                 } else {
-                                    Toast.makeText(context, R.string.challengeNotDeleted, Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(context, R.string.challengeNotDeleted, Toast.LENGTH_LONG).show();
                                 }
                             }
                         });

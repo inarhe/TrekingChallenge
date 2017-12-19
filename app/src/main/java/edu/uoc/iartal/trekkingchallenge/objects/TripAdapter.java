@@ -17,21 +17,16 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import edu.uoc.iartal.trekkingchallenge.R;
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
-import edu.uoc.iartal.trekkingchallenge.group.EditGroupActivity;
 import edu.uoc.iartal.trekkingchallenge.trip.EditTripActivity;
 import edu.uoc.iartal.trekkingchallenge.trip.ShowTripActivity;
-
 
 public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder> {
 
@@ -52,7 +47,7 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
             super(view);
             textViewTripName = (TextView) view.findViewById(R.id.cvTripName);
             textViewTripDate = (TextView) view.findViewById(R.id.cvTripDate);
-            textViewIsPublic = (TextView) view.findViewById(R.id.cvisPublic);
+            textViewIsPublic = (TextView) view.findViewById(R.id.cvIsPublic);
             imageViewTrip = (ImageView) view.findViewById(R.id.cvTripPhoto);
             buttonDelete = (ImageButton) view.findViewById(R.id.icDelTripAdmin);
             buttonEdit = (ImageButton) view.findViewById(R.id.icEditTripAdmin);
@@ -203,12 +198,12 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
                                     for (String user:tripMembers){
                                         databaseUser.child(user).child(FireBaseReferences.USER_TRIPS_REFERENCE).child(trips.get(position).getId()).removeValue();
                                     }
-                                    Toast.makeText(context , R.string.tripDeleted, Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(context , R.string.tripDeleted, Toast.LENGTH_LONG).show();
                                     trips.remove(position);
                                     isVisibleArray.remove(position);
                                     notifyDataSetChanged();
                                 } else {
-                                    Toast.makeText(context, R.string.tripNotDeleted, Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(context, R.string.tripNotDeleted, Toast.LENGTH_LONG).show();
                                 }
                             }
                         });

@@ -194,7 +194,7 @@ public class AddChallengeActivity extends AppCompatActivity implements AdapterVi
                 if(task.isSuccessful()){
                     Toast.makeText(getApplicationContext(), getString(R.string.challengeSaved), Toast.LENGTH_LONG).show();
                 } else {
-                    Toast.makeText(getApplicationContext(),getString(R.string.failedAddChallenge),Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(),getString(R.string.failedAddChallenge),Toast.LENGTH_LONG).show();
                 }
             }
         });

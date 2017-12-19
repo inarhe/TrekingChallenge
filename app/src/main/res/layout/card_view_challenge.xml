@@ -33,7 +33,7 @@
             android:textSize="20sp"/>
 
         <TextView
-            android:id="@+id/cvisPublic"
+            android:id="@+id/cvIsPublic"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -49,7 +49,7 @@
             android:layout_marginTop="10dp"
             android:layout_toRightOf="@+id/cvChallengePhoto"
             android:layout_toEndOf="@+id/cvChallengePhoto"
-            android:layout_below="@+id/cvisPublic" />
+            android:layout_below="@+id/cvIsPublic" />
 
         <TextView
             android:id="@+id/cvChallengeDate"
@@ -57,7 +57,7 @@
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/cvIconChallengeDate"
             android:layout_toEndOf="@+id/cvIconChallengeDate"
-            android:layout_below="@+id/cvisPublic"
+            android:layout_below="@+id/cvIsPublic"
             android:gravity="center"
             android:layout_alignTop="@+id/cvIconChallengeDate"
             android:layout_alignBottom="@+id/cvIconChallengeDate"/>

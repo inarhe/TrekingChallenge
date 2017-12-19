@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -29,7 +30,6 @@ import java.util.Locale;
 import edu.uoc.iartal.trekkingchallenge.R;
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
 import edu.uoc.iartal.trekkingchallenge.objects.Challenge;
-import edu.uoc.iartal.trekkingchallenge.objects.Group;
 import edu.uoc.iartal.trekkingchallenge.user.LoginActivity;
 
 public class EditChallengeActivity extends AppCompatActivity {
@@ -49,6 +49,9 @@ public class EditChallengeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_challenge);
+
+        // Hide keyboard until user select edit text
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         // Set toolbar and actionbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.editChallengeToolbar);
@@ -244,5 +247,11 @@ public class EditChallengeActivity extends AppCompatActivity {
                 });
     }
 
-
+    /**
+     * Cancel edit challenge if cancel button is clicked
+     * @param view
+     */
+    public void cancelEditChallenge (View view) {
+        finish();
+    }
 }

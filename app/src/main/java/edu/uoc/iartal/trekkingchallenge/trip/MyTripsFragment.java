@@ -8,6 +8,7 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -28,7 +29,6 @@ import java.util.List;
 
 import edu.uoc.iartal.trekkingchallenge.R;
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
-import edu.uoc.iartal.trekkingchallenge.objects.Group;
 import edu.uoc.iartal.trekkingchallenge.objects.Trip;
 import edu.uoc.iartal.trekkingchallenge.objects.TripAdapter;
 import edu.uoc.iartal.trekkingchallenge.objects.User;
@@ -65,6 +65,7 @@ public class MyTripsFragment extends Fragment implements SearchView.OnQueryTextL
                     User user = userSnapshot.getValue(User.class);
                     if (user.getUserMail().equals(currentMail)) {
                         currentUserName = user.getIdUser();
+                        Log.i("currentoncreate", currentUserName);
                     }
                 }
             }
@@ -118,11 +119,12 @@ public class MyTripsFragment extends Fragment implements SearchView.OnQueryTextL
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Trip trip = dataSnapshot.getValue(Trip.class);
+                Log.i("adminaded", trip.getUserAdmin());
                 if (trip.getMembers().containsKey(currentUserName)){
                     addTrip(trip);
                 }
                 tripAdapter.notifyDataSetChanged();
-                progressDialog.dismiss();
+                //progressDialog.dismiss();
             }
 
             @Override
@@ -135,7 +137,8 @@ public class MyTripsFragment extends Fragment implements SearchView.OnQueryTextL
                     } else {
                         int i = trips.indexOf(trip);
                         Trip tripArray = trips.get(i);
-                        if (!tripArray.getName().equals(trip.getName()) || !tripArray.getDescription().equals(trip.getDescription())){
+                        if (!tripArray.getName().equals(trip.getName()) || !tripArray.getDescription().equals(trip.getDescription())
+                                || !tripArray.getDate().equals(trip.getDate())){
                             trips.set(i, trip);
                         }
                     }
@@ -145,7 +148,7 @@ public class MyTripsFragment extends Fragment implements SearchView.OnQueryTextL
                     }
                 }
                 tripAdapter.notifyDataSetChanged();
-                progressDialog.dismiss();
+               // progressDialog.dismiss();
             }
 
             @Override
@@ -163,6 +166,7 @@ public class MyTripsFragment extends Fragment implements SearchView.OnQueryTextL
                 //TO-DO
             }
         });
+        progressDialog.dismiss();
     }
 
     /**
@@ -200,7 +204,7 @@ public class MyTripsFragment extends Fragment implements SearchView.OnQueryTextL
     }
 
     /**
-     * Pass new trip list to Adapter
+     * Pass new challenge list to Adapter
      * @param newText
      * @return
      */
@@ -230,7 +234,7 @@ public class MyTripsFragment extends Fragment implements SearchView.OnQueryTextL
     }
 
     /**
-     * Add user trip to the list
+     * Add user challenge to the list
      * @param trip
      */
     private void addTrip(Trip trip) {

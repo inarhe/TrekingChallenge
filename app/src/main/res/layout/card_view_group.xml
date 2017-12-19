@@ -33,7 +33,7 @@
                 android:textSize="22sp"/>
 
             <TextView
-                android:id="@+id/cvisPublic"
+                android:id="@+id/cvIsPublic"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"

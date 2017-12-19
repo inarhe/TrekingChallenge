@@ -36,9 +36,10 @@ public class FireBaseReferences {
     final public static String ROUTE_NUM_RATINGS_REFERENCE = "numratings";
 
     // Trip references
-    final public static String TRIP_REFERENCE = "trip";
+    final public static String TRIP_REFERENCE = "chTrip";
     final public static String TRIP_NAME_REFERENCE = "name";
     final public static String TRIP_DESCRIPTION_REFERENCE = "description";
+    final public static String TRIP_DATE_REFERENCE = "date";
 
     // Challenge references
     final public static String CHALLENGE_REFERENCE = "challenge";

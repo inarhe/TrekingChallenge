@@ -8,6 +8,7 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -66,6 +67,7 @@ public class MyChallengesFragment extends Fragment implements SearchView.OnQuery
                     User user = userSnapshot.getValue(User.class);
                     if (user.getUserMail().equals(currentMail)) {
                         currentUserName = user.getIdUser();
+                        Log.i("currentoncreate", currentUserName);
                     }
                 }
             }
@@ -119,6 +121,7 @@ public class MyChallengesFragment extends Fragment implements SearchView.OnQuery
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Challenge challenge = dataSnapshot.getValue(Challenge.class);
+                Log.i("adminaded", challenge.getUserAdmin());
                 if (challenge.getMembers().containsKey(currentUserName)){
                     addChallenge(challenge);
                 }
@@ -137,7 +140,7 @@ public class MyChallengesFragment extends Fragment implements SearchView.OnQuery
                         int i = challenges.indexOf(challenge);
                         Challenge challengeArray = challenges.get(i);
                         if (!challengeArray.getName().equals(challenge.getName()) || !challengeArray.getDescription().equals(challenge.getDescription())
-                                || !challengeArray.getLimitDate().equals(challenge.getLimitDate()) ){
+                                || !challengeArray.getLimitDate().equals(challenge.getLimitDate())){
                             challenges.set(i, challenge);
                         }
                     }
@@ -214,7 +217,7 @@ public class MyChallengesFragment extends Fragment implements SearchView.OnQuery
     }
 
     /**
-     * Get search result trip list
+     * Get search result challenge list
      * @param models
      * @param query
      * @return

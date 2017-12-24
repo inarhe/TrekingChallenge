@@ -72,7 +72,9 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".group.ListGroupsActivity" />
         </activity>
-        <activity android:name=".group.ShowGroupActivity">
+        <activity
+            android:name=".group.ShowGroupActivity"
+            android:launchMode="singleTop">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".group.ListGroupsActivity" />
@@ -99,7 +101,9 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".trip.ListTripsActivity" />
         </activity>
-        <activity android:name=".trip.ShowTripActivity">
+        <activity
+            android:name=".trip.ShowTripActivity"
+            android:launchMode="singleTop">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".trip.ListTripsActivity" />
@@ -134,9 +138,9 @@
                 android:value=".challenge.ListChallengesActivity" />
         </activity>
         <activity android:name=".challenge.EditChallengeActivity">
-        <meta-data
-            android:name="android.support.PARENT_ACTIVITY"
-            android:value=".challenge.ListChallengesActivity" />
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".challenge.ListChallengesActivity" />
         </activity>
 
         <!-- Route activities -->
@@ -183,6 +187,16 @@
                 android:value=".route.ShowRouteActivity" />
         </activity>
 
+        <!--Message activites-->
+        <activity android:name=".message.AddMessageActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".message.ListMessagesActivity" />
+        </activity>
+        <activity android:name=".message.ListMessagesActivity">
+
+        </activity>
+
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -203,6 +217,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".common.MainActivity" />
         </activity>
+
     </application>
 
 </manifest>

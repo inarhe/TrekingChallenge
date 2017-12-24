@@ -11,6 +11,7 @@ import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -24,6 +25,7 @@ import java.util.List;
 
 import edu.uoc.iartal.trekkingchallenge.R;
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
+import edu.uoc.iartal.trekkingchallenge.group.AddGroupActivity;
 import edu.uoc.iartal.trekkingchallenge.objects.Route;
 import edu.uoc.iartal.trekkingchallenge.objects.RouteAdapter;
 import edu.uoc.iartal.trekkingchallenge.user.LoginActivity;
@@ -176,6 +178,9 @@ public class ListRoutesActivity extends AppCompatActivity implements SearchView.
         ArrayList<Route> filterRoutes;
         if (resultCode == RESULT_OK) {
             filterRoutes = data.getParcelableArrayListExtra("routes");
+            if (filterRoutes.size()==0){
+                Toast.makeText(ListRoutesActivity.this,R.string.noMatches,Toast.LENGTH_LONG).show();
+            }
             routeAdapter.setFilter(filterRoutes);
         }
     }

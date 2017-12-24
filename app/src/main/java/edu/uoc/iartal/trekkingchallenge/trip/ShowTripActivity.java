@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import edu.uoc.iartal.trekkingchallenge.R;
 import edu.uoc.iartal.trekkingchallenge.common.CommonFunctionality;
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
+import edu.uoc.iartal.trekkingchallenge.message.ListMessagesActivity;
 import edu.uoc.iartal.trekkingchallenge.objects.Trip;
 import edu.uoc.iartal.trekkingchallenge.objects.User;
 import edu.uoc.iartal.trekkingchallenge.user.LoginActivity;
@@ -122,6 +123,11 @@ public class ShowTripActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.action_message:
+                Intent intent = new Intent(getApplicationContext(), ListMessagesActivity.class);
+                intent.putExtra("trip", trip);
+                startActivity(intent);
+                return true;
             case R.id.action_joinTrip:
                 joinTrip();
                 return true;

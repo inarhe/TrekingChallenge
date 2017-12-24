@@ -12,6 +12,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,21 +20,31 @@ import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.util.ArrayList;
+
 import edu.uoc.iartal.trekkingchallenge.R;
 import edu.uoc.iartal.trekkingchallenge.challenge.AddChallengeActivity;
-import edu.uoc.iartal.trekkingchallenge.challenge.FinishedChallengeActivity;
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
+import edu.uoc.iartal.trekkingchallenge.objects.Finished;
 import edu.uoc.iartal.trekkingchallenge.objects.Route;
+import edu.uoc.iartal.trekkingchallenge.objects.User;
 import edu.uoc.iartal.trekkingchallenge.trip.AddTripActivity;
 import edu.uoc.iartal.trekkingchallenge.user.LoginActivity;
 
 public class ShowRouteActivity extends AppCompatActivity {
     private StorageReference storageReference;
-    private ImageView imageViewHeader;
+    private ImageView imageViewHeader, imageViewCalendar;
+    private TextView textViewDate;
     private Route route;
+    private String currentMail, currentUserName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +73,8 @@ public class ShowRouteActivity extends AppCompatActivity {
 
         // Link layout elements with variables
         imageViewHeader = (ImageView) findViewById(R.id.ivRoute);
+        imageViewCalendar = (ImageView) findViewById(R.id.icCalendar);
+        textViewDate = (TextView) findViewById(R.id.tvCalendar);
         ImageView imageViewSeason = (ImageView) findViewById(R.id.icSeason);
         ImageView imageViewType = (ImageView) findViewById(R.id.icType);
         TextView textViewType = (TextView) findViewById(R.id.tvType);
@@ -72,6 +85,7 @@ public class ShowRouteActivity extends AppCompatActivity {
         TextView textViewDifficult = (TextView) findViewById(R.id.tvDifficult);
         TextView textViewTownship = (TextView) findViewById(R.id.tvTownShip);
         TextView textViewRegion = (TextView) findViewById(R.id.tvRegion);
+        RatingBar rbAverage = (RatingBar) findViewById(R.id.rbAverageRoute);
 
         // Set season icon according to route season
         if (route.getSeason().equals(getString(R.string.spring))){
@@ -115,6 +129,33 @@ public class ShowRouteActivity extends AppCompatActivity {
         textViewDifficult.setText(route.getDifficult());
         textViewRegion.setText(getString(R.string.region) + "  " + route.getRegion());
         textViewTownship.setText(getString(R.string.township) + "  " + route.getTownship());
+
+        rbAverage.setRating(route.getRatingAverage());
+
+        DatabaseReference databaseUser = FirebaseDatabase.getInstance().getReference(FireBaseReferences.USER_REFERENCE);
+        currentMail = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+
+        // Get current user
+        databaseUser.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot userSnapshot :
+                        dataSnapshot.getChildren()) {
+                    User user = userSnapshot.getValue(User.class);
+                    if (user.getUserMail().equals(currentMail)) {
+                        currentUserName = user.getIdUser();
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                //TO-DO
+            }
+        });
+
+        checkIfUserHasDone();
+
     }
 
     /**
@@ -215,5 +256,34 @@ public class ShowRouteActivity extends AppCompatActivity {
         Intent intent = new Intent(this, RatingRouteActivity.class);
         intent.putExtra("route", route);
         startActivity(intent);
+    }
+
+    private void checkIfUserHasDone(){
+        final ArrayList<String> finishedList = new ArrayList<>();
+        finishedList.addAll(route.getFinished().keySet());
+
+        DatabaseReference databaseFinished = FirebaseDatabase.getInstance().getReference(FireBaseReferences.FINISHED_REFERENCE);
+        databaseFinished.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot finishedSnapshot : dataSnapshot.getChildren()){
+                    if (finishedList.contains(finishedSnapshot.getValue(Finished.class).getId())){
+                        String finisher = finishedSnapshot.getValue(Finished.class).getUser();
+                        if (finisher.equals(currentUserName)){
+                            textViewDate.setText(finishedSnapshot.getValue(Finished.class).getDate());
+                            imageViewCalendar.setImageResource(R.drawable.ic_done);
+                        }
+                    } else {
+                        textViewDate.setText(R.string.notAlreadyDone);
+                        imageViewCalendar.setImageResource(R.drawable.ic_notdone);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 }

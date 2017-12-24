@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".challenge.ShowChallengeActivity">
 
     <include android:id="@+id/showChallengeToolbar"
@@ -24,8 +24,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:layout_marginLeft="@dimen/activity_vertical_margin"
-                android:layout_marginStart="@dimen/activity_vertical_margin"
+                android:layout_marginLeft="25dp"
+                android:layout_marginStart="25dp"
                 android:src="@drawable/ic_challenge"/>
 
             <TextView
@@ -49,8 +49,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:layout_below="@+id/icRouteShowChallenge"
-                android:layout_alignLeft="@+id/icRouteShowChallenge"
-                android:layout_alignStart="@+id/icRouteShowChallenge"
+                android:layout_alignLeft="@+id/tvRouteShowChallenge"
+                android:layout_alignStart="@+id/tvRouteShowChallenge"
                 android:textSize="15sp"/>
 
             <ImageView
@@ -84,8 +84,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:layout_below="@+id/icDateShowChallenge"
-                android:layout_alignLeft="@+id/icDateShowChallenge"
-                android:layout_alignStart="@+id/icDateShowChallenge"
+                android:layout_alignLeft="@+id/tvDateShowChallenge"
+                android:layout_alignStart="@+id/tvDateShowChallenge"
                 android:textSize="15sp"/>
 
             <ImageView
@@ -119,8 +119,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:layout_below="@+id/icDescShowChallenge"
-                android:layout_alignLeft="@+id/icDescShowChallenge"
-                android:layout_alignStart="@+id/icDescShowChallenge"
+                android:layout_alignLeft="@+id/tvDescShowChallenge"
+                android:layout_alignStart="@+id/tvDescShowChallenge"
                 android:textSize="15sp"/>
 
             <TextView
@@ -129,27 +129,25 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
                 android:layout_below="@+id/tvDescChallenge"
-                android:layout_alignLeft="@+id/icDescShowChallenge"
-                android:layout_alignStart="@+id/icDescShowChallenge"
+                android:layout_alignLeft="@+id/tvDescShowChallenge"
+                android:layout_alignStart="@+id/tvDescShowChallenge"
                 android:gravity="center"
                 android:text="@string/rankingChallenge"
                 android:textStyle="bold"
                 android:textSize="15sp"/>
 
-            <de.codecrafters.tableview.TableView
-                android:id="@+id/rankingTable"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <ListView
+                android:id="@+id/lvRanking"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
                 android:layout_below="@+id/tvRankingChallenge"
-                android:verticalScrollbarPosition="right"
-                android:scrollbars="vertical"
-                android:layout_marginLeft="@dimen/activity_vertical_margin"
-                android:layout_marginStart="@dimen/activity_vertical_margin"
-                android:layout_marginRight="@dimen/activity_vertical_margin"
-                android:layout_marginEnd="@dimen/activity_vertical_margin"
-                android:layout_marginBottom="50dp"
-                android:layout_marginTop="@dimen/activity_horizontal_margin">
-            </de.codecrafters.tableview.TableView>
+                android:layout_marginTop="8dp"
+                android:layout_alignLeft="@+id/tvRankingChallenge"
+                android:layout_alignStart="@+id/tvRankingChallenge"
+                android:layout_marginRight="60dp"
+                android:layout_marginEnd="60dp">
+
+            </ListView>
         </RelativeLayout>
     </ScrollView>
 

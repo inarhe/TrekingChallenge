@@ -28,7 +28,6 @@
         android:id="@+id/icCalendar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_done"
         android:layout_below="@id/viewDiv1"
         android:layout_marginTop="10dp"
         android:layout_marginLeft="25dp"
@@ -37,7 +36,7 @@
         android:layout_marginEnd="4dp"/>
 
     <TextView
-        android:id="@+id/tvCalenadar"
+        android:id="@+id/tvCalendar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
@@ -46,6 +45,26 @@
         android:layout_below="@id/viewDiv1"
         android:layout_alignTop="@+id/icCalendar"
         android:layout_alignBottom="@+id/icCalendar"/>
+
+    <RatingBar
+        android:id="@+id/rbAverageRoute"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/Widget.AppCompat.RatingBar.Indicator"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="6dp"
+        android:layout_marginRight="25dp"
+        android:layout_marginEnd="25dp"
+        android:layout_below="@id/viewDiv1"
+        android:clickable="false"
+        android:focusable="false"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:numStars="5"
+        android:stepSize="0.5"
+        android:isIndicator="false"/>
+
     <View
         android:id="@+id/viewDivMiddle"
         style="@style/Divider"

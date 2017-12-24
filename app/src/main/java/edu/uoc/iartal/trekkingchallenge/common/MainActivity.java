@@ -7,11 +7,19 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
 
 import edu.uoc.iartal.trekkingchallenge.map.MapActivity;
 import edu.uoc.iartal.trekkingchallenge.R;
 import edu.uoc.iartal.trekkingchallenge.challenge.ListChallengesActivity;
 import edu.uoc.iartal.trekkingchallenge.group.ListGroupsActivity;
+import edu.uoc.iartal.trekkingchallenge.objects.User;
 import edu.uoc.iartal.trekkingchallenge.route.ListRoutesActivity;
 import edu.uoc.iartal.trekkingchallenge.trip.ListTripsActivity;
 import edu.uoc.iartal.trekkingchallenge.user.AccessActivity;
@@ -47,10 +55,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Main search functionality. If user isn't logged, access is forbidden and opens user access activity
+     * Main list routes functionality. If user isn't logged, access is forbidden and opens user access activity
      * @param view
      */
-    public void searchActivity (View view){
+    public void routesActivity(View view){
         if (firebaseAuth.getCurrentUser() != null) {
             startActivity(new Intent(getApplicationContext(),ListRoutesActivity.class));
         } else {

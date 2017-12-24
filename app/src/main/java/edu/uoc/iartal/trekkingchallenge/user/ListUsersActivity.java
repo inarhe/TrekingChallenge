@@ -247,7 +247,7 @@ public class ListUsersActivity extends AppCompatActivity implements SearchView.O
         for (User user : selectedUsers){
             databaseUser.child(user.getIdUser()).child(FireBaseReferences.USER_GROUPS_REFERENCE).child(group.getId()).setValue("true");
             databaseGroup.child(group.getId()).child(FireBaseReferences.MEMBERS_REFERENCE).child(user.getIdUser()).setValue("true");
-            databaseGroup.child(group.getId()).child(FireBaseReferences.NUMBER_OF_MEMBERS_REFERENCE).setValue(group.getNumberOfMembers()+1);
+            databaseGroup.child(group.getId()).child(FireBaseReferences.NUMBER_OF_MEMBERS_REFERENCE).setValue(group.getNumberOfMembers() + selectedUsers.size());
         }
     }
 
@@ -258,7 +258,7 @@ public class ListUsersActivity extends AppCompatActivity implements SearchView.O
         for (User user : selectedUsers) {
             databaseUser.child(user.getIdUser()).child(FireBaseReferences.USER_TRIPS_REFERENCE).child(trip.getId()).setValue("true");
             databaseTrip.child(trip.getId()).child(FireBaseReferences.MEMBERS_REFERENCE).child(user.getIdUser()).setValue("true");
-            databaseTrip.child(trip.getId()).child(FireBaseReferences.NUMBER_OF_MEMBERS_REFERENCE).setValue(trip.getNumberOfMembers() + 1);
+            databaseTrip.child(trip.getId()).child(FireBaseReferences.NUMBER_OF_MEMBERS_REFERENCE).setValue(trip.getNumberOfMembers() + selectedUsers.size());
         }
     }
 
@@ -269,7 +269,7 @@ public class ListUsersActivity extends AppCompatActivity implements SearchView.O
         for (User user : selectedUsers){
             databaseUser.child(user.getIdUser()).child(FireBaseReferences.USER_CHALLENGES_REFERENCE).child(challenge.getId()).setValue("true");
             databaseChallenge.child(challenge.getId()).child(FireBaseReferences.MEMBERS_REFERENCE).child(user.getIdUser()).setValue("true");
-            databaseChallenge.child(challenge.getId()).child(FireBaseReferences.NUMBER_OF_MEMBERS_REFERENCE).setValue(challenge.getNumberOfMembers()+1);
+            databaseChallenge.child(challenge.getId()).child(FireBaseReferences.NUMBER_OF_MEMBERS_REFERENCE).setValue(challenge.getNumberOfMembers() + selectedUsers.size());
         }
     }
 }

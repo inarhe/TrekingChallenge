@@ -106,6 +106,18 @@ public class Finished implements Parcelable {
         dest.writeInt(minute);
     }
 
+    // Method to compare two group objects
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Finished){
+            Finished finishedObject = (Finished) obj;
+            if (finishedObject.getId().equals(this.id)){
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static final Creator<Finished> CREATOR = new Creator<Finished>() {
 
         public Finished createFromParcel(Parcel in) {

@@ -7,19 +7,17 @@ import android.os.Parcelable;
 // ChallengeResult object class. Implements Parcelable to pass ChallengeResult object between activities
 public class ChallengeResult implements Parcelable{
     private String id, user, challenge, date;
-    private int hour, minute;
-    private Double distance;
+    private Double distance, time;
     private Boolean isWinner;
 
     public ChallengeResult() {
 
     }
 
-    public ChallengeResult(String id, Double distance, int hour, int minute, String user, String challenge, String date) {
+    public ChallengeResult(String id, Double distance, Double time, String user, String challenge, String date) {
         this.id = id;
         this.distance = distance;
-        this.hour = hour;
-        this.minute = minute;
+        this.time = time;
         this.user = user;
         this.challenge = challenge;
         this.date = date;
@@ -28,8 +26,7 @@ public class ChallengeResult implements Parcelable{
     public ChallengeResult(Parcel in) {
         this.id = in.readString();
         this.distance = in.readDouble();
-        this.hour = in.readInt();
-        this.minute = in.readInt();
+        this.time = in.readDouble();
         this.user = in.readString();
         this.challenge = in.readString();
         this.date = in.readString();
@@ -51,20 +48,12 @@ public class ChallengeResult implements Parcelable{
         this.distance = distance;
     }
 
-    public int getHour() {
-        return hour;
+    public Double getTime() {
+        return time;
     }
 
-    public void setHour(int hour) {
-        this.hour = hour;
-    }
-
-    public int getminute() {
-        return minute;
-    }
-
-    public void setMinute(int minute) {
-        this.minute = minute;
+    public void setTime(Double time) {
+        this.time = time;
     }
 
     public String getUser() {
@@ -108,8 +97,7 @@ public class ChallengeResult implements Parcelable{
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(id);
         dest.writeDouble(distance);
-        dest.writeInt(hour);
-        dest.writeInt(minute);
+        dest.writeDouble(time);
         dest.writeString(user);
         dest.writeString(challenge);
         dest.writeString(date);

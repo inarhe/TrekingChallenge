@@ -8,7 +8,7 @@ import java.util.Map;
 
 // Challenge object class. Implements Parcelable to pass challenge object between activities
 public class Challenge implements Parcelable{
-    private String id, name, description, limitDate, route, userAdmin;
+    private String id, name, description, limitDate, route, userAdmin, classification;
     private Boolean isPublic;
     private int numberOfMembers;
     private Map<String, String> results = new HashMap<>();
@@ -18,7 +18,7 @@ public class Challenge implements Parcelable{
 
     }
 
-    public Challenge(String id, String name, String description, String limitDate, String route, String userAdmin, Boolean isPublic, int numberOfMembers) {
+    public Challenge(String id, String name, String description, String limitDate, String route, String userAdmin, Boolean isPublic, int numberOfMembers, String classification) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -27,6 +27,7 @@ public class Challenge implements Parcelable{
         this.userAdmin = userAdmin;
         this.isPublic = isPublic;
         this.numberOfMembers = numberOfMembers;
+        this.classification = classification;
     }
 
     public Challenge(Parcel in) {
@@ -37,6 +38,7 @@ public class Challenge implements Parcelable{
         this.route = in.readString();
         this.userAdmin = in.readString();
         this.numberOfMembers = in.readInt();
+        this.classification = in.readString();
         in.readMap(results, String.class.getClassLoader());
         in.readMap(members, String.class.getClassLoader());
     }
@@ -105,6 +107,14 @@ public class Challenge implements Parcelable{
         this.numberOfMembers = numberOfMembers;
     }
 
+    public String getClassification() {
+        return classification;
+    }
+
+    public void setClassification(String classification) {
+        this.classification = classification;
+    }
+
     public Map<String, String> getResults() {
         return this.results;
     }
@@ -127,6 +137,7 @@ public class Challenge implements Parcelable{
         dest.writeString(route);
         dest.writeString(userAdmin);
         dest.writeInt(numberOfMembers);
+        dest.writeString(classification);
         dest.writeMap(results);
         dest.writeMap(members);
     }

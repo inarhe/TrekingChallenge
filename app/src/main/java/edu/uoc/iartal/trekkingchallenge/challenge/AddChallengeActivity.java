@@ -17,6 +17,7 @@ import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -52,7 +53,7 @@ public class AddChallengeActivity extends AppCompatActivity implements AdapterVi
     private ImageView buttonCalendar;
     private DatabaseReference databaseChallenge, databaseUser, databaseRoute;
     private CheckBox checkBox;
-    private String userAdmin;
+    private String userAdmin, classification;
     private Spinner spinner;
     private Calendar dateSelected;
     private SimpleDateFormat sdf;
@@ -62,6 +63,7 @@ public class AddChallengeActivity extends AppCompatActivity implements AdapterVi
     private ArrayAdapter<String> adapter;
     private String route;
     private Challenge challenge;
+    private RadioGroup rgClassification;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,6 +98,8 @@ public class AddChallengeActivity extends AppCompatActivity implements AdapterVi
         checkBox = (CheckBox) findViewById(R.id.cBPublicChallenge);
         spinner = (Spinner) findViewById(R.id.spinnerRoute);
         buttonCalendar = (ImageView) findViewById(R.id.bDate);
+        rgClassification = (RadioGroup) findViewById(R.id.rgClassification);
+        rgClassification.check(R.id.rbClassificationTime);
 
         // Set calendar and date format
         dateSelected = Calendar.getInstance();
@@ -173,9 +177,21 @@ public class AddChallengeActivity extends AppCompatActivity implements AdapterVi
             isPublic = true;
         }
 
+        // Get which classification radio button is checked
+        switch (rgClassification.getCheckedRadioButtonId()){
+            case R.id.rbClassificationTime:
+                classification = getString(R.string.time);
+                break;
+            case R.id.rbClassificationDist:
+                classification = getString(R.string.distance);
+                break;
+        }
+
+
+
         // Add challenge to firebase database
         final String idChallenge = databaseChallenge.push().getKey();
-        challenge = new Challenge(idChallenge, name, description, date, route, userAdmin, isPublic, 1);
+        challenge = new Challenge(idChallenge, name, description, date, route, userAdmin, isPublic, 1, classification);
 
         databaseChallenge.child(idChallenge).setValue(challenge).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override

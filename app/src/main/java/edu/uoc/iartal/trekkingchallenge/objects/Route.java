@@ -3,6 +3,9 @@ package edu.uoc.iartal.trekkingchallenge.objects;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.HashMap;
+import java.util.Map;
+
 // Route object class. Implements Parcelable to pass route object between activities
 public class Route implements Parcelable {
     private String idRoute, name, headerPhoto, trackPhoto, profilePhoto, season, startPlace, time, trackLink, meteo;
@@ -10,6 +13,7 @@ public class Route implements Parcelable {
     private Double lng, lat;
     private Float ratingAverage;
     private int numRatings;
+    private Map<String, String> finished = new HashMap<>();
 
     public Route() {
 
@@ -63,6 +67,7 @@ public class Route implements Parcelable {
         this.region = in.readString();
         this.township = in.readString();
         this.numRatings = in.readInt();
+        in.readMap(finished, String.class.getClassLoader());
     }
 
     public String getIdRoute() {
@@ -241,6 +246,10 @@ public class Route implements Parcelable {
         this.numRatings = numRatings;
     }
 
+    public Map<String, String> getFinished() {
+        return this.finished;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -268,6 +277,7 @@ public class Route implements Parcelable {
         dest.writeString(region);
         dest.writeString(township);
         dest.writeInt(numRatings);
+        dest.writeMap(finished);
     }
 
     public static final Parcelable.Creator<Route> CREATOR = new Parcelable.Creator<Route>() {

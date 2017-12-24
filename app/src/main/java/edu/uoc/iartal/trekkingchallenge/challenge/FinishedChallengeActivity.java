@@ -133,7 +133,7 @@ public class FinishedChallengeActivity extends AppCompatActivity {
 
         // Add challenge result to firebase database
         idResult = databaseChallenge.push().getKey();
-        ChallengeResult challengeResult = new ChallengeResult(idResult, Double.parseDouble(finishDist), Integer.parseInt(finishHour), Integer.parseInt(finishMin), user, challenge.getId(), finishDate);
+        ChallengeResult challengeResult = new ChallengeResult(idResult, Double.parseDouble(finishDist), Double.parseDouble(finishHour), user, challenge.getId(), finishDate);
 
         databaseResult.child(idResult).setValue(challengeResult).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override

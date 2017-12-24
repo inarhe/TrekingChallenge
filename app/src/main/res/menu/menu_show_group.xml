@@ -4,6 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".group.ShowGroupActivity">
 
+    <item android:id="@+id/action_message"
+        android:title="@string/action_message"
+        android:orderInCategory="100"
+        android:icon="@drawable/ic_opinion"
+        app:showAsAction="ifRoom"/>
+
     <item android:id="@+id/action_joinGroup"
         android:title="@string/actionJoinGroup"
         android:orderInCategory="100"

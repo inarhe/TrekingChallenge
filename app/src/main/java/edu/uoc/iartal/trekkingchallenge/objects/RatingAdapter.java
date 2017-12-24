@@ -4,6 +4,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -18,6 +20,7 @@ public class RatingAdapter extends RecyclerView.Adapter<RatingAdapter.RatingView
     // Object which represents a list item and save view references
     public static class RatingViewHolder extends RecyclerView.ViewHolder {
         TextView textViewUser, textViewTitle, textViewOpinion;
+        RatingBar rbUserRate;
 
         // Link layout elements to variables
         public RatingViewHolder(View itemView) {
@@ -25,6 +28,7 @@ public class RatingAdapter extends RecyclerView.Adapter<RatingAdapter.RatingView
             textViewUser = (TextView) itemView.findViewById(R.id.cvRatingUser);
             textViewTitle = (TextView) itemView.findViewById(R.id.cvRatingTitle);
             textViewOpinion = (TextView) itemView.findViewById(R.id.cvRatingOpinion);
+            rbUserRate = (RatingBar) itemView.findViewById(R.id.rbUserRate);
         }
     }
 
@@ -54,5 +58,6 @@ public class RatingAdapter extends RecyclerView.Adapter<RatingAdapter.RatingView
         viewHolder.textViewUser.setText("@" + ratings.get(position).getUser());
         viewHolder.textViewTitle.setText(ratings.get(position).getTitle());
         viewHolder.textViewOpinion.setText(ratings.get(position).getOpinion());
+        viewHolder.rbUserRate.setRating(ratings.get(position).getValue());
     }
 }

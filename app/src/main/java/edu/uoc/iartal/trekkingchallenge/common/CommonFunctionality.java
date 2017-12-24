@@ -6,12 +6,14 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -23,7 +25,7 @@ import edu.uoc.iartal.trekkingchallenge.objects.User;
 public class CommonFunctionality {
 
     private static final String EMAIL_PATTERN = "^[a-zA-Z0-9#_~!$&'()*+,;=:.\"(),:;<>@\\[\\]\\\\]+@[a-zA-Z0-9-]+(\\.[a-zA-Z0-9-]+)*$";
-
+    private String currentUserName;
     /**
      *  Validate mail format
      * @param email
@@ -119,6 +121,35 @@ public class CommonFunctionality {
                         }
                     }
                 });
+    }
+
+    public interface SimpleCallback<T> {
+        void callback(T data);
+    }
+
+
+    public void getCurrentUserName(){//}@NonNull SimpleCallback<String> finishedCallback) {
+        // Get current user
+
+        final String currentMail = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+        DatabaseReference databaseUser = FirebaseDatabase.getInstance().getReference(FireBaseReferences.USER_REFERENCE);
+        databaseUser.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot userSnapshot :
+                        dataSnapshot.getChildren()) {
+                    User user = userSnapshot.getValue(User.class);
+                    if (user.getUserMail().equals(currentMail)) {
+                        currentUserName = user.getIdUser();
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
 }

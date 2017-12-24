@@ -24,6 +24,7 @@ import java.util.ArrayList;
 
 import edu.uoc.iartal.trekkingchallenge.common.CommonFunctionality;
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
+import edu.uoc.iartal.trekkingchallenge.message.ListMessagesActivity;
 import edu.uoc.iartal.trekkingchallenge.objects.Group;
 import edu.uoc.iartal.trekkingchallenge.objects.User;
 import edu.uoc.iartal.trekkingchallenge.user.LoginActivity;
@@ -116,6 +117,11 @@ public class ShowGroupActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.action_message:
+                Intent intent = new Intent(getApplicationContext(), ListMessagesActivity.class);
+                intent.putExtra("group", group);
+                startActivity(intent);
+                return true;
             case R.id.action_joinGroup:
                 joinGroup();
                 return true;

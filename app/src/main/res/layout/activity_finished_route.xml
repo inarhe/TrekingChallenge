@@ -194,7 +194,7 @@
                 android:layout_toEndOf="@+id/etHourFinish"
                 android:layout_alignTop="@+id/tvHourFinish"
                 android:layout_alignBottom="@+id/tvHourFinish"
-                android:text="@string/finishMin"
+
                 android:textStyle="bold"
                 android:textSize="15sp"/>
 

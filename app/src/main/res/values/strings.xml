@@ -74,9 +74,10 @@
     <string name="textGroupDescription">Descripció:</string>
     <string name="textGroupMembers">Nombre d\'integrants:</string>
     <string name="actionJoinGroup">Uneix-t\'hi</string>
-    <string name="actionLeaveGroup">Deixa el grup</string>
+    <string name="actionLeaveGroup">Abandona el grup</string>
     <string name="alreadyInGroup">Ja formes part del grup</string>
     <string name="noMemberGroup">No formes part d\'aquest grup</string>
+    <string name="action_message">Fòrum</string>
 
     <!--Add groups activity-->
     <string name="failedAddGroup">El grup no s\'ha creat correctament</string>
@@ -107,9 +108,8 @@
     <string name="titleFinishRoute">Ruta superada!</string>
     <string name="finishDate">Data realització</string>
     <string name="finishDist">Distància realitzada</string>
-    <string name="finishTime">Temps realitzat</string>
-    <string name="finishHour">Hores</string>
-    <string name="finishMin">Minuts</string>
+    <string name="finishTime">Temps realitzat (Format h.min)</string>
+    <string name="finishHour">Temps</string>
     <string name="distAdvice">Siusplau, introdueix una distància</string>
     <string name="timeAdvice">Siusplau, introdueix un temps</string>
     <string name="finishedSaved">Resultat guardat correctament</string>
@@ -130,6 +130,7 @@
     <string name="tracksButton">Recorregut i perfil de la ruta</string>
     <string name="region">Comarca:</string>
     <string name="township">Municipi:</string>
+    <string name="notAlreadyDone">No realitzada</string>
 
     <!--Search route activity-->
     <string name="advancedSearch">Cerca avançada</string>
@@ -158,6 +159,7 @@
 
     <!--List routes activity-->
     <string name="listRoutesActivity">Llista de rutes</string>
+    <string name="noMatches">No hi han coincidències</string>
 
     <!--Photo gallery activity-->
     <string name="photoGallery">Galeria de fotos</string>
@@ -226,12 +228,16 @@
     <string name="challengeNotDeleted">No s\'ha pogut eliminar el repte</string>
     <string name="alreadyInChallenge">Ja formes part del repte</string>
     <string name="noMemberChallenge">No formes part d\'aquest repte</string>
+    <string name="headerPosition">Posició</string>
+    <string name="headerUser">Usuari</string>
+    <string name="headerTime">Temps</string>
+    <string name="headerDistance">Distància</string>
 
     <!--Finished challenge activity-->
     <string name="finishChallengeActivity">Repte realitzat</string>
     <string name="titleFinishChallenge">Repte superat!</string>
     <string name="resultsChallenge">Resultats:</string>
-    <string name="action_challengeFinished">Registra resultat</string>
+    <string name="action_challengeFinished">Registrar resultat</string>
 
     <!--Add challenge activity-->
     <string name="listChallengesActivity">Reptes</string>
@@ -245,6 +251,10 @@
     <string name="privateChallenge">Repte privat</string>
     <string name="usersInvitedChallenge">Usuaris afegits al repte</string>
     <string name="limitDate">Data límit:</string>
+    <string name="classificationTime">Classificació per temps</string>
+    <string name="classificationDist">Classificació per distància</string>
+    <string name="time">Temps</string>
+    <string name="distance">Distància</string>
 
     <!--List challenges activity-->
     <string name="tabAllChallenges">"Tots"</string>
@@ -268,7 +278,19 @@
     <string name="hintCommentBody">Comentari</string>
     <string name="alreadyRated">Ja has valorat aquesta ruta</string>
     <string name="adviceTitle">Siusplau, introdueix un títol</string>
-    <string name="adviceBody">Siusplau, introdueix un comentari</string>
+    <string name="adviceBody">Siusplau, introdueix un missatge</string>
+
+
+    <!--MESSAGE OBJECT-->
+    <!--Message list activity-->
+    <string name="messageListActivity">Fòrum de missatges</string>
+
+    <!--Add message activity-->
+    <string name="hintMessageTilte">Títol del missatge</string>
+    <string name="hintMessage">Missatge</string>
+    <string name="addMessageActivity">Publicar missatge</string>
+    <string name="messagePublished">Missatge publicat</string>
+    <string name="messageNotPublished">No s\'ha pogut publicar el missatge</string>
 
 
     <!--MAP OBJECT-->
@@ -283,6 +305,7 @@
     <string name="acceptButton">Acceptar</string>
     <string name="cancelButton">Cancel·lar</string>
     <string name="registerButton">Registrar</string>
+    <string name="publishButton">Publicar</string>
     <string name="setLeave">leave</string>
     <string name="setJoin">join</string>
     <string name="nameField">Siusplau, introdueix un nom</string>
@@ -295,6 +318,7 @@
     <string name="actionSearch">Buscar</string>
     <string name="km">km</string>
     <string name="updating">Actualitzant dades</string>
+    <string name="none">none</string>
 
     <!--Manifest-->
     <string name="title_activity_map">Map</string>

@@ -65,7 +65,6 @@ public class MyTripsFragment extends Fragment implements SearchView.OnQueryTextL
                     User user = userSnapshot.getValue(User.class);
                     if (user.getUserMail().equals(currentMail)) {
                         currentUserName = user.getIdUser();
-                        Log.i("currentoncreate", currentUserName);
                     }
                 }
             }
@@ -119,7 +118,6 @@ public class MyTripsFragment extends Fragment implements SearchView.OnQueryTextL
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Trip trip = dataSnapshot.getValue(Trip.class);
-                Log.i("adminaded", trip.getUserAdmin());
                 if (trip.getMembers().containsKey(currentUserName)){
                     addTrip(trip);
                 }

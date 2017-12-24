@@ -33,7 +33,7 @@ public class FireBaseReferences {
     final public static String PROFILES_STORAGE = "profiles/";
     final public static String ROUTE_RATINGS_REFERENCE = "ratings";
     final public static String ROUTE_RATING_AVERAGE_REFERENCE = "ratingAverage";
-    final public static String ROUTE_NUM_RATINGS_REFERENCE = "numratings";
+    final public static String ROUTE_NUM_RATINGS_REFERENCE = "numRatings";
 
     // Trip references
     final public static String TRIP_REFERENCE = "chTrip";
@@ -57,7 +57,11 @@ public class FireBaseReferences {
     // Rating references
     final public static String RATING_REFERENCE = "rating";
 
+    // Message references
+    final public static String MESSAGE_REFERENCE = "message";
+
     // Common references
     final public static String MEMBERS_REFERENCE = "members";
     final public static String NUMBER_OF_MEMBERS_REFERENCE = "numberOfMembers";
+    final public static String MESSAGES_REFERENCE = "messages";
 }

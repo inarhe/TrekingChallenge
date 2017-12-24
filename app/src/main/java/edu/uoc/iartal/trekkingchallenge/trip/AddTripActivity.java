@@ -239,7 +239,6 @@ public class AddTripActivity extends AppCompatActivity implements AdapterView.On
      * @param view
      */
     public void cancelTrip (View view) {
-        startActivity(new Intent(getApplicationContext(), MainActivity.class));
         finish();
     }
 

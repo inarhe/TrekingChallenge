@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".user.UserHistoryActivity">
+
+    <include android:id="@+id/userHistoryToolbar"
+        layout="@layout/toolbar" />
+
+    <Button
+        android:id="@+id/bHistChallenges"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_below="@id/viewDiv3"
+        android:layout_marginTop="70dp"
+        android:drawableEnd="@drawable/ic_next"
+        android:drawableLeft="@drawable/ic_challenge"
+        android:drawableRight="@drawable/ic_next"
+        android:drawableStart="@drawable/ic_challenge"
+        android:gravity="center"
+        android:onClick="showDetails"
+        android:text="@string/historyChallenge" />
+
+    <Button
+        android:id="@+id/bHistTrips"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_below="@id/bHistChallenges"
+        android:drawableRight="@drawable/ic_next"
+        android:drawableEnd="@drawable/ic_next"
+        android:drawableStart="@drawable/ic_trip"
+        android:drawableLeft="@drawable/ic_trip"
+        android:onClick="showTracks"
+        android:text="@string/historyTrips"
+        android:gravity="center"/>
+
+    <Button
+        android:id="@+id/bHistRoutes"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_below="@id/bHistTrips"
+        android:drawableRight="@drawable/ic_next"
+        android:drawableEnd="@drawable/ic_next"
+        android:drawableStart="@drawable/ic_landscape"
+        android:drawableLeft="@drawable/ic_landscape"
+        android:onClick="showTracks"
+        android:text="@string/tracksButton"
+        android:gravity="center"/>
+
+    <View
+        android:id="@+id/viewDiv1"
+        style="@style/Divider"
+        android:layout_below="@id/bHistRoutes"
+        android:layout_marginTop="15dp"/>
+
+    <TextView
+        android:id="@+id/tvTotalChallenge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/viewDiv1"
+        android:padding="4dp"
+        android:layout_marginLeft="35dp"
+        android:layout_marginStart="35dp"
+        android:layout_marginTop="10dp"
+        android:text="@string/totalChallenges"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tvUserTotChall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/tvTotalChallenge"
+        android:layout_toEndOf="@+id/tvTotalChallenge"
+        android:layout_alignTop="@+id/tvTotalChallenge"
+        android:layout_alignBottom="@+id/tvTotalChallenge"
+        android:layout_alignStart="@+id/tvUserTotSlope"
+        android:layout_alignLeft="@+id/tvUserTotSlope"
+        android:gravity="center"
+        android:textSize="18sp"/>
+
+    <TextView
+        android:id="@+id/tvTotalTrips"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvTotalChallenge"
+        android:padding="4dp"
+        android:layout_marginLeft="35dp"
+        android:layout_marginStart="35dp"
+        android:layout_marginTop="6dp"
+        android:text="@string/totalTrips"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tvUserTotTrip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/tvTotalTrips"
+        android:layout_toEndOf="@+id/tvTotalTrips"
+        android:layout_alignTop="@+id/tvTotalTrips"
+        android:layout_alignBottom="@+id/tvTotalTrips"
+        android:layout_alignStart="@+id/tvUserTotSlope"
+        android:layout_alignLeft="@+id/tvUserTotSlope"
+        android:gravity="center"
+        android:textSize="18sp"/>
+
+    <TextView
+        android:id="@+id/tvTotalRoutes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvTotalTrips"
+        android:padding="4dp"
+        android:layout_marginLeft="35dp"
+        android:layout_marginStart="35dp"
+        android:layout_marginTop="6dp"
+        android:text="@string/totalRoutes"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tvUserTotRoute"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/tvTotalRoutes"
+        android:layout_toEndOf="@+id/tvTotalRoutes"
+        android:layout_alignTop="@+id/tvTotalRoutes"
+        android:layout_alignBottom="@+id/tvTotalRoutes"
+        android:layout_alignStart="@+id/tvUserTotSlope"
+        android:layout_alignLeft="@+id/tvUserTotSlope"
+        android:gravity="center"
+        android:textSize="18sp"/>
+
+    <TextView
+        android:id="@+id/tvTotalWin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvTotalRoutes"
+        android:padding="4dp"
+        android:layout_marginLeft="35dp"
+        android:layout_marginStart="35dp"
+        android:layout_marginTop="6dp"
+        android:text="@string/challengeWin"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tvUserTotWin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/tvTotalWin"
+        android:layout_toEndOf="@+id/tvTotalWin"
+        android:layout_alignTop="@+id/tvTotalWin"
+        android:layout_alignBottom="@+id/tvTotalWin"
+        android:layout_alignStart="@+id/tvUserTotSlope"
+        android:layout_alignLeft="@+id/tvUserTotSlope"
+        android:gravity="center"
+        android:textSize="18sp"/>
+
+    <TextView
+        android:id="@+id/tvTotalKm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvTotalWin"
+        android:padding="4dp"
+        android:layout_marginLeft="35dp"
+        android:layout_marginStart="35dp"
+        android:layout_marginTop="6dp"
+        android:text="@string/totalKms"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tvUserTotKm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/tvTotalKm"
+        android:layout_toEndOf="@+id/tvTotalKm"
+        android:layout_alignTop="@+id/tvTotalKm"
+        android:layout_alignBottom="@+id/tvTotalKm"
+        android:layout_alignStart="@+id/tvUserTotSlope"
+        android:layout_alignLeft="@+id/tvUserTotSlope"
+        android:gravity="center"
+        android:textSize="18sp"/>
+
+    <TextView
+        android:id="@+id/tvTotalSlope"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvTotalKm"
+        android:padding="4dp"
+        android:layout_marginLeft="35dp"
+        android:layout_marginStart="35dp"
+        android:layout_marginTop="6dp"
+        android:text="@string/totalIncSlope"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tvUserTotSlope"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/tvTotalSlope"
+        android:layout_toEndOf="@+id/tvTotalSlope"
+        android:layout_alignTop="@+id/tvTotalSlope"
+        android:layout_alignBottom="@+id/tvTotalSlope"
+        android:layout_marginLeft="15dp"
+        android:layout_marginStart="15dp"
+        android:gravity="center"
+        android:textSize="18sp"/>
+
+    <TextView
+        android:id="@+id/tvTotalHours"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvTotalSlope"
+        android:padding="4dp"
+        android:layout_marginLeft="35dp"
+        android:layout_marginStart="35dp"
+        android:layout_marginTop="6dp"
+        android:text="@string/routeHours"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tvUserTotHours"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/tvTotalHours"
+        android:layout_toEndOf="@+id/tvTotalHours"
+        android:layout_alignTop="@+id/tvTotalHours"
+        android:layout_alignBottom="@+id/tvTotalHours"
+        android:layout_alignStart="@+id/tvUserTotSlope"
+        android:layout_alignLeft="@+id/tvUserTotSlope"
+        android:gravity="center"
+        android:textSize="18sp"/>
+
+</RelativeLayout>

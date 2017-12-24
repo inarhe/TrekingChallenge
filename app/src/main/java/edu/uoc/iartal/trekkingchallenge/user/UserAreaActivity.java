@@ -99,7 +99,9 @@ public class UserAreaActivity extends AppCompatActivity {
                 deleteUserAccount();
                 return true;
             case R.id.action_userHistory:
-                //TO-DO
+                intent = new Intent(UserAreaActivity.this, UserHistoryActivity.class);
+                intent.putExtra("user", user);
+                startActivity(intent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

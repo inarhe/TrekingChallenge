@@ -35,6 +35,10 @@ public class User implements Parcelable {
         this.userName = in.readString();
         this.userMail = in.readString();
         this.userPassword = in.readString();
+        in.readMap(challenges, String.class.getClassLoader());
+        in.readMap(trips, String.class.getClassLoader());
+        in.readMap(finished, String.class.getClassLoader());
+        in.readMap(challengesResults, String.class.getClassLoader());
     }
 
     public String getIdUser() {
@@ -104,6 +108,10 @@ public class User implements Parcelable {
         dest.writeString(userName);
         dest.writeString(userMail);
         dest.writeString(userPassword);
+        dest.writeMap(challenges);
+        dest.writeMap(trips);
+        dest.writeMap(finished);
+        dest.writeMap(challengesResults);
     }
 
     public static final Parcelable.Creator<User> CREATOR = new Parcelable.Creator<User>() {

@@ -48,13 +48,10 @@ public class ShowChallengeActivity extends AppCompatActivity {
 
     private DatabaseReference databaseChallenge;
     private Challenge challenge;
-    private String[] tableHeader = {"User","Time", "Kms"};
-    private String [][] rankingTable;
     private ListView rankingList;
     private ViewGroup headerView;
     private ArrayList<String> challengesResultsIds;
     private ArrayList<ChallengeResult> challengeResults;
-    private SortableTableView<String[]> tableView;
     private CommonFunctionality common;
     private String currentMail, currentUserName;
 
@@ -85,14 +82,6 @@ public class ShowChallengeActivity extends AppCompatActivity {
         rankingList = (ListView) findViewById(R.id.lvRanking);
         headerView = (ViewGroup) getLayoutInflater().inflate(R.layout.header, rankingList, false);
         rankingList.addHeaderView(headerView);
-
-        // Link table layout and set tabl
-        //  tableView = (SortableTableView<String[]>) findViewById(R.id.rankingTable);
-       // tableView.setColumnCount(3);
-
-        //  tableView.setColumnComparator(1, new ChallengeResultComparator());
-      //  tableView.setHeaderElevation(4);
-      //  tableView.setHeaderBackgroundColor(Color.parseColor("#E0E0E0"));
 
         // Initialize variables
         common = new CommonFunctionality();
@@ -309,64 +298,6 @@ public class ShowChallengeActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-
-    /**
-     * Search challenge results of current challenge to fill the ranking table
-     */
-    private void populateTableRanking(){
-        challengeResults = new ArrayList<>();
-
-        DatabaseReference databaseChallResults = FirebaseDatabase.getInstance().getReference(FireBaseReferences.CHALLENGERESULT_REFERENCE);
-
-        if (databaseChallResults != null) {
-            currentMail = FirebaseAuth.getInstance().getCurrentUser().getEmail();
-
-            databaseChallResults.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    challengeResults.clear();
-                    for (DataSnapshot challengesSnapshot :
-                            dataSnapshot.getChildren()) {
-                        ChallengeResult chall = challengesSnapshot.getValue(ChallengeResult.class);
-                        if (challengesResultsIds.contains(chall.getId())) {
-                            challengeResults.add(chall);
-                        }
-                    }
-
-                    fillTable();
-
-                    //Set table header adapter and data adapter
-                    tableView.setHeaderAdapter(new SimpleTableHeaderAdapter(getApplicationContext(), tableHeader));
-                    if (rankingTable != null) {
-                        tableView.setDataAdapter(new SimpleTableDataAdapter(getApplicationContext(), rankingTable));
-                        tableView.sort(0, SortingOrder.ASCENDING);
-                    }
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                    //TO-DO
-                }
-            });
-        }
-
-
-
-    }
-
-    /**
-     * Fill table with challenge results
-     */
-    private void fillTable(){
-        rankingTable = new String[challengeResults.size()][3];
-
-        for (int i = 0; i < challengeResults.size(); i++) {
-            ChallengeResult result = challengeResults.get(i);
-            rankingTable[i][0] = result.getUser();
-            rankingTable[i][1] = (result.getTime()).toString();
-            rankingTable[i][2] = (result.getDistance()).toString();
-        }
-    }
 
     /**
      * Check if current user is a member of the challenge object

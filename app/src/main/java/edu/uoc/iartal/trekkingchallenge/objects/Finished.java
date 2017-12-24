@@ -7,21 +7,19 @@ import android.os.Parcelable;
 // Finished object class. Implements Parcelable to pass finished object between activities
 public class Finished implements Parcelable {
     private String id, user, route, date;
-    private Double distance;
-    private int hour, minute;
+    private Double distance, time;
 
     public Finished (){
 
     }
 
-    public Finished(String id, String user, String route, String date, Double distance, int hour, int minute) {
+    public Finished(String id, String user, String route, String date, Double distance, Double time) {
         this.id = id;
         this.user = user;
         this.route = route;
         this.date = date;
         this.distance = distance;
-        this.hour = hour;
-        this.minute = minute;
+        this.time = time;
     }
 
     public Finished(Parcel in) {
@@ -30,8 +28,7 @@ public class Finished implements Parcelable {
         this.route = in.readString();
         this.date = in.readString();
         this.distance = in.readDouble();
-        this.hour = in.readInt();
-        this.minute = in.readInt();
+        this.time = in.readDouble();
     }
 
     public String getId() {
@@ -74,20 +71,12 @@ public class Finished implements Parcelable {
         this.distance = distance;
     }
 
-    public int getHour() {
-        return hour;
+    public Double getTime() {
+        return time;
     }
 
-    public void setHour(int hour) {
-        this.hour = hour;
-    }
-
-    public int getMinute() {
-        return minute;
-    }
-
-    public void setMinute(int minute) {
-        this.minute = minute;
+    public void setTime(Double time) {
+        this.time = time;
     }
 
     @Override
@@ -102,8 +91,7 @@ public class Finished implements Parcelable {
         dest.writeString(route);
         dest.writeString(date);
         dest.writeDouble(distance);
-        dest.writeInt(hour);
-        dest.writeInt(minute);
+        dest.writeDouble(time);
     }
 
     // Method to compare two group objects

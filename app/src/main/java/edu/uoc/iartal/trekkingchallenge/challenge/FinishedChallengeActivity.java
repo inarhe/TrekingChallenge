@@ -41,7 +41,7 @@ public class FinishedChallengeActivity extends AppCompatActivity {
     private Calendar dateSelected;
     private SimpleDateFormat sdf;
     private String user;
-    private EditText editTextDate, editTextDist, editTextHour, editTextMinute;
+    private EditText editTextDate, editTextDist, editTextHour;
     private Context context = this;
     private DatePickerDialog.OnDateSetListener date;
     private Challenge challenge;
@@ -81,7 +81,6 @@ public class FinishedChallengeActivity extends AppCompatActivity {
         editTextDate = (EditText) findViewById(R.id.etDateFinish);
         editTextDist = (EditText) findViewById(R.id.etDistFinish);
         editTextHour = (EditText) findViewById(R.id.etHourFinish);
-        editTextMinute = (EditText) findViewById(R.id.etMinFinish);
 
         // Set calendar and date format
         dateSelected = Calendar.getInstance();
@@ -113,7 +112,6 @@ public class FinishedChallengeActivity extends AppCompatActivity {
         String finishDate = editTextDate.getText().toString().trim();
         String finishDist = editTextDist.getText().toString().trim();
         String finishHour = editTextHour.getText().toString().trim();
-        String finishMin = editTextMinute.getText().toString().trim();
 
         // If some of the input parameters are incorrect, stops the function execution further
         if (TextUtils.isEmpty(finishDist)) {
@@ -126,14 +124,9 @@ public class FinishedChallengeActivity extends AppCompatActivity {
             return;
         }
 
-        if (TextUtils.isEmpty(finishMin)) {
-            Toast.makeText(this, getString(R.string.timeAdvice), Toast.LENGTH_LONG).show();
-            return;
-        }
-
         // Add challenge result to firebase database
         idResult = databaseChallenge.push().getKey();
-        ChallengeResult challengeResult = new ChallengeResult(idResult, Double.parseDouble(finishDist), Double.parseDouble(finishHour), user, challenge.getId(), finishDate);
+        ChallengeResult challengeResult = new ChallengeResult(idResult, Double.parseDouble(finishDist), Double.parseDouble(finishHour), user, challenge.getId(), finishDate,0);
 
         databaseResult.child(idResult).setValue(challengeResult).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override

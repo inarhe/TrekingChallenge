@@ -83,7 +83,6 @@ public class FinishedRouteActivity extends AppCompatActivity {
         editTextDate = (EditText) findViewById(R.id.etDateFinish);
         editTextDist = (EditText) findViewById(R.id.etDistFinish);
         editTextHour = (EditText) findViewById(R.id.etHourFinish);
-        editTextMinute = (EditText) findViewById(R.id.etMinFinish);
 
         // Set calendar and date format
         dateSelected = Calendar.getInstance();
@@ -136,7 +135,7 @@ public class FinishedRouteActivity extends AppCompatActivity {
 
         // Add route finished result to firebase database
         idFinish = databaseFinished.push().getKey();
-        Finished finished = new Finished(idFinish, user, route.getIdRoute(), finishDate, Double.parseDouble(finishDist), Integer.parseInt(finishHour), Integer.parseInt(finishMin));
+        Finished finished = new Finished(idFinish, user, route.getIdRoute(), finishDate, Double.parseDouble(finishDist), Double.parseDouble(finishHour));
 
         databaseFinished.child(idFinish).setValue(finished).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override

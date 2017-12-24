@@ -65,6 +65,11 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".group.ListGroupsActivity" />
         </activity>
+        <activity android:name=".user.UserHistoryActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".user.UserAreaActivity" />
+        </activity>
 
         <!-- Group activities -->
         <activity android:name=".group.AddGroupActivity">
@@ -187,15 +192,13 @@
                 android:value=".route.ShowRouteActivity" />
         </activity>
 
-        <!--Message activites-->
+        <!-- Message activites -->
         <activity android:name=".message.AddMessageActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".message.ListMessagesActivity" />
         </activity>
-        <activity android:name=".message.ListMessagesActivity">
-
-        </activity>
+        <activity android:name=".message.ListMessagesActivity"></activity>
 
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
@@ -217,7 +220,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".common.MainActivity" />
         </activity>
-
     </application>
 
 </manifest>

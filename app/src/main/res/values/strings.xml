@@ -54,6 +54,19 @@
     <string name="listUsersActivity">Usuaris</string>
     <string name="usersInvitedGroup">"Usuaris afegits al grup"</string>
 
+    <!--User history activity-->
+    <string name="historyChallenge">Històric de reptes</string>
+    <string name="historyTrips">Històric d\'excursions</string>
+    <string name="historyRoutes">Històric de rutes</string>
+    <string name="totalChallenges">Total reptes:</string>
+    <string name="totalTrips">Total trips:</string>
+    <string name="totalRoutes">Total rutes:</string>
+    <string name="challengeWin">Reptes guanyats:</string>
+    <string name="totalKms">Kms totals:</string>
+    <string name="totalIncSlope">Desnivell acumulat:</string>
+    <string name="routeHours">Hores de ruta:</string>
+    <string name="userHistoryActivity">El meu històric</string>
+
     <!--GROUP OBJECT-->
     <!--Group adapter-->
     <string name="groupDeleted">Grup eliminat</string>

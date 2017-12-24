@@ -53,6 +53,7 @@ public class FireBaseReferences {
 
     // ChallengeResult references
     final public static String CHALLENGERESULT_REFERENCE = "challengeResult";
+    final public static String CHALLENGERESULT_POSITION_REFERENCE = "position";
 
     // Rating references
     final public static String RATING_REFERENCE = "rating";

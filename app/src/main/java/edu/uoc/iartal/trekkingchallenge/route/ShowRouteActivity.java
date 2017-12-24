@@ -121,10 +121,10 @@ public class ShowRouteActivity extends AppCompatActivity {
         });
 
         // Show selected route information in the layout
-        textViewType.setText(route.getDistance() + " km");
+        textViewType.setText(route.getDistance());
         textViewTime.setText(route.getTime());
-        textViewAscent.setText(route.getAscent());
-        textViewDecline.setText(route.getDecline());
+        textViewAscent.setText(Integer.toString(route.getAscent()) + " m");
+        textViewDecline.setText(Integer.toString(route.getDecline()) + " m");
         textViewSeason.setText(route.getSeason());
         textViewDifficult.setText(route.getDifficult());
         textViewRegion.setText(getString(R.string.region) + "  " + route.getRegion());

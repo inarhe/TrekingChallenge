@@ -122,7 +122,7 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.RouteViewHol
     @Override
     public void onBindViewHolder(final RouteViewHolder viewHolder, final int position) {
         viewHolder.textViewRouteName.setText(routes.get(position).getName());
-        viewHolder.textViewDistance.setText(routes.get(position).getDistance() + " km");
+        viewHolder.textViewDistance.setText(routes.get(position).getDistance());
         viewHolder.textViewTime.setText(routes.get(position).getTime());
         viewHolder.textViewDifficult.setText(routes.get(position).getDifficult());
         viewHolder.textViewRegion.setText(routes.get(position).getRegion());

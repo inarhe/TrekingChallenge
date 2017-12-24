@@ -8,19 +8,20 @@ import android.os.Parcelable;
 public class ChallengeResult implements Parcelable{
     private String id, user, challenge, date;
     private Double distance, time;
-    private Boolean isWinner;
+    private int position;
 
     public ChallengeResult() {
 
     }
 
-    public ChallengeResult(String id, Double distance, Double time, String user, String challenge, String date) {
+    public ChallengeResult(String id, Double distance, Double time, String user, String challenge, String date, int position) {
         this.id = id;
         this.distance = distance;
         this.time = time;
         this.user = user;
         this.challenge = challenge;
         this.date = date;
+        this.position = position;
     }
 
     public ChallengeResult(Parcel in) {
@@ -30,6 +31,7 @@ public class ChallengeResult implements Parcelable{
         this.user = in.readString();
         this.challenge = in.readString();
         this.date = in.readString();
+        this.position = in.readInt();
     }
 
     public String getId() {
@@ -72,12 +74,12 @@ public class ChallengeResult implements Parcelable{
         this.challenge = challenge;
     }
 
-    public Boolean getWinner() {
-        return isWinner;
+    public int getPosition() {
+        return position;
     }
 
-    public void setWinner(Boolean winner) {
-        isWinner = winner;
+    public void setPosition(int position) {
+        this.position = position;
     }
 
     public String getDate() {
@@ -101,6 +103,7 @@ public class ChallengeResult implements Parcelable{
         dest.writeString(user);
         dest.writeString(challenge);
         dest.writeString(date);
+        dest.writeInt(position);
     }
 
     public static final Creator<ChallengeResult> CREATOR = new Creator<ChallengeResult>() {

@@ -9,10 +9,10 @@ import java.util.Map;
 // Route object class. Implements Parcelable to pass route object between activities
 public class Route implements Parcelable {
     private String idRoute, name, headerPhoto, trackPhoto, profilePhoto, season, startPlace, time, trackLink, meteo;
-    private String type, difficult, distance, description, decline, ascent, region, township;
+    private String type, difficult, distance, description, region, township;
     private Double lng, lat;
     private Float ratingAverage;
-    private int numRatings;
+    private int numRatings, decline, ascent;
     private Map<String, String> finished = new HashMap<>();
 
     public Route() {
@@ -21,7 +21,7 @@ public class Route implements Parcelable {
 
     public Route(String idRoute, String name, String headerPhoto, String trackPhoto, String startPplace, String profilePhoto, String season, String time,
                  String trackLink, String meteo, String type, Double lng, Double lat, Float ratingAverage, String distance, String difficult, String description,
-                 String decline, String ascent, String region, String township, int numRatings) {
+                 int decline, int ascent, String region, String township, int numRatings) {
         this.idRoute = idRoute;
         this.name = name;
         this.headerPhoto = headerPhoto;
@@ -62,8 +62,8 @@ public class Route implements Parcelable {
         this.distance = in.readString();
         this.difficult = in.readString();
         this.description = in.readString();
-        this.decline = in.readString();
-        this.ascent = in.readString();
+        this.decline = in.readInt();
+        this.ascent = in.readInt();
         this.region = in.readString();
         this.township = in.readString();
         this.numRatings = in.readInt();
@@ -206,19 +206,19 @@ public class Route implements Parcelable {
         this.description = description;
     }
 
-    public String getDecline() {
+    public Integer getDecline() {
         return decline;
     }
 
-    public void setDecline(String decline) {
+    public void setDecline(Integer decline) {
         this.decline = decline;
     }
 
-    public String getAscent() {
+    public Integer getAscent() {
         return ascent;
     }
 
-    public void setAscent(String ascent) {
+    public void setAscent(Integer ascent) {
         this.ascent = ascent;
     }
 
@@ -272,8 +272,8 @@ public class Route implements Parcelable {
         dest.writeString(distance);
         dest.writeString(difficult);
         dest.writeString(description);
-        dest.writeString(decline);
-        dest.writeString(ascent);
+        dest.writeInt(decline);
+        dest.writeInt(ascent);
         dest.writeString(region);
         dest.writeString(township);
         dest.writeInt(numRatings);

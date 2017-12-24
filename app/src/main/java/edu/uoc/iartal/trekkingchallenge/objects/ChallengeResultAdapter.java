@@ -9,9 +9,13 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.util.ArrayList;
 
 import edu.uoc.iartal.trekkingchallenge.R;
+import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
 
 /**
  * Created by Ingrid Artal on 22/12/2017.
@@ -83,7 +87,9 @@ public class ChallengeResultAdapter extends ArrayAdapter<ChallengeResult> {
         TextView textViewTime = (TextView) convertView.findViewById(R.id.tvTime);
         TextView textViewDistance = (TextView) convertView.findViewById(R.id.tvDistance);*/
 
+        DatabaseReference databaseChallResults = FirebaseDatabase.getInstance().getReference(FireBaseReferences.CHALLENGERESULT_REFERENCE);
         ChallengeResult challengeResult = this.getItem(position);
+        databaseChallResults.child(challengeResult.getId()).child(FireBaseReferences.CHALLENGERESULT_POSITION_REFERENCE).setValue(position + 1);
 
         holder.textViewPosition.setText(Integer.toString(position + 1));
         holder.textViewUser.setText(challengeResult.getUser());

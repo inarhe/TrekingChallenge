@@ -69,12 +69,12 @@ public class CommonFunctionality {
                 User user = dataSnapshot.getValue(User.class);
 
                 if (action.equals("join")) {
-                    databaseObject.child(id).child(FireBaseReferences.MEMBERS_REFERENCE).child(user.getIdUser()).setValue("true");
-                    databaseUser.child(user.getIdUser()).child(objectReference).child(id).setValue("true");
+                    databaseObject.child(id).child(FireBaseReferences.MEMBERS_REFERENCE).child(user.getId()).setValue("true");
+                    databaseUser.child(user.getId()).child(objectReference).child(id).setValue("true");
                     databaseObject.child(id).child(FireBaseReferences.NUMBER_OF_MEMBERS_REFERENCE).setValue(numberOfMembers+1);
                 } else {
-                    databaseObject.child(id).child(FireBaseReferences.MEMBERS_REFERENCE).child(user.getIdUser()).removeValue();
-                    databaseUser.child(user.getIdUser()).child(objectReference).child(id).removeValue();
+                    databaseObject.child(id).child(FireBaseReferences.MEMBERS_REFERENCE).child(user.getId()).removeValue();
+                    databaseUser.child(user.getId()).child(objectReference).child(id).removeValue();
                     databaseObject.child(id).child(FireBaseReferences.NUMBER_OF_MEMBERS_REFERENCE).setValue(numberOfMembers-1);
                 }
             }
@@ -104,13 +104,13 @@ public class CommonFunctionality {
     /**
      * Update route results and challenge results in all dependencies
      * @param databaseObject
-     * @param child
-     * @param reference
-     * @param result
+     * @param childId
+     * @param childReference
+     * @param childResult
      * @param context
      */
-    public void updateResults (DatabaseReference databaseObject, String child, String reference, String result, final Context context){
-        databaseObject.child(child).child(reference).child(result).setValue("true")
+    public void updateResults (DatabaseReference databaseObject, String childId, String childReference, String childResult, final Context context){
+        databaseObject.child(childId).child(childReference).child(childResult).setValue("true")
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
@@ -123,33 +123,5 @@ public class CommonFunctionality {
                 });
     }
 
-    public interface SimpleCallback<T> {
-        void callback(T data);
-    }
-
-
-    public void getCurrentUserName(){//}@NonNull SimpleCallback<String> finishedCallback) {
-        // Get current user
-
-        final String currentMail = FirebaseAuth.getInstance().getCurrentUser().getEmail();
-        DatabaseReference databaseUser = FirebaseDatabase.getInstance().getReference(FireBaseReferences.USER_REFERENCE);
-        databaseUser.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot userSnapshot :
-                        dataSnapshot.getChildren()) {
-                    User user = userSnapshot.getValue(User.class);
-                    if (user.getUserMail().equals(currentMail)) {
-                        currentUserName = user.getIdUser();
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-    }
 
 }

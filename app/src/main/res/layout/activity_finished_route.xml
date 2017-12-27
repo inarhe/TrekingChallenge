@@ -178,7 +178,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/icTimeFinish"
                 android:gravity="center"
-                android:inputType="number"
+                android:inputType="numberDecimal"
                 android:layout_toRightOf="@+id/tvHourFinish"
                 android:layout_toEndOf="@+id/tvHourFinish" />
 

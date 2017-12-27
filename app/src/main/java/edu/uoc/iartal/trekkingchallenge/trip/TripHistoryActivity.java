@@ -1,11 +1,10 @@
-package edu.uoc.iartal.trekkingchallenge.challenge;
+package edu.uoc.iartal.trekkingchallenge.trip;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
@@ -27,34 +26,35 @@ import edu.uoc.iartal.trekkingchallenge.R;
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
 import edu.uoc.iartal.trekkingchallenge.objects.ChallengeHistoryAdapter;
 import edu.uoc.iartal.trekkingchallenge.objects.ChallengeResult;
-import edu.uoc.iartal.trekkingchallenge.objects.ChallengeResultAdapter;
+import edu.uoc.iartal.trekkingchallenge.objects.TripDone;
+import edu.uoc.iartal.trekkingchallenge.objects.TripHistoryAdapter;
 import edu.uoc.iartal.trekkingchallenge.objects.User;
 import edu.uoc.iartal.trekkingchallenge.user.LoginActivity;
 
-public class ChallengeHistoryActivity extends AppCompatActivity {
+public class TripHistoryActivity extends AppCompatActivity {
 
     private ListView historyList;
-    private ArrayList<ChallengeResult> challengeResults;
-    private ArrayList<String> results;
+    private ArrayList<TripDone> tripsDone;
+    private ArrayList<String> done;
     private SimpleDateFormat formatter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_challenge_history);
+        setContentView(R.layout.activity_trip_history);
 
         // Set toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.challengeHistoryToolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.tripHistoryToolbar);
         setSupportActionBar(toolbar);
         // Set actionbar
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setTitle(R.string.challengeHistoryActivity);
+        actionBar.setTitle(R.string.tripHistoryActivity);
 
         // Get Firebase authentication instance and database references
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         DatabaseReference databaseUser = FirebaseDatabase.getInstance().getReference(FireBaseReferences.USER_REFERENCE);
-        DatabaseReference databaseChallengeResult = FirebaseDatabase.getInstance().getReference(FireBaseReferences.CHALLENGERESULT_REFERENCE);
+        DatabaseReference databaseTripDone = FirebaseDatabase.getInstance().getReference(FireBaseReferences.TRIPSDONE_REFERENCE);
 
         // If user isn't logged, start login activity
         if (firebaseAuth.getCurrentUser() == null) {
@@ -63,39 +63,39 @@ public class ChallengeHistoryActivity extends AppCompatActivity {
         }
 
         // Link layout elements with variables
-        historyList = (ListView) findViewById(R.id.lvChallengeHistory);
-        ViewGroup headerView = (ViewGroup) getLayoutInflater().inflate(R.layout.header_challenge_history, historyList, false);
+        historyList = (ListView) findViewById(R.id.lvTripHistory);
+        ViewGroup headerView = (ViewGroup) getLayoutInflater().inflate(R.layout.header_trip_history, historyList, false);
         historyList.addHeaderView(headerView);
 
         // Get data from item clicked on list groups activity
         Bundle bundle = getIntent().getExtras();
         User user = bundle.getParcelable("user");
 
-        results = new ArrayList<>();
-        results.addAll(user.getChallengeResults().keySet());
+        done = new ArrayList<>();
+        done.addAll(user.getTripsDone().keySet());
 
 
-        challengeResults = new ArrayList<>();
+        tripsDone = new ArrayList<>();
 
-        DatabaseReference databaseChallResults = FirebaseDatabase.getInstance().getReference(FireBaseReferences.CHALLENGERESULT_REFERENCE);
+        DatabaseReference databaseTripsDone = FirebaseDatabase.getInstance().getReference(FireBaseReferences.TRIPSDONE_REFERENCE);
 
 
-            databaseChallResults.addValueEventListener(new ValueEventListener() {
+        databaseTripsDone.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    challengeResults.clear();
-                    for (DataSnapshot challengesSnapshot :
+                    tripsDone.clear();
+                    for (DataSnapshot tripDoneSnapshot :
                             dataSnapshot.getChildren()) {
-                        ChallengeResult chall = challengesSnapshot.getValue(ChallengeResult.class);
-                        if (results.contains(chall.getId())) {
-                            challengeResults.add(chall);
+                        TripDone tripDone = tripDoneSnapshot.getValue(TripDone.class);
+                        if (done.contains(tripDone.getId())) {
+                            tripsDone.add(tripDone);
                         }
                     }
                     formatter = new SimpleDateFormat("dd.MM.yyyy");
 
-                    Collections.sort(challengeResults, new Comparator<ChallengeResult>() {
+                    Collections.sort(tripsDone, new Comparator<TripDone>() {
                         @Override
-                        public int compare(ChallengeResult o1, ChallengeResult o2) {
+                        public int compare(TripDone o1, TripDone o2) {
                             Date date1 = null;
                             Date date2 = null;
                             try {
@@ -111,7 +111,7 @@ public class ChallengeHistoryActivity extends AppCompatActivity {
                     });
 
 
-                    ChallengeHistoryAdapter adapter = new ChallengeHistoryAdapter(getApplicationContext(), R.layout.adapter_challenge_history, challengeResults);
+                    TripHistoryAdapter adapter = new TripHistoryAdapter(getApplicationContext(), R.layout.adapter_trip_history, tripsDone);
                     historyList.setAdapter(adapter);
 
                 }

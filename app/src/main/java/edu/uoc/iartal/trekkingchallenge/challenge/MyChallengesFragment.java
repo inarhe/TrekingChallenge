@@ -63,9 +63,8 @@ public class MyChallengesFragment extends Fragment implements SearchView.OnQuery
                 for (DataSnapshot userSnapshot :
                         dataSnapshot.getChildren()) {
                     User user = userSnapshot.getValue(User.class);
-                    if (user.getUserMail().equals(currentMail)) {
-                        currentUserName = user.getIdUser();
-                        Log.i("currentoncreate", currentUserName);
+                    if (user.getMail().equals(currentMail)) {
+                        currentUserName = user.getId();
                     }
                 }
             }
@@ -119,7 +118,7 @@ public class MyChallengesFragment extends Fragment implements SearchView.OnQuery
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Challenge challenge = dataSnapshot.getValue(Challenge.class);
-                Log.i("adminaded", challenge.getUserAdmin());
+
                 if (challenge.getMembers().containsKey(currentUserName)){
                     addChallenge(challenge);
                 }

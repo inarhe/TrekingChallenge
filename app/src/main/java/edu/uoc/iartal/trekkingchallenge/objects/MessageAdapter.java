@@ -7,9 +7,17 @@ import android.view.ViewGroup;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
 
 import edu.uoc.iartal.trekkingchallenge.R;
+import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
 
 /**
  * Created by Ingrid Artal on 21/12/2017.
@@ -53,7 +61,25 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
      */
     @Override
     public void onBindViewHolder(final MessageAdapter.MessageViewHolder viewHolder, final int position) {
-        viewHolder.textViewUser.setText("@" + messages.get(position).getUser());
+        DatabaseReference databaseUser = FirebaseDatabase.getInstance().getReference(FireBaseReferences.USER_REFERENCE);
+        Query query = databaseUser.orderByChild(FireBaseReferences.USER_ID_REFERENCE).equalTo(messages.get(position).getUser());
+
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot userSnapshot : dataSnapshot.getChildren()){
+                    User user = userSnapshot.getValue(User.class);
+                    viewHolder.textViewUser.setText("@" + user.getAlias());
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
         viewHolder.textViewBody.setText(messages.get(position).getText());
     }
 }

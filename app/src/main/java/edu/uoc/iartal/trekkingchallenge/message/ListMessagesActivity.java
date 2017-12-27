@@ -173,7 +173,7 @@ public class ListMessagesActivity extends AppCompatActivity {
         query.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                userName = dataSnapshot.getValue(User.class).getIdUser();
+                userName = dataSnapshot.getValue(User.class).getId();
             }
 
             @Override

@@ -141,7 +141,7 @@ public class FinishedRouteActivity extends AppCompatActivity {
 
         // Add route finished result to firebase database
         idFinish = databaseFinished.push().getKey();
-        Finished finished = new Finished(idFinish, user.getIdUser(), route.getIdRoute(), finishDate, Double.parseDouble(finishDist), Double.parseDouble(finishHour), route.getName());
+        Finished finished = new Finished(idFinish, user.getId(), route.getIdRoute(), finishDate, Double.parseDouble(finishDist), Double.parseDouble(finishHour), route.getName());
 
         databaseFinished.child(idFinish).setValue(finished).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
@@ -157,7 +157,7 @@ public class FinishedRouteActivity extends AppCompatActivity {
         CommonFunctionality common = new CommonFunctionality();
 
         // Update result list in user and route database nodes
-        common.updateResults (databaseUser, user.getIdUser(), FireBaseReferences.USER_FINISHED_REFERENCE, idFinish, context);
+        common.updateResults (databaseUser, user.getId(), FireBaseReferences.USER_FINISHED_REFERENCE, idFinish, context);
         common.updateResults(databaseRoute, route.getIdRoute(), FireBaseReferences.ROUTE_FINISHED_REFERENCE,idFinish, context);
 
         databaseHistory.child(user.getHistory()).child(FireBaseReferences.HISTORY_DISTANCE_REFERENCE).setValue(historyDistance + Double.parseDouble(finishDist));

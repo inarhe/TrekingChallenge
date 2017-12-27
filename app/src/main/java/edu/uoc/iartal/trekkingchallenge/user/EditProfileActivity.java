@@ -28,7 +28,7 @@ import edu.uoc.iartal.trekkingchallenge.objects.User;
 
 public class EditProfileActivity extends AppCompatActivity {
 
-    private EditText editTextidUser, editTextName, editTextMail, editTextPass, editTextRepeatPass;
+    private EditText editTextAlias, editTextName, editTextMail, editTextPass, editTextRepeatPass;
     private FirebaseAuth firebaseAuth;
     private DatabaseReference databaseUser;
     private FirebaseUser firebaseUser;
@@ -63,7 +63,7 @@ public class EditProfileActivity extends AppCompatActivity {
         }
 
         // Link layout elements with variables
-        editTextidUser = (EditText) findViewById(R.id.etIdUser);
+        editTextAlias = (EditText) findViewById(R.id.etIdUser);
         editTextName = (EditText) findViewById(R.id.etUserName);
         editTextMail = (EditText) findViewById(R.id.etUserMail);
         editTextPass = (EditText) findViewById(R.id.etUserPass);
@@ -74,14 +74,14 @@ public class EditProfileActivity extends AppCompatActivity {
         user = bundle.getParcelable("user");
 
         // Set text fields with current user information
-        editTextidUser.setText(user.getIdUser());
-        editTextName.setText(user.getUserName());
-        editTextMail.setText(user.getUserMail());
-        editTextPass.setText(user.getUserPassword());
-        editTextRepeatPass.setText(user.getUserPassword());
+        editTextAlias.setText(user.getAlias());
+        editTextName.setText(user.getName());
+        editTextMail.setText(user.getMail());
+        editTextPass.setText(user.getPassword());
+        editTextRepeatPass.setText(user.getPassword());
 
         // Reautheticate current user. Necessary to change user credentials
-        reauthenticateUser(firebaseUser, user.getUserMail(), user.getUserPassword() );
+        reauthenticateUser(firebaseUser, user.getMail(), user.getPassword() );
     }
 
     /**
@@ -94,14 +94,14 @@ public class EditProfileActivity extends AppCompatActivity {
         firebaseUser = firebaseAuth.getCurrentUser();
 
         // Get input parameters
-        String newIdUser = editTextidUser.getText().toString().trim();
+        String newAlias = editTextAlias.getText().toString().trim();
         String newUserName = editTextName.getText().toString().trim();
         final String newUserMail = editTextMail.getText().toString().trim();
         final String newUserPassword = editTextPass.getText().toString().trim();
         String newRepeatPassword = editTextRepeatPass.getText().toString().trim();
 
         // If some of the input parameters are incorrect, stops the function execution further
-        if (TextUtils.isEmpty(newIdUser)) {
+        if (TextUtils.isEmpty(newAlias)) {
             Toast.makeText(this, getString(R.string.idField), Toast.LENGTH_LONG).show();
             return;
         }
@@ -136,31 +136,31 @@ public class EditProfileActivity extends AppCompatActivity {
         progressDialog.show();
 
         // Check idUser parameter and update database if its necessary
-        if (!(user.getIdUser()).equals(newIdUser)){
-            databaseUser.child(user.getIdUser()).child(FireBaseReferences.USER_ID_REFERENCE).setValue(newIdUser);
+        if (!(user.getAlias()).equals(newAlias)){
+            databaseUser.child(user.getId()).child(FireBaseReferences.USER_ALIAS_REFERENCE).setValue(newAlias);
         }
 
         // Check user name parameter and update database if its necessary
-        if ((!(user.getUserName()).equals(newUserName))){
-            databaseUser.child(user.getIdUser()).child(FireBaseReferences.USER_NAME_REFERENCE).setValue(newUserName);
+        if ((!(user.getName()).equals(newUserName))){
+            databaseUser.child(user.getId()).child(FireBaseReferences.USER_NAME_REFERENCE).setValue(newUserName);
         }
 
         // Check user mail parameter and update database if its necessary
-        if ((!(user.getUserMail()).equals(newUserMail))) {
+        if ((!(user.getMail()).equals(newUserMail))) {
             // If mail has changed, needs to update firebase user credentials
             firebaseUser.updateEmail(newUserMail).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
                     if (task.isSuccessful()) {
-                        databaseUser.child(user.getIdUser()).child(FireBaseReferences.USER_MAIL_REFERENCE).setValue(newUserMail);
+                        databaseUser.child(user.getId()).child(FireBaseReferences.USER_MAIL_REFERENCE).setValue(newUserMail);
 
                         // Verify if password has changed too, in order to reauthenticate user
-                        if ((!(user.getUserPassword()).equals(newUserPassword))) {
+                        if ((!(user.getPassword()).equals(newUserPassword))) {
                             firebaseUser.updatePassword(newUserPassword).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if (task.isSuccessful()) {
-                                        databaseUser.child(user.getIdUser()).child(FireBaseReferences.USER_PASSWORD_REFERENCE).setValue(newUserPassword);
+                                        databaseUser.child(user.getId()).child(FireBaseReferences.USER_PASSWORD_REFERENCE).setValue(newUserPassword);
                                         Toast.makeText(EditProfileActivity.this, getString(R.string.confirmEditProfile), Toast.LENGTH_SHORT).show();
 
                                         reauthenticateUser(firebaseUser, newUserMail, newUserPassword);
@@ -172,7 +172,7 @@ public class EditProfileActivity extends AppCompatActivity {
                                 }
                             });
                         } else {
-                            reauthenticateUser(firebaseUser, newUserMail, user.getUserPassword());
+                            reauthenticateUser(firebaseUser, newUserMail, user.getPassword());
 
                             result.putExtra("userMail", newUserMail);
                             setResult(RESULT_OK, result);
@@ -182,16 +182,16 @@ public class EditProfileActivity extends AppCompatActivity {
                 }
             });
         } else {
-            if ((!(user.getUserPassword()).equals(newUserPassword))) {
+            if ((!(user.getPassword()).equals(newUserPassword))) {
                 // Only has changed password
                 firebaseUser.updatePassword(newUserPassword).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
-                            databaseUser.child(user.getIdUser()).child(FireBaseReferences.USER_PASSWORD_REFERENCE).setValue(newUserPassword);
+                            databaseUser.child(user.getId()).child(FireBaseReferences.USER_PASSWORD_REFERENCE).setValue(newUserPassword);
                             Toast.makeText(EditProfileActivity.this, getString(R.string.confirmEditProfile), Toast.LENGTH_SHORT).show();
 
-                            reauthenticateUser(firebaseUser, user.getUserMail(), newUserPassword);
+                            reauthenticateUser(firebaseUser, user.getMail(), newUserPassword);
 
                             finish();
                         }

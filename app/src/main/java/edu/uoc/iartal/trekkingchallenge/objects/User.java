@@ -10,69 +10,81 @@ import java.util.Map;
 
 // User object class. Implements Parcelable to pass user object between activities
 public class User implements Parcelable {
-    private String idUser, userName, userMail, userPassword, history;
+    private String id, alias, name, mail, password, history;
     private Map<String, String> groups = new HashMap<>();
     private Map<String, String> trips = new HashMap<>();
+    private Map<String, String> tripsDone = new HashMap<>();
     private Map<String, String> finished = new HashMap<>();
     private Map<String, String> challenges = new HashMap<>();
     private Map<String, String> ratings = new HashMap<>();
-    private Map<String, String> results = new HashMap<>();
+    private Map<String, String> challengeResults = new HashMap<>();
 
     public User() {
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
     }
 
 
-    public User(String idUser, String userName, String userMail, String userPassword, String history) {
-        this.idUser = idUser;
-        this.userName = userName;
-        this.userMail = userMail;
-        this.userPassword = userPassword;
+    public User(String id, String alias, String name, String mail, String password, String history) {
+        this.id = id;
+        this.alias = alias;
+        this.name = name;
+        this.mail = mail;
+        this.password = password;
         this.history = history;
     }
 
     public User(Parcel in) {
-        this.idUser = in.readString();
-        this.userName = in.readString();
-        this.userMail = in.readString();
-        this.userPassword = in.readString();
+        this.id = in.readString();
+        this.alias = in.readString();
+        this.name = in.readString();
+        this.mail = in.readString();
+        this.password = in.readString();
         this.history = in.readString();
         in.readMap(challenges, String.class.getClassLoader());
         in.readMap(trips, String.class.getClassLoader());
+        in.readMap(tripsDone, String.class.getClassLoader());
         in.readMap(finished, String.class.getClassLoader());
-        in.readMap(results, String.class.getClassLoader());
+        in.readMap(challengeResults, String.class.getClassLoader());
     }
 
-    public String getIdUser() {
-        return idUser;
+    public String getId() {
+        return id;
     }
 
-    public void setIdUser(String idUser) {
-        this.idUser = idUser;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getAlias() {
+        return alias;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setAlias(String alias) {
+        this.alias = alias;
     }
 
-    public String getUserMail() {
-        return userMail;
+    public String getName() {
+        return name;
     }
 
-    public void setUserMail(String userMail) {
-        this.userMail = userMail;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getUserPassword() {
-        return userPassword;
+    public String getMail() {
+        return mail;
     }
 
-    public void setUserPassword(String userPassword) {
-        this.userPassword = userPassword;
+    public void setMail(String mail) {
+        this.mail = mail;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getHistory() {
@@ -91,6 +103,10 @@ public class User implements Parcelable {
         return this.trips;
     }
 
+    public Map<String, String> getTripsDone() {
+        return this.tripsDone;
+    }
+
     public Map<String, String> getFinished() {
         return this.finished;
     }
@@ -103,8 +119,8 @@ public class User implements Parcelable {
         return this.ratings;
     }
 
-    public Map<String, String> getResults() {
-        return this.results;
+    public Map<String, String> getChallengeResults() {
+        return this.challengeResults;
     }
 
     @Override
@@ -114,15 +130,17 @@ public class User implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(idUser);
-        dest.writeString(userName);
-        dest.writeString(userMail);
-        dest.writeString(userPassword);
+        dest.writeString(id);
+        dest.writeString(alias);
+        dest.writeString(name);
+        dest.writeString(mail);
+        dest.writeString(password);
         dest.writeString(history);
         dest.writeMap(challenges);
         dest.writeMap(trips);
+        dest.writeMap(tripsDone);
         dest.writeMap(finished);
-        dest.writeMap(results);
+        dest.writeMap(challengeResults);
     }
 
     public static final Parcelable.Creator<User> CREATOR = new Parcelable.Creator<User>() {

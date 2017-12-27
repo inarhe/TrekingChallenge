@@ -231,10 +231,17 @@
     <string name="editTripFail">No s\'ha pogut modificar l\'excursió</string>
 
     <!--Trip history activity-->
-    <string name="headerTripName">Repte</string>
+    <string name="headerTripName">Excursió</string>
     <string name="headerTripDate">Data</string>
+    <string name="headerTripRoute">Ruta</string>
     <string name="headerTripResult">Resultats</string>
-    <string name="tripHistoryActivity">Històric de reptes</string>
+    <string name="tripHistoryActivity">Històric d\'excursions</string>
+
+    <!--Finished trip activity-->
+    <string name="finishTripActivity">Excursió realitzada</string>
+    <string name="titleFinishTrip">Excursió superada!</string>
+    <string name="resultsTrip">Resultats:</string>
+    <string name="action_tripFinished">Registrar resultat</string>
 
 
     <!--CHALLENGE OBJECT-->

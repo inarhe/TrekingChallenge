@@ -99,8 +99,8 @@ public class ShowChallengeActivity extends AppCompatActivity {
                 for (DataSnapshot userSnapshot :
                         dataSnapshot.getChildren()) {
                     User user = userSnapshot.getValue(User.class);
-                    if (user.getUserMail().equals(currentMail)) {
-                        currentUserName = user.getIdUser();
+                    if (user.getMail().equals(currentMail)) {
+                        currentUserName = user.getId();
                     }
                 }
             }

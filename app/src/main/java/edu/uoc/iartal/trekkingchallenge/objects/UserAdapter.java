@@ -76,8 +76,8 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
     @Override
     public void onBindViewHolder(final UserViewHolder viewHolder, final int position) {
         // Modify content of each list item
-        viewHolder.textViewUserAlias.setText(users.get(position).getIdUser());
-        viewHolder.textViewUserName.setText(users.get(position).getUserName());
+        viewHolder.textViewUserAlias.setText(users.get(position).getAlias());
+        viewHolder.textViewUserName.setText(users.get(position).getName());
         viewHolder.imageViewUser.setImageResource(R.drawable.ic_person);
         viewHolder.checkBox.setVisibility(View.VISIBLE);
         viewHolder.checkBox.setChecked(false);

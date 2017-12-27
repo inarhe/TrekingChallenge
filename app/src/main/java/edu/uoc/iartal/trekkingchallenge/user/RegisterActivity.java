@@ -30,8 +30,8 @@ import edu.uoc.iartal.trekkingchallenge.R;
 
 public class RegisterActivity extends AppCompatActivity {
 
-    private EditText editTextUserId, editTextUserName, editTextUserMail, editTextUserPass, editTextPassRepeat;
-    private String idUser, userName, userMail, userPassword;
+    private EditText editTextUserAlias, editTextUserName, editTextUserMail, editTextUserPass, editTextPassRepeat;
+    private String alias, name, mail, password;
     private ProgressDialog progressDialog;
     private FirebaseAuth firebaseAuth;
     private DatabaseReference databaseUser, databaseHistory;
@@ -65,7 +65,7 @@ public class RegisterActivity extends AppCompatActivity {
         progressDialog = new ProgressDialog(this);
 
         // Link layout elements with variables
-        editTextUserId = (EditText) findViewById(R.id.etIdUser);
+        editTextUserAlias = (EditText) findViewById(R.id.etIdUser);
         editTextUserName = (EditText) findViewById(R.id.etUserName);
         editTextUserMail = (EditText) findViewById(R.id.etUserMail);
         editTextUserPass = (EditText) findViewById(R.id.etUserPass);
@@ -80,42 +80,42 @@ public class RegisterActivity extends AppCompatActivity {
     public void registerUser (View view){
 
         // Get input parameters
-        idUser = editTextUserId.getText().toString().trim();
-        userName = editTextUserName.getText().toString().trim();
-        userMail = editTextUserMail.getText().toString().trim();
-        userPassword = editTextUserPass.getText().toString().trim();
+        alias = editTextUserAlias.getText().toString().trim();
+        name = editTextUserName.getText().toString().trim();
+        mail = editTextUserMail.getText().toString().trim();
+        password = editTextUserPass.getText().toString().trim();
         String repeatPassword = editTextPassRepeat.getText().toString().trim();
 
         CommonFunctionality common = new CommonFunctionality();
 
         // If some of the input parameters are incorrect or empty, stops the function execution further
-        if(TextUtils.isEmpty(userName)) {
+        if(TextUtils.isEmpty(name)) {
             Toast.makeText(this, getString(R.string.nameField), Toast.LENGTH_LONG).show();
             return;
         }
 
-        if(TextUtils.isEmpty(idUser)) {
+        if(TextUtils.isEmpty(alias)) {
             Toast.makeText(this, getString(R.string.idField), Toast.LENGTH_LONG).show();
             return;
         }
 
-        if(TextUtils.isEmpty(userMail)) {
+        if(TextUtils.isEmpty(mail)) {
             Toast.makeText(this, getString(R.string.mailField), Toast.LENGTH_LONG).show();
             return;
-        } else if (!common.validateEmail(userMail)){
+        } else if (!common.validateEmail(mail)){
             Toast.makeText(this, getString(R.string.mailFormat), Toast.LENGTH_LONG).show();
             return;
         }
 
-        if(TextUtils.isEmpty(userPassword)) {
+        if(TextUtils.isEmpty(password)) {
             Toast.makeText(this, getString(R.string.passwordField), Toast.LENGTH_LONG).show();
             return;
-        } else if (!common.validatePassword(userPassword)){
+        } else if (!common.validatePassword(password)){
             Toast.makeText(this, getString(R.string.passwordTooShort), Toast.LENGTH_LONG).show();
             return;
         }
 
-        if(!userPassword.equals(repeatPassword)) {
+        if(!password.equals(repeatPassword)) {
             Toast.makeText(this, getString(R.string.samePass), Toast.LENGTH_LONG).show();
             return;
         }
@@ -126,16 +126,19 @@ public class RegisterActivity extends AppCompatActivity {
 
 
         // Execute firebase user registration function
-        firebaseAuth.createUserWithEmailAndPassword(userMail,userPassword)
+        firebaseAuth.createUserWithEmailAndPassword(mail,password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         // If user is successfully registered and logged in, create user object and start main activity
                         if(task.isSuccessful()){
                             String idHistory = databaseHistory.push().getKey();
+                            String idUser = databaseUser.push().getKey();
+
                             History history = new History(idHistory, 0.0, 0.0, 0, 0, idUser);
                             databaseHistory.child(idHistory).setValue(history);
-                            User user = new User(idUser, userName,userMail,userPassword, idHistory);
+
+                            User user = new User(idUser, alias, name, mail, password, idHistory);
                             databaseUser.child(idUser).setValue(user);
 
                             progressDialog.dismiss();

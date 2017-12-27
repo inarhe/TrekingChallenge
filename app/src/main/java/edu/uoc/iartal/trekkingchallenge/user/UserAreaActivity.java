@@ -35,7 +35,7 @@ import edu.uoc.iartal.trekkingchallenge.R;
 public class UserAreaActivity extends AppCompatActivity {
 
     private static final int ACTIVITY_CODE = 1;
-    private TextView textViewUserName, textViewUserMail, textViewIdUser;
+    private TextView textViewUserName, textViewUserMail, textViewAlias;
     private Intent intent;
     private ProgressDialog progressDialog;
     private User user;
@@ -62,7 +62,7 @@ public class UserAreaActivity extends AppCompatActivity {
         progressDialog = new ProgressDialog(this);
 
         // Link layout elements with variables
-        textViewIdUser = (TextView) findViewById(R.id.tvIdUser);
+        textViewAlias = (TextView) findViewById(R.id.tvIdUser);
         textViewUserName = (TextView) findViewById(R.id.tvUserName);
         textViewUserMail = (TextView) findViewById(R.id.tvUserMail);
 
@@ -124,7 +124,7 @@ public class UserAreaActivity extends AppCompatActivity {
 
                         final FirebaseUser userFirebase = FirebaseAuth.getInstance().getCurrentUser();
                         AuthCredential credential = EmailAuthProvider
-                                .getCredential(user.getUserMail(), user.getUserPassword());
+                                .getCredential(user.getMail(), user.getPassword());
 
                         if (userFirebase != null){
                             userFirebase.reauthenticate(credential)
@@ -203,9 +203,9 @@ public class UserAreaActivity extends AppCompatActivity {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 user = dataSnapshot.getValue(User.class);
-                textViewIdUser.setText(user.getIdUser());
-                textViewUserName.setText(user.getUserName());
-                textViewUserMail.setText(user.getUserMail());
+                textViewAlias.setText(user.getAlias());
+                textViewUserName.setText(user.getName());
+                textViewUserMail.setText(user.getMail());
 
                 progressDialog.dismiss();
             }

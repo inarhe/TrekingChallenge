@@ -23,6 +23,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 
 import edu.uoc.iartal.trekkingchallenge.R;
+import edu.uoc.iartal.trekkingchallenge.challenge.FinishedChallengeActivity;
 import edu.uoc.iartal.trekkingchallenge.common.CommonFunctionality;
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
 import edu.uoc.iartal.trekkingchallenge.message.ListMessagesActivity;
@@ -90,8 +91,8 @@ public class ShowTripActivity extends AppCompatActivity {
                 for (DataSnapshot userSnapshot :
                         dataSnapshot.getChildren()) {
                     User user = userSnapshot.getValue(User.class);
-                    if (user.getUserMail().equals(currentMail)) {
-                        currentUserName = user.getIdUser();
+                    if (user.getMail().equals(currentMail)) {
+                        currentUserName = user.getId();
                     }
                 }
             }
@@ -133,6 +134,9 @@ public class ShowTripActivity extends AppCompatActivity {
                 return true;
             case R.id.action_leaveTrip:
                 leaveTrip();
+                return true;
+            case R.id.action_result:
+                tripFinished();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -216,6 +220,15 @@ public class ShowTripActivity extends AppCompatActivity {
 
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
+    }
+
+    /**
+     * Starts register challenge results activity when option menu is selected
+     */
+    public void tripFinished() {
+        Intent intent = new Intent(this, FinishedTripActivity.class);
+        intent.putExtra("trip", trip);
+        startActivity(intent);
     }
 
     /**

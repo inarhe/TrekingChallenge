@@ -179,7 +179,7 @@ public class AddGroupActivity extends AppCompatActivity {
         query.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                userAdmin = dataSnapshot.getValue(User.class).getIdUser();
+                userAdmin = dataSnapshot.getValue(User.class).getId();
             }
 
             @Override

@@ -88,7 +88,7 @@ public class ListUsersActivity extends AppCompatActivity implements SearchView.O
                 for (DataSnapshot userSnapshot:
                         dataSnapshot.getChildren()) {
                     User user = userSnapshot.getValue(User.class);
-                    if (!user.getUserMail().equals(FirebaseAuth.getInstance().getCurrentUser().getEmail())){
+                    if (!user.getMail().equals(FirebaseAuth.getInstance().getCurrentUser().getEmail())){
                         users.add(user);
                     }
                 }
@@ -232,7 +232,7 @@ public class ListUsersActivity extends AppCompatActivity implements SearchView.O
         query = query.toLowerCase();
         filteredModelList.clear();
         for (User model : models) {
-            final String text = model.getIdUser().toLowerCase();
+            final String text = model.getAlias().toLowerCase();
             if (text.contains(query)) {
                 filteredModelList.add(model);
             }
@@ -245,8 +245,8 @@ public class ListUsersActivity extends AppCompatActivity implements SearchView.O
      */
     private void setGroups (){
         for (User user : selectedUsers){
-            databaseUser.child(user.getIdUser()).child(FireBaseReferences.USER_GROUPS_REFERENCE).child(group.getId()).setValue("true");
-            databaseGroup.child(group.getId()).child(FireBaseReferences.MEMBERS_REFERENCE).child(user.getIdUser()).setValue("true");
+            databaseUser.child(user.getId()).child(FireBaseReferences.USER_GROUPS_REFERENCE).child(group.getId()).setValue("true");
+            databaseGroup.child(group.getId()).child(FireBaseReferences.MEMBERS_REFERENCE).child(user.getId()).setValue("true");
             databaseGroup.child(group.getId()).child(FireBaseReferences.NUMBER_OF_MEMBERS_REFERENCE).setValue(group.getNumberOfMembers() + selectedUsers.size());
         }
     }
@@ -256,8 +256,8 @@ public class ListUsersActivity extends AppCompatActivity implements SearchView.O
      */
     private void setTrips () {
         for (User user : selectedUsers) {
-            databaseUser.child(user.getIdUser()).child(FireBaseReferences.USER_TRIPS_REFERENCE).child(trip.getId()).setValue("true");
-            databaseTrip.child(trip.getId()).child(FireBaseReferences.MEMBERS_REFERENCE).child(user.getIdUser()).setValue("true");
+            databaseUser.child(user.getId()).child(FireBaseReferences.USER_TRIPS_REFERENCE).child(trip.getId()).setValue("true");
+            databaseTrip.child(trip.getId()).child(FireBaseReferences.MEMBERS_REFERENCE).child(user.getId()).setValue("true");
             databaseTrip.child(trip.getId()).child(FireBaseReferences.NUMBER_OF_MEMBERS_REFERENCE).setValue(trip.getNumberOfMembers() + selectedUsers.size());
         }
     }
@@ -267,8 +267,8 @@ public class ListUsersActivity extends AppCompatActivity implements SearchView.O
      */
     private void setChallenges (){
         for (User user : selectedUsers){
-            databaseUser.child(user.getIdUser()).child(FireBaseReferences.USER_CHALLENGES_REFERENCE).child(challenge.getId()).setValue("true");
-            databaseChallenge.child(challenge.getId()).child(FireBaseReferences.MEMBERS_REFERENCE).child(user.getIdUser()).setValue("true");
+            databaseUser.child(user.getId()).child(FireBaseReferences.USER_CHALLENGES_REFERENCE).child(challenge.getId()).setValue("true");
+            databaseChallenge.child(challenge.getId()).child(FireBaseReferences.MEMBERS_REFERENCE).child(user.getId()).setValue("true");
             databaseChallenge.child(challenge.getId()).child(FireBaseReferences.NUMBER_OF_MEMBERS_REFERENCE).setValue(challenge.getNumberOfMembers() + selectedUsers.size());
         }
     }

@@ -11,21 +11,21 @@
 
     <TextView
         android:id="@+id/tvChallengeName"
-        android:layout_width="95dp"
+        android:layout_width="@dimen/list_widthColumn_4x1"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:textAlignment="center" />
 
     <TextView
         android:id="@+id/tvChallengeDate"
-        android:layout_width="95dp"
+        android:layout_width="@dimen/list_widthColumn_4x2"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:textAlignment="center" />
 
     <TextView
         android:id="@+id/tvChallengePosition"
-        android:layout_width="95dp"
+        android:layout_width="@dimen/list_widthColumn_4x3"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:textAlignment="center" />
@@ -37,14 +37,14 @@
 
         <TextView
             android:id="@+id/tvChallengeDistance"
-            android:layout_width="95dp"
+            android:layout_width="@dimen/list_widthColumn_4x4"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:textAlignment="center" />
 
         <TextView
             android:id="@+id/tvChallengeTime"
-            android:layout_width="95dp"
+            android:layout_width="@dimen/list_widthColumn_4x4"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:textAlignment="center" />

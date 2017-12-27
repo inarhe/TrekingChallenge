@@ -19,4 +19,9 @@
         android:title="@string/actionLeaveTrip"
         android:orderInCategory="100"
         app:showAsAction="never"/>
+
+    <item android:id="@+id/action_result"
+        android:title="@string/action_tripFinished"
+        android:orderInCategory="100"
+        app:showAsAction="never"/>
 </menu>

@@ -1,4 +1,4 @@
-package edu.uoc.iartal.trekkingchallenge.challenge;
+package edu.uoc.iartal.trekkingchallenge.trip;
 
 import android.app.DatePickerDialog;
 import android.content.Context;
@@ -32,30 +32,32 @@ import java.util.Locale;
 
 import edu.uoc.iartal.trekkingchallenge.R;
 import edu.uoc.iartal.trekkingchallenge.common.CommonFunctionality;
+import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
 import edu.uoc.iartal.trekkingchallenge.objects.Challenge;
 import edu.uoc.iartal.trekkingchallenge.objects.ChallengeResult;
-import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
 import edu.uoc.iartal.trekkingchallenge.objects.History;
 import edu.uoc.iartal.trekkingchallenge.objects.Route;
+import edu.uoc.iartal.trekkingchallenge.objects.Trip;
+import edu.uoc.iartal.trekkingchallenge.objects.TripDone;
 import edu.uoc.iartal.trekkingchallenge.objects.User;
 import edu.uoc.iartal.trekkingchallenge.user.LoginActivity;
 
-public class FinishedChallengeActivity extends AppCompatActivity {
+public class FinishedTripActivity extends AppCompatActivity {
     private Calendar dateSelected;
     private SimpleDateFormat sdf;
     private User user;
     private EditText editTextDate, editTextDist, editTextHour;
     private Context context = this;
     private DatePickerDialog.OnDateSetListener date;
-    private Challenge challenge;
-    private DatabaseReference databaseUser, databaseResult, databaseChallenge, databaseHistory, databaseRoute;
+    private Trip trip;
+    private DatabaseReference databaseUser, databaseTripsDone, databaseTrip, databaseHistory, databaseRoute;
     private Double historyTime, historyDistance;
-    private int historyWins, historySlope, routeSlope;
+    private int historySlope, routeSlope;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_finished_challenge);
+        setContentView(R.layout.activity_finished_trip);
 
         // If user isn't logged, start login activity
         if (FirebaseAuth.getInstance().getCurrentUser() == null) {
@@ -65,22 +67,22 @@ public class FinishedChallengeActivity extends AppCompatActivity {
 
         // Get data from show challenge activity
         Bundle bundle = getIntent().getExtras();
-        challenge = bundle.getParcelable("challenge");
+        trip = bundle.getParcelable("trip");
 
         // Set toolbar and actionbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.finishedChallengeToolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.finishedTripToolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setTitle(R.string.finishChallengeActivity);
+        actionBar.setTitle(R.string.finishTripActivity);
 
         // Hide keyboard until user select edit text
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         // Get database references
         databaseUser = FirebaseDatabase.getInstance().getReference(FireBaseReferences.USER_REFERENCE);
-        databaseResult = FirebaseDatabase.getInstance().getReference(FireBaseReferences.CHALLENGERESULT_REFERENCE);
-        databaseChallenge = FirebaseDatabase.getInstance().getReference(FireBaseReferences.CHALLENGE_REFERENCE);
+        databaseTripsDone = FirebaseDatabase.getInstance().getReference(FireBaseReferences.TRIPSDONE_REFERENCE);
+        databaseTrip = FirebaseDatabase.getInstance().getReference(FireBaseReferences.TRIP_REFERENCE);
         databaseHistory = FirebaseDatabase.getInstance().getReference(FireBaseReferences.HISTORY_REFERENCE);
         databaseRoute = FirebaseDatabase.getInstance().getReference(FireBaseReferences.ROUTE_REFERENCE);
 
@@ -115,7 +117,7 @@ public class FinishedChallengeActivity extends AppCompatActivity {
      */
     public void registerFinish(View view){
         //Initialize variables
-        String idResult;
+        String idDone;
         String finishDate = editTextDate.getText().toString().trim();
         String finishDist = editTextDist.getText().toString().trim();
         String finishHour = editTextHour.getText().toString().trim();
@@ -132,16 +134,16 @@ public class FinishedChallengeActivity extends AppCompatActivity {
         }
 
         // Add challenge result to firebase database
-        idResult = databaseResult.push().getKey();
-        ChallengeResult challengeResult = new ChallengeResult(idResult, Double.parseDouble(finishDist), Double.parseDouble(finishHour), user.getId(), challenge.getId(), finishDate,0, challenge.getName());
+        idDone = databaseTripsDone.push().getKey();
+        TripDone tripsDone = new TripDone(idDone, Double.parseDouble(finishDist), Double.parseDouble(finishHour), user.getId(), trip.getId(), finishDate, trip.getName(), trip.getRoute());
 
-        databaseResult.child(idResult).setValue(challengeResult).addOnCompleteListener(new OnCompleteListener<Void>() {
+        databaseTripsDone.child(idDone).setValue(tripsDone).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if(task.isSuccessful()) {
-                    Toast.makeText(FinishedChallengeActivity.this, getString(R.string.finishedSaved), Toast.LENGTH_LONG).show();
+                    Toast.makeText(FinishedTripActivity.this, getString(R.string.finishedSaved), Toast.LENGTH_LONG).show();
                 } else {
-                    Toast.makeText(FinishedChallengeActivity.this, getString(R.string.finishedFailed), Toast.LENGTH_LONG).show();
+                    Toast.makeText(FinishedTripActivity.this, getString(R.string.finishedFailed), Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -149,17 +151,13 @@ public class FinishedChallengeActivity extends AppCompatActivity {
         CommonFunctionality common = new CommonFunctionality();
 
         // Update result list in user and challenge database nodes
-        common.updateResults (databaseUser, user.getId(), FireBaseReferences.USER_RESULT_REFERENCE, idResult, context);
-        common.updateResults(databaseChallenge, challenge.getId(), FireBaseReferences.CHALLENGE_FINISHED_REFERENCE,idResult, context);
-
-        if (challengeResult.getPosition() == 1){
-            databaseHistory.child(user.getHistory()).child(FireBaseReferences.HISTORY_WINS_REFERENCE).setValue(historyWins + 1);
-        }
+        common.updateResults (databaseUser, user.getId(), FireBaseReferences.USER_TRIPSDONE_REFERENCE, idDone, context);
+        common.updateResults(databaseTrip, trip.getId(), FireBaseReferences.TRIP_DONE_REFERENCE,idDone, context);
 
         databaseHistory.child(user.getHistory()).child(FireBaseReferences.HISTORY_DISTANCE_REFERENCE).setValue(historyDistance + Double.parseDouble(finishDist));
         databaseHistory.child(user.getHistory()).child(FireBaseReferences.HISTORY_TIME_REFERENCE).setValue(historyTime + Double.parseDouble(finishHour));
 
-        Query query = databaseRoute.orderByChild(FireBaseReferences.ROUTE_ID_REFERENCE).equalTo(challenge.getRoute());
+        Query query = databaseRoute.orderByChild(FireBaseReferences.ROUTE_NAME_REFERENCE).equalTo(trip.getRoute());
 
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -261,7 +259,6 @@ public class FinishedChallengeActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot historySnapshot : dataSnapshot.getChildren()) {
                     History history = historySnapshot.getValue(History.class);
-                    historyWins = history.getChallengeWin();
                     historyDistance = history.getTotalDistance();
                     historyTime = history.getTotalTime();
                     historySlope = history.getTotalSlope();

@@ -8,9 +8,17 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
 
 import edu.uoc.iartal.trekkingchallenge.R;
+import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
 
 
 public class RatingAdapter extends RecyclerView.Adapter<RatingAdapter.RatingViewHolder> {
@@ -55,7 +63,23 @@ public class RatingAdapter extends RecyclerView.Adapter<RatingAdapter.RatingView
      */
     @Override
     public void onBindViewHolder(final RatingViewHolder viewHolder, final int position) {
-        viewHolder.textViewUser.setText("@" + ratings.get(position).getUser());
+        DatabaseReference databaseUser = FirebaseDatabase.getInstance().getReference(FireBaseReferences.USER_REFERENCE);
+        Query query = databaseUser.orderByChild(FireBaseReferences.USER_ID_REFERENCE).equalTo(ratings.get(position).getUser());
+
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot userSnapshot : dataSnapshot.getChildren()){
+                    User user = userSnapshot.getValue(User.class);
+                    viewHolder.textViewUser.setText("@" + user.getAlias());
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
         viewHolder.textViewTitle.setText(ratings.get(position).getTitle());
         viewHolder.textViewOpinion.setText(ratings.get(position).getOpinion());
         viewHolder.rbUserRate.setRating(ratings.get(position).getValue());

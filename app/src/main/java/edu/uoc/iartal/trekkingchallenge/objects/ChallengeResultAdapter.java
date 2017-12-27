@@ -111,7 +111,7 @@ public class ChallengeResultAdapter extends ArrayAdapter<ChallengeResult> {
                         final User user = userSnapshot.getValue(User.class);
 
                         ArrayList<String> challengeResults = new ArrayList<>();
-                        challengeResults.addAll(user.getResults().keySet());
+                        challengeResults.addAll(user.getChallengeResults().keySet());
 
                         databaseChallResults.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
@@ -119,7 +119,7 @@ public class ChallengeResultAdapter extends ArrayAdapter<ChallengeResult> {
                                 challengeWin = 0;
                                 for (DataSnapshot result : dataSnapshot.getChildren()){
                                     ChallengeResult challengeResult = result.getValue(ChallengeResult.class);
-                                    if (challengeResult.getUser().equals(user.getIdUser())){
+                                    if (challengeResult.getUser().equals(user.getId())){
                                         if (challengeResult.getPosition() == 1){
                                             challengeWin ++;
                                         }

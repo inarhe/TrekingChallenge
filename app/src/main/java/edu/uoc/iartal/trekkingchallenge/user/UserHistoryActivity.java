@@ -27,6 +27,7 @@ import edu.uoc.iartal.trekkingchallenge.objects.History;
 import edu.uoc.iartal.trekkingchallenge.objects.Route;
 import edu.uoc.iartal.trekkingchallenge.objects.User;
 import edu.uoc.iartal.trekkingchallenge.route.RouteHistoryActivity;
+import edu.uoc.iartal.trekkingchallenge.trip.TripHistoryActivity;
 
 public class UserHistoryActivity extends AppCompatActivity {
 
@@ -81,8 +82,8 @@ public class UserHistoryActivity extends AppCompatActivity {
 
         // Show selected group information in the layout
 
-        tvTotalChall.setText(Integer.toString(user.getChallenges().size()));
-        tvTotalTrip.setText(Integer.toString(user.getTrips().size()));
+        tvTotalChall.setText(Integer.toString(user.getChallengeResults().size()));
+        tvTotalTrip.setText(Integer.toString(user.getTripsDone().size()));
         tvTotalRoute.setText(Integer.toString(user.getFinished().size()));
 
         Query query = databaseHistory.orderByChild(FireBaseReferences.HISTORY_ID_REFERENCE).equalTo(user.getHistory());
@@ -119,8 +120,8 @@ public class UserHistoryActivity extends AppCompatActivity {
     }
 
     public void tripHistory(View view){
-       // Intent intent = new Intent(getApplicationContext(), TripHistoryActivity.class);
-      //  intent.putExtra("user", user);
-      //  startActivity(intent);
+        Intent intent = new Intent(getApplicationContext(), TripHistoryActivity.class);
+        intent.putExtra("user", user);
+        startActivity(intent);
     }
 }

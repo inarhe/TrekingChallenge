@@ -10,24 +10,25 @@ import java.util.Map;
 
 // User object class. Implements Parcelable to pass user object between activities
 public class User implements Parcelable {
-    private String idUser, userName, userMail, userPassword;
+    private String idUser, userName, userMail, userPassword, history;
     private Map<String, String> groups = new HashMap<>();
     private Map<String, String> trips = new HashMap<>();
     private Map<String, String> finished = new HashMap<>();
     private Map<String, String> challenges = new HashMap<>();
     private Map<String, String> ratings = new HashMap<>();
-    private Map<String, String> challengesResults = new HashMap<>();
+    private Map<String, String> results = new HashMap<>();
 
     public User() {
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
     }
 
 
-    public User(String idUser, String userName, String userMail, String userPassword) {
+    public User(String idUser, String userName, String userMail, String userPassword, String history) {
         this.idUser = idUser;
         this.userName = userName;
         this.userMail = userMail;
         this.userPassword = userPassword;
+        this.history = history;
     }
 
     public User(Parcel in) {
@@ -35,10 +36,11 @@ public class User implements Parcelable {
         this.userName = in.readString();
         this.userMail = in.readString();
         this.userPassword = in.readString();
+        this.history = in.readString();
         in.readMap(challenges, String.class.getClassLoader());
         in.readMap(trips, String.class.getClassLoader());
         in.readMap(finished, String.class.getClassLoader());
-        in.readMap(challengesResults, String.class.getClassLoader());
+        in.readMap(results, String.class.getClassLoader());
     }
 
     public String getIdUser() {
@@ -73,6 +75,14 @@ public class User implements Parcelable {
         this.userPassword = userPassword;
     }
 
+    public String getHistory() {
+        return history;
+    }
+
+    public void setHistory(String history) {
+        this.history = history;
+    }
+
     public Map<String, String> getGroups() {
         return this.groups;
     }
@@ -93,8 +103,8 @@ public class User implements Parcelable {
         return this.ratings;
     }
 
-    public Map<String, String> getChallengesResults() {
-        return this.challengesResults;
+    public Map<String, String> getResults() {
+        return this.results;
     }
 
     @Override
@@ -108,10 +118,11 @@ public class User implements Parcelable {
         dest.writeString(userName);
         dest.writeString(userMail);
         dest.writeString(userPassword);
+        dest.writeString(history);
         dest.writeMap(challenges);
         dest.writeMap(trips);
         dest.writeMap(finished);
-        dest.writeMap(challengesResults);
+        dest.writeMap(results);
     }
 
     public static final Parcelable.Creator<User> CREATOR = new Parcelable.Creator<User>() {

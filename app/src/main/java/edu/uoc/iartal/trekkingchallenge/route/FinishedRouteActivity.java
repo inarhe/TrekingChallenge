@@ -24,6 +24,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -33,6 +34,7 @@ import edu.uoc.iartal.trekkingchallenge.R;
 import edu.uoc.iartal.trekkingchallenge.common.CommonFunctionality;
 import edu.uoc.iartal.trekkingchallenge.objects.Finished;
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
+import edu.uoc.iartal.trekkingchallenge.objects.History;
 import edu.uoc.iartal.trekkingchallenge.objects.Route;
 import edu.uoc.iartal.trekkingchallenge.objects.User;
 import edu.uoc.iartal.trekkingchallenge.user.LoginActivity;
@@ -42,12 +44,15 @@ public class FinishedRouteActivity extends AppCompatActivity {
     private DatePickerDialog datePickerDialog;
     private Calendar dateSelected;
     private SimpleDateFormat sdf;
-    private String dateFormat, user;
+    private String dateFormat;
+    private User user;
     private EditText editTextDate, editTextDist, editTextHour, editTextMinute;
     private Context context = this;
     private DatePickerDialog.OnDateSetListener date;
     private Route route;
-    private DatabaseReference databaseUser, databaseRoute, databaseFinished;
+    private DatabaseReference databaseUser, databaseRoute, databaseFinished, databaseHistory;
+    private Double historyTime, historyDistance;
+    private int historySlope;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +83,7 @@ public class FinishedRouteActivity extends AppCompatActivity {
         databaseUser = FirebaseDatabase.getInstance().getReference(FireBaseReferences.USER_REFERENCE);
         databaseRoute = FirebaseDatabase.getInstance().getReference(FireBaseReferences.ROUTE_REFERENCE);
         databaseFinished = FirebaseDatabase.getInstance().getReference(FireBaseReferences.FINISHED_REFERENCE);
+        databaseHistory = FirebaseDatabase.getInstance().getReference(FireBaseReferences.HISTORY_REFERENCE);
 
         // Link layout elements with variables
         editTextDate = (EditText) findViewById(R.id.etDateFinish);
@@ -135,7 +141,7 @@ public class FinishedRouteActivity extends AppCompatActivity {
 
         // Add route finished result to firebase database
         idFinish = databaseFinished.push().getKey();
-        Finished finished = new Finished(idFinish, user, route.getIdRoute(), finishDate, Double.parseDouble(finishDist), Double.parseDouble(finishHour));
+        Finished finished = new Finished(idFinish, user.getIdUser(), route.getIdRoute(), finishDate, Double.parseDouble(finishDist), Double.parseDouble(finishHour), route.getName());
 
         databaseFinished.child(idFinish).setValue(finished).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
@@ -151,8 +157,12 @@ public class FinishedRouteActivity extends AppCompatActivity {
         CommonFunctionality common = new CommonFunctionality();
 
         // Update result list in user and route database nodes
-        common.updateResults (databaseUser, user, FireBaseReferences.USER_FINISHED_REFERENCE, idFinish, context);
+        common.updateResults (databaseUser, user.getIdUser(), FireBaseReferences.USER_FINISHED_REFERENCE, idFinish, context);
         common.updateResults(databaseRoute, route.getIdRoute(), FireBaseReferences.ROUTE_FINISHED_REFERENCE,idFinish, context);
+
+        databaseHistory.child(user.getHistory()).child(FireBaseReferences.HISTORY_DISTANCE_REFERENCE).setValue(historyDistance + Double.parseDouble(finishDist));
+        databaseHistory.child(user.getHistory()).child(FireBaseReferences.HISTORY_TIME_REFERENCE).setValue(historyTime + Double.parseDouble(finishHour));
+        databaseHistory.child(user.getHistory()).child(FireBaseReferences.HISTORY_SLOPE_REFERENCE).setValue(historySlope + route.getAscent() + route.getDecline());
 
         finish();
     }
@@ -201,7 +211,8 @@ public class FinishedRouteActivity extends AppCompatActivity {
         query.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                user = dataSnapshot.getValue(User.class).getIdUser();
+                user = dataSnapshot.getValue(User.class);
+                getHistoryValues();
             }
 
             @Override
@@ -222,6 +233,30 @@ public class FinishedRouteActivity extends AppCompatActivity {
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 //TO-DO
+            }
+        });
+    }
+
+    /**
+     * Query database to get current user information and know who is doing the action
+     */
+    private void getHistoryValues(){
+       Query query = databaseHistory.orderByChild(FireBaseReferences.HISTORY_ID_REFERENCE).equalTo(user.getHistory());
+
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot historySnapshot : dataSnapshot.getChildren()) {
+                    History history = historySnapshot.getValue(History.class);
+                    historyDistance = history.getTotalDistance();
+                    historyTime = history.getTotalTime();
+                    historySlope = history.getTotalSlope();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
             }
         });
     }

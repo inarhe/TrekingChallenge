@@ -61,6 +61,14 @@ public class FireBaseReferences {
     // Message references
     final public static String MESSAGE_REFERENCE = "message";
 
+    // History references
+    final public static String HISTORY_REFERENCE = "history";
+    final public static String HISTORY_ID_REFERENCE = "id";
+    final public static String HISTORY_WINS_REFERENCE = "challengeWin";
+    final public static String HISTORY_DISTANCE_REFERENCE = "totalDistance";
+    final public static String HISTORY_SLOPE_REFERENCE = "totalSlope";
+    final public static String HISTORY_TIME_REFERENCE = "totalTime";
+
     // Common references
     final public static String MEMBERS_REFERENCE = "members";
     final public static String NUMBER_OF_MEMBERS_REFERENCE = "numberOfMembers";

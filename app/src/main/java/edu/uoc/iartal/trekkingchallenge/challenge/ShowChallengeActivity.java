@@ -2,7 +2,6 @@ package edu.uoc.iartal.trekkingchallenge.challenge;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
@@ -11,9 +10,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,15 +23,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 
-import de.codecrafters.tableview.SortableTableView;
-import de.codecrafters.tableview.SortingOrder;
-import de.codecrafters.tableview.TableView;
-import de.codecrafters.tableview.toolkit.SimpleTableDataAdapter;
-import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter;
 import edu.uoc.iartal.trekkingchallenge.R;
 import edu.uoc.iartal.trekkingchallenge.common.CommonFunctionality;
 import edu.uoc.iartal.trekkingchallenge.objects.Challenge;
@@ -80,7 +71,7 @@ public class ShowChallengeActivity extends AppCompatActivity {
         TextView textViewDate = (TextView) findViewById(R.id.tvDateChallenge);
         TextView textViewDesc = (TextView) findViewById(R.id.tvDescChallenge);
         rankingList = (ListView) findViewById(R.id.lvRanking);
-        headerView = (ViewGroup) getLayoutInflater().inflate(R.layout.header, rankingList, false);
+        headerView = (ViewGroup) getLayoutInflater().inflate(R.layout.header_ranking_challenge, rankingList, false);
         rankingList.addHeaderView(headerView);
 
         // Initialize variables

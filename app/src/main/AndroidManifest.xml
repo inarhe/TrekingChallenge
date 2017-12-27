@@ -65,7 +65,9 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".group.ListGroupsActivity" />
         </activity>
-        <activity android:name=".user.UserHistoryActivity">
+        <activity
+            android:name=".user.UserHistoryActivity"
+            android:launchMode="singleTop">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".user.UserAreaActivity" />
@@ -147,6 +149,11 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".challenge.ListChallengesActivity" />
         </activity>
+        <activity android:name=".challenge.ChallengeHistoryActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".user.UserHistoryActivity" />
+        </activity>
 
         <!-- Route activities -->
         <activity android:name=".route.ListRoutesActivity">
@@ -191,6 +198,11 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".route.ShowRouteActivity" />
         </activity>
+        <activity android:name=".route.RouteHistoryActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".user.UserHistoryActivity" />
+        </activity>
 
         <!-- Message activites -->
         <activity android:name=".message.AddMessageActivity">
@@ -198,7 +210,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".message.ListMessagesActivity" />
         </activity>
-        <activity android:name=".message.ListMessagesActivity"></activity>
+        <activity android:name=".message.ListMessagesActivity" />
 
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.

@@ -177,6 +177,12 @@
     <!--Photo gallery activity-->
     <string name="photoGallery">Galeria de fotos</string>
 
+    <!--Route history activity-->
+    <string name="headerRouteName">Ruta</string>
+    <string name="headerRouteDate">Data</string>
+    <string name="headerRouteResult">Resultats</string>
+    <string name="routeHistoryActivity">Històric de rutes</string>
+
 
     <!--TRIP OBJECT-->
     <!--Trip adapter-->
@@ -223,6 +229,12 @@
     <string name="editTripActivityName">Modificar excursió</string>
     <string name="editTripOk">Excursió modificada correctament</string>
     <string name="editTripFail">No s\'ha pogut modificar l\'excursió</string>
+
+    <!--Trip history activity-->
+    <string name="headerTripName">Repte</string>
+    <string name="headerTripDate">Data</string>
+    <string name="headerTripResult">Resultats</string>
+    <string name="tripHistoryActivity">Històric de reptes</string>
 
 
     <!--CHALLENGE OBJECT-->
@@ -278,6 +290,13 @@
     <string name="editChallengeActivityName">Modificar repte</string>
     <string name="editChallengeOk">Repte modificat correctament</string>
     <string name="editChallengeFail">No s\'ha pogut modificar el repte</string>
+
+    <!--Challenge history activity-->
+    <string name="headerChallengeName">Repte</string>
+    <string name="headerChallengeDate">Data</string>
+    <string name="headerChallengePosition">Posició</string>
+    <string name="headerChallengeResult">Resultats</string>
+    <string name="challengeHistoryActivity">Històric de reptes</string>
 
 
     <!--RATING OBJECT-->

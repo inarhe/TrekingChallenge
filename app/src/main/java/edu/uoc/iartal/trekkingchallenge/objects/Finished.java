@@ -6,20 +6,21 @@ import android.os.Parcelable;
 
 // Finished object class. Implements Parcelable to pass finished object between activities
 public class Finished implements Parcelable {
-    private String id, user, route, date;
+    private String id, user, route, date, name;
     private Double distance, time;
 
     public Finished (){
 
     }
 
-    public Finished(String id, String user, String route, String date, Double distance, Double time) {
+    public Finished(String id, String user, String route, String date, Double distance, Double time, String name) {
         this.id = id;
         this.user = user;
         this.route = route;
         this.date = date;
         this.distance = distance;
         this.time = time;
+        this.name = name;
     }
 
     public Finished(Parcel in) {
@@ -29,6 +30,7 @@ public class Finished implements Parcelable {
         this.date = in.readString();
         this.distance = in.readDouble();
         this.time = in.readDouble();
+        this.name = in.readString();
     }
 
     public String getId() {
@@ -79,6 +81,14 @@ public class Finished implements Parcelable {
         this.time = time;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -92,6 +102,7 @@ public class Finished implements Parcelable {
         dest.writeString(date);
         dest.writeDouble(distance);
         dest.writeDouble(time);
+        dest.writeString(name);
     }
 
     // Method to compare two group objects

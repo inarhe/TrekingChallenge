@@ -5,6 +5,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -12,16 +13,20 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
 import edu.uoc.iartal.trekkingchallenge.R;
+import edu.uoc.iartal.trekkingchallenge.challenge.ChallengeHistoryActivity;
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
 import edu.uoc.iartal.trekkingchallenge.objects.ChallengeResult;
 import edu.uoc.iartal.trekkingchallenge.objects.Finished;
+import edu.uoc.iartal.trekkingchallenge.objects.History;
 import edu.uoc.iartal.trekkingchallenge.objects.Route;
 import edu.uoc.iartal.trekkingchallenge.objects.User;
+import edu.uoc.iartal.trekkingchallenge.route.RouteHistoryActivity;
 
 public class UserHistoryActivity extends AppCompatActivity {
 
@@ -41,7 +46,7 @@ public class UserHistoryActivity extends AppCompatActivity {
 
         // Get Firebase authentication instance and database references
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-        DatabaseReference databaseUser = FirebaseDatabase.getInstance().getReference(FireBaseReferences.USER_REFERENCE);
+        DatabaseReference databaseHistory = FirebaseDatabase.getInstance().getReference(FireBaseReferences.HISTORY_REFERENCE);
         DatabaseReference databaseChallengeResult = FirebaseDatabase.getInstance().getReference(FireBaseReferences.CHALLENGERESULT_REFERENCE);
         DatabaseReference databaseFinished = FirebaseDatabase.getInstance().getReference(FireBaseReferences.FINISHED_REFERENCE);
         final DatabaseReference databaseRoute = FirebaseDatabase.getInstance().getReference(FireBaseReferences.ROUTE_REFERENCE);
@@ -80,22 +85,18 @@ public class UserHistoryActivity extends AppCompatActivity {
         tvTotalTrip.setText(Integer.toString(user.getTrips().size()));
         tvTotalRoute.setText(Integer.toString(user.getFinished().size()));
 
-        ArrayList<String> challengeResults = new ArrayList<>();
-        challengeResults.addAll(user.getChallengesResults().keySet());
+        Query query = databaseHistory.orderByChild(FireBaseReferences.HISTORY_ID_REFERENCE).equalTo(user.getHistory());
 
-        databaseChallengeResult.addListenerForSingleValueEvent(new ValueEventListener() {
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                challengeWin = 0;
-                for (DataSnapshot result : dataSnapshot.getChildren()){
-                    ChallengeResult challengeResult = result.getValue(ChallengeResult.class);
-                    if (challengeResult.getUser().equals(user.getIdUser())){
-                        if (challengeResult.getPosition() == 1){
-                            challengeWin ++;
-                        }
-                    }
+                for (DataSnapshot historySnapshot : dataSnapshot.getChildren()){
+                    History history = historySnapshot.getValue(History.class);
+                    tvTotalSlope.setText(Integer.toString(history.getTotalSlope()) + " m");
+                    tvTotalKm.setText(String.valueOf(history.getTotalDistance()) + " km");
+                    tvTotalHour.setText(String.valueOf(history.getTotalTime()) + " h");
+                    tvTotalWin.setText(Integer.toString(history.getChallengeWin()));
                 }
-                tvTotalWin.setText(Integer.toString(challengeWin));
             }
 
             @Override
@@ -103,51 +104,23 @@ public class UserHistoryActivity extends AppCompatActivity {
 
             }
         });
+    }
 
-        ArrayList<String> finishedRoutes = new ArrayList<>();
-        finishedRoutes.addAll(user.getFinished().keySet());
+    public void challengeHistory(View view){
+        Intent intent = new Intent(getApplicationContext(), ChallengeHistoryActivity.class);
+        intent.putExtra("user", user);
+        startActivity(intent);
+    }
 
-        databaseFinished.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                km = 0.0;
-                hour = 0.0;
-                slope = 0;
-                for (DataSnapshot finish : dataSnapshot.getChildren()){
-                    final Finished finished = finish.getValue(Finished.class);
-                    if (finished.getUser().equals(user.getIdUser())){
-                        km = km + finished.getDistance();
-                        hour = hour + finished.getTime();
-                    }
-                    databaseRoute.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            for (DataSnapshot routes : dataSnapshot.getChildren()) {
-                                Route route = routes.getValue(Route.class);
-                                if (route.getIdRoute().equals(finished.getRoute())) {
-                                    slope = slope + route.getAscent() + route.getDecline();
-                                }
-                            }
-                            tvTotalSlope.setText(Integer.toString(slope) + " m");
-                        }
+    public void routeHistory(View view){
+        Intent intent = new Intent(getApplicationContext(), RouteHistoryActivity.class);
+        intent.putExtra("user", user);
+        startActivity(intent);
+    }
 
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-
-                        }
-                    });
-
-                }
-                tvTotalKm.setText(String.valueOf(km) + " km");
-                tvTotalHour.setText(String.valueOf(hour) + " h");
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
+    public void tripHistory(View view){
+       // Intent intent = new Intent(getApplicationContext(), TripHistoryActivity.class);
+      //  intent.putExtra("user", user);
+      //  startActivity(intent);
     }
 }

@@ -21,7 +21,7 @@
         android:drawableRight="@drawable/ic_next"
         android:drawableStart="@drawable/ic_challenge"
         android:gravity="center"
-        android:onClick="showDetails"
+        android:onClick="challengeHistory"
         android:text="@string/historyChallenge" />
 
     <Button
@@ -33,7 +33,7 @@
         android:drawableEnd="@drawable/ic_next"
         android:drawableStart="@drawable/ic_trip"
         android:drawableLeft="@drawable/ic_trip"
-        android:onClick="showTracks"
+        android:onClick="tripHistory"
         android:text="@string/historyTrips"
         android:gravity="center"/>
 
@@ -46,8 +46,8 @@
         android:drawableEnd="@drawable/ic_next"
         android:drawableStart="@drawable/ic_landscape"
         android:drawableLeft="@drawable/ic_landscape"
-        android:onClick="showTracks"
-        android:text="@string/tracksButton"
+        android:onClick="routeHistory"
+        android:text="@string/historyRoutes"
         android:gravity="center"/>
 
     <View

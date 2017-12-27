@@ -135,7 +135,7 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.RouteViewHol
             viewHolder.imageViewType.setImageResource(R.drawable.ic_goback);
         }
 
-        // Get header photo name, download it and set into list route
+        // Get header_ranking_challenge photo name, download it and set into list route
         String namePhoto = routes.get(position).getHeaderPhoto();
         storageReference.child(FireBaseReferences.HEADERS_STORAGE + namePhoto).getDownloadUrl()
                 .addOnSuccessListener(new OnSuccessListener<Uri>() {

@@ -19,6 +19,7 @@ import edu.uoc.iartal.trekkingchallenge.map.MapActivity;
 import edu.uoc.iartal.trekkingchallenge.R;
 import edu.uoc.iartal.trekkingchallenge.challenge.ListChallengesActivity;
 import edu.uoc.iartal.trekkingchallenge.group.ListGroupsActivity;
+import edu.uoc.iartal.trekkingchallenge.objects.History;
 import edu.uoc.iartal.trekkingchallenge.objects.User;
 import edu.uoc.iartal.trekkingchallenge.route.ListRoutesActivity;
 import edu.uoc.iartal.trekkingchallenge.trip.ListTripsActivity;

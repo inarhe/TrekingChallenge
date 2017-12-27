@@ -24,6 +24,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -34,18 +35,20 @@ import edu.uoc.iartal.trekkingchallenge.common.CommonFunctionality;
 import edu.uoc.iartal.trekkingchallenge.objects.Challenge;
 import edu.uoc.iartal.trekkingchallenge.objects.ChallengeResult;
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
+import edu.uoc.iartal.trekkingchallenge.objects.History;
 import edu.uoc.iartal.trekkingchallenge.objects.User;
 import edu.uoc.iartal.trekkingchallenge.user.LoginActivity;
 
 public class FinishedChallengeActivity extends AppCompatActivity {
     private Calendar dateSelected;
     private SimpleDateFormat sdf;
-    private String user;
+    private User user;
     private EditText editTextDate, editTextDist, editTextHour;
     private Context context = this;
     private DatePickerDialog.OnDateSetListener date;
     private Challenge challenge;
-    private DatabaseReference databaseUser, databaseResult, databaseChallenge;
+    private DatabaseReference databaseUser, databaseResult, databaseChallenge, databaseHistory;
+    private int historyWins;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +79,7 @@ public class FinishedChallengeActivity extends AppCompatActivity {
         databaseUser = FirebaseDatabase.getInstance().getReference(FireBaseReferences.USER_REFERENCE);
         databaseResult = FirebaseDatabase.getInstance().getReference(FireBaseReferences.CHALLENGERESULT_REFERENCE);
         databaseChallenge = FirebaseDatabase.getInstance().getReference(FireBaseReferences.CHALLENGE_REFERENCE);
+        databaseHistory = FirebaseDatabase.getInstance().getReference(FireBaseReferences.HISTORY_REFERENCE);
 
         // Link layout elements with variables
         editTextDate = (EditText) findViewById(R.id.etDateFinish);
@@ -126,7 +130,7 @@ public class FinishedChallengeActivity extends AppCompatActivity {
 
         // Add challenge result to firebase database
         idResult = databaseChallenge.push().getKey();
-        ChallengeResult challengeResult = new ChallengeResult(idResult, Double.parseDouble(finishDist), Double.parseDouble(finishHour), user, challenge.getId(), finishDate,0);
+        ChallengeResult challengeResult = new ChallengeResult(idResult, Double.parseDouble(finishDist), Double.parseDouble(finishHour), user.getIdUser(), challenge.getId(), finishDate,0, challenge.getName());
 
         databaseResult.child(idResult).setValue(challengeResult).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
@@ -142,8 +146,12 @@ public class FinishedChallengeActivity extends AppCompatActivity {
         CommonFunctionality common = new CommonFunctionality();
 
         // Update result list in user and challenge database nodes
-        common.updateResults (databaseUser, user, FireBaseReferences.USER_RESULT_REFERENCE, idResult, context);
+        common.updateResults (databaseUser, user.getIdUser(), FireBaseReferences.USER_RESULT_REFERENCE, idResult, context);
         common.updateResults(databaseChallenge, challenge.getId(), FireBaseReferences.CHALLENGE_FINISHED_REFERENCE,idResult, context);
+
+        if (challengeResult.getPosition() == 1){
+            databaseHistory.child(user.getHistory()).child(FireBaseReferences.HISTORY_WINS_REFERENCE).setValue(historyWins + 1);
+        }
 
         finish();
     }
@@ -192,7 +200,8 @@ public class FinishedChallengeActivity extends AppCompatActivity {
         query.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                user = dataSnapshot.getValue(User.class).getIdUser();
+                user = dataSnapshot.getValue(User.class);
+                getHistoryValues();
             }
 
             @Override
@@ -213,6 +222,28 @@ public class FinishedChallengeActivity extends AppCompatActivity {
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 //TO-DO
+            }
+        });
+    }
+
+    /**
+     * Query database to get current user information and know who is doing the action
+     */
+    private void getHistoryValues(){
+        Query query = databaseHistory.orderByChild(FireBaseReferences.HISTORY_ID_REFERENCE).equalTo(user.getHistory());
+
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot historySnapshot : dataSnapshot.getChildren()) {
+                    History history = historySnapshot.getValue(History.class);
+                    historyWins = history.getChallengeWin();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
             }
         });
     }

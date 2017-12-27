@@ -105,7 +105,7 @@ public class ShowRouteActivity extends AppCompatActivity {
             imageViewType.setImageResource(R.drawable.ic_goback);
         }
 
-        // Get header photo name, download it and set into show route
+        // Get header_ranking_challenge photo name, download it and set into show route
         String namePhoto = route.getHeaderPhoto();
         storageReference.child(FireBaseReferences.HEADERS_STORAGE + namePhoto).getDownloadUrl()
                 .addOnSuccessListener(new OnSuccessListener<Uri>() {

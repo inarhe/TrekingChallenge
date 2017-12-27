@@ -23,6 +23,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import edu.uoc.iartal.trekkingchallenge.common.CommonFunctionality;
 import edu.uoc.iartal.trekkingchallenge.common.MainActivity;
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
+import edu.uoc.iartal.trekkingchallenge.objects.History;
 import edu.uoc.iartal.trekkingchallenge.objects.User;
 import edu.uoc.iartal.trekkingchallenge.R;
 
@@ -33,7 +34,7 @@ public class RegisterActivity extends AppCompatActivity {
     private String idUser, userName, userMail, userPassword;
     private ProgressDialog progressDialog;
     private FirebaseAuth firebaseAuth;
-    private DatabaseReference databaseUser;
+    private DatabaseReference databaseUser, databaseHistory;
 
 
     /**
@@ -58,6 +59,7 @@ public class RegisterActivity extends AppCompatActivity {
         // Get Firebase authentication instance and database user reference instance
         firebaseAuth = FirebaseAuth.getInstance();
         databaseUser = FirebaseDatabase.getInstance().getReference(FireBaseReferences.USER_REFERENCE);
+        databaseHistory = FirebaseDatabase.getInstance().getReference(FireBaseReferences.HISTORY_REFERENCE);
 
         // Initialize progress dialog
         progressDialog = new ProgressDialog(this);
@@ -130,8 +132,10 @@ public class RegisterActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         // If user is successfully registered and logged in, create user object and start main activity
                         if(task.isSuccessful()){
-                           // idUser = databaseUser.push().getKey();
-                            User user = new User(idUser, userName,userMail,userPassword);
+                            String idHistory = databaseHistory.push().getKey();
+                            History history = new History(idHistory, 0.0, 0.0, 0, 0, idUser);
+                            databaseHistory.child(idHistory).setValue(history);
+                            User user = new User(idUser, userName,userMail,userPassword, idHistory);
                             databaseUser.child(idUser).setValue(user);
 
                             progressDialog.dismiss();

@@ -1,9 +1,7 @@
 package edu.uoc.iartal.trekkingchallenge.user;
 
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -13,23 +11,20 @@ import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-
 import edu.uoc.iartal.trekkingchallenge.common.CommonFunctionality;
-import edu.uoc.iartal.trekkingchallenge.common.MainActivity;
+import edu.uoc.iartal.trekkingchallenge.common.FirebaseController;
 import edu.uoc.iartal.trekkingchallenge.R;
 
 
 public class LoginActivity extends AppCompatActivity {
 
     private EditText editTextMail, editTextPass;
-    private FirebaseAuth firebaseAuth;
     private ProgressDialog progressDialog;
 
-
+    /**
+     * Initialize variables and link view elements on activity create
+     * @param savedInstanceState
+     */
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
@@ -44,15 +39,11 @@ public class LoginActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle(getString(R.string.loginActivity));
 
-        // Get Firebase authentication instance
-        firebaseAuth = FirebaseAuth.getInstance();
-
         // Initialize progress dialog
         progressDialog = new ProgressDialog(this);
 
         // If user is logged starts main activity with main menu
-        if (firebaseAuth.getCurrentUser() != null) {
-            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+        if (((FirebaseController)getApplication()).checkActiveUserSession() != null) {
             finish();
         }
 
@@ -60,7 +51,6 @@ public class LoginActivity extends AppCompatActivity {
         editTextMail = (EditText) findViewById(R.id.loginMail);
         editTextPass = (EditText) findViewById(R.id.loginPassword);
     }
-
 
     /**
      * Login user when accept button is clicked
@@ -72,9 +62,10 @@ public class LoginActivity extends AppCompatActivity {
         String email = editTextMail.getText().toString().trim();
         String password = editTextPass.getText().toString().trim();
 
+        // Instantiate common functionality class
         CommonFunctionality common = new CommonFunctionality();
 
-        // If some of the input parameters are incorrect, stops the function execution further
+        // Check input parameters. If some parameter is incorrect, stops the execution
         if(TextUtils.isEmpty(email)) {
             Toast.makeText(this, getString(R.string.mailField), Toast.LENGTH_LONG).show();
             return;
@@ -95,22 +86,7 @@ public class LoginActivity extends AppCompatActivity {
         progressDialog.setMessage(getString(R.string.logging));
         progressDialog.show();
 
-        // Execute firebase sign in function
-        firebaseAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                progressDialog.dismiss();
-                // If logging is successful start main activity
-                if(task.isSuccessful()) {
-                    startActivity(new Intent(getApplicationContext(), MainActivity.class));
-                    finish();
-                }else{
-                    Toast.makeText(getApplicationContext(),getString(R.string.failedLogin),Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+        // Execute controller method to create user in database
+        ((FirebaseController)getApplication()).loginDatabase(email, password, progressDialog, this);
     }
 }
-
-
-

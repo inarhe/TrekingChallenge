@@ -26,6 +26,7 @@
     <string name="successfulRegister">Usuari registrat correctament</string>
 
     <!--Logging activity-->
+    <string name="loginSuccess">Sessió iniciada correctament</string>
     <string name="failedLogin">No s\'ha pogut iniciar sessió, siusplau torna-ho a provar</string>
     <string name="loginTitle">Accedeix a TrekkingChallenge</string>
     <string name="logging">Iniciant sessió usuari...</string>

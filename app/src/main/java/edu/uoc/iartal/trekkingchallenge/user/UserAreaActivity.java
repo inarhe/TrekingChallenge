@@ -29,6 +29,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
+import edu.uoc.iartal.trekkingchallenge.common.FirebaseController;
 import edu.uoc.iartal.trekkingchallenge.objects.User;
 import edu.uoc.iartal.trekkingchallenge.R;
 
@@ -190,12 +191,13 @@ public class UserAreaActivity extends AppCompatActivity {
      */
     private void loadUser(){
         //Initialize variables
-        String currentMail = FirebaseAuth.getInstance().getCurrentUser().getEmail();
-        DatabaseReference databaseUser = FirebaseDatabase.getInstance().getReference(FireBaseReferences.USER_REFERENCE);
+        String currentMail = ((FirebaseController)getApplication()).getCurrentUserEmail();
 
         // Show message on progress dialog
         progressDialog.setMessage(getString(R.string.loadingData));
         progressDialog.show();
+
+        DatabaseReference databaseUser = FirebaseDatabase.getInstance().getReference(FireBaseReferences.USER_REFERENCE);
 
         // Query database to get user information
         Query query = databaseUser.orderByChild(FireBaseReferences.USER_MAIL_REFERENCE).equalTo(currentMail);

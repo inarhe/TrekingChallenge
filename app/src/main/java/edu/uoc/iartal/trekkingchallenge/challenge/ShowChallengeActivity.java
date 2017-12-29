@@ -28,11 +28,11 @@ import java.util.Comparator;
 
 import edu.uoc.iartal.trekkingchallenge.R;
 import edu.uoc.iartal.trekkingchallenge.common.CommonFunctionality;
-import edu.uoc.iartal.trekkingchallenge.objects.Challenge;
-import edu.uoc.iartal.trekkingchallenge.objects.ChallengeResult;
+import edu.uoc.iartal.trekkingchallenge.model.Challenge;
+import edu.uoc.iartal.trekkingchallenge.model.ChallengeResult;
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
-import edu.uoc.iartal.trekkingchallenge.objects.ChallengeResultAdapter;
-import edu.uoc.iartal.trekkingchallenge.objects.User;
+import edu.uoc.iartal.trekkingchallenge.adapter.ChallengeResultAdapter;
+import edu.uoc.iartal.trekkingchallenge.model.User;
 import edu.uoc.iartal.trekkingchallenge.user.LoginActivity;
 
 public class ShowChallengeActivity extends AppCompatActivity {

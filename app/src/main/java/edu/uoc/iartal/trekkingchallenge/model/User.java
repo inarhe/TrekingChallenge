@@ -1,4 +1,4 @@
-package edu.uoc.iartal.trekkingchallenge.objects;
+package edu.uoc.iartal.trekkingchallenge.model;
 
 
 import android.os.Parcel;
@@ -18,6 +18,7 @@ public class User implements Parcelable {
     private Map<String, String> challenges = new HashMap<>();
     private Map<String, String> ratings = new HashMap<>();
     private Map<String, String> challengeResults = new HashMap<>();
+    private Map<String, String> messages = new HashMap<>();
 
     public User() {
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
@@ -40,11 +41,14 @@ public class User implements Parcelable {
         this.mail = in.readString();
         this.password = in.readString();
         this.history = in.readString();
+        in.readMap(groups, String.class.getClassLoader());
+        in.readMap(ratings, String.class.getClassLoader());
         in.readMap(challenges, String.class.getClassLoader());
         in.readMap(trips, String.class.getClassLoader());
         in.readMap(tripsDone, String.class.getClassLoader());
         in.readMap(finished, String.class.getClassLoader());
         in.readMap(challengeResults, String.class.getClassLoader());
+        in.readMap(messages, String.class.getClassLoader());
     }
 
     public String getId() {
@@ -123,6 +127,10 @@ public class User implements Parcelable {
         return this.challengeResults;
     }
 
+    public Map<String, String> getMessages() {
+        return messages;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -136,11 +144,14 @@ public class User implements Parcelable {
         dest.writeString(mail);
         dest.writeString(password);
         dest.writeString(history);
+        dest.writeMap(groups);
+        dest.writeMap(ratings);
         dest.writeMap(challenges);
         dest.writeMap(trips);
         dest.writeMap(tripsDone);
         dest.writeMap(finished);
         dest.writeMap(challengeResults);
+        dest.writeMap(messages);
     }
 
     public static final Parcelable.Creator<User> CREATOR = new Parcelable.Creator<User>() {

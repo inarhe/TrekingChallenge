@@ -25,9 +25,8 @@ import java.util.List;
 
 import edu.uoc.iartal.trekkingchallenge.R;
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
-import edu.uoc.iartal.trekkingchallenge.group.AddGroupActivity;
-import edu.uoc.iartal.trekkingchallenge.objects.Route;
-import edu.uoc.iartal.trekkingchallenge.objects.RouteAdapter;
+import edu.uoc.iartal.trekkingchallenge.model.Route;
+import edu.uoc.iartal.trekkingchallenge.adapter.RouteAdapter;
 import edu.uoc.iartal.trekkingchallenge.user.LoginActivity;
 
 public class ListRoutesActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {

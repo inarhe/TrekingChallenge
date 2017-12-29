@@ -28,11 +28,11 @@ import java.util.List;
 import edu.uoc.iartal.trekkingchallenge.challenge.ListChallengesActivity;
 import edu.uoc.iartal.trekkingchallenge.group.ListGroupsActivity;
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
-import edu.uoc.iartal.trekkingchallenge.objects.Challenge;
-import edu.uoc.iartal.trekkingchallenge.objects.Group;
-import edu.uoc.iartal.trekkingchallenge.objects.Trip;
-import edu.uoc.iartal.trekkingchallenge.objects.User;
-import edu.uoc.iartal.trekkingchallenge.objects.UserAdapter;
+import edu.uoc.iartal.trekkingchallenge.model.Challenge;
+import edu.uoc.iartal.trekkingchallenge.model.Group;
+import edu.uoc.iartal.trekkingchallenge.model.Trip;
+import edu.uoc.iartal.trekkingchallenge.model.User;
+import edu.uoc.iartal.trekkingchallenge.adapter.UserAdapter;
 import edu.uoc.iartal.trekkingchallenge.R;
 import edu.uoc.iartal.trekkingchallenge.trip.ListTripsActivity;
 

@@ -20,6 +20,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private EditText editTextMail, editTextPass;
     private ProgressDialog progressDialog;
+    private FirebaseController controller;
 
     /**
      * Initialize variables and link view elements on activity create
@@ -41,9 +42,10 @@ public class LoginActivity extends AppCompatActivity {
 
         // Initialize progress dialog
         progressDialog = new ProgressDialog(this);
+        controller = new FirebaseController();
 
         // If user is logged starts main activity with main menu
-        if (((FirebaseController)getApplication()).checkActiveUserSession() != null) {
+        if (controller.getActiveUserSession() != null) {
             finish();
         }
 
@@ -87,6 +89,6 @@ public class LoginActivity extends AppCompatActivity {
         progressDialog.show();
 
         // Execute controller method to create user in database
-        ((FirebaseController)getApplication()).loginDatabase(email, password, progressDialog, this);
+        controller.loginDatabase(email, password, progressDialog, this);
     }
 }

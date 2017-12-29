@@ -29,7 +29,7 @@ import java.util.Locale;
 
 import edu.uoc.iartal.trekkingchallenge.R;
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
-import edu.uoc.iartal.trekkingchallenge.objects.Trip;
+import edu.uoc.iartal.trekkingchallenge.model.Trip;
 import edu.uoc.iartal.trekkingchallenge.user.LoginActivity;
 
 public class EditTripActivity extends AppCompatActivity {

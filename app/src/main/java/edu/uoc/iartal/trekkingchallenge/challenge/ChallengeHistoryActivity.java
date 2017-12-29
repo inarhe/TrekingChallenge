@@ -5,7 +5,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
@@ -25,10 +24,9 @@ import java.util.Date;
 
 import edu.uoc.iartal.trekkingchallenge.R;
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
-import edu.uoc.iartal.trekkingchallenge.objects.ChallengeHistoryAdapter;
-import edu.uoc.iartal.trekkingchallenge.objects.ChallengeResult;
-import edu.uoc.iartal.trekkingchallenge.objects.ChallengeResultAdapter;
-import edu.uoc.iartal.trekkingchallenge.objects.User;
+import edu.uoc.iartal.trekkingchallenge.adapter.ChallengeHistoryAdapter;
+import edu.uoc.iartal.trekkingchallenge.model.ChallengeResult;
+import edu.uoc.iartal.trekkingchallenge.model.User;
 import edu.uoc.iartal.trekkingchallenge.user.LoginActivity;
 
 public class ChallengeHistoryActivity extends AppCompatActivity {

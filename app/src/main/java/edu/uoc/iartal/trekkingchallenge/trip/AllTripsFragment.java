@@ -28,8 +28,8 @@ import java.util.List;
 
 import edu.uoc.iartal.trekkingchallenge.R;
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
-import edu.uoc.iartal.trekkingchallenge.objects.Trip;
-import edu.uoc.iartal.trekkingchallenge.objects.TripAdapter;
+import edu.uoc.iartal.trekkingchallenge.model.Trip;
+import edu.uoc.iartal.trekkingchallenge.adapter.TripAdapter;
 
 public class AllTripsFragment extends Fragment implements SearchView.OnQueryTextListener{
     private List<Trip> trips;

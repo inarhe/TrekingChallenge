@@ -2,7 +2,6 @@ package edu.uoc.iartal.trekkingchallenge.message;
 
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,7 +9,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
@@ -28,11 +26,11 @@ import java.util.ArrayList;
 
 import edu.uoc.iartal.trekkingchallenge.R;
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
-import edu.uoc.iartal.trekkingchallenge.objects.Group;
-import edu.uoc.iartal.trekkingchallenge.objects.Message;
-import edu.uoc.iartal.trekkingchallenge.objects.MessageAdapter;
-import edu.uoc.iartal.trekkingchallenge.objects.Trip;
-import edu.uoc.iartal.trekkingchallenge.objects.User;
+import edu.uoc.iartal.trekkingchallenge.model.Group;
+import edu.uoc.iartal.trekkingchallenge.model.Message;
+import edu.uoc.iartal.trekkingchallenge.adapter.MessageAdapter;
+import edu.uoc.iartal.trekkingchallenge.model.Trip;
+import edu.uoc.iartal.trekkingchallenge.model.User;
 import edu.uoc.iartal.trekkingchallenge.user.LoginActivity;
 
 public class ListMessagesActivity extends AppCompatActivity {

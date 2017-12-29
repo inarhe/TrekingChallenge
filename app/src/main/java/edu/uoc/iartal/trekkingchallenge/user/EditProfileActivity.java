@@ -24,7 +24,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
 import edu.uoc.iartal.trekkingchallenge.R;
-import edu.uoc.iartal.trekkingchallenge.objects.User;
+import edu.uoc.iartal.trekkingchallenge.model.User;
 
 public class EditProfileActivity extends AppCompatActivity {
 

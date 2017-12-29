@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.CheckBox;
@@ -24,21 +25,25 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import edu.uoc.iartal.trekkingchallenge.common.FirebaseController;
+import edu.uoc.iartal.trekkingchallenge.common.OnGetDataListener;
 import edu.uoc.iartal.trekkingchallenge.user.ListUsersActivity;
 import edu.uoc.iartal.trekkingchallenge.user.LoginActivity;
 import edu.uoc.iartal.trekkingchallenge.common.MainActivity;
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
-import edu.uoc.iartal.trekkingchallenge.objects.Group;
-import edu.uoc.iartal.trekkingchallenge.objects.User;
+import edu.uoc.iartal.trekkingchallenge.model.Group;
+import edu.uoc.iartal.trekkingchallenge.model.User;
 import edu.uoc.iartal.trekkingchallenge.R;
 
 public class AddGroupActivity extends AppCompatActivity {
     private EditText editTextName, editTextDescription;
-    private DatabaseReference databaseGroup, databaseUser;
+    private DatabaseReference databaseGroup;
     private CheckBox checkBox;
-    private String userAdmin, name, description;
+    private User currentUser;
     private Group group;
-    private Boolean isPublic, groupExists = false;
+    private String name, description, idGroup;
+    private Boolean isPublic, groupExists;
+    private FirebaseController controller;
 
 
     @Override
@@ -53,25 +58,46 @@ public class AddGroupActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle(getString(R.string.addGroupActivity));
 
-        // If user isn't logged, start login activity
-        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
-            startActivity(new Intent(getApplicationContext(), LoginActivity.class));
-            finish();
-        }
-
         // Hide keyboard until user select edit text
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
+        // Initialize variables
+        controller = new FirebaseController();
+
         // Get database references
-        databaseGroup = FirebaseDatabase.getInstance().getReference(FireBaseReferences.GROUP_REFERENCE);
-        databaseUser = FirebaseDatabase.getInstance().getReference(FireBaseReferences.USER_REFERENCE);
+        databaseGroup = controller.getDatabaseReference(FireBaseReferences.GROUP_REFERENCE);
+        DatabaseReference databaseUser = controller.getDatabaseReference(FireBaseReferences.USER_REFERENCE);
 
         // Link layout elements with variables
         editTextName = (EditText) findViewById(R.id.etNameGroup);
         editTextDescription = (EditText) findViewById(R.id.etDescriptionGroup);
         checkBox = (CheckBox) findViewById(R.id.cBPublicGgroup);
 
-        getUserAdmin();
+        // Get current user
+        controller.readData(databaseUser, new OnGetDataListener() {
+            @Override
+            public void onStart() {
+                //Nothing to do
+            }
+
+            @Override
+            public void onSuccess(DataSnapshot data) {
+                String currentMail = controller.getCurrentUserEmail();
+
+                for (DataSnapshot userSnapshot : data.getChildren()){
+                    User user = userSnapshot.getValue(User.class);
+
+                    if (user.getMail().equals(currentMail)){
+                        currentUser = user;
+                    }
+                }
+            }
+
+            @Override
+            public void onFailed(DatabaseError databaseError) {
+                Log.e("AddGroup getAdmin error", databaseError.getMessage());
+            }
+        });
     }
 
     /**
@@ -81,6 +107,7 @@ public class AddGroupActivity extends AppCompatActivity {
     public void addGroup (View view) {
         // Initialize variables with input parameters
         isPublic = false;
+        groupExists = false;
         name = editTextName.getText().toString().trim();
         description = editTextDescription.getText().toString().trim();
 
@@ -99,53 +126,43 @@ public class AddGroupActivity extends AppCompatActivity {
             isPublic = true;
         }
 
-        databaseGroup.addListenerForSingleValueEvent(new ValueEventListener() {
+        // Execute controller method to get database groups objects. Use OnGetDataListener interface to know
+        // when database data is retrieved and search if group already exists
+        controller.readDataOnce(databaseGroup, new OnGetDataListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot groupSnapshot : dataSnapshot.getChildren()){
+            public void onStart() {
+                //Nothing to do
+            }
+
+            @Override
+            public void onSuccess(DataSnapshot data) {
+                for (DataSnapshot groupSnapshot : data.getChildren()){
                     Group group = groupSnapshot.getValue(Group.class);
                     if (group.getName().equals(name)){
                         groupExists = true;
                     }
                 }
 
+                // If group not exists, executes add group controller method
                 if (!groupExists){
-                    // Add group to firebase database
-                    final String idGroup = databaseGroup.push().getKey();
-                    group = new Group(idGroup, name, description, isPublic, userAdmin, 1);
+                    idGroup = controller.getFirebaseNewKey(databaseGroup);
+                    if (idGroup == null){
+                        Toast.makeText(getApplicationContext(), R.string.failedAddGroup, Toast.LENGTH_SHORT).show();
+                    } else {
+                        group = new Group(idGroup, name, description, isPublic, currentUser.getId(), 1);
+                        controller.creatGroup(databaseGroup, group, currentUser.getId(), getApplicationContext());
 
-                    databaseGroup.child(idGroup).setValue(group).addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if(task.isSuccessful()) {
-                                databaseGroup.child(idGroup).child(FireBaseReferences.MEMBERS_REFERENCE).child(userAdmin).setValue("true");
-                                databaseUser.child(userAdmin).child(FireBaseReferences.USER_GROUPS_REFERENCE).child(idGroup).setValue("true")
-                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<Void> task) {
-                                                if(task.isSuccessful()){
-                                                    Toast.makeText(getApplicationContext(), R.string.groupSaved, Toast.LENGTH_LONG).show();
-                                                } else {
-                                                    Toast.makeText(AddGroupActivity.this,R.string.failedAddGroup,Toast.LENGTH_LONG).show();
-                                                }
-                                            }
-                                        });
-                            } else {
-                                Toast.makeText(AddGroupActivity.this, R.string.failedAddGroup, Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });
-
-                    // Select users that admin wants in the group
-                    inviteUsers();
+                        // Select users that admin wants in the group
+                        inviteUsers();
+                    }
                 } else {
                     Toast.makeText(AddGroupActivity.this,R.string.groupAlreadyExists,Toast.LENGTH_LONG).show();
                 }
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
-
+            public void onFailed(DatabaseError databaseError) {
+                Log.e("LoadAllGroups error", databaseError.getMessage());
             }
         });
     }
@@ -167,40 +184,5 @@ public class AddGroupActivity extends AppCompatActivity {
         intent.putExtra("group", group);
         startActivity(intent);
         finish();
-    }
-
-    /**
-     * Query database to get current user information and know who is doing the action
-     */
-    private void getUserAdmin(){
-        String currentMail = FirebaseAuth.getInstance().getCurrentUser().getEmail();
-        Query query = databaseUser.orderByChild(FireBaseReferences.USER_MAIL_REFERENCE).equalTo(currentMail);
-
-        query.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                userAdmin = dataSnapshot.getValue(User.class).getId();
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                //TO-DO
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-                //TO-DO
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-                //TO-DO
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                //TO-DO
-            }
-        });
     }
 }

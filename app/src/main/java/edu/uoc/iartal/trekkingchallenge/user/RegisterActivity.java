@@ -19,6 +19,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     private EditText editTextUserAlias, editTextUserName, editTextUserMail, editTextUserPass, editTextPassRepeat;
     private ProgressDialog progressDialog ;
+    private FirebaseController controller;
 
     /**
      * Initialize variables and link view elements on activity create
@@ -41,6 +42,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         // Initialize progressDialog
         progressDialog =  new ProgressDialog(this);
+        controller = new FirebaseController();
 
         // Link layout elements with variables
         editTextUserAlias = (EditText) findViewById(R.id.etIdUser);
@@ -102,7 +104,7 @@ public class RegisterActivity extends AppCompatActivity {
         progressDialog.show();
 
         // Execute controller method to create user in database
-        ((FirebaseController)getApplication()).createUserAndHistory(alias, name, mail, password, this, progressDialog);
+        controller.createUserAndHistory(alias, name, mail, password, this, progressDialog);
     }
 
     /**

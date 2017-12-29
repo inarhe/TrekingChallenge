@@ -51,6 +51,7 @@ public class FireBaseReferences {
     final public static String CHALLENGE_NAME_REFERENCE = "name";
     final public static String CHALLENGE_DESCRIPTION_REFERENCE = "description";
     final public static String CHALLENGE_DATE_REFERENCE = "limitDate";
+    final public static String CHALLENGE_RESULTS_REFERENCE = "results";
 
     // Finished route references
     final public static String FINISHED_REFERENCE = "finished";
@@ -80,4 +81,6 @@ public class FireBaseReferences {
     final public static String MEMBERS_REFERENCE = "members";
     final public static String NUMBER_OF_MEMBERS_REFERENCE = "numberOfMembers";
     final public static String MESSAGES_REFERENCE = "messages";
+    final public static String USER_ADMIN_REFERENCE = "userAdmin";
+    final public static String OBJECT_USER_REFERENCE = "user";
 }

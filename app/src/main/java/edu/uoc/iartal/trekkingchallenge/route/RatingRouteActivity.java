@@ -33,10 +33,10 @@ import java.util.ArrayList;
 
 import edu.uoc.iartal.trekkingchallenge.R;
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
-import edu.uoc.iartal.trekkingchallenge.objects.Rating;
-import edu.uoc.iartal.trekkingchallenge.objects.RatingAdapter;
-import edu.uoc.iartal.trekkingchallenge.objects.Route;
-import edu.uoc.iartal.trekkingchallenge.objects.User;
+import edu.uoc.iartal.trekkingchallenge.model.Rating;
+import edu.uoc.iartal.trekkingchallenge.adapter.RatingAdapter;
+import edu.uoc.iartal.trekkingchallenge.model.Route;
+import edu.uoc.iartal.trekkingchallenge.model.User;
 import edu.uoc.iartal.trekkingchallenge.user.LoginActivity;
 
 public class RatingRouteActivity extends AppCompatActivity {

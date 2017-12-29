@@ -32,12 +32,12 @@ import java.util.Locale;
 
 import edu.uoc.iartal.trekkingchallenge.R;
 import edu.uoc.iartal.trekkingchallenge.common.CommonFunctionality;
-import edu.uoc.iartal.trekkingchallenge.objects.Challenge;
-import edu.uoc.iartal.trekkingchallenge.objects.ChallengeResult;
+import edu.uoc.iartal.trekkingchallenge.model.Challenge;
+import edu.uoc.iartal.trekkingchallenge.model.ChallengeResult;
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
-import edu.uoc.iartal.trekkingchallenge.objects.History;
-import edu.uoc.iartal.trekkingchallenge.objects.Route;
-import edu.uoc.iartal.trekkingchallenge.objects.User;
+import edu.uoc.iartal.trekkingchallenge.model.History;
+import edu.uoc.iartal.trekkingchallenge.model.Route;
+import edu.uoc.iartal.trekkingchallenge.model.User;
 import edu.uoc.iartal.trekkingchallenge.user.LoginActivity;
 
 public class FinishedChallengeActivity extends AppCompatActivity {

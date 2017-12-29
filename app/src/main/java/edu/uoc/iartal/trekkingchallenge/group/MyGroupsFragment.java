@@ -14,21 +14,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.support.v7.widget.SearchView;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
-import edu.uoc.iartal.trekkingchallenge.objects.Group;
-import edu.uoc.iartal.trekkingchallenge.objects.GroupAdapter;
-import edu.uoc.iartal.trekkingchallenge.objects.User;
+import edu.uoc.iartal.trekkingchallenge.common.FirebaseController;
+import edu.uoc.iartal.trekkingchallenge.common.OnGetChildListener;
+import edu.uoc.iartal.trekkingchallenge.common.OnGetDataListener;
+import edu.uoc.iartal.trekkingchallenge.model.Group;
+import edu.uoc.iartal.trekkingchallenge.adapter.GroupAdapter;
+import edu.uoc.iartal.trekkingchallenge.model.User;
 import edu.uoc.iartal.trekkingchallenge.R;
 
 import android.view.MenuInflater;
@@ -39,7 +38,8 @@ public class MyGroupsFragment extends Fragment implements SearchView.OnQueryText
     private GroupAdapter groupAdapter;
     private ProgressDialog progressDialog;
     private RecyclerView recyclerView;
-    private String currentUserName, currentMail;
+    private String currentUserId;
+    private FirebaseController controller;
 
     public MyGroupsFragment(){
 
@@ -50,29 +50,37 @@ public class MyGroupsFragment extends Fragment implements SearchView.OnQueryText
         super.onCreate(savedInstanceState);
 
         //Initialize variables
+        controller = new FirebaseController();
         progressDialog = new ProgressDialog(getActivity());
-        progressDialog.setMessage(getString(R.string.loadingData));
-
-        DatabaseReference databaseUser = FirebaseDatabase.getInstance().getReference(FireBaseReferences.USER_REFERENCE);
-        currentMail = FirebaseAuth.getInstance().getCurrentUser().getEmail();
         groups = new ArrayList<>();
+        groupAdapter = new GroupAdapter(groups);
 
-        // Get current user
-        databaseUser.addValueEventListener(new ValueEventListener() {
+        // Get user database reference
+        DatabaseReference databaseUser = controller.getDatabaseReference(FireBaseReferences.USER_REFERENCE);
+
+        // Get current user id
+        controller.readData(databaseUser, new OnGetDataListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot userSnapshot :
-                        dataSnapshot.getChildren()) {
+            public void onStart() {
+                //Nothing to do
+            }
+
+            @Override
+            public void onSuccess(DataSnapshot data) {
+                String currentMail = controller.getCurrentUserEmail();
+
+                for (DataSnapshot userSnapshot : data.getChildren()){
                     User user = userSnapshot.getValue(User.class);
-                    if (user.getMail().equals(currentMail)) {
-                        currentUserName = user.getId();
+
+                    if (user.getMail().equals(currentMail)){
+                        currentUserId = user.getId();
                     }
                 }
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
-                //TO-DO
+            public void onFailed(DatabaseError databaseError) {
+                Log.e("MyGrpCurrentUser error", databaseError.getMessage());
             }
         });
     }
@@ -107,30 +115,35 @@ public class MyGroupsFragment extends Fragment implements SearchView.OnQueryText
 
         setHasOptionsMenu(true);
 
-        DatabaseReference databaseGroup = FirebaseDatabase.getInstance().getReference(FireBaseReferences.GROUP_REFERENCE);
-
-        groupAdapter = new GroupAdapter(groups);
+        DatabaseReference databaseGroup = controller.getDatabaseReference(FireBaseReferences.GROUP_REFERENCE);
 
         recyclerView.setAdapter(groupAdapter);
 
-        // Get user groups and notify adapter to show them in recycler view
-        progressDialog.show();
-        databaseGroup.addChildEventListener(new ChildEventListener() {
+        // Execute controller method to get database groups objects. Use OnGetDataListener interface to know
+        // when database data is retrieved and notify adapter to show them in recycler view
+        controller.readChild(databaseGroup, new OnGetChildListener() {
             @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Group group = dataSnapshot.getValue(Group.class);
-                if (group.getMembers().containsKey(currentUserName)){
-                        addGroup(group);
-                }
-                groupAdapter.notifyDataSetChanged();
-                progressDialog.dismiss();
+            public void onStart() {
+                progressDialog.setMessage(getString(R.string.loadingData));
+                progressDialog.show();
             }
 
             @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+            public void onSuccess(DataSnapshot data) {
+                Group group = data.getValue(Group.class);
+                if (group.getMembers().containsKey(currentUserId)) {
+                    addGroup(group);
+                }
+                groupAdapter.notifyDataSetChanged();
+                progressDialog.dismiss();
+
+            }
+
+            @Override
+            public void onChanged(DataSnapshot data) {
                 // Get user groups and check if some group has been updated
-                Group group = dataSnapshot.getValue(Group.class);
-                if (group.getMembers().containsKey(currentUserName)){
+                Group group = data.getValue(Group.class);
+                if (group.getMembers().containsKey(currentUserId)){
                     if (!groups.contains(group)){
                         addGroup(group);
                     } else {
@@ -150,18 +163,13 @@ public class MyGroupsFragment extends Fragment implements SearchView.OnQueryText
             }
 
             @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-                //TO-DO
+            public void onRemoved(DataSnapshot data) {
+                //Nothing to do
             }
 
             @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-                //TO-DO
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                //TO-DO
+            public void onFailed(DatabaseError databaseError) {
+                Log.e("LoadMyGroups error", databaseError.getMessage());
             }
         });
     }
@@ -236,7 +244,7 @@ public class MyGroupsFragment extends Fragment implements SearchView.OnQueryText
      */
     private void addGroup(Group group) {
         groups.add(group);
-        if (group.getUserAdmin().equals(currentUserName)) {
+        if (group.getUserAdmin().equals(currentUserId)) {
             groupAdapter.setVisibility(true);
         } else {
             groupAdapter.setVisibility(false);

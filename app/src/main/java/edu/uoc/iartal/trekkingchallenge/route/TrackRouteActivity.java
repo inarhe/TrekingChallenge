@@ -20,7 +20,7 @@ import com.google.firebase.storage.StorageReference;
 
 import edu.uoc.iartal.trekkingchallenge.R;
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
-import edu.uoc.iartal.trekkingchallenge.objects.Route;
+import edu.uoc.iartal.trekkingchallenge.model.Route;
 import edu.uoc.iartal.trekkingchallenge.user.LoginActivity;
 
 public class TrackRouteActivity extends AppCompatActivity {

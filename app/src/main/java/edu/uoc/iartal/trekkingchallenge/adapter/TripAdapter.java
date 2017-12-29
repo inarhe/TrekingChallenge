@@ -1,4 +1,4 @@
-package edu.uoc.iartal.trekkingchallenge.objects;
+package edu.uoc.iartal.trekkingchallenge.adapter;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -25,6 +25,7 @@ import java.util.List;
 
 import edu.uoc.iartal.trekkingchallenge.R;
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
+import edu.uoc.iartal.trekkingchallenge.model.Trip;
 import edu.uoc.iartal.trekkingchallenge.trip.EditTripActivity;
 import edu.uoc.iartal.trekkingchallenge.trip.ShowTripActivity;
 

@@ -1,4 +1,4 @@
-package edu.uoc.iartal.trekkingchallenge.objects;
+package edu.uoc.iartal.trekkingchallenge.model;
 
 
 import android.os.Parcel;

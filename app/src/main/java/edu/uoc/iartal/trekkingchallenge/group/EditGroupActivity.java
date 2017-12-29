@@ -1,6 +1,5 @@
 package edu.uoc.iartal.trekkingchallenge.group;
 
-import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -20,12 +19,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-
 import edu.uoc.iartal.trekkingchallenge.R;
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
-import edu.uoc.iartal.trekkingchallenge.objects.Group;
+import edu.uoc.iartal.trekkingchallenge.model.Group;
 import edu.uoc.iartal.trekkingchallenge.user.LoginActivity;
 
 public class EditGroupActivity extends AppCompatActivity {

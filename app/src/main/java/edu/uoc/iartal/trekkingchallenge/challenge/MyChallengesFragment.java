@@ -8,7 +8,6 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -28,10 +27,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.uoc.iartal.trekkingchallenge.R;
-import edu.uoc.iartal.trekkingchallenge.objects.Challenge;
-import edu.uoc.iartal.trekkingchallenge.objects.ChallengeAdapter;
+import edu.uoc.iartal.trekkingchallenge.model.Challenge;
+import edu.uoc.iartal.trekkingchallenge.adapter.ChallengeAdapter;
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
-import edu.uoc.iartal.trekkingchallenge.objects.User;
+import edu.uoc.iartal.trekkingchallenge.model.User;
 
 public class MyChallengesFragment extends Fragment implements SearchView.OnQueryTextListener{
     private List<Challenge> challenges;

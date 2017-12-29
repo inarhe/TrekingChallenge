@@ -7,34 +7,32 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-import edu.uoc.iartal.trekkingchallenge.common.CommonFunctionality;
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
+import edu.uoc.iartal.trekkingchallenge.common.FirebaseController;
+import edu.uoc.iartal.trekkingchallenge.common.OnGetDataListener;
 import edu.uoc.iartal.trekkingchallenge.message.ListMessagesActivity;
-import edu.uoc.iartal.trekkingchallenge.objects.Group;
-import edu.uoc.iartal.trekkingchallenge.objects.User;
-import edu.uoc.iartal.trekkingchallenge.user.LoginActivity;
+import edu.uoc.iartal.trekkingchallenge.model.Group;
+import edu.uoc.iartal.trekkingchallenge.model.User;
 import edu.uoc.iartal.trekkingchallenge.R;
 
 public class ShowGroupActivity extends AppCompatActivity {
     private DatabaseReference databaseGroup;
     private Group group;
-    private CommonFunctionality common;
-    private String currentMail, currentUserName;
+    private User currentUser;
+    private FirebaseController controller;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,24 +43,16 @@ public class ShowGroupActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.showGroupToolbar);
         setSupportActionBar(toolbar);
 
-        // Get Firebase authentication instance and database references
-        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-        DatabaseReference databaseUser = FirebaseDatabase.getInstance().getReference(FireBaseReferences.USER_REFERENCE);
-        databaseGroup = FirebaseDatabase.getInstance().getReference(FireBaseReferences.GROUP_REFERENCE);
+        // Initialize variables
+        controller = new FirebaseController();
 
-        // If user isn't logged, start login activity
-        if (firebaseAuth.getCurrentUser() == null) {
-            startActivity(new Intent(getApplicationContext(), LoginActivity.class));
-            finish();
-        }
+        // Get Firebase authentication instance and database references
+        DatabaseReference databaseUser = controller.getDatabaseReference(FireBaseReferences.USER_REFERENCE);
+        databaseGroup = controller.getDatabaseReference(FireBaseReferences.GROUP_REFERENCE);
 
         // Link layout elements with variables
         TextView textViewDescription = (TextView) findViewById(R.id.tvGroupDescription);
         TextView textViewMembers = (TextView) findViewById(R.id.tvNumberMembers);
-
-        // Initialize variables
-        common = new CommonFunctionality();
-        currentMail = firebaseAuth.getCurrentUser().getEmail();
 
         // Get data from item clicked on list groups activity
         Bundle bundle = getIntent().getExtras();
@@ -77,22 +67,29 @@ public class ShowGroupActivity extends AppCompatActivity {
         textViewDescription.setText(group.getDescription());
         textViewMembers.setText(Integer.toString(group.getNumberOfMembers()) + " " + getString(R.string.members));
 
-        // Get current user name
-        databaseUser.addValueEventListener(new ValueEventListener() {
+        // Get current user
+        controller.readData(databaseUser, new OnGetDataListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot userSnapshot :
-                        dataSnapshot.getChildren()) {
+            public void onStart() {
+                //Nothing to do
+            }
+
+            @Override
+            public void onSuccess(DataSnapshot data) {
+                String currentMail = controller.getCurrentUserEmail();
+
+                for (DataSnapshot userSnapshot : data.getChildren()){
                     User user = userSnapshot.getValue(User.class);
-                    if (user.getMail().equals(currentMail)) {
-                        currentUserName = user.getId();
+
+                    if (user.getMail().equals(currentMail)){
+                        currentUser = user;
                     }
                 }
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
-                //TO-DO
+            public void onFailed(DatabaseError databaseError) {
+                Log.e("ShowGroup getAdm error", databaseError.getMessage());
             }
         });
     }
@@ -118,9 +115,7 @@ public class ShowGroupActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_message:
-                Intent intent = new Intent(getApplicationContext(), ListMessagesActivity.class);
-                intent.putExtra("group", group);
-                startActivity(intent);
+                sendMessage();
                 return true;
             case R.id.action_joinGroup:
                 joinGroup();
@@ -131,6 +126,15 @@ public class ShowGroupActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    /**
+     * When the menu message icon is clicked, this method is executed. Start ListMessage activity
+     */
+    private void sendMessage(){
+        Intent intent = new Intent(getApplicationContext(), ListMessagesActivity.class);
+        intent.putExtra("group", group);
+        startActivity(intent);
     }
 
     /**
@@ -154,7 +158,7 @@ public class ShowGroupActivity extends AppCompatActivity {
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
-                        common.updateJoins(currentMail, getString(R.string.setJoin), databaseGroup, group.getId(), group.getNumberOfMembers(), FireBaseReferences.USER_GROUPS_REFERENCE);
+                        controller.updateJoins(getString(R.string.setJoin), databaseGroup, FireBaseReferences.USER_GROUPS_REFERENCE, group.getId(), currentUser, group.getNumberOfMembers());
                         Toast.makeText(getApplicationContext(), getString(R.string.groupJoined), Toast.LENGTH_LONG).show();
                         finish();
                     }
@@ -194,7 +198,7 @@ public class ShowGroupActivity extends AppCompatActivity {
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
-                        common.updateJoins(currentMail, getString(R.string.setLeave), databaseGroup, group.getId(), group.getNumberOfMembers(), FireBaseReferences.USER_GROUPS_REFERENCE);
+                        controller.updateJoins(getString(R.string.setLeave), databaseGroup, FireBaseReferences.USER_GROUPS_REFERENCE, group.getId(), currentUser, group.getNumberOfMembers());
                         finish();
                     }
                 });
@@ -220,6 +224,6 @@ public class ShowGroupActivity extends AppCompatActivity {
         ArrayList<String> members = new ArrayList<>();
         members.addAll(group.getMembers().keySet());
 
-        return members.contains(currentUserName);
+        return members.contains(currentUser.getId());
     }
 }

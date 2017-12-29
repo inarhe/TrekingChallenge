@@ -1,4 +1,4 @@
-package edu.uoc.iartal.trekkingchallenge.objects;
+package edu.uoc.iartal.trekkingchallenge.adapter;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -27,6 +27,7 @@ import edu.uoc.iartal.trekkingchallenge.R;
 import edu.uoc.iartal.trekkingchallenge.challenge.EditChallengeActivity;
 import edu.uoc.iartal.trekkingchallenge.challenge.ShowChallengeActivity;
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
+import edu.uoc.iartal.trekkingchallenge.model.Challenge;
 
 public class ChallengeAdapter extends RecyclerView.Adapter<ChallengeAdapter.ChallengeViewHolder> {
 

@@ -27,8 +27,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.uoc.iartal.trekkingchallenge.R;
-import edu.uoc.iartal.trekkingchallenge.objects.Challenge;
-import edu.uoc.iartal.trekkingchallenge.objects.ChallengeAdapter;
+import edu.uoc.iartal.trekkingchallenge.model.Challenge;
+import edu.uoc.iartal.trekkingchallenge.adapter.ChallengeAdapter;
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
 
 

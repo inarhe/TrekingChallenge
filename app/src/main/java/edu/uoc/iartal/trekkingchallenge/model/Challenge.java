@@ -1,4 +1,4 @@
-package edu.uoc.iartal.trekkingchallenge.objects;
+package edu.uoc.iartal.trekkingchallenge.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -6,39 +6,40 @@ import android.os.Parcelable;
 import java.util.HashMap;
 import java.util.Map;
 
-// Trip object class. Implements Parcelable to pass trip object between activities
-public class Trip implements Parcelable{
-    private String id, name, description, date, place, route, userAdmin;
+// Challenge object class. Implements Parcelable to pass challenge object between activities
+public class Challenge implements Parcelable{
+    private String id, name, description, limitDate, route, userAdmin, classification;
     private Boolean isPublic;
     private int numberOfMembers;
+    private Map<String, String> results = new HashMap<>();
     private Map<String, String> members = new HashMap<>();
 
-    public Trip() {
+    public Challenge() {
 
     }
 
-    public Trip(String id, String name, String description, String date, String place, String route,
-                Boolean isPublic, String userAdmin, int numberOfMembers) {
+    public Challenge(String id, String name, String description, String limitDate, String route, String userAdmin, Boolean isPublic, int numberOfMembers, String classification) {
         this.id = id;
         this.name = name;
         this.description = description;
-        this.date = date;
-        this.place = place;
+        this.limitDate = limitDate;
         this.route = route;
-        this.isPublic = isPublic;
         this.userAdmin = userAdmin;
+        this.isPublic = isPublic;
         this.numberOfMembers = numberOfMembers;
+        this.classification = classification;
     }
 
-    public Trip(Parcel in) {
+    public Challenge(Parcel in) {
         this.id = in.readString();
         this.name = in.readString();
         this.description = in.readString();
-        this.date = in.readString();
-        this.place = in.readString();
+        this.limitDate = in.readString();
         this.route = in.readString();
         this.userAdmin = in.readString();
         this.numberOfMembers = in.readInt();
+        this.classification = in.readString();
+        in.readMap(results, String.class.getClassLoader());
         in.readMap(members, String.class.getClassLoader());
     }
 
@@ -66,20 +67,12 @@ public class Trip implements Parcelable{
         this.description = description;
     }
 
-    public String getDate() {
-        return date;
+    public String getLimitDate() {
+        return limitDate;
     }
 
-    public void setDate(String date) {
-        this.date = date;
-    }
-
-    public String getPlace() {
-        return place;
-    }
-
-    public void setPlace(String place) {
-        this.place = place;
+    public void setLimitDate(String limitDate) {
+        this.limitDate = limitDate;
     }
 
     public String getRoute() {
@@ -114,6 +107,18 @@ public class Trip implements Parcelable{
         this.numberOfMembers = numberOfMembers;
     }
 
+    public String getClassification() {
+        return classification;
+    }
+
+    public void setClassification(String classification) {
+        this.classification = classification;
+    }
+
+    public Map<String, String> getResults() {
+        return this.results;
+    }
+
     public Map<String, String> getMembers() {
         return this.members;
     }
@@ -128,34 +133,35 @@ public class Trip implements Parcelable{
         dest.writeString(id);
         dest.writeString(name);
         dest.writeString(description);
-        dest.writeString(date);
-        dest.writeString(place);
+        dest.writeString(limitDate);
         dest.writeString(route);
         dest.writeString(userAdmin);
         dest.writeInt(numberOfMembers);
+        dest.writeString(classification);
+        dest.writeMap(results);
         dest.writeMap(members);
     }
 
-    // Method to compare two trip objects
+    // Method to compare two challenge objects
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof Trip){
-            Trip tripObject = (Trip) obj;
-            if (tripObject.getId().equals(this.id)){
+        if (obj instanceof Challenge){
+            Challenge challengeObject = (Challenge) obj;
+            if (challengeObject.getId().equals(this.id)){
                 return true;
             }
         }
         return false;
     }
 
-    public static final Parcelable.Creator<Trip> CREATOR = new Parcelable.Creator<Trip>() {
+    public static final Creator<Challenge> CREATOR = new Creator<Challenge>() {
 
-        public Trip createFromParcel(Parcel in) {
-            return new Trip(in);
+        public Challenge createFromParcel(Parcel in) {
+            return new Challenge(in);
         }
 
-        public Trip[] newArray(int size) {
-            return new Trip[size];
+        public Challenge[] newArray(int size) {
+            return new Challenge[size];
         }
     };
 }

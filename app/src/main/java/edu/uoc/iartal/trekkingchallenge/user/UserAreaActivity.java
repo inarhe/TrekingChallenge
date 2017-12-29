@@ -3,34 +3,27 @@ package edu.uoc.iartal.trekkingchallenge.user;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
 import edu.uoc.iartal.trekkingchallenge.common.FirebaseController;
-import edu.uoc.iartal.trekkingchallenge.objects.User;
+import edu.uoc.iartal.trekkingchallenge.common.OnGetDataListener;
+import edu.uoc.iartal.trekkingchallenge.model.User;
 import edu.uoc.iartal.trekkingchallenge.R;
 
 public class UserAreaActivity extends AppCompatActivity {
@@ -40,6 +33,8 @@ public class UserAreaActivity extends AppCompatActivity {
     private Intent intent;
     private ProgressDialog progressDialog;
     private User user;
+    private DatabaseReference databaseUser;
+    private FirebaseController controller;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +56,8 @@ public class UserAreaActivity extends AppCompatActivity {
 
         // Initialize progress dialog
         progressDialog = new ProgressDialog(this);
+        controller = new FirebaseController();
+        databaseUser = controller.getDatabaseReference(FireBaseReferences.USER_REFERENCE);
 
         // Link layout elements with variables
         textViewAlias = (TextView) findViewById(R.id.tvIdUser);
@@ -92,9 +89,7 @@ public class UserAreaActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.action_editProfile:
                 loadUser();
-                intent = new Intent(UserAreaActivity.this, EditProfileActivity.class);
-                intent.putExtra("user", user);
-                startActivityForResult(intent, ACTIVITY_CODE);
+                editUserAccount();
                 return true;
             case R.id.action_deleteProfile:
                 deleteUserAccount();
@@ -109,10 +104,63 @@ public class UserAreaActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        //user = data.getParcelableExtra("user");
+        //loadUser();
+        if (data.getStringExtra("userMail") != null) {
+            textViewUserMail.setText(data.getStringExtra("userMail"));
+        }
+    }
+
+    /**
+     * Load and show data of current user
+     */
+    private void loadUser(){
+        // Execute controller method to get database users objects and find which has active session. Use OnGetDataListener
+        // interface to know when database data is retrieved
+        controller.readData(databaseUser, new OnGetDataListener() {
+            @Override
+            public void onStart() {
+                progressDialog.setMessage(getString(R.string.loadingData));
+                progressDialog.show();
+            }
+
+            @Override
+            public void onSuccess(DataSnapshot data) {
+                String currentMail = controller.getCurrentUserEmail();
+
+                for (DataSnapshot userSnapshot : data.getChildren()){
+                    user = userSnapshot.getValue(User.class);
+
+                    if (user.getMail().equals(currentMail)){
+                        textViewAlias.setText(user.getAlias());
+                        textViewUserName.setText(user.getName());
+                        textViewUserMail.setText(user.getMail());
+                    }
+                }
+                progressDialog.dismiss();
+            }
+
+            @Override
+            public void onFailed(DatabaseError databaseError) {
+                Log.e("LoadUser error", databaseError.getMessage());
+            }
+        });
+    }
+
+    private void editUserAccount(){
+        intent = new Intent(UserAreaActivity.this, EditProfileActivity.class);
+        intent.putExtra("user", user);
+        startActivityForResult(intent, ACTIVITY_CODE);
+    }
+
     /**
      * Delete user account when delete button is clicked
      */
-    public void deleteUserAccount(){
+    private void deleteUserAccount(){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(getString(R.string.deleteUserConfirmation));
         builder.setCancelable(true);
@@ -123,27 +171,12 @@ public class UserAreaActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
 
-                        final FirebaseUser userFirebase = FirebaseAuth.getInstance().getCurrentUser();
-                        AuthCredential credential = EmailAuthProvider
-                                .getCredential(user.getMail(), user.getPassword());
+                        FirebaseUser firebaseUser = controller.getActiveUserSession();
+                       // AuthCredential credential = ((FirebaseController)getApplication()).getUserCredentials(user.getMail(), user.getPassword());
 
-                        if (userFirebase != null){
-                            userFirebase.reauthenticate(credential)
-                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<Void> task) {
-                                            userFirebase.delete()
-                                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                        @Override
-                                                        public void onComplete(@NonNull Task<Void> task) {
-                                                            if (task.isSuccessful()) {
-                                                                Toast.makeText(getApplicationContext(), getString(R.string.userAccountDeleted), Toast.LENGTH_LONG).show();
-                                                                finish();
-                                                            }
-                                                        }
-                                                    });
-                                        }
-                                    });
+                        if (firebaseUser != null){
+                            controller.removeUserDependencies(user);
+                            controller.deleteFirebaseUser(firebaseUser, user, getApplicationContext());
                         } else {
                             startActivity(new Intent(getApplicationContext(), LoginActivity.class));
                             finish();
@@ -168,69 +201,13 @@ public class UserAreaActivity extends AppCompatActivity {
      * @param view
      */
     public void signOut(View view) {
-        FirebaseAuth.getInstance().signOut();
-        Toast.makeText(this, R.string.userSignOut, Toast.LENGTH_SHORT).show();
-        finish();
+        controller.signOutDatabase(this);
+
+
+
     }
 
 
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
 
-        //user = data.getParcelableExtra("user");
-        //loadUser();
-        if (data.getStringExtra("userMail") != null) {
-            textViewUserMail.setText(data.getStringExtra("userMail"));
-        }
-    }
-
-    /**
-     * Load data of current user
-     */
-    private void loadUser(){
-        //Initialize variables
-        String currentMail = ((FirebaseController)getApplication()).getCurrentUserEmail();
-
-        // Show message on progress dialog
-        progressDialog.setMessage(getString(R.string.loadingData));
-        progressDialog.show();
-
-        DatabaseReference databaseUser = FirebaseDatabase.getInstance().getReference(FireBaseReferences.USER_REFERENCE);
-
-        // Query database to get user information
-        Query query = databaseUser.orderByChild(FireBaseReferences.USER_MAIL_REFERENCE).equalTo(currentMail);
-        query.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                user = dataSnapshot.getValue(User.class);
-                textViewAlias.setText(user.getAlias());
-                textViewUserName.setText(user.getName());
-                textViewUserMail.setText(user.getMail());
-
-                progressDialog.dismiss();
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                //TO-DO
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-                //TO-DO
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-                //TO-DO
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-    }
 }

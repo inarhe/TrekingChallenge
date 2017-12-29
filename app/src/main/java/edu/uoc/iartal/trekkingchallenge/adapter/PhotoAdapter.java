@@ -1,4 +1,4 @@
-package edu.uoc.iartal.trekkingchallenge.objects;
+package edu.uoc.iartal.trekkingchallenge.adapter;
 
 import android.content.Context;
 import android.net.Uri;
@@ -21,6 +21,7 @@ import com.google.firebase.storage.StorageReference;
 
 import edu.uoc.iartal.trekkingchallenge.R;
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
+import edu.uoc.iartal.trekkingchallenge.model.Route;
 
 /**
  * Created by Ingrid Artal on 25/11/2017.

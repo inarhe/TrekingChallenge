@@ -24,11 +24,9 @@ import java.util.Date;
 
 import edu.uoc.iartal.trekkingchallenge.R;
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
-import edu.uoc.iartal.trekkingchallenge.objects.ChallengeHistoryAdapter;
-import edu.uoc.iartal.trekkingchallenge.objects.ChallengeResult;
-import edu.uoc.iartal.trekkingchallenge.objects.Finished;
-import edu.uoc.iartal.trekkingchallenge.objects.RouteHistoryAdapter;
-import edu.uoc.iartal.trekkingchallenge.objects.User;
+import edu.uoc.iartal.trekkingchallenge.model.Finished;
+import edu.uoc.iartal.trekkingchallenge.adapter.RouteHistoryAdapter;
+import edu.uoc.iartal.trekkingchallenge.model.User;
 import edu.uoc.iartal.trekkingchallenge.user.LoginActivity;
 
 public class RouteHistoryActivity extends AppCompatActivity {

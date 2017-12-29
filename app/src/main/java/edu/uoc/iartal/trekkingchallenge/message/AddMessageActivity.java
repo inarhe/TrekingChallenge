@@ -15,17 +15,15 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import edu.uoc.iartal.trekkingchallenge.R;
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
 import edu.uoc.iartal.trekkingchallenge.common.MainActivity;
-import edu.uoc.iartal.trekkingchallenge.group.AddGroupActivity;
-import edu.uoc.iartal.trekkingchallenge.objects.Group;
-import edu.uoc.iartal.trekkingchallenge.objects.Message;
-import edu.uoc.iartal.trekkingchallenge.objects.Trip;
+import edu.uoc.iartal.trekkingchallenge.model.Group;
+import edu.uoc.iartal.trekkingchallenge.model.Message;
+import edu.uoc.iartal.trekkingchallenge.model.Trip;
 import edu.uoc.iartal.trekkingchallenge.user.LoginActivity;
 
 public class AddMessageActivity extends AppCompatActivity {

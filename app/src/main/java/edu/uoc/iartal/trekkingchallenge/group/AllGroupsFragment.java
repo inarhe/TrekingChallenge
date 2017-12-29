@@ -10,6 +10,7 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -20,15 +21,15 @@ import android.view.ViewGroup;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
-import edu.uoc.iartal.trekkingchallenge.objects.Group;
-import edu.uoc.iartal.trekkingchallenge.objects.GroupAdapter;
+import edu.uoc.iartal.trekkingchallenge.common.FirebaseController;
+import edu.uoc.iartal.trekkingchallenge.common.OnGetDataListener;
+import edu.uoc.iartal.trekkingchallenge.model.Group;
+import edu.uoc.iartal.trekkingchallenge.adapter.GroupAdapter;
 import edu.uoc.iartal.trekkingchallenge.R;
 
 
@@ -37,6 +38,8 @@ public class AllGroupsFragment extends Fragment implements SearchView.OnQueryTex
     private GroupAdapter groupAdapter;
     private ProgressDialog progressDialog;
     private RecyclerView recyclerView;
+    private FirebaseController controller;
+    private DatabaseReference databaseGroup;
 
 
     public AllGroupsFragment(){
@@ -47,9 +50,14 @@ public class AllGroupsFragment extends Fragment implements SearchView.OnQueryTex
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //Initialize progress dialog
+        //Initialize variables
         progressDialog = new ProgressDialog(getActivity());
-        progressDialog.setMessage(getString(R.string.loadingData));
+        controller = new FirebaseController();
+        groups = new ArrayList<>();
+        groupAdapter = new GroupAdapter(groups);
+
+        // Get group database reference
+        databaseGroup = controller.getDatabaseReference(FireBaseReferences.GROUP_REFERENCE);
     }
 
     /**
@@ -88,20 +96,21 @@ public class AllGroupsFragment extends Fragment implements SearchView.OnQueryTex
             }
         });
 
-        DatabaseReference databaseGroup = FirebaseDatabase.getInstance().getReference(FireBaseReferences.GROUP_REFERENCE);
-        groups = new ArrayList<>();
-        groupAdapter = new GroupAdapter(groups);
-
         recyclerView.setAdapter(groupAdapter);
 
-        // Get database groups and notify adapter to show them in recycler view
-        progressDialog.show();
-        databaseGroup.addValueEventListener(new ValueEventListener() {
+        // Execute controller method to get database groups objects. Use OnGetDataListener interface to know
+        // when database data is retrieved and notify adapter to show them in recycler view
+        controller.readData(databaseGroup, new OnGetDataListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onStart() {
+                progressDialog.setMessage(getString(R.string.loadingData));
+                progressDialog.show();
+            }
+
+            @Override
+            public void onSuccess(DataSnapshot data) {
                 groups.clear();
-                for (DataSnapshot groupSnapshot:
-                        dataSnapshot.getChildren()) {
+                for (DataSnapshot groupSnapshot:data.getChildren()) {
                     Group group = groupSnapshot.getValue(Group.class);
                     if (group.getIsPublic()){
                         groups.add(group);
@@ -112,8 +121,8 @@ public class AllGroupsFragment extends Fragment implements SearchView.OnQueryTex
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
-                //TO-DO
+            public void onFailed(DatabaseError databaseError) {
+                Log.e("LoadAllGroups error", databaseError.getMessage());
             }
         });
     }

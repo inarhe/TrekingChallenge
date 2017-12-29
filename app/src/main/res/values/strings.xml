@@ -355,6 +355,7 @@
     <string name="descAdvice">Siusplau, introdueix una descripció</string>
     <string name="chooseRoute">Siusplau, selecciona una ruta</string>
     <string name="loadingData">Carregant dades...</string>
+    <string name="loadingDataFailed">Error al carregar les dades</string>
     <string name="actionSearch">Buscar</string>
     <string name="km">km</string>
     <string name="updating">Actualitzant dades</string>

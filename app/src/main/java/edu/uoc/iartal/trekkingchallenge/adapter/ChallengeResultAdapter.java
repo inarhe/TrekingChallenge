@@ -1,4 +1,4 @@
-package edu.uoc.iartal.trekkingchallenge.objects;
+package edu.uoc.iartal.trekkingchallenge.adapter;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -20,6 +20,8 @@ import java.util.ArrayList;
 
 import edu.uoc.iartal.trekkingchallenge.R;
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
+import edu.uoc.iartal.trekkingchallenge.model.ChallengeResult;
+import edu.uoc.iartal.trekkingchallenge.model.User;
 
 /**
  * Created by Ingrid Artal on 22/12/2017.

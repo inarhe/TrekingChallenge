@@ -1,4 +1,4 @@
-package edu.uoc.iartal.trekkingchallenge.objects;
+package edu.uoc.iartal.trekkingchallenge.adapter;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -27,6 +27,7 @@ import edu.uoc.iartal.trekkingchallenge.group.EditGroupActivity;
 import edu.uoc.iartal.trekkingchallenge.R;
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
 import edu.uoc.iartal.trekkingchallenge.group.ShowGroupActivity;
+import edu.uoc.iartal.trekkingchallenge.model.Group;
 
 
 public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.GroupViewHolder> {
@@ -77,28 +78,31 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.GroupViewHol
      */
     @Override
     public void onBindViewHolder(GroupViewHolder viewHolder, final int position) {
-        viewHolder.textViewGroupName.setText(groups.get(position).getName());
-        viewHolder.imageViewGroup.setImageResource(R.drawable.ic_people);
+        if (position < groups.size()){
+            viewHolder.textViewGroupName.setText(groups.get(position).getName());
+            viewHolder.imageViewGroup.setImageResource(R.drawable.ic_people);
 
-        if (groups.get(position).getIsPublic()) {
-            viewHolder.textViewIsPublic.setText(R.string.publicGroup);
-        } else {
-            viewHolder.textViewIsPublic.setText(R.string.privateGroup);
-        }
-
-        // Show delete button only if current user is group admin
-        if (isVisibleArray.isEmpty()){
-            viewHolder.buttonDelete.setVisibility(View.GONE);
-            viewHolder.buttonEdit.setVisibility(View.GONE);
-        } else {
-            if(isVisibleArray.get(position)){
-                viewHolder.buttonDelete.setVisibility(View.VISIBLE);
-                viewHolder.buttonEdit.setVisibility(View.VISIBLE);
+            if (groups.get(position).getIsPublic()) {
+                viewHolder.textViewIsPublic.setText(R.string.publicGroup);
             } else {
+                viewHolder.textViewIsPublic.setText(R.string.privateGroup);
+            }
+
+            // Show delete button only if current user is group admin
+            if (isVisibleArray.isEmpty()){
                 viewHolder.buttonDelete.setVisibility(View.GONE);
                 viewHolder.buttonEdit.setVisibility(View.GONE);
+            } else {
+                if(isVisibleArray.get(position)){
+                    viewHolder.buttonDelete.setVisibility(View.VISIBLE);
+                    viewHolder.buttonEdit.setVisibility(View.VISIBLE);
+                } else {
+                    viewHolder.buttonDelete.setVisibility(View.GONE);
+                    viewHolder.buttonEdit.setVisibility(View.GONE);
+                }
             }
         }
+
 
         // When cardview is clicked starts show detail group activity
         viewHolder.cardView.setOnClickListener(new View.OnClickListener() {
@@ -150,6 +154,10 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.GroupViewHol
         } else {
             isVisibleArray.add(false);
         }
+    }
+
+    public void removeVisibility(){
+        isVisibleArray.clear();
     }
 
     /**

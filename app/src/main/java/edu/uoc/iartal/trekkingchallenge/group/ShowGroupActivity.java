@@ -27,6 +27,7 @@ import edu.uoc.iartal.trekkingchallenge.message.ListMessagesActivity;
 import edu.uoc.iartal.trekkingchallenge.model.Group;
 import edu.uoc.iartal.trekkingchallenge.model.User;
 import edu.uoc.iartal.trekkingchallenge.R;
+import edu.uoc.iartal.trekkingchallenge.user.LoginActivity;
 
 public class ShowGroupActivity extends AppCompatActivity {
     private DatabaseReference databaseGroup;
@@ -45,6 +46,12 @@ public class ShowGroupActivity extends AppCompatActivity {
 
         // Initialize variables
         controller = new FirebaseController();
+
+        // If user isn't logged, start login activity
+        if (controller.getActiveUserSession() == null) {
+            startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+            finish();
+        }
 
         // Get Firebase authentication instance and database references
         DatabaseReference databaseUser = controller.getDatabaseReference(FireBaseReferences.USER_REFERENCE);
@@ -67,7 +74,8 @@ public class ShowGroupActivity extends AppCompatActivity {
         textViewDescription.setText(group.getDescription());
         textViewMembers.setText(Integer.toString(group.getNumberOfMembers()) + " " + getString(R.string.members));
 
-        // Get current user
+        // Execute controller method to get database current user object. Use OnGetDataListener interface to know
+        // when database data is retrieved
         controller.readData(databaseUser, new OnGetDataListener() {
             @Override
             public void onStart() {
@@ -144,7 +152,7 @@ public class ShowGroupActivity extends AppCompatActivity {
     private void joinGroup () {
         // Check if user is a group member
         if (checkIsMember()){
-            Toast.makeText(getApplicationContext(), R.string.alreadyInGroup, Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), R.string.alreadyInGroup, Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -159,7 +167,7 @@ public class ShowGroupActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
                         controller.updateJoins(getString(R.string.setJoin), databaseGroup, FireBaseReferences.USER_GROUPS_REFERENCE, group.getId(), currentUser, group.getNumberOfMembers());
-                        Toast.makeText(getApplicationContext(), getString(R.string.groupJoined), Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), getString(R.string.groupJoined), Toast.LENGTH_SHORT).show();
                         finish();
                     }
                 });
@@ -184,13 +192,13 @@ public class ShowGroupActivity extends AppCompatActivity {
     public void leaveGroup () {
         // Check if user is a group member
         if (!checkIsMember()){
-            Toast.makeText(getApplicationContext(), R.string.noMemberGroup, Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), R.string.noMemberGroup, Toast.LENGTH_SHORT).show();
             return;
         }
 
         // Create alert dialog to ask user confirmation
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(getString(R.string.groupLeft));
+        builder.setMessage(getString(R.string.groupLeftAsk));
         builder.setCancelable(true);
 
         builder.setPositiveButton(
@@ -199,6 +207,7 @@ public class ShowGroupActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
                         controller.updateJoins(getString(R.string.setLeave), databaseGroup, FireBaseReferences.USER_GROUPS_REFERENCE, group.getId(), currentUser, group.getNumberOfMembers());
+                        Toast.makeText(getApplicationContext(), getString(R.string.groupLeft), Toast.LENGTH_SHORT).show();
                         finish();
                     }
                 });

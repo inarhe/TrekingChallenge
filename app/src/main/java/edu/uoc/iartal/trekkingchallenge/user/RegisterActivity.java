@@ -70,33 +70,33 @@ public class RegisterActivity extends AppCompatActivity {
 
         // Check input parameters. If some parameter is incorrect or empty, stops the function execution
         if(TextUtils.isEmpty(name)) {
-            Toast.makeText(this, getString(R.string.nameField), Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getString(R.string.nameField), Toast.LENGTH_SHORT).show();
             return;
         }
 
         if(TextUtils.isEmpty(alias)) {
-            Toast.makeText(this, getString(R.string.idField), Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getString(R.string.idField), Toast.LENGTH_SHORT).show();
             return;
         }
 
         if(TextUtils.isEmpty(mail)) {
-            Toast.makeText(this, getString(R.string.mailField), Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getString(R.string.mailField), Toast.LENGTH_SHORT).show();
             return;
         } else if (!common.validateEmail(mail)){
-            Toast.makeText(this, getString(R.string.mailFormat), Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getString(R.string.mailFormat), Toast.LENGTH_SHORT).show();
             return;
         }
 
         if(TextUtils.isEmpty(password)) {
-            Toast.makeText(this, getString(R.string.passwordField), Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getString(R.string.passwordField), Toast.LENGTH_SHORT).show();
             return;
         } else if (!common.validatePassword(password)){
-            Toast.makeText(this, getString(R.string.passwordTooShort), Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getString(R.string.passwordTooShort), Toast.LENGTH_SHORT).show();
             return;
         }
 
         if(!password.equals(repeatPassword)) {
-            Toast.makeText(this, getString(R.string.samePass), Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getString(R.string.samePass), Toast.LENGTH_SHORT).show();
             return;
         }
 

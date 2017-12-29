@@ -15,6 +15,7 @@ import android.os.Bundle;
 import com.google.firebase.auth.FirebaseAuth;
 
 import edu.uoc.iartal.trekkingchallenge.R;
+import edu.uoc.iartal.trekkingchallenge.common.FirebaseController;
 import edu.uoc.iartal.trekkingchallenge.user.LoginActivity;
 
 public class ListGroupsActivity extends AppCompatActivity {
@@ -31,8 +32,11 @@ public class ListGroupsActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle(getString(R.string.listGroupsActivity));
 
+        // Initialize variables
+        FirebaseController controller = new FirebaseController();
+
         // If user isn't logged, start login activity
-        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+        if (controller.getActiveUserSession() == null) {
             startActivity(new Intent(getApplicationContext(), LoginActivity.class));
             finish();
         }

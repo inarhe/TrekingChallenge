@@ -2,7 +2,6 @@ package edu.uoc.iartal.trekkingchallenge.group;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,14 +12,12 @@ import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 import edu.uoc.iartal.trekkingchallenge.R;
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
+import edu.uoc.iartal.trekkingchallenge.common.FirebaseController;
+import edu.uoc.iartal.trekkingchallenge.common.OnCompleteTaskListener;
 import edu.uoc.iartal.trekkingchallenge.model.Group;
 import edu.uoc.iartal.trekkingchallenge.user.LoginActivity;
 
@@ -29,8 +26,9 @@ public class EditGroupActivity extends AppCompatActivity {
     private Group group;
     private EditText editTextName, editTextDescription;
     private ProgressDialog progressDialog;
-    private Boolean updateName, updateDesc;
-    private String newName, newDescription;
+    private Boolean updateDesc;
+    private String newDescription;
+    private FirebaseController controller;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,17 +45,18 @@ public class EditGroupActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle(R.string.editGroupActivityName);
 
-        // Get database references
-        databaseGroup = FirebaseDatabase.getInstance().getReference(FireBaseReferences.GROUP_REFERENCE);
+        // Initialize variables
+        controller = new FirebaseController();
+        progressDialog = new ProgressDialog(this);
 
         // If user isn't logged, start login activity
-        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+        if (controller.getActiveUserSession() == null) {
             startActivity(new Intent(getApplicationContext(), LoginActivity.class));
             finish();
         }
 
-        // Initialize variables
-        progressDialog = new ProgressDialog(this);
+        // Get database references
+        databaseGroup = controller.getDatabaseReference(FireBaseReferences.GROUP_REFERENCE);
 
         // Link layout elements with variables
         editTextName = (EditText) findViewById(R.id.etGroupName);
@@ -78,21 +77,21 @@ public class EditGroupActivity extends AppCompatActivity {
      */
     public void editGroup (View view) {
         //Initialize variables
-        updateName = false;
+        Boolean updateName = false;
         updateDesc = false;
 
         // Get input parameters
-        newName = editTextName.getText().toString().trim();
+        String newName = editTextName.getText().toString().trim();
         newDescription = editTextDescription.getText().toString().trim();
 
-        // If some of the input parameters are incorrect, stops the function execution further
+        // Check input parameters. If some parameter is incorrect or empty, stops the function execution
         if (TextUtils.isEmpty(newName)) {
-            Toast.makeText(this, R.string.nameField, Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.nameField, Toast.LENGTH_SHORT).show();
             return;
         }
 
         if (TextUtils.isEmpty(newDescription)) {
-            Toast.makeText(this, R.string.descriptionField, Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.descriptionField, Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -112,20 +111,27 @@ public class EditGroupActivity extends AppCompatActivity {
 
         // Update database if its necessary
         if (updateName) {
-            databaseGroup.child(group.getId()).child(FireBaseReferences.GROUP_NAME_REFERENCE).setValue(newName)
-                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+            // Execute controller method to update database group object. Use OnGetDataListener interface to know
+            // when database is updated
+            controller.executeTask(databaseGroup, group.getId(), FireBaseReferences.GROUP_NAME_REFERENCE, newName, new OnCompleteTaskListener() {
                 @Override
-                public void onComplete(@NonNull Task<Void> task) {
-                    if (task.isSuccessful()){
-                        if (updateDesc){
-                            updateDescription();
-                        }
-                        progressDialog.dismiss();
-                        Toast.makeText(getApplicationContext(), R.string.editGroupOk, Toast.LENGTH_LONG).show();
-                        finish();
-                    } else {
-                        Toast.makeText(getApplicationContext(), R.string.editGroupFail, Toast.LENGTH_LONG).show();
+                public void onStart() {
+                    //Nothing to do
+                }
+
+                @Override
+                public void onSuccess() {
+                    if (updateDesc){
+                        updateDescription();
                     }
+                    progressDialog.dismiss();
+                    Toast.makeText(getApplicationContext(), R.string.editGroupOk, Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+
+                @Override
+                public void onFailed() {
+                    Toast.makeText(getApplicationContext(), R.string.editGroupFail, Toast.LENGTH_LONG).show();
                 }
             });
         } else {
@@ -149,17 +155,23 @@ public class EditGroupActivity extends AppCompatActivity {
      * Update description group into database
      */
     private void updateDescription(){
-        databaseGroup.child(group.getId()).child(FireBaseReferences.GROUP_DESCRIPTION_REFERENCE).setValue(newDescription)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
+        // Execute controller method to update database group object. Use OnGetDataListener interface to know
+        // when database is updated
+        controller.executeTask(databaseGroup, group.getId(), FireBaseReferences.GROUP_DESCRIPTION_REFERENCE, newDescription, new OnCompleteTaskListener() {
                     @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()){
-                            Toast.makeText(getApplicationContext(), R.string.editGroupOk, Toast.LENGTH_LONG).show();
-                        } else {
-                            Toast.makeText(getApplicationContext(), R.string.editGroupFail, Toast.LENGTH_LONG).show();
-                        }
+                    public void onStart() {
+                        //Nothing to do
+                    }
+
+                    @Override
+                    public void onSuccess() {
+                        Toast.makeText(getApplicationContext(), R.string.editGroupOk, Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onFailed() {
+                        Toast.makeText(getApplicationContext(), R.string.editGroupFail, Toast.LENGTH_SHORT).show();
                     }
                 });
     }
-
 }

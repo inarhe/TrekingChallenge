@@ -41,7 +41,6 @@ public class AllGroupsFragment extends Fragment implements SearchView.OnQueryTex
     private FirebaseController controller;
     private DatabaseReference databaseGroup;
 
-
     public AllGroupsFragment(){
 
     }

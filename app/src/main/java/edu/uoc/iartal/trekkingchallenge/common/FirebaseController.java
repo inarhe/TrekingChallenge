@@ -201,6 +201,20 @@ public class FirebaseController {
         });
     }
 
+    public void executeTask (DatabaseReference database, String child, String reference, String value, final OnCompleteTaskListener listener){
+        listener.onStart();
+        database.child(child).child(reference).setValue(value).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()){
+                    listener.onSuccess();
+                } else {
+                    listener.onFailed();
+                }
+            }
+        });
+    }
+
     public void signOutDatabase(Context context){
         FirebaseAuth.getInstance().signOut();
         Toast.makeText(context, R.string.userSignOut, Toast.LENGTH_SHORT).show();

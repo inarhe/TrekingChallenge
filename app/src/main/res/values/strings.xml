@@ -82,8 +82,9 @@
 
     <!--Show groups activity-->
     <string name="groupJoined">T\'has unit al grup</string>
+    <string name="groupLeft">Has abandonat el grup</string>
     <string name="joinGroupAsk">Et vols unir a aquest grup?</string>
-    <string name="groupLeft">Segur que vols abandonar el grup?</string>
+    <string name="groupLeftAsk">Segur que vols abandonar el grup?</string>
     <string name="groupAskDeleted">Segur que vols eliminar el grup?</string>
     <string name="textGroupDescription">Descripció:</string>
     <string name="textGroupMembers">Nombre d\'integrants:</string>

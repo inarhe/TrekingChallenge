@@ -58,7 +58,8 @@ public class MyGroupsFragment extends Fragment implements SearchView.OnQueryText
         // Get user database reference
         DatabaseReference databaseUser = controller.getDatabaseReference(FireBaseReferences.USER_REFERENCE);
 
-        // Get current user id
+        // Execute controller method to get database current user object. Use OnGetDataListener interface to know
+        // when database data is retrieved
         controller.readData(databaseUser, new OnGetDataListener() {
             @Override
             public void onStart() {

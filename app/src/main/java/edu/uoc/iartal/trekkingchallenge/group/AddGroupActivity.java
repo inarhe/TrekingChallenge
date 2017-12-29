@@ -64,6 +64,12 @@ public class AddGroupActivity extends AppCompatActivity {
         // Initialize variables
         controller = new FirebaseController();
 
+        // If user isn't logged, start login activity
+        if (controller.getActiveUserSession() == null) {
+            startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+            finish();
+        }
+
         // Get database references
         databaseGroup = controller.getDatabaseReference(FireBaseReferences.GROUP_REFERENCE);
         DatabaseReference databaseUser = controller.getDatabaseReference(FireBaseReferences.USER_REFERENCE);
@@ -73,7 +79,8 @@ public class AddGroupActivity extends AppCompatActivity {
         editTextDescription = (EditText) findViewById(R.id.etDescriptionGroup);
         checkBox = (CheckBox) findViewById(R.id.cBPublicGgroup);
 
-        // Get current user
+        // Execute controller method to get database current user object. Use OnGetDataListener interface to know
+        // when database data is retrieved
         controller.readData(databaseUser, new OnGetDataListener() {
             @Override
             public void onStart() {
@@ -111,14 +118,14 @@ public class AddGroupActivity extends AppCompatActivity {
         name = editTextName.getText().toString().trim();
         description = editTextDescription.getText().toString().trim();
 
-        // If some of the input parameters are incorrect, stops execution
+        // Check input parameters. If some parameter is incorrect or empty, stops the function execution
         if (TextUtils.isEmpty(name)) {
-            Toast.makeText(this, getString(R.string.nameField), Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getString(R.string.nameField), Toast.LENGTH_SHORT).show();
             return;
         }
 
         if (TextUtils.isEmpty(description)) {
-            Toast.makeText(this, getString(R.string.descriptionField), Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getString(R.string.descriptionField), Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -156,7 +163,7 @@ public class AddGroupActivity extends AppCompatActivity {
                         inviteUsers();
                     }
                 } else {
-                    Toast.makeText(AddGroupActivity.this,R.string.groupAlreadyExists,Toast.LENGTH_LONG).show();
+                    Toast.makeText(AddGroupActivity.this,R.string.groupAlreadyExists,Toast.LENGTH_SHORT).show();
                 }
             }
 

@@ -77,7 +77,7 @@ public class ShowTripActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle(trip.getName());
 
-        // Show selected group information in the layout
+        // Show selected trip information in the layout
         textViewRoute.setText(trip.getRoute());
         textViewDate.setText(trip.getDate());
         textViewPlace.setText(trip.getPlace());
@@ -238,7 +238,7 @@ public class ShowTripActivity extends AppCompatActivity {
      * Check if current user is a member of the trip object
      * @return current user id
      */
-    private Boolean checkIsMember(){
+    private boolean checkIsMember(){
         ArrayList<String> members = new ArrayList<>();
         members.addAll(trip.getMembers().keySet());
 
@@ -277,7 +277,7 @@ public class ShowTripActivity extends AppCompatActivity {
 
             @Override
             public void onFailed(DatabaseError databaseError) {
-
+                Log.e("ShowTrip check error", databaseError.getMessage());
             }
         });
     }

@@ -35,6 +35,8 @@ public class RouteHistoryActivity extends AppCompatActivity {
     private ArrayList<Finished> finishedRoutes;
     private ArrayList<String> routes;
     private SimpleDateFormat formatter;
+    private DatabaseReference databaseFinished;
+    private FirebaseController controller;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +51,7 @@ public class RouteHistoryActivity extends AppCompatActivity {
         actionBar.setTitle(R.string.routeHistoryActivity);
 
         // Initialize variables
-        FirebaseController controller = new FirebaseController();
+        controller = new FirebaseController();
         routes = new ArrayList<>();
         finishedRoutes = new ArrayList<>();
 
@@ -60,21 +62,28 @@ public class RouteHistoryActivity extends AppCompatActivity {
         }
 
         // Get database reference
-        DatabaseReference databaseFinished = controller.getDatabaseReference(FireBaseReferences.FINISHED_REFERENCE);
+        databaseFinished = controller.getDatabaseReference(FireBaseReferences.FINISHED_REFERENCE);
 
         // Set listView and its header
         historyList = (ListView) findViewById(R.id.lvRouteHistory);
         ViewGroup headerView = (ViewGroup) getLayoutInflater().inflate(R.layout.header_route_history, historyList, false);
         historyList.addHeaderView(headerView);
 
-        // Get data from item clicked on list groups activity
+        // Get data from user history activity
         Bundle bundle = getIntent().getExtras();
         User user = bundle.getParcelable("user");
 
         // Get user routes finished ids
         routes.addAll(user.getFinished().keySet());
 
-        // Execute controller method to get database current user trips done. Use OnGetDataListener interface to know
+        getHistoryValues();
+    }
+
+    /**
+     * Get list of finished routes to show in the history
+     */
+    private void getHistoryValues(){
+        // Execute controller method to get database current user routes done. Use OnGetDataListener interface to know
         // when database data is retrieved
         controller.readDataOnce(databaseFinished, new OnGetDataListener() {
             @Override

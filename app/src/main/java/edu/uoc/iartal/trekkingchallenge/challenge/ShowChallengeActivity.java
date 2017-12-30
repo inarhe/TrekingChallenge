@@ -7,6 +7,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -15,19 +16,17 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
 import edu.uoc.iartal.trekkingchallenge.R;
-import edu.uoc.iartal.trekkingchallenge.common.CommonFunctionality;
+import edu.uoc.iartal.trekkingchallenge.common.FirebaseController;
+import edu.uoc.iartal.trekkingchallenge.common.OnGetDataListener;
 import edu.uoc.iartal.trekkingchallenge.model.Challenge;
 import edu.uoc.iartal.trekkingchallenge.model.ChallengeResult;
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
@@ -37,14 +36,15 @@ import edu.uoc.iartal.trekkingchallenge.user.LoginActivity;
 
 public class ShowChallengeActivity extends AppCompatActivity {
 
-    private DatabaseReference databaseChallenge;
+    private DatabaseReference databaseChallenge, databaseUser,databaseResults;
     private Challenge challenge;
     private ListView rankingList;
-    private ViewGroup headerView;
+    private User currentUser;
     private ArrayList<String> challengesResultsIds;
     private ArrayList<ChallengeResult> challengeResults;
-    private CommonFunctionality common;
-    private String currentMail, currentUserName;
+    private FirebaseController controller;
+    private boolean isFinished;
+    private String currentMail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,30 +55,31 @@ public class ShowChallengeActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.showChallengeToolbar);
         setSupportActionBar(toolbar);
 
-        // Get Firebase authentication instance and database references
-        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-        DatabaseReference databaseUser = FirebaseDatabase.getInstance().getReference(FireBaseReferences.USER_REFERENCE);
-        databaseChallenge = FirebaseDatabase.getInstance().getReference(FireBaseReferences.CHALLENGE_REFERENCE);
+        // Initialize variables
+        controller = new FirebaseController();
+        challengesResultsIds = new ArrayList<>();
+        challengeResults = new ArrayList<>();
 
         // If user isn't logged, start login activity
-        if (firebaseAuth.getCurrentUser() == null) {
+        if (controller.getActiveUserSession() == null) {
             startActivity(new Intent(getApplicationContext(), LoginActivity.class));
             finish();
         }
+
+        // Get database references
+        databaseUser = controller.getDatabaseReference(FireBaseReferences.USER_REFERENCE);
+        databaseChallenge = controller.getDatabaseReference(FireBaseReferences.CHALLENGE_REFERENCE);
+        databaseResults = controller.getDatabaseReference(FireBaseReferences.CHALLENGERESULT_REFERENCE);
 
         // Link layout elements with variables
         TextView textViewRoute = (TextView) findViewById(R.id.tvRouteChallenge);
         TextView textViewDate = (TextView) findViewById(R.id.tvDateChallenge);
         TextView textViewDesc = (TextView) findViewById(R.id.tvDescChallenge);
         rankingList = (ListView) findViewById(R.id.lvRanking);
-        headerView = (ViewGroup) getLayoutInflater().inflate(R.layout.header_ranking_challenge, rankingList, false);
+        ViewGroup headerView = (ViewGroup) getLayoutInflater().inflate(R.layout.header_ranking_challenge, rankingList, false);
         rankingList.addHeaderView(headerView);
 
-        // Initialize variables
-        common = new CommonFunctionality();
-        currentMail = firebaseAuth.getCurrentUser().getEmail();
-
-        // Get data from item clicked on list groups activity
+        // Get data from item clicked on list challenges activity
         Bundle bundle = getIntent().getExtras();
         challenge = bundle.getParcelable("challenge");
 
@@ -87,84 +88,12 @@ public class ShowChallengeActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle(challenge.getName());
 
-        // Show selected group information in the layout
+        // Show selected challenge information in the layout
         textViewRoute.setText(challenge.getRoute());
         textViewDate.setText(challenge.getLimitDate());
         textViewDesc.setText(challenge.getDescription());
 
-        // Get current user name
-        databaseUser.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot userSnapshot :
-                        dataSnapshot.getChildren()) {
-                    User user = userSnapshot.getValue(User.class);
-                    if (user.getMail().equals(currentMail)) {
-                        currentUserName = user.getId();
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                //TO-DO
-            }
-        });
-
-        challengesResultsIds = new ArrayList<>();
-
-        // Get all challenge results
-        for (String key : challenge.getResults().keySet()) {
-            challengesResultsIds.add(key);
-        }
-
-        challengeResults = new ArrayList<>();
-
-        DatabaseReference databaseChallResults = FirebaseDatabase.getInstance().getReference(FireBaseReferences.CHALLENGERESULT_REFERENCE);
-
-        if (databaseChallResults != null) {
-            currentMail = FirebaseAuth.getInstance().getCurrentUser().getEmail();
-
-            databaseChallResults.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    challengeResults.clear();
-                    for (DataSnapshot challengesSnapshot :
-                            dataSnapshot.getChildren()) {
-                        ChallengeResult chall = challengesSnapshot.getValue(ChallengeResult.class);
-                        if (challengesResultsIds.contains(chall.getId())) {
-                            challengeResults.add(chall);
-                        }
-                    }
-
-                    Collections.sort(challengeResults, new Comparator<ChallengeResult>() {
-                        @Override
-                        public int compare(ChallengeResult o1, ChallengeResult o2) {
-                            if (challenge.getClassification().equals(getString(R.string.time))) {
-                                return o1.getTime().intValue() - o2.getTime().intValue();
-                            } else {
-                                return o1.getDistance().intValue() - o2.getDistance().intValue();
-                            }
-                        }
-                    });
-
-
-                    ChallengeResultAdapter adapter = new ChallengeResultAdapter(getApplicationContext(), R.layout.adapter_challenge_results, challengeResults);
-                    rankingList.setAdapter(adapter);
-
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                    //TO-DO
-                }
-            });
-
-            // Fill the table with challenge results
-            //  populateTableRanking();
-
-
-        }
+        getCurrentUser();
     }
 
     /**
@@ -208,7 +137,7 @@ public class ShowChallengeActivity extends AppCompatActivity {
     public void joinChallenge () {
         // Check if user is a challenge member
         if (checkIsMember()){
-            Toast.makeText(getApplicationContext(), R.string.alreadyInGroup, Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), R.string.alreadyInChallenge, Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -222,8 +151,8 @@ public class ShowChallengeActivity extends AppCompatActivity {
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
-                        common.updateJoins(currentMail, getString(R.string.setJoin), databaseChallenge, challenge.getId(), challenge.getNumberOfMembers(), FireBaseReferences.USER_CHALLENGES_REFERENCE);
-                        Toast.makeText(getApplicationContext(), getString(R.string.challengeJoined), Toast.LENGTH_LONG).show();
+                        controller.updateJoins(getString(R.string.setJoin), databaseChallenge, FireBaseReferences.USER_CHALLENGES_REFERENCE, challenge.getId(), currentUser, challenge.getNumberOfMembers());
+                        Toast.makeText(getApplicationContext(), getString(R.string.challengeJoined), Toast.LENGTH_SHORT).show();
                         finish();
                     }
                 });
@@ -248,13 +177,13 @@ public class ShowChallengeActivity extends AppCompatActivity {
     public void leaveChallenge () {
         // Check if user is a challenge member
         if (!checkIsMember()){
-            Toast.makeText(getApplicationContext(), R.string.noMemberGroup, Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), R.string.noMemberChallenge, Toast.LENGTH_SHORT).show();
             return;
         }
 
         // Create alert dialog to ask user confirmation
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(getString(R.string.challengeLeft));
+        builder.setMessage(getString(R.string.challengeLeftAsk));
         builder.setCancelable(true);
 
         builder.setPositiveButton(
@@ -262,7 +191,8 @@ public class ShowChallengeActivity extends AppCompatActivity {
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
-                        common.updateJoins(currentMail, getString(R.string.setLeave), databaseChallenge, challenge.getId(), challenge.getNumberOfMembers(), FireBaseReferences.USER_CHALLENGES_REFERENCE);
+                        controller.updateJoins(getString(R.string.setLeave), databaseChallenge, FireBaseReferences.USER_CHALLENGES_REFERENCE, challenge.getId(), currentUser, challenge.getNumberOfMembers());
+                        Toast.makeText(getApplicationContext(), getString(R.string.tripLeft), Toast.LENGTH_SHORT).show();
                         finish();
                     }
                 });
@@ -281,24 +211,35 @@ public class ShowChallengeActivity extends AppCompatActivity {
     }
 
     /**
-     * Starts register challenge results activity when option menu is selected
+     * Check if user is a challenge member and doesn't have finished yet
      */
     public void challengeFinished() {
+        if (!checkIsMember()){
+            Toast.makeText(getApplicationContext(), R.string.noMemberChallenge, Toast.LENGTH_SHORT).show();
+            return;
+        } else {
+            checkAlreadyFinished();
+        }
+    }
+
+    /**
+     * Starts register challenge result activity if user doesn't have finished yet and it's a member
+     */
+    private void startResultRegister(){
         Intent intent = new Intent(this, FinishedChallengeActivity.class);
         intent.putExtra("challenge", challenge);
         startActivity(intent);
     }
 
-
     /**
      * Check if current user is a member of the challenge object
-     * @return
+     * @return current user id
      */
-    private Boolean checkIsMember(){
+    private boolean checkIsMember(){
         ArrayList<String> members = new ArrayList<>();
         members.addAll(challenge.getMembers().keySet());
 
-        return members.contains(currentUserName);
+        return members.contains(currentUser.getId());
     }
 
     private static class ChallengeResultComparator implements Comparator<Double>{
@@ -306,6 +247,127 @@ public class ShowChallengeActivity extends AppCompatActivity {
         public int compare(Double result1, Double result2) {
 
             return result1.compareTo(result2);
+        }
+    }
+
+    /**
+     * Check if current user has already registered a result
+     * @return current user id
+     */
+    private void checkAlreadyFinished(){
+        isFinished = false;
+        final ArrayList<String> results = new ArrayList<>();
+        results.addAll(currentUser.getChallengeResults().keySet());
+
+        controller.readDataOnce(databaseResults, new OnGetDataListener() {
+            @Override
+            public void onStart() {
+                // Nothing to do
+            }
+
+            @Override
+            public void onSuccess(DataSnapshot data) {
+                for (DataSnapshot resultSnapshot : data.getChildren()){
+                    ChallengeResult challengeResult = resultSnapshot.getValue(ChallengeResult.class);
+                    if ((results.contains(challengeResult.getId())) && (challengeResult.getChallenge().equals(challenge.getName()))){
+                        Toast.makeText(getApplicationContext(), R.string.alreadyFinish, Toast.LENGTH_SHORT).show();
+                        isFinished = true;
+                    }
+                }
+
+                if (!isFinished){
+                    startResultRegister();
+                }
+            }
+
+            @Override
+            public void onFailed(DatabaseError databaseError) {
+                Log.e("ShowChall check error", databaseError.getMessage());
+            }
+        });
+    }
+
+    /**
+     * Get current user object from database
+     */
+    private void getCurrentUser(){
+        // Execute controller method to get database current user object. Use OnGetDataListener interface to know
+        // when database data is retrieved
+        controller.readDataOnce(databaseUser, new OnGetDataListener() {
+            @Override
+            public void onStart() {
+                //Nothing to do
+            }
+
+            @Override
+            public void onSuccess(DataSnapshot data) {
+                currentMail = controller.getCurrentUserEmail();
+
+                for (DataSnapshot userSnapshot : data.getChildren()){
+                    User user = userSnapshot.getValue(User.class);
+
+                    if (user.getMail().equals(currentMail)){
+                        currentUser = user;
+                        getChallengeResults();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailed(DatabaseError databaseError) {
+                Log.e("ShowChall getUser error", databaseError.getMessage());
+            }
+        });
+    }
+
+    /**
+     * Get list of challenge results to show in ranking list
+     */
+    private void getChallengeResults(){
+
+        // Get all challenge results
+        for (String key : challenge.getResults().keySet()) {
+            challengesResultsIds.add(key);
+        }
+
+        if (databaseResults != null) {
+            controller.readData(databaseResults, new OnGetDataListener() {
+                @Override
+                public void onStart() {
+                    //Nothing to do
+                }
+
+                @Override
+                public void onSuccess(DataSnapshot data) {
+                    challengeResults.clear();
+                    for (DataSnapshot challengesSnapshot : data.getChildren()) {
+                        ChallengeResult chall = challengesSnapshot.getValue(ChallengeResult.class);
+                        if (challengesResultsIds.contains(chall.getId())) {
+                            challengeResults.add(chall);
+                        }
+                    }
+
+                    Collections.sort(challengeResults, new Comparator<ChallengeResult>() {
+                        @Override
+                        public int compare(ChallengeResult o1, ChallengeResult o2) {
+                            if (challenge.getClassification().equals(getString(R.string.time))) {
+                                return o1.getTime().intValue() - o2.getTime().intValue();
+                            } else {
+                                return o1.getDistance().intValue() - o2.getDistance().intValue();
+                            }
+                        }
+                    });
+
+
+                    ChallengeResultAdapter adapter = new ChallengeResultAdapter(getApplicationContext(), R.layout.adapter_challenge_results, challengeResults);
+                    rankingList.setAdapter(adapter);
+                }
+
+                @Override
+                public void onFailed(DatabaseError databaseError) {
+                    Log.e("ShowChall getRes error", databaseError.getMessage());
+                }
+            });
         }
     }
 }

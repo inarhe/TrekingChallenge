@@ -310,8 +310,39 @@ public class FirebaseController {
         });
     }
 
+    public void addNewChallenge(final DatabaseReference databaseChallenge, final Challenge challenge, final String userAdmin, final Context context){
+        final DatabaseReference databaseUser = getDatabaseReference(FireBaseReferences.USER_REFERENCE);
+
+        databaseChallenge.child(challenge.getId()).setValue(challenge).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if(task.isSuccessful()) {
+                    databaseChallenge.child(challenge.getId()).child(FireBaseReferences.MEMBERS_REFERENCE).child(userAdmin).setValue("true");
+                    databaseUser.child(userAdmin).child(FireBaseReferences.USER_CHALLENGES_REFERENCE).child(challenge.getId()).setValue("true");
+                    Toast.makeText(context, R.string.challengeSaved, Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(context, R.string.failedAddChallenge, Toast.LENGTH_SHORT).show();
+                    Log.e("error",task.getException().getMessage());
+                }
+            }
+        });
+    }
+
     public void addNewTripResult(DatabaseReference databaseTripDone, TripDone tripDone, final Context context){
         databaseTripDone.child(tripDone.getId()).setValue(tripDone).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if(task.isSuccessful()) {
+                    Toast.makeText(context, R.string.finishedSaved, Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(context, R.string.finishedFailed, Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    public void addNewChallengeResult(DatabaseReference databaseChallengeResult, ChallengeResult challengeResult, final Context context){
+        databaseChallengeResult.child(challengeResult.getId()).setValue(challengeResult).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if(task.isSuccessful()) {
@@ -387,12 +418,16 @@ public class FirebaseController {
                 });
     }
 
-    public void updateHistory (String childId, int slope, Double distance, double time){
+    public void updateHistory (String childId, int slope, Double distance, double time, int challengeWin){
         DatabaseReference databaseHistory = getDatabaseReference(FireBaseReferences.HISTORY_REFERENCE);
 
         databaseHistory.child(childId).child(FireBaseReferences.HISTORY_SLOPE_REFERENCE).setValue(slope);
         databaseHistory.child(childId).child(FireBaseReferences.HISTORY_DISTANCE_REFERENCE).setValue(distance);
         databaseHistory.child(childId).child(FireBaseReferences.HISTORY_TIME_REFERENCE).setValue(time);
+
+        if (challengeWin != -1){
+            databaseHistory.child(childId).child(FireBaseReferences.HISTORY_WINS_REFERENCE).setValue(challengeWin);
+        }
     }
 
 

@@ -4,7 +4,6 @@ import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -17,11 +16,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -29,6 +24,8 @@ import java.util.Locale;
 
 import edu.uoc.iartal.trekkingchallenge.R;
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
+import edu.uoc.iartal.trekkingchallenge.common.FirebaseController;
+import edu.uoc.iartal.trekkingchallenge.common.OnCompleteTaskListener;
 import edu.uoc.iartal.trekkingchallenge.model.Challenge;
 import edu.uoc.iartal.trekkingchallenge.user.LoginActivity;
 
@@ -36,11 +33,11 @@ public class EditChallengeActivity extends AppCompatActivity {
     private DatabaseReference databaseChallenge;
     private Challenge challenge;
     private EditText editTextName, editTextDescription, dateEditText;
-    private ImageView buttonCalendar;
     private ProgressDialog progressDialog;
-    private Boolean updateName, updateDate, updateDesc;
-    private String newName, newDescription, newDate;
-    private Context context = this;
+    private Boolean updateDate, updateDesc;
+    private String newDescription, newDate;
+    private Context context;
+    private FirebaseController controller;
     private Calendar dateSelected;
     private SimpleDateFormat sdf;
     private DatePickerDialog.OnDateSetListener date;
@@ -60,29 +57,31 @@ public class EditChallengeActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle(R.string.editChallengeActivityName);
 
+        // Initialize variables
+        controller = new FirebaseController();
+        progressDialog = new ProgressDialog(this);
+        context = this;
+
         // Get database references
-        databaseChallenge = FirebaseDatabase.getInstance().getReference(FireBaseReferences.CHALLENGE_REFERENCE);
+        databaseChallenge = controller.getDatabaseReference(FireBaseReferences.CHALLENGE_REFERENCE);
 
         // If user isn't logged, start login activity
-        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+        if (controller.getActiveUserSession() == null) {
             startActivity(new Intent(getApplicationContext(), LoginActivity.class));
             finish();
         }
-
-        // Initialize variables
-        progressDialog = new ProgressDialog(this);
 
         // Link layout elements with variables
         editTextName = (EditText) findViewById(R.id.etChallengeName);
         editTextDescription = (EditText) findViewById(R.id.etChallengeDesc);
         dateEditText = (EditText) findViewById(R.id.dateEditText);
-        buttonCalendar = (ImageView) findViewById(R.id.bDate);
+        ImageView buttonCalendar = (ImageView) findViewById(R.id.bDate);
 
         // Get data from item clicked on list challenges activity
         Bundle bundle = getIntent().getExtras();
         challenge = bundle.getParcelable("challenge");
 
-        // Show selected challemge information in the layout
+        // Show selected challenge information in the layout
         editTextName.setText(challenge.getName());
         editTextDescription.setText(challenge.getDescription());
 
@@ -109,23 +108,23 @@ public class EditChallengeActivity extends AppCompatActivity {
      */
     public void editChallenge (View view) {
         //Initialize variables
-        updateName = false;
+        Boolean updateName = false;
         updateDesc = false;
         updateDate = false;
 
         // Get input parameters
-        newName = editTextName.getText().toString().trim();
+        String newName = editTextName.getText().toString().trim();
         newDescription = editTextDescription.getText().toString().trim();
         newDate = dateEditText.getText().toString().trim();
 
-        // If some of the input parameters are incorrect, stops the function execution further
+        // Check input parameters. If some parameter is incorrect or empty, stops the function execution
         if (TextUtils.isEmpty(newName)) {
-            Toast.makeText(this, R.string.nameField, Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.nameField, Toast.LENGTH_SHORT).show();
             return;
         }
 
         if (TextUtils.isEmpty(newDescription)) {
-            Toast.makeText(this, R.string.descriptionField, Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.descriptionField, Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -150,27 +149,34 @@ public class EditChallengeActivity extends AppCompatActivity {
 
         // Update database if its necessary
         if (updateName) {
-            databaseChallenge.child(challenge.getId()).child(FireBaseReferences.CHALLENGE_NAME_REFERENCE).setValue(newName)
-                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if (task.isSuccessful()){
-                                if (updateDesc){
-                                    updateDescriptionValue();
-                                    if (updateDate){
-                                        updateDateValue();
-                                    }
-                                } else if (updateDate){
-                                    updateDateValue();
-                                }
-                                Toast.makeText(getApplicationContext(), R.string.editChallengeOk, Toast.LENGTH_LONG).show();
-                                finish();
-                            } else {
-                                Toast.makeText(getApplicationContext(), R.string.editChallengeFail, Toast.LENGTH_LONG).show();
-                            }
-                            progressDialog.dismiss();
+            // Execute controller method to update database challenge object. Use OnGetDataListener interface to know
+            // when database is updated
+            controller.executeTask(databaseChallenge, challenge.getId(), FireBaseReferences.CHALLENGE_NAME_REFERENCE, newName, new OnCompleteTaskListener() {
+                @Override
+                public void onStart() {
+                    //Nothing to do
+                }
+
+                @Override
+                public void onSuccess() {
+                    if (updateDesc){
+                        updateDescriptionValue();
+                        if (updateDate) {
+                            updateDateValue();
                         }
-                    });
+                    } else if (updateDate) {
+                        updateDateValue();
+                    }
+                    progressDialog.dismiss();
+                    Toast.makeText(getApplicationContext(), R.string.editChallengeOk, Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+
+                @Override
+                public void onFailed() {
+                    Toast.makeText(getApplicationContext(), R.string.editChallengeFail, Toast.LENGTH_SHORT).show();
+                }
+            });
         } else {
             if (updateDesc){
                 updateDescriptionValue();
@@ -180,9 +186,18 @@ public class EditChallengeActivity extends AppCompatActivity {
             } else if (updateDate){
                 updateDateValue();
             }
+            Toast.makeText(getApplicationContext(), R.string.editChallengeOk, Toast.LENGTH_SHORT).show();
             progressDialog.dismiss();
             finish();
         }
+    }
+
+    /**
+     * Cancel edit challenge if cancel button is clicked
+     * @param view
+     */
+    public void cancelEditChallenge (View view) {
+        finish();
     }
 
     /**
@@ -213,45 +228,13 @@ public class EditChallengeActivity extends AppCompatActivity {
      * Update challenge description into database
      */
     private void updateDescriptionValue(){
-        databaseChallenge.child(challenge.getId()).child(FireBaseReferences.CHALLENGE_DESCRIPTION_REFERENCE).setValue(newDescription)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()){
-                            if (updateDate){
-                               updateDateValue();
-                            } else {
-                                Toast.makeText(getApplicationContext(), R.string.editChallengeOk, Toast.LENGTH_LONG).show();
-                            }
-                        } else {
-                            Toast.makeText(getApplicationContext(), R.string.editChallengeFail, Toast.LENGTH_LONG).show();
-                        }
-                    }
-                });
+        controller.editStringParameter(databaseChallenge, challenge.getId(), FireBaseReferences.CHALLENGE_DESCRIPTION_REFERENCE, newDescription);
     }
 
     /**
      * Update challenge date into database
      */
     private void updateDateValue(){
-        databaseChallenge.child(challenge.getId()).child(FireBaseReferences.CHALLENGE_DATE_REFERENCE).setValue(newDate)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()){
-                            Toast.makeText(getApplicationContext(), R.string.editChallengeOk, Toast.LENGTH_LONG).show();
-                        } else {
-                            Toast.makeText(getApplicationContext(), R.string.editChallengeFail, Toast.LENGTH_LONG).show();
-                        }
-                    }
-                });
-    }
-
-    /**
-     * Cancel edit challenge if cancel button is clicked
-     * @param view
-     */
-    public void cancelEditChallenge (View view) {
-        finish();
+        controller.editStringParameter(databaseChallenge, challenge.getId(), FireBaseReferences.CHALLENGE_DATE_REFERENCE, newDate);
     }
 }

@@ -249,7 +249,8 @@
     <string name="descChallenge">Descripció:</string>
     <string name="challengeJoined">T\'has unit al repte</string>
     <string name="joinChallengeAsk">Et vols unir a aquest repte?</string>
-    <string name="challengeLeft">Segur que vols abandonar el repte?</string>
+    <string name="challengeLeftAsk">Segur que vols abandonar el repte?</string>
+    <string name="challengeLeft">Has abandonat el repte</string>
     <string name="challengeAskDeleted">Segur que vols eliminar el repte?</string>
     <string name="rankingChallenge">Rànquing del repte:</string>
     <string name="challengeDeleted">Repte eliminat</string>
@@ -282,6 +283,7 @@
     <string name="classificationDist">Classificació per distància</string>
     <string name="time">Temps</string>
     <string name="distance">Distància</string>
+    <string name="challAlreadyExists">El repte ja existeix</string>
 
     <!--List challenges activity-->
     <string name="tabAllChallenges">"Tots"</string>

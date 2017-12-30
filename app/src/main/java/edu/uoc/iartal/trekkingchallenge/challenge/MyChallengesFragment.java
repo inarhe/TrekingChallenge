@@ -8,6 +8,7 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -15,29 +16,30 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import edu.uoc.iartal.trekkingchallenge.R;
+import edu.uoc.iartal.trekkingchallenge.common.FirebaseController;
+import edu.uoc.iartal.trekkingchallenge.common.OnGetChildListener;
+import edu.uoc.iartal.trekkingchallenge.common.OnGetDataListener;
 import edu.uoc.iartal.trekkingchallenge.model.Challenge;
 import edu.uoc.iartal.trekkingchallenge.adapter.ChallengeAdapter;
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
 import edu.uoc.iartal.trekkingchallenge.model.User;
 
 public class MyChallengesFragment extends Fragment implements SearchView.OnQueryTextListener{
-    private List<Challenge> challenges;
+    private ArrayList<Challenge> challenges;
     private ChallengeAdapter challengeAdapter;
     private ProgressDialog progressDialog;
     private RecyclerView recyclerView;
-    private String currentUserName, currentMail;
+    private String currentUserId;
+    private DatabaseReference databaseUser, databaseChallenge;
+    private FirebaseController controller;
 
     public MyChallengesFragment(){
 
@@ -48,31 +50,15 @@ public class MyChallengesFragment extends Fragment implements SearchView.OnQuery
         super.onCreate(savedInstanceState);
 
         //Initialize variables
+        controller = new FirebaseController();
         progressDialog = new ProgressDialog(getActivity());
-        progressDialog.setMessage(getString(R.string.loadingData));
-
-        DatabaseReference databaseUser = FirebaseDatabase.getInstance().getReference(FireBaseReferences.USER_REFERENCE);
-        currentMail = FirebaseAuth.getInstance().getCurrentUser().getEmail();
         challenges = new ArrayList<>();
+        challengeAdapter = new ChallengeAdapter(challenges);
 
-        // Get current user
-        databaseUser.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot userSnapshot :
-                        dataSnapshot.getChildren()) {
-                    User user = userSnapshot.getValue(User.class);
-                    if (user.getMail().equals(currentMail)) {
-                        currentUserName = user.getId();
-                    }
-                }
-            }
+        // Get user database reference
+        databaseUser = controller.getDatabaseReference(FireBaseReferences.USER_REFERENCE);
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                //TO-DO
-            }
-        });
+        getCurrentUserId();
     }
 
     /**
@@ -95,7 +81,7 @@ public class MyChallengesFragment extends Fragment implements SearchView.OnQuery
     }
 
     /**
-     * Get database public and private challenges that current user is a member
+     * Get database public and private challenges which current user is a member
      * @param view
      * @param savedInstanceState
      */
@@ -105,65 +91,10 @@ public class MyChallengesFragment extends Fragment implements SearchView.OnQuery
 
         setHasOptionsMenu(true);
 
-        DatabaseReference databaseChallenge = FirebaseDatabase.getInstance().getReference(FireBaseReferences.CHALLENGE_REFERENCE);
-
-        challengeAdapter = new ChallengeAdapter(challenges);
-
+        databaseChallenge = controller.getDatabaseReference(FireBaseReferences.CHALLENGE_REFERENCE);
         recyclerView.setAdapter(challengeAdapter);
 
-        // Get database challenges and notify adapter to show them in recycler view
-        progressDialog.show();
-        databaseChallenge.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Challenge challenge = dataSnapshot.getValue(Challenge.class);
-
-                if (challenge.getMembers().containsKey(currentUserName)){
-                    addChallenge(challenge);
-                }
-                challengeAdapter.notifyDataSetChanged();
-                progressDialog.dismiss();
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                // Get user challenges
-                Challenge challenge = dataSnapshot.getValue(Challenge.class);
-                if (challenge.getMembers().containsKey(currentUserName)){
-                    if (!challenges.contains(challenge)){
-                        addChallenge(challenge);
-                    } else {
-                        int i = challenges.indexOf(challenge);
-                        Challenge challengeArray = challenges.get(i);
-                        if (!challengeArray.getName().equals(challenge.getName()) || !challengeArray.getDescription().equals(challenge.getDescription())
-                                || !challengeArray.getLimitDate().equals(challenge.getLimitDate())){
-                            challenges.set(i, challenge);
-                        }
-                    }
-                } else {
-                    if (challenges.contains(challenge)){
-                        challenges.remove(challenge);
-                    }
-                }
-                challengeAdapter.notifyDataSetChanged();
-                progressDialog.dismiss();
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-                //TO-DO
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-                //TO-DO
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                //TO-DO
-            }
-        });
+        showChallengesInView();
     }
 
     /**
@@ -236,10 +167,111 @@ public class MyChallengesFragment extends Fragment implements SearchView.OnQuery
      */
     private void addChallenge(Challenge challenge) {
         challenges.add(challenge);
-        if (challenge.getUserAdmin().equals(currentUserName)) {
+        if (challenge.getUserAdmin().equals(currentUserId)) {
             challengeAdapter.setVisibility(true);
         } else {
             challengeAdapter.setVisibility(false);
         }
+    }
+
+    /**
+     * Get current user to get his challenges list later
+     */
+    private void getCurrentUserId(){
+        // Execute controller method to get database current user object. Use OnGetDataListener interface to know
+        // when database data is retrieved
+        controller.readDataOnce(databaseUser, new OnGetDataListener() {
+            @Override
+            public void onStart() {
+                //Nothing to do
+            }
+
+            @Override
+            public void onSuccess(DataSnapshot data) {
+                String currentMail = controller.getCurrentUserEmail();
+
+                for (DataSnapshot userSnapshot : data.getChildren()){
+                    User user = userSnapshot.getValue(User.class);
+
+                    if (user.getMail().equals(currentMail)){
+                        currentUserId = user.getId();
+                    }
+                }
+                getUserChallenges();
+            }
+
+            @Override
+            public void onFailed(DatabaseError databaseError) {
+                Log.e("MyChallCurrentUsr error", databaseError.getMessage());
+            }
+        });
+    }
+
+    /**
+     * Get current user challenges list
+     */
+    private void getUserChallenges(){
+        // Execute controller method to get database challenges objects. Use OnGetDataListener interface to know
+        // when database data is retrieved and notify adapter to show them in recycler view
+        controller.readChild(databaseChallenge, new OnGetChildListener() {
+            @Override
+            public void onStart() {
+                progressDialog.setMessage(getString(R.string.loadingData));
+                progressDialog.show();
+            }
+
+            @Override
+            public void onSuccess(DataSnapshot data) {
+                Challenge challenge = data.getValue(Challenge.class);
+
+                if (challenge.getMembers().containsKey(currentUserId)){
+                    addChallenge(challenge);
+                }
+                challengeAdapter.notifyDataSetChanged();
+                progressDialog.dismiss();
+            }
+
+            @Override
+            public void onChanged(DataSnapshot data) {
+                // Get user challenges and check if some challenge has been updated
+                Challenge challenge = data.getValue(Challenge.class);
+                if (challenge.getMembers().containsKey(currentUserId)){
+                    if (!challenges.contains(challenge)){
+                        addChallenge(challenge);
+                    } else {
+                        int i = challenges.indexOf(challenge);
+                        Challenge challengeArray = challenges.get(i);
+                        if (!challengeArray.getName().equals(challenge.getName()) || !challengeArray.getDescription().equals(challenge.getDescription())
+                                || !challengeArray.getLimitDate().equals(challenge.getLimitDate())){
+                            challenges.set(i, challenge);
+                        }
+                    }
+                } else {
+                    if (challenges.contains(challenge)) {
+                        challenges.remove(challenge);
+                    }
+                }
+                challengeAdapter.notifyDataSetChanged();
+                progressDialog.dismiss();
+            }
+
+            @Override
+            public void onRemoved(DataSnapshot data) {
+                //Nothing to do
+            }
+
+            @Override
+            public void onFailed(DatabaseError databaseError) {
+                Log.e("ListMyChall error", databaseError.getMessage());
+            }
+        });
+    }
+
+    /**
+     * Return list of challenges
+     * @return challenges
+     */
+    private ArrayList<Challenge> showChallengesInView(){
+        return challenges;
     }
 }

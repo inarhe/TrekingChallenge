@@ -4,11 +4,11 @@ import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
@@ -22,25 +22,20 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
-import edu.uoc.iartal.trekkingchallenge.common.MainActivity;
+import edu.uoc.iartal.trekkingchallenge.common.ConstantsUtils;
+import edu.uoc.iartal.trekkingchallenge.common.FirebaseController;
 import edu.uoc.iartal.trekkingchallenge.R;
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
+import edu.uoc.iartal.trekkingchallenge.common.OnGetDataListener;
 import edu.uoc.iartal.trekkingchallenge.model.Challenge;
 import edu.uoc.iartal.trekkingchallenge.model.Route;
 import edu.uoc.iartal.trekkingchallenge.model.User;
@@ -50,20 +45,21 @@ import edu.uoc.iartal.trekkingchallenge.user.LoginActivity;
 public class AddChallengeActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
 
     private EditText editTextName, editTextDescription, dateEditText;
-    private ImageView buttonCalendar;
     private DatabaseReference databaseChallenge, databaseUser, databaseRoute;
     private CheckBox checkBox;
-    private String userAdmin, classification;
     private Spinner spinner;
     private Calendar dateSelected;
     private SimpleDateFormat sdf;
     private DatePickerDialog.OnDateSetListener date;
-    private ArrayList<String> nameRoutes = new ArrayList<>();
-    private Context context = this;
-    private ArrayAdapter<String> adapter;
-    private String route;
+    private String idChallenge, name, challengeDate, description, classification, route;
+    private User currentUser;
     private Challenge challenge;
+    private ArrayList<String> nameRoutes;
+    private Context context;
+    private ArrayAdapter<String> spinnerAdapter;
+    private boolean isPublic, challengeExists;
     private RadioGroup rgClassification;
+    private FirebaseController controller;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,19 +73,24 @@ public class AddChallengeActivity extends AppCompatActivity implements AdapterVi
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle(getString(R.string.addChallengeActivity));
 
+        // Hide keyboard until user select edit text
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
+        // Initialize variables
+        controller = new FirebaseController();
+        nameRoutes = new ArrayList<>();
+        context = this;
+
         // If user isn't logged, start login activity
-        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+        if (controller.getActiveUserSession() == null) {
             startActivity(new Intent(getApplicationContext(), LoginActivity.class));
             finish();
         }
 
-        // Hide keyboard until user select edit text
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-
         // Get database references
-        databaseChallenge = FirebaseDatabase.getInstance().getReference(FireBaseReferences.CHALLENGE_REFERENCE);
-        databaseUser = FirebaseDatabase.getInstance().getReference(FireBaseReferences.USER_REFERENCE);
-        databaseRoute = FirebaseDatabase.getInstance().getReference(FireBaseReferences.ROUTE_REFERENCE);
+        databaseChallenge = controller.getDatabaseReference(FireBaseReferences.CHALLENGE_REFERENCE);
+        databaseUser = controller.getDatabaseReference(FireBaseReferences.USER_REFERENCE);
+        databaseRoute = controller.getDatabaseReference(FireBaseReferences.ROUTE_REFERENCE);
 
         // Link layout elements with variables
         editTextName = (EditText) findViewById(R.id.etNameChallenge);
@@ -97,7 +98,7 @@ public class AddChallengeActivity extends AppCompatActivity implements AdapterVi
         dateEditText = (EditText) findViewById(R.id.dateEditText);
         checkBox = (CheckBox) findViewById(R.id.cBPublicChallenge);
         spinner = (Spinner) findViewById(R.id.spinnerRoute);
-        buttonCalendar = (ImageView) findViewById(R.id.bDate);
+        ImageView buttonCalendar = (ImageView) findViewById(R.id.bDate);
         rgClassification = (RadioGroup) findViewById(R.id.rgClassification);
         rgClassification.check(R.id.rbClassificationTime);
 
@@ -143,7 +144,7 @@ public class AddChallengeActivity extends AppCompatActivity implements AdapterVi
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
-
+        //Nothing to do
     }
 
     /**
@@ -152,24 +153,25 @@ public class AddChallengeActivity extends AppCompatActivity implements AdapterVi
      */
     public void addChallenge (View view) {
         // Initialize variables with input parameters
-        Boolean isPublic = false;
-        String name = editTextName.getText().toString().trim();
-        String description = editTextDescription.getText().toString().trim();
-        String date = dateEditText.getText().toString().trim();
+        isPublic = false;
+        challengeExists = false;
+        name = editTextName.getText().toString().trim();
+        description = editTextDescription.getText().toString().trim();
+        challengeDate = dateEditText.getText().toString().trim();
 
-        // If some of the input parameters are incorrect, stops the function execution further
+        // Check input parameters. If some parameter is incorrect or empty, stops the function execution
         if (TextUtils.isEmpty(name)) {
-            Toast.makeText(this, getString(R.string.nameAdvice), Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getString(R.string.nameAdvice), Toast.LENGTH_SHORT).show();
             return;
         }
 
         if (TextUtils.isEmpty(description)) {
-            Toast.makeText(this, getString(R.string.descAdvice), Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getString(R.string.descAdvice), Toast.LENGTH_SHORT).show();
             return;
         }
 
-        if (route==null) {
-            Toast.makeText(this, getString(R.string.chooseRoute), Toast.LENGTH_LONG).show();
+        if (route == null) {
+            Toast.makeText(this, getString(R.string.chooseRoute), Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -187,44 +189,52 @@ public class AddChallengeActivity extends AppCompatActivity implements AdapterVi
                 break;
         }
 
-
-
-        // Add challenge to firebase database
-        final String idChallenge = databaseChallenge.push().getKey();
-        challenge = new Challenge(idChallenge, name, description, date, route, userAdmin, isPublic, 1, classification);
-
-        databaseChallenge.child(idChallenge).setValue(challenge).addOnCompleteListener(new OnCompleteListener<Void>() {
+        // Execute controller method to get database challenges objects. Use OnGetDataListener interface to know
+        // when database data is retrieved and search if challenge already exists
+        controller.readDataOnce(databaseChallenge, new OnGetDataListener() {
             @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if(!task.isSuccessful()) {
-                    Toast.makeText(getApplicationContext(), getString(R.string.failedAddChallenge), Toast.LENGTH_SHORT).show();
-                }
+            public void onStart() {
+                //Nothing to do
             }
-        });
 
-        databaseChallenge.child(idChallenge).child(FireBaseReferences.MEMBERS_REFERENCE).child(userAdmin).setValue("true");
-        databaseUser.child(userAdmin).child(FireBaseReferences.USER_CHALLENGES_REFERENCE).child(challenge.getId()).setValue("true")
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if(task.isSuccessful()){
-                    Toast.makeText(getApplicationContext(), getString(R.string.challengeSaved), Toast.LENGTH_LONG).show();
+            public void onSuccess(DataSnapshot data) {
+                for (DataSnapshot challengeSnapshot : data.getChildren()){
+                    Challenge challenge = challengeSnapshot.getValue(Challenge.class);
+                    if (challenge.getName().equals(name)){
+                        challengeExists = true;
+                    }
+                }
+
+                // If challenge doesn't exist, executes add challenge controller method
+                if (!challengeExists){
+                    idChallenge = controller.getFirebaseNewKey(databaseChallenge);
+                    if (idChallenge == null){
+                        Toast.makeText(getApplicationContext(), R.string.failedAddChallenge, Toast.LENGTH_SHORT).show();
+                    } else {
+                        challenge = new Challenge(idChallenge, name, description, challengeDate, route, currentUser.getId(), isPublic, ConstantsUtils.DEFAULT_MEMBERS, classification);
+                        controller.addNewChallenge(databaseChallenge, challenge, currentUser.getId(), getApplicationContext());
+
+                        // Select users that admin wants in the challenge
+                        inviteUsers();
+                    }
                 } else {
-                    Toast.makeText(getApplicationContext(),getString(R.string.failedAddChallenge),Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(),R.string.challAlreadyExists,Toast.LENGTH_SHORT).show();
                 }
             }
-        });
 
-        // Select users that admin wants in the challenge
-        inviteUsers();
+            @Override
+            public void onFailed(DatabaseError databaseError) {
+                Log.e("AddChall error", databaseError.getMessage());
+            }
+        });
     }
 
     /**
-     * Cancel challenge creation when cancel button is clicked. Start main activity
+     * Cancel challenge creation when cancel button is clicked.
      * @param view
      */
     public void cancelChallenge (View view) {
-        startActivity(new Intent(getApplicationContext(), MainActivity.class));
         finish();
     }
 
@@ -245,20 +255,27 @@ public class AddChallengeActivity extends AppCompatActivity implements AdapterVi
         nameRoutes.clear();
         nameRoutes.add(getString(R.string.chooseRouteSpinner));
 
-        databaseRoute.addValueEventListener(new ValueEventListener() {
+        // Execute controller method to get database route objects. Use OnGetDataListener interface to know
+        // when database data is retrieved
+        controller.readDataOnce(databaseRoute, new OnGetDataListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot routeSnapshot : dataSnapshot.getChildren()) {
-                    String nameRoute = routeSnapshot.getValue(Route.class).getName();
-                    nameRoutes.add(nameRoute);
-                }
-                adapter = new ArrayAdapter<>(getBaseContext(),R.layout.support_simple_spinner_dropdown_item, nameRoutes);
-                spinner.setAdapter(adapter);
+            public void onStart() {
+                // Nothing to do
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
-                //TO-DO
+            public void onSuccess(DataSnapshot data) {
+                for (DataSnapshot routeSnapshot : data.getChildren()) {
+                    String nameRoute = routeSnapshot.getValue(Route.class).getName();
+                    nameRoutes.add(nameRoute);
+                }
+                spinnerAdapter = new ArrayAdapter<>(getBaseContext(), R.layout.support_simple_spinner_dropdown_item, nameRoutes);
+                spinner.setAdapter(spinnerAdapter);
+            }
+
+            @Override
+            public void onFailed(DatabaseError databaseError) {
+                Log.e("AddChall getRoute error", databaseError.getMessage());
             }
         });
     }
@@ -290,36 +307,33 @@ public class AddChallengeActivity extends AppCompatActivity implements AdapterVi
     }
 
     /**
-     * Query database to get current user information and know who is doing the action
+     * Get current user information and know who is doing the action
      */
     private void getUserAdmin(){
-        String mail = FirebaseAuth.getInstance().getCurrentUser().getEmail();
-        Query query = databaseUser.orderByChild(FireBaseReferences.USER_MAIL_REFERENCE).equalTo(mail);
-
-        query.addChildEventListener(new ChildEventListener() {
+        // Execute controller method to get database current user object. Use OnGetDataListener interface to know
+        // when database data is retrieved
+        controller.readDataOnce(databaseUser, new OnGetDataListener() {
             @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                userAdmin = dataSnapshot.getValue(User.class).getId();
+            public void onStart() {
+                //Nothing to do
             }
 
             @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                //TO-DO
+            public void onSuccess(DataSnapshot data) {
+                String currentMail = controller.getCurrentUserEmail();
+
+                for (DataSnapshot userSnapshot : data.getChildren()){
+                    User user = userSnapshot.getValue(User.class);
+
+                    if (user.getMail().equals(currentMail)){
+                        currentUser = user;
+                    }
+                }
             }
 
             @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-                //TO-DO
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-                //TO-DO
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                //TO-DO
+            public void onFailed(DatabaseError databaseError) {
+                Log.e("AddChall getAdmin error", databaseError.getMessage());
             }
         });
     }

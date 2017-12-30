@@ -10,6 +10,7 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -20,13 +21,13 @@ import android.view.ViewGroup;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import edu.uoc.iartal.trekkingchallenge.R;
+import edu.uoc.iartal.trekkingchallenge.common.FirebaseController;
+import edu.uoc.iartal.trekkingchallenge.common.OnGetDataListener;
 import edu.uoc.iartal.trekkingchallenge.model.Challenge;
 import edu.uoc.iartal.trekkingchallenge.adapter.ChallengeAdapter;
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
@@ -37,6 +38,8 @@ public class AllChallengesFragment extends Fragment implements SearchView.OnQuer
     private ChallengeAdapter challengeAdapter;
     private ProgressDialog progressDialog;
     private RecyclerView recyclerView;
+    private FirebaseController controller;
+    private DatabaseReference databaseChallenge;
 
     public AllChallengesFragment(){
 
@@ -48,7 +51,12 @@ public class AllChallengesFragment extends Fragment implements SearchView.OnQuer
 
         //Initialize progress dialog
         progressDialog = new ProgressDialog(getActivity());
-        progressDialog.setMessage(getString(R.string.loadingData));
+        controller = new FirebaseController();
+        challenges = new ArrayList<>();
+        challengeAdapter = new ChallengeAdapter(challenges);
+
+        // Get challenge database reference
+        databaseChallenge = controller.getDatabaseReference(FireBaseReferences.CHALLENGE_REFERENCE);
     }
 
     /**
@@ -87,34 +95,9 @@ public class AllChallengesFragment extends Fragment implements SearchView.OnQuer
             }
         });
 
-        DatabaseReference databaseChallenge = FirebaseDatabase.getInstance().getReference(FireBaseReferences.CHALLENGE_REFERENCE);
-        challenges = new ArrayList<>();
-        challengeAdapter = new ChallengeAdapter(challenges);
-
         recyclerView.setAdapter(challengeAdapter);
 
-        /// Get database challenges and notify adapter to show them in recycler view
-        progressDialog.show();
-        databaseChallenge.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                challenges.clear();
-                for (DataSnapshot challengeSnapshot:
-                        dataSnapshot.getChildren()) {
-                    Challenge challenge = challengeSnapshot.getValue(Challenge.class);
-                    if (challenge.getPublic()){
-                        challenges.add(challenge);
-                    }
-                }
-                challengeAdapter.notifyDataSetChanged();
-                progressDialog.dismiss();
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                //TO-DO
-            }
-        });
+        getListPublicChallenges();
     }
 
     /**
@@ -146,14 +129,13 @@ public class AllChallengesFragment extends Fragment implements SearchView.OnQuer
                 });
     }
 
-
     @Override
     public boolean onQueryTextSubmit(String query) {
         return false;
     }
 
     /**
-     * Pass new trip list to Adapter
+     * Pass new challenge list to Adapter
      * @param newText
      * @return
      */
@@ -165,7 +147,7 @@ public class AllChallengesFragment extends Fragment implements SearchView.OnQuer
     }
 
     /**
-     * Get search result trip list
+     * Get search result challenge list
      * @param models
      * @param query
      * @return
@@ -180,5 +162,38 @@ public class AllChallengesFragment extends Fragment implements SearchView.OnQuer
             }
         }
         return filteredModelList;
+    }
+
+    /**
+     * Get list of public challenges and notify adapter to show them in recyclerView
+     */
+    private void getListPublicChallenges(){
+        // Execute controller method to get database challenge objects. Use OnGetDataListener interface to know
+        // when database data is retrieved and notify adapter to show them in recycler view
+        controller.readData(databaseChallenge, new OnGetDataListener() {
+            @Override
+            public void onStart() {
+                progressDialog.setMessage(getString(R.string.loadingData));
+                progressDialog.show();
+            }
+
+            @Override
+            public void onSuccess(DataSnapshot data) {
+                challenges.clear();
+                for (DataSnapshot challengeSnapshot : data.getChildren()) {
+                    Challenge challenge = challengeSnapshot.getValue(Challenge.class);
+                    if (challenge.getPublic()){
+                        challenges.add(challenge);
+                    }
+                }
+                challengeAdapter.notifyDataSetChanged();
+                progressDialog.dismiss();
+            }
+
+            @Override
+            public void onFailed(DatabaseError databaseError) {
+                Log.e("ListAllChall error", databaseError.getMessage());
+            }
+        });
     }
 }

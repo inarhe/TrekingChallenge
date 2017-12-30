@@ -4,27 +4,20 @@ import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -32,6 +25,9 @@ import java.util.Locale;
 
 import edu.uoc.iartal.trekkingchallenge.R;
 import edu.uoc.iartal.trekkingchallenge.common.CommonFunctionality;
+import edu.uoc.iartal.trekkingchallenge.common.ConstantsUtils;
+import edu.uoc.iartal.trekkingchallenge.common.FirebaseController;
+import edu.uoc.iartal.trekkingchallenge.common.OnGetDataListener;
 import edu.uoc.iartal.trekkingchallenge.model.Challenge;
 import edu.uoc.iartal.trekkingchallenge.model.ChallengeResult;
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
@@ -43,29 +39,22 @@ import edu.uoc.iartal.trekkingchallenge.user.LoginActivity;
 public class FinishedChallengeActivity extends AppCompatActivity {
     private Calendar dateSelected;
     private SimpleDateFormat sdf;
-    private User user;
-    private EditText editTextDate, editTextDist, editTextHour;
-    private Context context = this;
     private DatePickerDialog.OnDateSetListener date;
+    private User currentUser;
+    private EditText editTextDate, editTextDist, editTextHour;
+    private Context context;
     private Challenge challenge;
     private DatabaseReference databaseUser, databaseResult, databaseChallenge, databaseHistory, databaseRoute;
-    private Double historyTime, historyDistance;
+    private double historyTime, historyDistance;
+    private String finishDist, finishTime;
     private int historyWins, historySlope, routeSlope;
+    private FirebaseController controller;
+    private CommonFunctionality common;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_finished_challenge);
-
-        // If user isn't logged, start login activity
-        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
-            startActivity(new Intent(getApplicationContext(), LoginActivity.class));
-            finish();
-        }
-
-        // Get data from show challenge activity
-        Bundle bundle = getIntent().getExtras();
-        challenge = bundle.getParcelable("challenge");
 
         // Set toolbar and actionbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.finishedChallengeToolbar);
@@ -74,15 +63,30 @@ public class FinishedChallengeActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle(R.string.finishChallengeActivity);
 
+        // Initialize variables
+        controller = new FirebaseController();
+        context = this;
+        common = new CommonFunctionality();
+
+        // If user isn't logged, start login activity
+        if (controller.getActiveUserSession() == null) {
+            startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+            finish();
+        }
+
         // Hide keyboard until user select edit text
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
+        // Get data from show challenge activity
+        Bundle bundle = getIntent().getExtras();
+        challenge = bundle.getParcelable("challenge");
+
         // Get database references
-        databaseUser = FirebaseDatabase.getInstance().getReference(FireBaseReferences.USER_REFERENCE);
-        databaseResult = FirebaseDatabase.getInstance().getReference(FireBaseReferences.CHALLENGERESULT_REFERENCE);
-        databaseChallenge = FirebaseDatabase.getInstance().getReference(FireBaseReferences.CHALLENGE_REFERENCE);
-        databaseHistory = FirebaseDatabase.getInstance().getReference(FireBaseReferences.HISTORY_REFERENCE);
-        databaseRoute = FirebaseDatabase.getInstance().getReference(FireBaseReferences.ROUTE_REFERENCE);
+        databaseUser = controller.getDatabaseReference(FireBaseReferences.USER_REFERENCE);
+        databaseResult = controller.getDatabaseReference(FireBaseReferences.CHALLENGERESULT_REFERENCE);
+        databaseChallenge = controller.getDatabaseReference(FireBaseReferences.CHALLENGE_REFERENCE);
+        databaseHistory = controller.getDatabaseReference(FireBaseReferences.HISTORY_REFERENCE);
+        databaseRoute = controller.getDatabaseReference(FireBaseReferences.ROUTE_REFERENCE);
 
         // Link layout elements with variables
         editTextDate = (EditText) findViewById(R.id.etDateFinish);
@@ -95,6 +99,8 @@ public class FinishedChallengeActivity extends AppCompatActivity {
         sdf = new SimpleDateFormat(dateFormat, Locale.GERMAN);
         setDate();
 
+        getCurrentUser();
+
         // Click listener on date edit text to show calendar
         editTextDate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -104,10 +110,7 @@ public class FinishedChallengeActivity extends AppCompatActivity {
                         dateSelected.get(Calendar.DAY_OF_MONTH)).show();
             }
         });
-
-        getUserAdmin();
     }
-
 
     /**
      * Save user challenge result in database and update dependencies
@@ -117,65 +120,36 @@ public class FinishedChallengeActivity extends AppCompatActivity {
         //Initialize variables
         String idResult;
         String finishDate = editTextDate.getText().toString().trim();
-        String finishDist = editTextDist.getText().toString().trim();
-        String finishHour = editTextHour.getText().toString().trim();
+        finishDist = editTextDist.getText().toString().trim();
+        finishTime = editTextHour.getText().toString().trim();
 
-        // If some of the input parameters are incorrect, stops the function execution further
+        // Check input parameters. If some parameter is incorrect or empty, stops the function execution
         if (TextUtils.isEmpty(finishDist)) {
-            Toast.makeText(this, getString(R.string.distAdvice), Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getString(R.string.distAdvice), Toast.LENGTH_SHORT).show();
             return;
         }
 
-        if (TextUtils.isEmpty(finishHour)) {
-            Toast.makeText(this, getString(R.string.timeAdvice), Toast.LENGTH_LONG).show();
+        if (TextUtils.isEmpty(finishTime)) {
+            Toast.makeText(this, getString(R.string.timeAdvice), Toast.LENGTH_SHORT).show();
             return;
         }
 
         // Add challenge result to firebase database
-        idResult = databaseResult.push().getKey();
-        ChallengeResult challengeResult = new ChallengeResult(idResult, Double.parseDouble(finishDist), Double.parseDouble(finishHour), user.getId(), challenge.getId(), finishDate,0, challenge.getName());
+        idResult = controller.getFirebaseNewKey(databaseResult);
 
-        databaseResult.child(idResult).setValue(challengeResult).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if(task.isSuccessful()) {
-                    Toast.makeText(FinishedChallengeActivity.this, getString(R.string.finishedSaved), Toast.LENGTH_LONG).show();
-                } else {
-                    Toast.makeText(FinishedChallengeActivity.this, getString(R.string.finishedFailed), Toast.LENGTH_LONG).show();
-                }
-            }
-        });
+        if (idResult == null){
+            Toast.makeText(getApplicationContext(), R.string.finishedFailed, Toast.LENGTH_SHORT).show();
+        } else {
+            ChallengeResult challengeResult = new ChallengeResult(idResult, Double.parseDouble(finishDist), Double.parseDouble(finishTime), currentUser.getId(), challenge.getId(), finishDate,ConstantsUtils.DEFAULT_RANKING_POSITION, challenge.getName());
+            controller.addNewChallengeResult(databaseResult, challengeResult, getApplicationContext());
 
-        CommonFunctionality common = new CommonFunctionality();
+            // Update result list in user and challenge database nodes
+            controller.updateResults (databaseUser, currentUser.getId(), FireBaseReferences.USER_RESULT_REFERENCE, idResult, context);
+            controller.updateResults(databaseChallenge, challenge.getId(), FireBaseReferences.CHALLENGE_FINISHED_REFERENCE,idResult, context);
 
-        // Update result list in user and challenge database nodes
-        common.updateResults (databaseUser, user.getId(), FireBaseReferences.USER_RESULT_REFERENCE, idResult, context);
-        common.updateResults(databaseChallenge, challenge.getId(), FireBaseReferences.CHALLENGE_FINISHED_REFERENCE,idResult, context);
+            updateHistory(challengeResult);
 
-        if (challengeResult.getPosition() == 1){
-            databaseHistory.child(user.getHistory()).child(FireBaseReferences.HISTORY_WINS_REFERENCE).setValue(historyWins + 1);
         }
-
-        databaseHistory.child(user.getHistory()).child(FireBaseReferences.HISTORY_DISTANCE_REFERENCE).setValue(historyDistance + Double.parseDouble(finishDist));
-        databaseHistory.child(user.getHistory()).child(FireBaseReferences.HISTORY_TIME_REFERENCE).setValue(historyTime + Double.parseDouble(finishHour));
-
-        Query query = databaseRoute.orderByChild(FireBaseReferences.ROUTE_ID_REFERENCE).equalTo(challenge.getRoute());
-
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot routeSnapshot : dataSnapshot.getChildren()) {
-                    Route route = routeSnapshot.getValue(Route.class);
-                    routeSlope = route.getAscent() + route.getDecline();
-                }
-                databaseHistory.child(user.getHistory()).child(FireBaseReferences.HISTORY_SLOPE_REFERENCE).setValue(historySlope + routeSlope);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
 
         finish();
     }
@@ -215,62 +189,101 @@ public class FinishedChallengeActivity extends AppCompatActivity {
     }
 
     /**
-     * Query database to get current user information and know who is doing the action
+     * Get current user information and get his history values
      */
-    private void getUserAdmin(){
-        String mail = FirebaseAuth.getInstance().getCurrentUser().getEmail();
-        Query query = databaseUser.orderByChild(FireBaseReferences.USER_MAIL_REFERENCE).equalTo(mail);
-
-        query.addChildEventListener(new ChildEventListener() {
+    private void getCurrentUser(){
+        // Execute controller method to get database current user object. Use OnGetDataListener interface to know
+        // when database data is retrieved
+        controller.readDataOnce(databaseUser, new OnGetDataListener() {
             @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                user = dataSnapshot.getValue(User.class);
-                getHistoryValues();
+            public void onStart() {
+                //Nothing to do
             }
 
             @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                //TO-DO
+            public void onSuccess(DataSnapshot data) {
+                String currentMail = controller.getCurrentUserEmail();
+
+                for (DataSnapshot userSnapshot : data.getChildren()){
+                    User user = userSnapshot.getValue(User.class);
+
+                    if (user.getMail().equals(currentMail)){
+                        currentUser = user;
+                        getHistoryValues();
+                    }
+                }
             }
 
             @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-                //TO-DO
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-                //TO-DO
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                //TO-DO
+            public void onFailed(DatabaseError databaseError) {
+                Log.e("FinChall getUsr error", databaseError.getMessage());
             }
         });
     }
 
     /**
-     * Query database to get current user information and know who is doing the action
+     * Get user history values
      */
     private void getHistoryValues(){
-        Query query = databaseHistory.orderByChild(FireBaseReferences.HISTORY_ID_REFERENCE).equalTo(user.getHistory());
 
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
+        controller.readDataOnce(databaseHistory, new OnGetDataListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot historySnapshot : dataSnapshot.getChildren()) {
+            public void onStart() {
+                // Nothing to do
+            }
+
+            @Override
+            public void onSuccess(DataSnapshot data) {
+                for (DataSnapshot historySnapshot : data.getChildren()) {
                     History history = historySnapshot.getValue(History.class);
-                    historyWins = history.getChallengeWin();
-                    historyDistance = history.getTotalDistance();
-                    historyTime = history.getTotalTime();
-                    historySlope = history.getTotalSlope();
+                    if (history.getId().equals(currentUser.getHistory())){
+                        historyWins = history.getChallengeWin();
+                        historyDistance = history.getTotalDistance();
+                        historyTime = history.getTotalTime();
+                        historySlope = history.getTotalSlope();
+                    }
                 }
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
+            public void onFailed(DatabaseError databaseError) {
+                Log.e("FinChall getHist error", databaseError.getMessage());
+            }
+        });
+    }
 
+    /**
+     * Update user history with challenge results.
+     */
+    private void updateHistory(final ChallengeResult challengeResult){
+        controller.readDataOnce(databaseRoute, new OnGetDataListener() {
+            @Override
+            public void onStart() {
+                // Nothing to do
+            }
+
+            @Override
+            public void onSuccess(DataSnapshot data) {
+                for (DataSnapshot routeSnapshot : data.getChildren()) {
+                    Route route = routeSnapshot.getValue(Route.class);
+                    if (route.getName().equals(challenge.getRoute())) {
+                        routeSlope = route.getAscent() + route.getDecline();
+                    }
+                }
+                int totalSlope = historySlope + routeSlope;
+                double totalDistance = common.round(historyDistance + Double.parseDouble(finishDist), ConstantsUtils.NUM_OF_DECIMALS);
+                double totalTime = common.round(common.sumHours(historyTime, Double.parseDouble(finishTime)),ConstantsUtils.NUM_OF_DECIMALS);
+
+                if (challengeResult.getPosition() == 1){
+                    controller.updateHistory(currentUser.getHistory(), totalSlope, totalDistance , totalTime,historyWins + 1);
+                } else {
+                    controller.updateHistory(currentUser.getHistory(), totalSlope, totalDistance , totalTime, ConstantsUtils.NO_CHALLENGE_WIN);
+                }
+            }
+
+            @Override
+            public void onFailed(DatabaseError databaseError) {
+                Log.e("UpHistCRes error", databaseError.getMessage());
             }
         });
     }

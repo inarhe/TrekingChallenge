@@ -25,6 +25,7 @@ import java.util.Locale;
 
 import edu.uoc.iartal.trekkingchallenge.R;
 import edu.uoc.iartal.trekkingchallenge.common.CommonFunctionality;
+import edu.uoc.iartal.trekkingchallenge.common.ConstantsUtils;
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
 import edu.uoc.iartal.trekkingchallenge.common.FirebaseController;
 import edu.uoc.iartal.trekkingchallenge.common.OnGetDataListener;
@@ -76,7 +77,7 @@ public class FinishedTripActivity extends AppCompatActivity {
         // Hide keyboard until user select edit text
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
-        // Get data from show challenge activity
+        // Get data from show trip activity
         Bundle bundle = getIntent().getExtras();
         trip = bundle.getParcelable("trip");
 
@@ -113,7 +114,7 @@ public class FinishedTripActivity extends AppCompatActivity {
 
 
     /**
-     * Save user challenge result in database and update dependencies
+     * Save user trip result in database and update dependencies
      * @param view
      */
     public void registerFinish(View view){
@@ -269,10 +270,10 @@ public class FinishedTripActivity extends AppCompatActivity {
                     }
                 }
                 int totalSlope = historySlope + routeSlope;
-                double totalDistance = common.round(historyDistance + Double.parseDouble(finishDist),2);
-                double totalTime = common.round(common.sumHours(historyTime, Double.parseDouble(finishHour)),2);
+                double totalDistance = common.round(historyDistance + Double.parseDouble(finishDist),ConstantsUtils.NUM_OF_DECIMALS);
+                double totalTime = common.round(common.sumHours(historyTime, Double.parseDouble(finishHour)),ConstantsUtils.NUM_OF_DECIMALS);
 
-                controller.updateHistory(currentUser.getHistory(), totalSlope, totalDistance , totalTime);
+                controller.updateHistory(currentUser.getHistory(), totalSlope, totalDistance , totalTime, ConstantsUtils.NO_CHALLENGE_WIN);
             }
 
             @Override

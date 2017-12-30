@@ -37,6 +37,8 @@ public class TripHistoryActivity extends AppCompatActivity {
     private ArrayList<TripDone> tripsDone;
     private ArrayList<String> done;
     private SimpleDateFormat formatter;
+    private DatabaseReference databaseTripDone;
+    private FirebaseController controller;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +53,7 @@ public class TripHistoryActivity extends AppCompatActivity {
         actionBar.setTitle(R.string.tripHistoryActivity);
 
         // Initialize variables
-        FirebaseController controller = new FirebaseController();
+        controller = new FirebaseController();
         done = new ArrayList<>();
         tripsDone = new ArrayList<>();
 
@@ -62,20 +64,27 @@ public class TripHistoryActivity extends AppCompatActivity {
         }
 
         // Get database reference
-        DatabaseReference databaseTripDone = controller.getDatabaseReference(FireBaseReferences.TRIPSDONE_REFERENCE);
+        databaseTripDone = controller.getDatabaseReference(FireBaseReferences.TRIPSDONE_REFERENCE);
 
         // Set listView and its header
         historyList = (ListView) findViewById(R.id.lvTripHistory);
         ViewGroup headerView = (ViewGroup) getLayoutInflater().inflate(R.layout.header_trip_history, historyList, false);
         historyList.addHeaderView(headerView);
 
-        // Get data from item clicked on list groups activity
+        // Get data from user history activity
         Bundle bundle = getIntent().getExtras();
         User user = bundle.getParcelable("user");
 
         // Get user trips finished ids
         done.addAll(user.getTripsDone().keySet());
 
+        getHistoryValues();
+    }
+
+    /**
+     * Get list of finished trips to show in the history
+     */
+    private void getHistoryValues(){
         // Execute controller method to get database current user trips done. Use OnGetDataListener interface to know
         // when database data is retrieved
         controller.readDataOnce(databaseTripDone, new OnGetDataListener() {

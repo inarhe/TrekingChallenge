@@ -149,7 +149,7 @@ public class EditTripActivity extends AppCompatActivity {
 
         // Update database if its necessary
         if (updateName) {
-            // Execute controller method to update database group object. Use OnGetDataListener interface to know
+            // Execute controller method to update database trip object. Use OnGetDataListener interface to know
             // when database is updated
             controller.executeTask(databaseTrip, trip.getId(), FireBaseReferences.TRIP_NAME_REFERENCE, newName, new OnCompleteTaskListener() {
                         @Override
@@ -193,6 +193,14 @@ public class EditTripActivity extends AppCompatActivity {
     }
 
     /**
+     * Cancel edit trip if cancel button is clicked
+     * @param view
+     */
+    public void cancelEditTrip (View view) {
+        finish();
+    }
+
+    /**
      * Set current date format and DatePickerDialog
      */
     private void setDate(){
@@ -220,7 +228,6 @@ public class EditTripActivity extends AppCompatActivity {
      * Update trip description into database
      */
     private void updateDescriptionValue(){
-        // Execute controller method to update database group object.
         controller.editStringParameter(databaseTrip, trip.getId(), FireBaseReferences.TRIP_DESCRIPTION_REFERENCE, newDescription);
     }
 
@@ -228,15 +235,6 @@ public class EditTripActivity extends AppCompatActivity {
      * Update trip date into database
      */
     private void updateDateValue(){
-        // Execute controller method to update database group object.
         controller.editStringParameter(databaseTrip, trip.getId(), FireBaseReferences.TRIP_DATE_REFERENCE, newDate);
-    }
-
-    /**
-     * Cancel edit trip if cancel button is clicked
-     * @param view
-     */
-    public void cancelEditTrip (View view) {
-        finish();
     }
 }

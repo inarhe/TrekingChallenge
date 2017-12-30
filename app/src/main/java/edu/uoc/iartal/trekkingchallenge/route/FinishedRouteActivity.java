@@ -256,6 +256,6 @@ public class FinishedRouteActivity extends AppCompatActivity {
         double totalDistance = common.round(historyDistance + Double.parseDouble(finishDist),2);
         double totalTime = common.round(common.sumHours(historyTime, Double.parseDouble(finishTime)),2);
 
-        controller.updateHistory(currentUser.getHistory(), totalSlope, totalDistance , totalTime);
+        controller.updateHistory(currentUser.getHistory(), totalSlope, totalDistance , totalTime, -1);
     }
 }

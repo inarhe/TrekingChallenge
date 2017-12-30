@@ -31,6 +31,7 @@ import java.util.Calendar;
 import java.util.Locale;
 
 import edu.uoc.iartal.trekkingchallenge.R;
+import edu.uoc.iartal.trekkingchallenge.common.ConstantsUtils;
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
 import edu.uoc.iartal.trekkingchallenge.common.FirebaseController;
 import edu.uoc.iartal.trekkingchallenge.common.OnGetDataListener;
@@ -54,7 +55,7 @@ public class AddTripActivity extends AppCompatActivity implements AdapterView.On
     private ArrayAdapter<String> spinnerAdapter;
     private Trip trip;
     private User currentUser;
-    private Boolean isPublic, tripExists;
+    private boolean isPublic, tripExists;
     private FirebaseController controller;
     private Context context;
 
@@ -158,22 +159,22 @@ public class AddTripActivity extends AppCompatActivity implements AdapterView.On
 
         // Check input parameters. If some parameter is incorrect or empty, stops the function execution
         if (TextUtils.isEmpty(name)) {
-            Toast.makeText(this, getString(R.string.nameAdvice), Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getString(R.string.nameAdvice), Toast.LENGTH_SHORT).show();
             return;
         }
 
         if (TextUtils.isEmpty(description)) {
-            Toast.makeText(this, getString(R.string.descAdvice), Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getString(R.string.descAdvice), Toast.LENGTH_SHORT).show();
             return;
         }
 
         if (TextUtils.isEmpty(place)) {
-            Toast.makeText(this, getString(R.string.placeAdvice), Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getString(R.string.placeAdvice), Toast.LENGTH_SHORT).show();
             return;
         }
 
-        if (route==null) {
-            Toast.makeText(this, getString(R.string.chooseRoute), Toast.LENGTH_LONG).show();
+        if (route == null) {
+            Toast.makeText(this, getString(R.string.chooseRoute), Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -181,8 +182,8 @@ public class AddTripActivity extends AppCompatActivity implements AdapterView.On
             isPublic = true;
         }
 
-        // Execute controller method to get database groups objects. Use OnGetDataListener interface to know
-        // when database data is retrieved and search if group already exists
+        // Execute controller method to get database trips objects. Use OnGetDataListener interface to know
+        // when database data is retrieved and search if trip already exists
         controller.readDataOnce(databaseTrip, new OnGetDataListener() {
             @Override
             public void onStart() {
@@ -204,7 +205,7 @@ public class AddTripActivity extends AppCompatActivity implements AdapterView.On
                     if (idTrip == null){
                         Toast.makeText(getApplicationContext(), R.string.failedAddTrip, Toast.LENGTH_SHORT).show();
                     } else {
-                        trip = new Trip(idTrip, name, description, tripDate, place, route, isPublic, currentUser.getId(), 1);
+                        trip = new Trip(idTrip, name, description, tripDate, place, route, isPublic, currentUser.getId(), ConstantsUtils.DEFAULT_MEMBERS);
                         controller.addNewTrip(databaseTrip, trip, currentUser.getId(), getApplicationContext());
 
                         // Select users that admin wants in the trip

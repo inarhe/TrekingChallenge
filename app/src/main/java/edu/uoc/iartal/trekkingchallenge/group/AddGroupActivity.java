@@ -17,6 +17,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 
+import edu.uoc.iartal.trekkingchallenge.common.ConstantsUtils;
 import edu.uoc.iartal.trekkingchallenge.common.FirebaseController;
 import edu.uoc.iartal.trekkingchallenge.common.OnGetDataListener;
 import edu.uoc.iartal.trekkingchallenge.user.ListUsersActivity;
@@ -122,7 +123,7 @@ public class AddGroupActivity extends AppCompatActivity {
                     if (idGroup == null){
                         Toast.makeText(getApplicationContext(), R.string.failedAddGroup, Toast.LENGTH_SHORT).show();
                     } else {
-                        group = new Group(idGroup, name, description, isPublic, currentUser.getId(), 1);
+                        group = new Group(idGroup, name, description, isPublic, currentUser.getId(), ConstantsUtils.DEFAULT_MEMBERS);
                         controller.addNewGroup(databaseGroup, group, currentUser.getId(), getApplicationContext());
 
                         // Select users that admin wants in the group

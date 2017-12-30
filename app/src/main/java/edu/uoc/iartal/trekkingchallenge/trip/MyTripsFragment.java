@@ -174,7 +174,7 @@ public class MyTripsFragment extends Fragment implements SearchView.OnQueryTextL
     }
 
     /**
-     * Get current user to get his groups list later
+     * Get current user to get his trips list later
      */
     private void getCurrentUserId(){
         // Execute controller method to get database current user object. Use OnGetDataListener interface to know

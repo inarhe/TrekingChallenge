@@ -88,8 +88,6 @@
     <string name="groupAskDeleted">Segur que vols eliminar el grup?</string>
     <string name="textGroupDescription">Descripció:</string>
     <string name="textGroupMembers">Nombre d\'integrants:</string>
-    <string name="actionJoinGroup">Uneix-t\'hi</string>
-    <string name="actionLeaveGroup">Abandona el grup</string>
     <string name="alreadyInGroup">Ja formes part del grup</string>
     <string name="noMemberGroup">No formes part d\'aquest grup</string>
     <string name="action_message">Fòrum</string>
@@ -197,8 +195,6 @@
     <string name="placeTrip">Lloc de sortida:</string>
     <string name="descTrip">Descripció:</string>
     <string name="membTrip">Integrants:</string>
-    <string name="actionJoinTrip">Uneix-t\'hi</string>
-    <string name="actionLeaveTrip">Abandona l\'excursió</string>
     <string name="tripJoined">T\'has unit a l\'excursió</string>
     <string name="joinTripAsk">Et vols unir a aquesta excursió?</string>
     <string name="tripLeftAsk">Segur que vols abandonar l\'excursió?</string>
@@ -244,7 +240,6 @@
     <string name="finishTripActivity">Excursió realitzada</string>
     <string name="titleFinishTrip">Excursió superada!</string>
     <string name="resultsTrip">Resultats:</string>
-    <string name="action_tripFinished">Registrar resultat</string>
 
 
     <!--CHALLENGE OBJECT-->
@@ -252,8 +247,6 @@
     <string name="routeChallenge">Ruta escollida:</string>
     <string name="dateChallenge">Data límit:</string>
     <string name="descChallenge">Descripció:</string>
-    <string name="actionJoinChallenge">Uneix-t\'hi</string>
-    <string name="actionLeaveChallenge">Abandona el repte</string>
     <string name="challengeJoined">T\'has unit al repte</string>
     <string name="joinChallengeAsk">Et vols unir a aquest repte?</string>
     <string name="challengeLeft">Segur que vols abandonar el repte?</string>
@@ -272,7 +265,6 @@
     <string name="finishChallengeActivity">Repte realitzat</string>
     <string name="titleFinishChallenge">Repte superat!</string>
     <string name="resultsChallenge">Resultats:</string>
-    <string name="action_challengeFinished">Registrar resultat</string>
 
     <!--Add challenge activity-->
     <string name="listChallengesActivity">Reptes</string>
@@ -362,6 +354,10 @@
     <string name="km">km</string>
     <string name="updating">Actualitzant dades</string>
     <string name="none">none</string>
+    <string name="actionJoin">Unir-se</string>
+    <string name="actionLeave">Abandonar</string>
+    <string name="actionFinish">Registrar resultat</string>
+    <string name="alreadyFinish">Ja has registrat un resultat</string>
 
     <!--Manifest-->
     <string name="title_activity_map">Map</string>

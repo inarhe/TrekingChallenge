@@ -11,12 +11,12 @@
         app:showAsAction="ifRoom"/>
 
     <item android:id="@+id/action_joinGroup"
-        android:title="@string/actionJoinGroup"
+        android:title="@string/actionJoin"
         android:orderInCategory="100"
         app:showAsAction="never" />
 
     <item android:id="@+id/action_leaveGroup"
-        android:title="@string/actionLeaveGroup"
+        android:title="@string/actionLeave"
         android:orderInCategory="100"
         app:showAsAction="never"/>
 </menu>

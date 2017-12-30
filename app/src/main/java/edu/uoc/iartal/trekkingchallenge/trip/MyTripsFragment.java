@@ -33,7 +33,7 @@ import edu.uoc.iartal.trekkingchallenge.adapter.TripAdapter;
 import edu.uoc.iartal.trekkingchallenge.model.User;
 
 public class MyTripsFragment extends Fragment implements SearchView.OnQueryTextListener{
-    private List<Trip> trips;
+    private ArrayList<Trip> trips;
     private TripAdapter tripAdapter;
     private ProgressDialog progressDialog;
     private RecyclerView recyclerView;
@@ -93,7 +93,7 @@ public class MyTripsFragment extends Fragment implements SearchView.OnQueryTextL
         databaseTrip = controller.getDatabaseReference(FireBaseReferences.TRIP_REFERENCE);
         recyclerView.setAdapter(tripAdapter);
 
-        getUserTrips();
+        showTripsInView();
     }
 
     /**
@@ -196,6 +196,7 @@ public class MyTripsFragment extends Fragment implements SearchView.OnQueryTextL
                         currentUserId = user.getId();
                     }
                 }
+                getUserTrips();
             }
 
             @Override
@@ -221,6 +222,7 @@ public class MyTripsFragment extends Fragment implements SearchView.OnQueryTextL
             @Override
             public void onSuccess(DataSnapshot data) {
                 Trip trip = data.getValue(Trip.class);
+
                 if (trip.getMembers().containsKey(currentUserId)){
                     addTrip(trip);
                 }
@@ -262,5 +264,13 @@ public class MyTripsFragment extends Fragment implements SearchView.OnQueryTextL
                 Log.e("LoadMyTrips error", databaseError.getMessage());
             }
         });
+    }
+
+    /**
+     * Return list of trips
+     * @return trips
+     */
+    private ArrayList<Trip> showTripsInView(){
+        return trips;
     }
 }

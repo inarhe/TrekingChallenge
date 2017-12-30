@@ -26,14 +26,16 @@ import edu.uoc.iartal.trekkingchallenge.common.FirebaseController;
 import edu.uoc.iartal.trekkingchallenge.common.OnGetDataListener;
 import edu.uoc.iartal.trekkingchallenge.message.ListMessagesActivity;
 import edu.uoc.iartal.trekkingchallenge.model.Trip;
+import edu.uoc.iartal.trekkingchallenge.model.TripDone;
 import edu.uoc.iartal.trekkingchallenge.model.User;
 import edu.uoc.iartal.trekkingchallenge.user.LoginActivity;
 
 public class ShowTripActivity extends AppCompatActivity {
-    private DatabaseReference databaseTrip, databaseUser;
+    private DatabaseReference databaseTrip, databaseUser, databaseTripDone;
     private Trip trip;
     private User currentUser;
     private FirebaseController controller;
+    private boolean isFinished;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +58,7 @@ public class ShowTripActivity extends AppCompatActivity {
         // Get database references
         databaseUser = controller.getDatabaseReference(FireBaseReferences.USER_REFERENCE);
         databaseTrip = controller.getDatabaseReference(FireBaseReferences.TRIP_REFERENCE);
+        databaseTripDone = controller.getDatabaseReference(FireBaseReferences.TRIPSDONE_REFERENCE);
 
         // Link layout elements with variables
         TextView textViewRoute = (TextView) findViewById(R.id.tvRouteTrip);
@@ -210,9 +213,21 @@ public class ShowTripActivity extends AppCompatActivity {
     }
 
     /**
-     * Starts register trip result activity when option menu is selected
+     * Check if user is a trip member and doesn't have finished yet
      */
     public void tripFinished() {
+        if (!checkIsMember()){
+            Toast.makeText(getApplicationContext(), R.string.noMemberTrip, Toast.LENGTH_SHORT).show();
+            return;
+        } else {
+            checkAlreadyFinished();
+        }
+    }
+
+    /**
+     * Starts register trip result activity if user doesn't have finished yet and it's a member
+     */
+    private void startResultRegister(){
         Intent intent = new Intent(this, FinishedTripActivity.class);
         intent.putExtra("trip", trip);
         startActivity(intent);
@@ -227,6 +242,43 @@ public class ShowTripActivity extends AppCompatActivity {
         members.addAll(trip.getMembers().keySet());
 
         return members.contains(currentUser.getId());
+    }
+
+    /**
+     * Check if current user has already registered a result
+     * @return current user id
+     */
+    private void checkAlreadyFinished(){
+        isFinished = false;
+        final ArrayList<String> dones = new ArrayList<>();
+        dones.addAll(currentUser.getTripsDone().keySet());
+
+        controller.readDataOnce(databaseTripDone, new OnGetDataListener() {
+            @Override
+            public void onStart() {
+                // Nothing to do
+            }
+
+            @Override
+            public void onSuccess(DataSnapshot data) {
+                for (DataSnapshot doneSnapshot : data.getChildren()){
+                    TripDone tripDone = doneSnapshot.getValue(TripDone.class);
+                    if ((dones.contains(tripDone.getId())) && (tripDone.getTrip().equals(trip.getName()))){
+                        Toast.makeText(getApplicationContext(), R.string.alreadyFinish, Toast.LENGTH_SHORT).show();
+                        isFinished = true;
+                    }
+                }
+
+                if (!isFinished){
+                    startResultRegister();
+                }
+            }
+
+            @Override
+            public void onFailed(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     /**

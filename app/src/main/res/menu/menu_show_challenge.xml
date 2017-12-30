@@ -5,17 +5,17 @@
     tools:context=".challenge.ShowChallengeActivity">
 
     <item android:id="@+id/action_joinChallenge"
-        android:title="@string/actionJoinChallenge"
+        android:title="@string/actionJoin"
         android:orderInCategory="100"
         app:showAsAction="never" />
 
     <item android:id="@+id/action_leaveChallenge"
-        android:title="@string/actionLeaveChallenge"
+        android:title="@string/actionLeave"
         android:orderInCategory="100"
         app:showAsAction="never"/>
 
     <item android:id="@+id/action_result"
-        android:title="@string/action_challengeFinished"
+        android:title="@string/actionFinish"
         android:orderInCategory="100"
         app:showAsAction="never"/>
 </menu>

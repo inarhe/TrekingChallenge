@@ -24,6 +24,7 @@ import java.util.Calendar;
 import java.util.Locale;
 
 import edu.uoc.iartal.trekkingchallenge.R;
+import edu.uoc.iartal.trekkingchallenge.common.CommonFunctionality;
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
 import edu.uoc.iartal.trekkingchallenge.common.FirebaseController;
 import edu.uoc.iartal.trekkingchallenge.common.OnGetDataListener;
@@ -43,10 +44,11 @@ public class FinishedTripActivity extends AppCompatActivity {
     private Trip trip;
     private String finishDist, finishHour;
     private DatabaseReference databaseUser, databaseTripDone, databaseTrip, databaseHistory, databaseRoute;
-    private Double historyTime, historyDistance;
+    private double historyTime, historyDistance;
     private int historySlope, routeSlope;
     private FirebaseController controller;
     private Context context;
+    private CommonFunctionality common;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +68,7 @@ public class FinishedTripActivity extends AppCompatActivity {
         // Initialize variables
         controller = new FirebaseController();
         context = this;
+        common = new CommonFunctionality();
 
         // If user isn't logged, start login activity
         if (controller.getActiveUserSession() == null) {
@@ -260,11 +263,15 @@ public class FinishedTripActivity extends AppCompatActivity {
             public void onSuccess(DataSnapshot data) {
                 for (DataSnapshot routeSnapshot : data.getChildren()) {
                     Route route = routeSnapshot.getValue(Route.class);
-                    if (route.getIdRoute().equals(trip.getRoute())) {
+                    if (route.getName().equals(trip.getRoute())) {
                         routeSlope = route.getAscent() + route.getDecline();
                     }
                 }
-                controller.updateHistory(currentUser.getHistory(), (historySlope + routeSlope), (historyDistance + Double.parseDouble(finishDist)), sumHours(historyTime, Double.parseDouble(finishHour)));
+                int totalSlope = historySlope + routeSlope;
+                double totalDistance = common.round(historyDistance + Double.parseDouble(finishDist),2);
+                double totalTime = common.round(common.sumHours(historyTime, Double.parseDouble(finishHour)),2);
+
+                controller.updateHistory(currentUser.getHistory(), totalSlope, totalDistance , totalTime);
             }
 
             @Override
@@ -272,21 +279,5 @@ public class FinishedTripActivity extends AppCompatActivity {
                 Log.e("UpHistTDone error", databaseError.getMessage());
             }
         });
-    }
-
-    /**
-     * Sum two hours in double format
-     * @param firstHour
-     * @param secondHour
-     * @return
-     */
-    private Double sumHours (Double firstHour, Double secondHour){
-        String [] firstNum = (Double.toString(firstHour)).split("\\.");
-        String [] secondNum = (Double.toString(secondHour)).split("\\.");
-        Integer firstInt = Integer.parseInt(firstNum[0]);
-        Integer secondInt = Integer.parseInt(secondNum[0]);
-        Double totalDecimal = (firstHour - (double)firstInt) + (secondHour - (double)secondInt);
-
-        return (double)firstInt + (double)secondInt + (totalDecimal/60);
     }
 }

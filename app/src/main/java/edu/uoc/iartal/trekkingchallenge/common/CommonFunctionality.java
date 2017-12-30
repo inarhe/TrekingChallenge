@@ -13,6 +13,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -119,6 +121,33 @@ public class CommonFunctionality {
                         }
                     }
                 });
+    }
+
+    /**
+     * Sum two hours in double format
+     * @param firstHour
+     * @param secondHour
+     * @return
+     */
+    public double sumHours (Double firstHour, Double secondHour){
+        String [] firstNum = (Double.toString(firstHour)).split("\\.");
+        String [] secondNum = (Double.toString(secondHour)).split("\\.");
+        Integer firstInt = Integer.parseInt(firstNum[0]);
+        Integer secondInt = Integer.parseInt(secondNum[0]);
+        double totalDecimal = (firstHour - (double)firstInt) + (secondHour - (double)secondInt);
+
+        if (totalDecimal > 60){
+            totalDecimal = totalDecimal/60;
+        }
+        return round((double)firstInt + (double)secondInt + totalDecimal,2);
+    }
+
+    public double round(double value, int places) {
+        if (places < 0) throw new IllegalArgumentException();
+
+        BigDecimal bd = new BigDecimal(value);
+        bd = bd.setScale(places, RoundingMode.HALF_UP);
+        return bd.doubleValue();
     }
 
 

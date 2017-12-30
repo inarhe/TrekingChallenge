@@ -27,6 +27,7 @@ import edu.uoc.iartal.trekkingchallenge.common.OnGetChildListener;
 import edu.uoc.iartal.trekkingchallenge.common.OnGetDataListener;
 import edu.uoc.iartal.trekkingchallenge.model.Group;
 import edu.uoc.iartal.trekkingchallenge.adapter.GroupAdapter;
+import edu.uoc.iartal.trekkingchallenge.model.Trip;
 import edu.uoc.iartal.trekkingchallenge.model.User;
 import edu.uoc.iartal.trekkingchallenge.R;
 
@@ -34,7 +35,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 public class MyGroupsFragment extends Fragment implements SearchView.OnQueryTextListener{
-    private List<Group> groups;
+    private ArrayList<Group> groups;
     private GroupAdapter groupAdapter;
     private ProgressDialog progressDialog;
     private RecyclerView recyclerView;
@@ -94,7 +95,7 @@ public class MyGroupsFragment extends Fragment implements SearchView.OnQueryText
         databaseGroup = controller.getDatabaseReference(FireBaseReferences.GROUP_REFERENCE);
         recyclerView.setAdapter(groupAdapter);
 
-        getUserGroups();
+        showGroupsInView();
     }
 
     /**
@@ -197,6 +198,7 @@ public class MyGroupsFragment extends Fragment implements SearchView.OnQueryText
                         currentUserId = user.getId();
                     }
                 }
+                getUserGroups();
             }
 
             @Override
@@ -262,5 +264,13 @@ public class MyGroupsFragment extends Fragment implements SearchView.OnQueryText
                 Log.e("LoadMyGroups error", databaseError.getMessage());
             }
         });
+    }
+
+    /**
+     * Return list of groups
+     * @return groups
+     */
+    private ArrayList<Group> showGroupsInView(){
+        return groups;
     }
 }

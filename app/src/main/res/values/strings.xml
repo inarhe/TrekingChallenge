@@ -201,8 +201,9 @@
     <string name="actionLeaveTrip">Abandona l\'excursió</string>
     <string name="tripJoined">T\'has unit a l\'excursió</string>
     <string name="joinTripAsk">Et vols unir a aquesta excursió?</string>
-    <string name="tripLeft">Segur que vols abandonar l\'excursió?</string>
-    <string name="tripAskDeleted">Segur que vols eliminar l\'excursió??</string>
+    <string name="tripLeftAsk">Segur que vols abandonar l\'excursió?</string>
+    <string name="tripLeft">Has abandonat l\'excursió</string>
+    <string name="tripAskDeleted">Segur que vols eliminar l\'excursió?</string>
     <string name="tripDeleted">Excursió eliminada </string>
     <string name="tripNotDeleted">No s\'ha pogut eliminar l\'excursió</string>
     <string name="dateTrip">Data excursió</string>

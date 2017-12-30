@@ -30,7 +30,7 @@ import edu.uoc.iartal.trekkingchallenge.R;
 import edu.uoc.iartal.trekkingchallenge.user.LoginActivity;
 
 public class ShowGroupActivity extends AppCompatActivity {
-    private DatabaseReference databaseGroup;
+    private DatabaseReference databaseGroup, databaseUser;
     private Group group;
     private User currentUser;
     private FirebaseController controller;
@@ -53,8 +53,8 @@ public class ShowGroupActivity extends AppCompatActivity {
             finish();
         }
 
-        // Get Firebase authentication instance and database references
-        DatabaseReference databaseUser = controller.getDatabaseReference(FireBaseReferences.USER_REFERENCE);
+        // Get database references
+        databaseUser = controller.getDatabaseReference(FireBaseReferences.USER_REFERENCE);
         databaseGroup = controller.getDatabaseReference(FireBaseReferences.GROUP_REFERENCE);
 
         // Link layout elements with variables
@@ -74,32 +74,7 @@ public class ShowGroupActivity extends AppCompatActivity {
         textViewDescription.setText(group.getDescription());
         textViewMembers.setText(Integer.toString(group.getNumberOfMembers()) + " " + getString(R.string.members));
 
-        // Execute controller method to get database current user object. Use OnGetDataListener interface to know
-        // when database data is retrieved
-        controller.readData(databaseUser, new OnGetDataListener() {
-            @Override
-            public void onStart() {
-                //Nothing to do
-            }
-
-            @Override
-            public void onSuccess(DataSnapshot data) {
-                String currentMail = controller.getCurrentUserEmail();
-
-                for (DataSnapshot userSnapshot : data.getChildren()){
-                    User user = userSnapshot.getValue(User.class);
-
-                    if (user.getMail().equals(currentMail)){
-                        currentUser = user;
-                    }
-                }
-            }
-
-            @Override
-            public void onFailed(DatabaseError databaseError) {
-                Log.e("ShowGroup getAdm error", databaseError.getMessage());
-            }
-        });
+        getCurrentUser();
     }
 
     /**
@@ -227,12 +202,44 @@ public class ShowGroupActivity extends AppCompatActivity {
 
     /**
      * Check if current user is a member of the group object
-     * @return
+     * @return current user id
      */
     private Boolean checkIsMember(){
         ArrayList<String> members = new ArrayList<>();
         members.addAll(group.getMembers().keySet());
 
         return members.contains(currentUser.getId());
+    }
+
+    /**
+     * Get current user object from database
+     */
+    private void getCurrentUser(){
+        // Execute controller method to get database current user object. Use OnGetDataListener interface to know
+        // when database data is retrieved
+        controller.readDataOnce(databaseUser, new OnGetDataListener() {
+            @Override
+            public void onStart() {
+                //Nothing to do
+            }
+
+            @Override
+            public void onSuccess(DataSnapshot data) {
+                String currentMail = controller.getCurrentUserEmail();
+
+                for (DataSnapshot userSnapshot : data.getChildren()){
+                    User user = userSnapshot.getValue(User.class);
+
+                    if (user.getMail().equals(currentMail)){
+                        currentUser = user;
+                    }
+                }
+            }
+
+            @Override
+            public void onFailed(DatabaseError databaseError) {
+                Log.e("ShowGroup getUser error", databaseError.getMessage());
+            }
+        });
     }
 }

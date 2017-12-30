@@ -12,8 +12,6 @@ import android.support.v4.view.ViewPager;
 
 import android.os.Bundle;
 
-import com.google.firebase.auth.FirebaseAuth;
-
 import edu.uoc.iartal.trekkingchallenge.R;
 import edu.uoc.iartal.trekkingchallenge.common.FirebaseController;
 import edu.uoc.iartal.trekkingchallenge.user.LoginActivity;

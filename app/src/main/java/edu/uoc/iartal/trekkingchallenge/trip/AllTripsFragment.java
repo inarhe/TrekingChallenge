@@ -10,6 +10,7 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -20,14 +21,14 @@ import android.view.ViewGroup;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import edu.uoc.iartal.trekkingchallenge.R;
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
+import edu.uoc.iartal.trekkingchallenge.common.FirebaseController;
+import edu.uoc.iartal.trekkingchallenge.common.OnGetDataListener;
 import edu.uoc.iartal.trekkingchallenge.model.Trip;
 import edu.uoc.iartal.trekkingchallenge.adapter.TripAdapter;
 
@@ -36,6 +37,8 @@ public class AllTripsFragment extends Fragment implements SearchView.OnQueryText
     private TripAdapter tripAdapter;
     private ProgressDialog progressDialog;
     private RecyclerView recyclerView;
+    private FirebaseController controller;
+    private DatabaseReference databaseTrip;
 
     public AllTripsFragment(){
 
@@ -47,7 +50,12 @@ public class AllTripsFragment extends Fragment implements SearchView.OnQueryText
 
         //Initialize progress dialog
         progressDialog = new ProgressDialog(getActivity());
-        progressDialog.setMessage(getString(R.string.loadingData));
+        controller = new FirebaseController();
+        trips = new ArrayList<>();
+        tripAdapter = new TripAdapter(trips);
+
+        // Get trip database reference
+        databaseTrip = controller.getDatabaseReference(FireBaseReferences.TRIP_REFERENCE);
     }
 
     /**
@@ -86,34 +94,9 @@ public class AllTripsFragment extends Fragment implements SearchView.OnQueryText
             }
         });
 
-        DatabaseReference databaseTrip = FirebaseDatabase.getInstance().getReference(FireBaseReferences.TRIP_REFERENCE);
-        trips = new ArrayList<>();
-        tripAdapter = new TripAdapter(trips);
-
         recyclerView.setAdapter(tripAdapter);
 
-        // Get database trips and notify adapter to show them in recycler view
-        progressDialog.show();
-        databaseTrip.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                trips.clear();
-                for (DataSnapshot tripSnapshot:
-                        dataSnapshot.getChildren()) {
-                    Trip trip = tripSnapshot.getValue(Trip.class);
-                    if (trip.getPublic()){
-                        trips.add(trip);
-                    }
-                }
-                tripAdapter.notifyDataSetChanged();
-                progressDialog.dismiss();
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                //TO-DO
-            }
-        });
+        getListPublicTrips();
     }
 
     /**
@@ -179,5 +162,38 @@ public class AllTripsFragment extends Fragment implements SearchView.OnQueryText
             }
         }
         return filteredModelList;
+    }
+
+    /**
+     * Get list of public trips and notify adapter to show them in recyclerView
+     */
+    private void getListPublicTrips(){
+        // Execute controller method to get database trip objects. Use OnGetDataListener interface to know
+        // when database data is retrieved and notify adapter to show them in recycler view
+        controller.readData(databaseTrip, new OnGetDataListener() {
+            @Override
+            public void onStart() {
+                progressDialog.setMessage(getString(R.string.loadingData));
+                progressDialog.show();
+            }
+
+            @Override
+            public void onSuccess(DataSnapshot data) {
+                trips.clear();
+                for (DataSnapshot tripSnapshot : data.getChildren()) {
+                    Trip trip = tripSnapshot.getValue(Trip.class);
+                    if (trip.getPublic()){
+                        trips.add(trip);
+                    }
+                }
+                tripAdapter.notifyDataSetChanged();
+                progressDialog.dismiss();
+            }
+
+            @Override
+            public void onFailed(DatabaseError databaseError) {
+                Log.e("LoadAllTrips error", databaseError.getMessage());
+            }
+        });
     }
 }

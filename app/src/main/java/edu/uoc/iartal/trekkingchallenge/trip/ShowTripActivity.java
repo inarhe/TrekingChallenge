@@ -7,34 +7,33 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
 import edu.uoc.iartal.trekkingchallenge.R;
-import edu.uoc.iartal.trekkingchallenge.common.CommonFunctionality;
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
+import edu.uoc.iartal.trekkingchallenge.common.FirebaseController;
+import edu.uoc.iartal.trekkingchallenge.common.OnGetDataListener;
 import edu.uoc.iartal.trekkingchallenge.message.ListMessagesActivity;
 import edu.uoc.iartal.trekkingchallenge.model.Trip;
 import edu.uoc.iartal.trekkingchallenge.model.User;
 import edu.uoc.iartal.trekkingchallenge.user.LoginActivity;
 
 public class ShowTripActivity extends AppCompatActivity {
-    private DatabaseReference databaseTrip;
+    private DatabaseReference databaseTrip, databaseUser;
     private Trip trip;
-    private CommonFunctionality common;
-    private String currentMail, currentUserName;
+    private User currentUser;
+    private FirebaseController controller;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,16 +44,18 @@ public class ShowTripActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.showTripToolbar);
         setSupportActionBar(toolbar);
 
-        // Get Firebase authentication instance and database references
-        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-        DatabaseReference databaseUser = FirebaseDatabase.getInstance().getReference(FireBaseReferences.USER_REFERENCE);
-        databaseTrip = FirebaseDatabase.getInstance().getReference(FireBaseReferences.TRIP_REFERENCE);
+        // Initialize variables
+        controller = new FirebaseController();
 
         // If user isn't logged, start login activity
-        if (firebaseAuth.getCurrentUser() == null) {
+        if (controller.getActiveUserSession() == null) {
             startActivity(new Intent(getApplicationContext(), LoginActivity.class));
             finish();
         }
+
+        // Get database references
+        databaseUser = controller.getDatabaseReference(FireBaseReferences.USER_REFERENCE);
+        databaseTrip = controller.getDatabaseReference(FireBaseReferences.TRIP_REFERENCE);
 
         // Link layout elements with variables
         TextView textViewRoute = (TextView) findViewById(R.id.tvRouteTrip);
@@ -62,10 +63,6 @@ public class ShowTripActivity extends AppCompatActivity {
         TextView textViewPlace = (TextView) findViewById(R.id.tvPlaceTrip);
         TextView textViewDesc = (TextView) findViewById(R.id.tvDescTrip);
         TextView textViewMemb = (TextView) findViewById(R.id.tvMembTrip);
-
-        // Initialize variables
-        common = new CommonFunctionality();
-        currentMail = firebaseAuth.getCurrentUser().getEmail();
 
         // Get data from item clicked on list trips activity
         Bundle bundle = getIntent().getExtras();
@@ -83,24 +80,7 @@ public class ShowTripActivity extends AppCompatActivity {
         textViewDesc.setText(trip.getDescription());
         textViewMemb.setText(Integer.toString(trip.getNumberOfMembers()) + " " + getString(R.string.members));
 
-        // Get current user name
-        databaseUser.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot userSnapshot :
-                        dataSnapshot.getChildren()) {
-                    User user = userSnapshot.getValue(User.class);
-                    if (user.getMail().equals(currentMail)) {
-                        currentUserName = user.getId();
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                //TO-DO
-            }
-        });
+        getCurrentUser();
     }
 
     /**
@@ -124,9 +104,7 @@ public class ShowTripActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_message:
-                Intent intent = new Intent(getApplicationContext(), ListMessagesActivity.class);
-                intent.putExtra("trip", trip);
-                startActivity(intent);
+                sendMessage();
                 return true;
             case R.id.action_joinTrip:
                 joinTrip();
@@ -143,13 +121,22 @@ public class ShowTripActivity extends AppCompatActivity {
     }
 
     /**
+     * When the menu message icon is clicked, this method is executed. Start ListMessage activity
+     */
+    private void sendMessage(){
+        Intent intent = new Intent(getApplicationContext(), ListMessagesActivity.class);
+        intent.putExtra("trip", trip);
+        startActivity(intent);
+    }
+
+    /**
      * When the menu option "join trip" is clicked, this method is executed. Check group members, add current user to selected trip, add trip to user trips and
      * updates trip members number
      */
     public void joinTrip () {
         // Check if user is a trip member
         if (checkIsMember()){
-            Toast.makeText(getApplicationContext(), R.string.alreadyInGroup, Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), R.string.alreadyInTrip, Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -163,8 +150,8 @@ public class ShowTripActivity extends AppCompatActivity {
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
-                        common.updateJoins(currentMail, getString(R.string.setJoin), databaseTrip, trip.getId(), trip.getNumberOfMembers(), FireBaseReferences.USER_TRIPS_REFERENCE);
-                        Toast.makeText(getApplicationContext(), getString(R.string.tripJoined), Toast.LENGTH_LONG).show();
+                        controller.updateJoins(getString(R.string.setJoin), databaseTrip, FireBaseReferences.USER_TRIPS_REFERENCE, trip.getId(), currentUser, trip.getNumberOfMembers());
+                        Toast.makeText(getApplicationContext(), getString(R.string.tripJoined), Toast.LENGTH_SHORT).show();
                         finish();
                     }
                 });
@@ -189,13 +176,13 @@ public class ShowTripActivity extends AppCompatActivity {
     public void leaveTrip () {
         // Check if user is a trip member
         if (!checkIsMember()){
-            Toast.makeText(getApplicationContext(), R.string.noMemberGroup, Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), R.string.noMemberTrip, Toast.LENGTH_SHORT).show();
             return;
         }
 
         // Create alert dialog to ask user confirmation
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(getString(R.string.tripLeft));
+        builder.setMessage(getString(R.string.tripLeftAsk));
         builder.setCancelable(true);
 
         builder.setPositiveButton(
@@ -203,7 +190,8 @@ public class ShowTripActivity extends AppCompatActivity {
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
-                        common.updateJoins(currentMail, getString(R.string.setLeave), databaseTrip, trip.getId(), trip.getNumberOfMembers(), FireBaseReferences.USER_TRIPS_REFERENCE);
+                        controller.updateJoins(getString(R.string.setLeave), databaseTrip, FireBaseReferences.USER_TRIPS_REFERENCE, trip.getId(), currentUser, trip.getNumberOfMembers());
+                        Toast.makeText(getApplicationContext(), getString(R.string.tripLeft), Toast.LENGTH_SHORT).show();
                         finish();
                     }
                 });
@@ -222,7 +210,7 @@ public class ShowTripActivity extends AppCompatActivity {
     }
 
     /**
-     * Starts register challenge results activity when option menu is selected
+     * Starts register trip result activity when option menu is selected
      */
     public void tripFinished() {
         Intent intent = new Intent(this, FinishedTripActivity.class);
@@ -232,12 +220,44 @@ public class ShowTripActivity extends AppCompatActivity {
 
     /**
      * Check if current user is a member of the trip object
-     * @return
+     * @return current user id
      */
     private Boolean checkIsMember(){
         ArrayList<String> members = new ArrayList<>();
         members.addAll(trip.getMembers().keySet());
 
-        return members.contains(currentUserName);
+        return members.contains(currentUser.getId());
+    }
+
+    /**
+     * Get current user object from database
+     */
+    private void getCurrentUser(){
+        // Execute controller method to get database current user object. Use OnGetDataListener interface to know
+        // when database data is retrieved
+        controller.readDataOnce(databaseUser, new OnGetDataListener() {
+            @Override
+            public void onStart() {
+                //Nothing to do
+            }
+
+            @Override
+            public void onSuccess(DataSnapshot data) {
+                String currentMail = controller.getCurrentUserEmail();
+
+                for (DataSnapshot userSnapshot : data.getChildren()){
+                    User user = userSnapshot.getValue(User.class);
+
+                    if (user.getMail().equals(currentMail)){
+                        currentUser = user;
+                    }
+                }
+            }
+
+            @Override
+            public void onFailed(DatabaseError databaseError) {
+                Log.e("ShowTrip getUser error", databaseError.getMessage());
+            }
+        });
     }
 }

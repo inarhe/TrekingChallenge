@@ -97,33 +97,7 @@ public class AllGroupsFragment extends Fragment implements SearchView.OnQueryTex
 
         recyclerView.setAdapter(groupAdapter);
 
-        // Execute controller method to get database groups objects. Use OnGetDataListener interface to know
-        // when database data is retrieved and notify adapter to show them in recycler view
-        controller.readData(databaseGroup, new OnGetDataListener() {
-            @Override
-            public void onStart() {
-                progressDialog.setMessage(getString(R.string.loadingData));
-                progressDialog.show();
-            }
-
-            @Override
-            public void onSuccess(DataSnapshot data) {
-                groups.clear();
-                for (DataSnapshot groupSnapshot:data.getChildren()) {
-                    Group group = groupSnapshot.getValue(Group.class);
-                    if (group.getIsPublic()){
-                        groups.add(group);
-                    }
-                }
-                groupAdapter.notifyDataSetChanged();
-                progressDialog.dismiss();
-            }
-
-            @Override
-            public void onFailed(DatabaseError databaseError) {
-                Log.e("LoadAllGroups error", databaseError.getMessage());
-            }
-        });
+        getListPublicGroups();
     }
 
     /**
@@ -189,5 +163,38 @@ public class AllGroupsFragment extends Fragment implements SearchView.OnQueryTex
             }
         }
         return filteredModelList;
+    }
+
+    /**
+     * Get list of public groups and notify adapter to show them in recyclerView
+     */
+    private void getListPublicGroups(){
+        // Execute controller method to get database group objects. Use OnGetDataListener interface to know
+        // when database data is retrieved and notify adapter to show them in recycler view
+        controller.readData(databaseGroup, new OnGetDataListener() {
+            @Override
+            public void onStart() {
+                progressDialog.setMessage(getString(R.string.loadingData));
+                progressDialog.show();
+            }
+
+            @Override
+            public void onSuccess(DataSnapshot data) {
+                groups.clear();
+                for (DataSnapshot groupSnapshot:data.getChildren()) {
+                    Group group = groupSnapshot.getValue(Group.class);
+                    if (group.getIsPublic()){
+                        groups.add(group);
+                    }
+                }
+                groupAdapter.notifyDataSetChanged();
+                progressDialog.dismiss();
+            }
+
+            @Override
+            public void onFailed(DatabaseError databaseError) {
+                Log.e("LoadAllGroups error", databaseError.getMessage());
+            }
+        });
     }
 }

@@ -72,7 +72,7 @@ public class EditGroupActivity extends AppCompatActivity {
     }
 
     /**
-     * Executed when accept button is selected. Verify input parameters and update values
+     * Executed when accept button is clicked. Verify input parameters and update values
      * @param view
      */
     public void editGroup (View view) {
@@ -122,7 +122,7 @@ public class EditGroupActivity extends AppCompatActivity {
                 @Override
                 public void onSuccess() {
                     if (updateDesc){
-                        updateDescription();
+                        updateDescriptionValue();
                     }
                     progressDialog.dismiss();
                     Toast.makeText(getApplicationContext(), R.string.editGroupOk, Toast.LENGTH_SHORT).show();
@@ -131,12 +131,13 @@ public class EditGroupActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailed() {
-                    Toast.makeText(getApplicationContext(), R.string.editGroupFail, Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), R.string.editGroupFail, Toast.LENGTH_SHORT).show();
                 }
             });
         } else {
             if (updateDesc){
-                updateDescription();
+                updateDescriptionValue();
+                Toast.makeText(getApplicationContext(), R.string.editGroupOk, Toast.LENGTH_SHORT).show();
             }
             progressDialog.dismiss();
             finish();
@@ -154,24 +155,8 @@ public class EditGroupActivity extends AppCompatActivity {
     /**
      * Update description group into database
      */
-    private void updateDescription(){
-        // Execute controller method to update database group object. Use OnGetDataListener interface to know
-        // when database is updated
-        controller.executeTask(databaseGroup, group.getId(), FireBaseReferences.GROUP_DESCRIPTION_REFERENCE, newDescription, new OnCompleteTaskListener() {
-                    @Override
-                    public void onStart() {
-                        //Nothing to do
-                    }
-
-                    @Override
-                    public void onSuccess() {
-                        Toast.makeText(getApplicationContext(), R.string.editGroupOk, Toast.LENGTH_SHORT).show();
-                    }
-
-                    @Override
-                    public void onFailed() {
-                        Toast.makeText(getApplicationContext(), R.string.editGroupFail, Toast.LENGTH_SHORT).show();
-                    }
-                });
+    private void updateDescriptionValue() {
+        // Execute controller method to update database group object.
+        controller.editObjectParameter(databaseGroup, group.getId(), FireBaseReferences.GROUP_DESCRIPTION_REFERENCE, newDescription);
     }
 }

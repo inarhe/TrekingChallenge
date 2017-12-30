@@ -21,6 +21,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -37,6 +38,7 @@ import edu.uoc.iartal.trekkingchallenge.model.Rating;
 import edu.uoc.iartal.trekkingchallenge.model.Trip;
 import edu.uoc.iartal.trekkingchallenge.model.TripDone;
 import edu.uoc.iartal.trekkingchallenge.model.User;
+import edu.uoc.iartal.trekkingchallenge.trip.FinishedTripActivity;
 
 /**
  * Created by Ingrid Artal on 27/12/2017.
@@ -165,6 +167,25 @@ public class FirebaseController {
         });
     }
 
+    public void queryDataOnce(DatabaseReference database, String reference, String value, final OnGetDataListener listener){
+
+        Query query = database.orderByChild(reference).equalTo(value);
+
+        listener.onStart();
+
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                listener.onSuccess(dataSnapshot);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                listener.onFailed(databaseError);
+            }
+        });
+    }
+
     /**
      *
      * @param database
@@ -215,6 +236,10 @@ public class FirebaseController {
         });
     }
 
+    public void editObjectParameter(DatabaseReference database, String child, String reference, String value){
+        database.child(child).child(reference).setValue(value);
+    }
+
     public void signOutDatabase(Context context){
         FirebaseAuth.getInstance().signOut();
         Toast.makeText(context, R.string.userSignOut, Toast.LENGTH_SHORT).show();
@@ -235,7 +260,7 @@ public class FirebaseController {
         return null;
     }
 
-    public void creatGroup(final DatabaseReference databaseGroup, final Group group, final String userAdmin, final Context context){
+    public void addNewGroup(final DatabaseReference databaseGroup, final Group group, final String userAdmin, final Context context){
         final DatabaseReference databaseUser = getDatabaseReference(FireBaseReferences.USER_REFERENCE);
 
             databaseGroup.child(group.getId()).setValue(group).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -243,17 +268,8 @@ public class FirebaseController {
                 public void onComplete(@NonNull Task<Void> task) {
                     if(task.isSuccessful()) {
                         databaseGroup.child(group.getId()).child(FireBaseReferences.MEMBERS_REFERENCE).child(userAdmin).setValue("true");
-                        databaseUser.child(userAdmin).child(FireBaseReferences.USER_GROUPS_REFERENCE).child(group.getId()).setValue("true")
-                                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        if(task.isSuccessful()){
-                                            Toast.makeText(context, R.string.groupSaved, Toast.LENGTH_SHORT).show();
-                                        } else {
-                                            Toast.makeText(context, R.string.failedAddGroup,Toast.LENGTH_SHORT).show();
-                                        }
-                                    }
-                                });
+                        databaseUser.child(userAdmin).child(FireBaseReferences.USER_GROUPS_REFERENCE).child(group.getId()).setValue("true");
+                        Toast.makeText(context, R.string.groupSaved, Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(context, R.string.failedAddGroup, Toast.LENGTH_SHORT).show();
                         Log.e("error",task.getException().getMessage());
@@ -262,28 +278,84 @@ public class FirebaseController {
             });
     }
 
+    public void addNewTrip(final DatabaseReference databaseTrip, final Trip trip, final String userAdmin, final Context context){
+        final DatabaseReference databaseUser = getDatabaseReference(FireBaseReferences.USER_REFERENCE);
+
+        databaseTrip.child(trip.getId()).setValue(trip).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if(task.isSuccessful()) {
+                    databaseTrip.child(trip.getId()).child(FireBaseReferences.MEMBERS_REFERENCE).child(userAdmin).setValue("true");
+                    databaseUser.child(userAdmin).child(FireBaseReferences.USER_TRIPS_REFERENCE).child(trip.getId()).setValue("true");
+                    Toast.makeText(context, R.string.tripSaved, Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(context, R.string.failedAddTrip, Toast.LENGTH_SHORT).show();
+                    Log.e("error",task.getException().getMessage());
+                }
+            }
+        });
+    }
+
+    public void addNewTripResult(DatabaseReference databaseTripDone, TripDone tripDone, final Context context){
+        databaseTripDone.child(tripDone.getId()).setValue(tripDone).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if(task.isSuccessful()) {
+                    Toast.makeText(context, R.string.finishedSaved, Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(context, R.string.finishedFailed, Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+
     /**
      * Update joins, when a user wants to join or leave a group, trip or challenge
      * @param action
      * @param databaseReference
      * @param reference
-     * @param id
+     * @param childId
      * @param user
      * @param numberOfMembers
      */
-    public void updateJoins (String action, DatabaseReference databaseReference, String reference, String id, User user, int numberOfMembers){
+    public void updateJoins (String action, DatabaseReference databaseReference, String reference, String childId, User user, int numberOfMembers){
         DatabaseReference databaseUser = getDatabaseReference(FireBaseReferences.USER_REFERENCE);
 
         if (action.equals("join")) {
-            databaseReference.child(id).child(FireBaseReferences.MEMBERS_REFERENCE).child(user.getId()).setValue("true");
-            databaseUser.child(user.getId()).child(reference).child(id).setValue("true");
-            databaseReference.child(id).child(FireBaseReferences.NUMBER_OF_MEMBERS_REFERENCE).setValue(numberOfMembers+1);
+            databaseReference.child(childId).child(FireBaseReferences.MEMBERS_REFERENCE).child(user.getId()).setValue("true");
+            databaseUser.child(user.getId()).child(reference).child(childId).setValue("true");
+            databaseReference.child(childId).child(FireBaseReferences.NUMBER_OF_MEMBERS_REFERENCE).setValue(numberOfMembers+1);
         } else {
-            databaseReference.child(id).child(FireBaseReferences.MEMBERS_REFERENCE).child(user.getId()).removeValue();
-            databaseUser.child(user.getId()).child(reference).child(id).removeValue();
-            databaseReference.child(id).child(FireBaseReferences.NUMBER_OF_MEMBERS_REFERENCE).setValue(numberOfMembers-1);
+            databaseReference.child(childId).child(FireBaseReferences.MEMBERS_REFERENCE).child(user.getId()).removeValue();
+            databaseUser.child(user.getId()).child(reference).child(childId).removeValue();
+            databaseReference.child(childId).child(FireBaseReferences.NUMBER_OF_MEMBERS_REFERENCE).setValue(numberOfMembers-1);
         }
     }
+
+    public void updateResults (DatabaseReference databaseObject, String childId, String childReference, String childResult, final Context context){
+        databaseObject.child(childId).child(childReference).child(childResult).setValue("true")
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if(task.isSuccessful()){
+                            Toast.makeText(context, context.getResources().getString(R.string.finishedSaved), Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(context, context.getResources().getString(R.string.finishedFailed),Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+    }
+
+    public void updateHistory (String childId, int slope, Double distance, double time){
+        DatabaseReference databaseHistory = getDatabaseReference(FireBaseReferences.HISTORY_REFERENCE);
+
+        databaseHistory.child(childId).child(FireBaseReferences.HISTORY_SLOPE_REFERENCE).setValue(slope);
+        databaseHistory.child(childId).child(FireBaseReferences.HISTORY_DISTANCE_REFERENCE).setValue(distance);
+        databaseHistory.child(childId).child(FireBaseReferences.HISTORY_TIME_REFERENCE).setValue(time);
+    }
+
+
 
 
 

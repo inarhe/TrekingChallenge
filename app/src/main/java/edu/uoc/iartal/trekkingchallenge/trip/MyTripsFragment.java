@@ -8,6 +8,7 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -15,19 +16,18 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import edu.uoc.iartal.trekkingchallenge.R;
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
+import edu.uoc.iartal.trekkingchallenge.common.FirebaseController;
+import edu.uoc.iartal.trekkingchallenge.common.OnGetChildListener;
+import edu.uoc.iartal.trekkingchallenge.common.OnGetDataListener;
 import edu.uoc.iartal.trekkingchallenge.model.Trip;
 import edu.uoc.iartal.trekkingchallenge.adapter.TripAdapter;
 import edu.uoc.iartal.trekkingchallenge.model.User;
@@ -37,7 +37,9 @@ public class MyTripsFragment extends Fragment implements SearchView.OnQueryTextL
     private TripAdapter tripAdapter;
     private ProgressDialog progressDialog;
     private RecyclerView recyclerView;
-    private String currentUserName, currentMail;
+    private String currentUserId;
+    private DatabaseReference databaseUser, databaseTrip;
+    private FirebaseController controller;
 
     public MyTripsFragment(){
 
@@ -48,31 +50,15 @@ public class MyTripsFragment extends Fragment implements SearchView.OnQueryTextL
         super.onCreate(savedInstanceState);
 
         //Initialize variables
+        controller = new FirebaseController();
         progressDialog = new ProgressDialog(getActivity());
-        progressDialog.setMessage(getString(R.string.loadingData));
-
-        DatabaseReference databaseUser = FirebaseDatabase.getInstance().getReference(FireBaseReferences.USER_REFERENCE);
-        currentMail = FirebaseAuth.getInstance().getCurrentUser().getEmail();
         trips = new ArrayList<>();
+        tripAdapter = new TripAdapter(trips);
 
-        // Get current user
-        databaseUser.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot userSnapshot :
-                        dataSnapshot.getChildren()) {
-                    User user = userSnapshot.getValue(User.class);
-                    if (user.getMail().equals(currentMail)) {
-                        currentUserName = user.getId();
-                    }
-                }
-            }
+        // Get user database reference
+        databaseUser = controller.getDatabaseReference(FireBaseReferences.USER_REFERENCE);
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                //TO-DO
-            }
-        });
+        getCurrentUserId();
     }
 
     /**
@@ -95,75 +81,19 @@ public class MyTripsFragment extends Fragment implements SearchView.OnQueryTextL
     }
 
     /**
-     * Get database public and private trips that current user is a member
+     * Get database public and private trips which current user is a member
      * @param view
      * @param savedInstanceState
      */
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         setHasOptionsMenu(true);
 
-        DatabaseReference databaseTrip = FirebaseDatabase.getInstance().getReference(FireBaseReferences.TRIP_REFERENCE);
-
-        tripAdapter = new TripAdapter(trips);
-
+        databaseTrip = controller.getDatabaseReference(FireBaseReferences.TRIP_REFERENCE);
         recyclerView.setAdapter(tripAdapter);
 
-        // Get database trips and notify adapter to show them in recycler view
-        progressDialog.show();
-        databaseTrip.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Trip trip = dataSnapshot.getValue(Trip.class);
-                if (trip.getMembers().containsKey(currentUserName)){
-                    addTrip(trip);
-                }
-                tripAdapter.notifyDataSetChanged();
-                //progressDialog.dismiss();
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                // Get user trips
-                Trip trip = dataSnapshot.getValue(Trip.class);
-                if (trip.getMembers().containsKey(currentUserName)){
-                    if (!trips.contains(trip)){
-                        addTrip(trip);
-                    } else {
-                        int i = trips.indexOf(trip);
-                        Trip tripArray = trips.get(i);
-                        if (!tripArray.getName().equals(trip.getName()) || !tripArray.getDescription().equals(trip.getDescription())
-                                || !tripArray.getDate().equals(trip.getDate())){
-                            trips.set(i, trip);
-                        }
-                    }
-                } else {
-                    if (trips.contains(trip)){
-                        trips.remove(trip);
-                    }
-                }
-                tripAdapter.notifyDataSetChanged();
-               // progressDialog.dismiss();
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-                //TO-DO
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-                //TO-DO
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                //TO-DO
-            }
-        });
-        progressDialog.dismiss();
+        getUserTrips();
     }
 
     /**
@@ -231,15 +161,106 @@ public class MyTripsFragment extends Fragment implements SearchView.OnQueryTextL
     }
 
     /**
-     * Add user challenge to the list
+     * Add user trip to the list
      * @param trip
      */
     private void addTrip(Trip trip) {
         trips.add(trip);
-        if (trip.getUserAdmin().equals(currentUserName)) {
+        if (trip.getUserAdmin().equals(currentUserId)) {
             tripAdapter.setVisibility(true);
         } else {
             tripAdapter.setVisibility(false);
         }
+    }
+
+    /**
+     * Get current user to get his groups list later
+     */
+    private void getCurrentUserId(){
+        // Execute controller method to get database current user object. Use OnGetDataListener interface to know
+        // when database data is retrieved
+        controller.readDataOnce(databaseUser, new OnGetDataListener() {
+            @Override
+            public void onStart() {
+                //Nothing to do
+            }
+
+            @Override
+            public void onSuccess(DataSnapshot data) {
+                String currentMail = controller.getCurrentUserEmail();
+
+                for (DataSnapshot userSnapshot : data.getChildren()){
+                    User user = userSnapshot.getValue(User.class);
+
+                    if (user.getMail().equals(currentMail)){
+                        currentUserId = user.getId();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailed(DatabaseError databaseError) {
+                Log.e("MyTripCurrentUser error", databaseError.getMessage());
+            }
+        });
+    }
+
+    /**
+     * Get current user trips list
+     */
+    private void getUserTrips(){
+        // Execute controller method to get database trips objects. Use OnGetDataListener interface to know
+        // when database data is retrieved and notify adapter to show them in recycler view
+        controller.readChild(databaseTrip, new OnGetChildListener() {
+            @Override
+            public void onStart() {
+                progressDialog.setMessage(getString(R.string.loadingData));
+                progressDialog.show();
+            }
+
+            @Override
+            public void onSuccess(DataSnapshot data) {
+                Trip trip = data.getValue(Trip.class);
+                if (trip.getMembers().containsKey(currentUserId)){
+                    addTrip(trip);
+                }
+                tripAdapter.notifyDataSetChanged();
+                progressDialog.dismiss();
+            }
+
+            @Override
+            public void onChanged(DataSnapshot data) {
+                // Get user trips and check if some trip has been updated
+                Trip trip = data.getValue(Trip.class);
+                if (trip.getMembers().containsKey(currentUserId)){
+                    if (!trips.contains(trip)){
+                        addTrip(trip);
+                    } else {
+                        int i = trips.indexOf(trip);
+                        Trip tripArray = trips.get(i);
+                        if (!tripArray.getName().equals(trip.getName()) || !tripArray.getDescription().equals(trip.getDescription())
+                                || !tripArray.getDate().equals(trip.getDate())){
+                            trips.set(i, trip);
+                        }
+                    }
+                } else {
+                    if (trips.contains(trip)){
+                        trips.remove(trip);
+                    }
+                }
+                tripAdapter.notifyDataSetChanged();
+                progressDialog.dismiss();
+            }
+
+            @Override
+            public void onRemoved(DataSnapshot data) {
+                //Nothing to do
+            }
+
+            @Override
+            public void onFailed(DatabaseError databaseError) {
+                Log.e("LoadMyTrips error", databaseError.getMessage());
+            }
+        });
     }
 }

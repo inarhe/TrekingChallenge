@@ -39,6 +39,7 @@ public class MyGroupsFragment extends Fragment implements SearchView.OnQueryText
     private ProgressDialog progressDialog;
     private RecyclerView recyclerView;
     private String currentUserId;
+    private DatabaseReference databaseUser, databaseGroup;
     private FirebaseController controller;
 
     public MyGroupsFragment(){
@@ -56,34 +57,9 @@ public class MyGroupsFragment extends Fragment implements SearchView.OnQueryText
         groupAdapter = new GroupAdapter(groups);
 
         // Get user database reference
-        DatabaseReference databaseUser = controller.getDatabaseReference(FireBaseReferences.USER_REFERENCE);
+        databaseUser = controller.getDatabaseReference(FireBaseReferences.USER_REFERENCE);
 
-        // Execute controller method to get database current user object. Use OnGetDataListener interface to know
-        // when database data is retrieved
-        controller.readData(databaseUser, new OnGetDataListener() {
-            @Override
-            public void onStart() {
-                //Nothing to do
-            }
-
-            @Override
-            public void onSuccess(DataSnapshot data) {
-                String currentMail = controller.getCurrentUserEmail();
-
-                for (DataSnapshot userSnapshot : data.getChildren()){
-                    User user = userSnapshot.getValue(User.class);
-
-                    if (user.getMail().equals(currentMail)){
-                        currentUserId = user.getId();
-                    }
-                }
-            }
-
-            @Override
-            public void onFailed(DatabaseError databaseError) {
-                Log.e("MyGrpCurrentUser error", databaseError.getMessage());
-            }
-        });
+        getCurrentUserId();
     }
 
     /**
@@ -106,73 +82,19 @@ public class MyGroupsFragment extends Fragment implements SearchView.OnQueryText
     }
 
     /**
-     * Get database public and private groups that current user is a member
+     * Get database public and private groups which current user is a member
      * @param view
      * @param savedInstanceState
      */
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         setHasOptionsMenu(true);
 
-        DatabaseReference databaseGroup = controller.getDatabaseReference(FireBaseReferences.GROUP_REFERENCE);
-
+        databaseGroup = controller.getDatabaseReference(FireBaseReferences.GROUP_REFERENCE);
         recyclerView.setAdapter(groupAdapter);
 
-        // Execute controller method to get database groups objects. Use OnGetDataListener interface to know
-        // when database data is retrieved and notify adapter to show them in recycler view
-        controller.readChild(databaseGroup, new OnGetChildListener() {
-            @Override
-            public void onStart() {
-                progressDialog.setMessage(getString(R.string.loadingData));
-                progressDialog.show();
-            }
-
-            @Override
-            public void onSuccess(DataSnapshot data) {
-                Group group = data.getValue(Group.class);
-                if (group.getMembers().containsKey(currentUserId)) {
-                    addGroup(group);
-                }
-                groupAdapter.notifyDataSetChanged();
-                progressDialog.dismiss();
-
-            }
-
-            @Override
-            public void onChanged(DataSnapshot data) {
-                // Get user groups and check if some group has been updated
-                Group group = data.getValue(Group.class);
-                if (group.getMembers().containsKey(currentUserId)){
-                    if (!groups.contains(group)){
-                        addGroup(group);
-                    } else {
-                        int i = groups.indexOf(group);
-                        Group groupArray = groups.get(i);
-                        if (!groupArray.getName().equals(group.getName()) || !groupArray.getDescription().equals(group.getDescription())){
-                            groups.set(i, group);
-                        }
-                    }
-                } else {
-                    if (groups.contains(group)){
-                        groups.remove(group);
-                    }
-                }
-                groupAdapter.notifyDataSetChanged();
-                progressDialog.dismiss();
-            }
-
-            @Override
-            public void onRemoved(DataSnapshot data) {
-                //Nothing to do
-            }
-
-            @Override
-            public void onFailed(DatabaseError databaseError) {
-                Log.e("LoadMyGroups error", databaseError.getMessage());
-            }
-        });
+        getUserGroups();
     }
 
     /**
@@ -250,5 +172,95 @@ public class MyGroupsFragment extends Fragment implements SearchView.OnQueryText
         } else {
             groupAdapter.setVisibility(false);
         }
+    }
+
+    /**
+     * Get current user to get his groups list later
+     */
+    private void getCurrentUserId(){
+        // Execute controller method to get database current user object. Use OnGetDataListener interface to know
+        // when database data is retrieved
+        controller.readDataOnce(databaseUser, new OnGetDataListener() {
+            @Override
+            public void onStart() {
+                //Nothing to do
+            }
+
+            @Override
+            public void onSuccess(DataSnapshot data) {
+                String currentMail = controller.getCurrentUserEmail();
+
+                for (DataSnapshot userSnapshot : data.getChildren()){
+                    User user = userSnapshot.getValue(User.class);
+
+                    if (user.getMail().equals(currentMail)){
+                        currentUserId = user.getId();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailed(DatabaseError databaseError) {
+                Log.e("MyGrpCurrentUser error", databaseError.getMessage());
+            }
+        });
+    }
+
+    /**
+     * Get current user groups list
+     */
+    private void getUserGroups(){
+        // Execute controller method to get database groups objects. Use OnGetDataListener interface to know
+        // when database data is retrieved and notify adapter to show them in recycler view
+        controller.readChild(databaseGroup, new OnGetChildListener() {
+            @Override
+            public void onStart() {
+                progressDialog.setMessage(getString(R.string.loadingData));
+                progressDialog.show();
+            }
+
+            @Override
+            public void onSuccess(DataSnapshot data) {
+                Group group = data.getValue(Group.class);
+                if (group.getMembers().containsKey(currentUserId)) {
+                    addGroup(group);
+                }
+                groupAdapter.notifyDataSetChanged();
+                progressDialog.dismiss();
+            }
+
+            @Override
+            public void onChanged(DataSnapshot data) {
+                // Get user groups and check if some group has been updated
+                Group group = data.getValue(Group.class);
+                if (group.getMembers().containsKey(currentUserId)){
+                    if (!groups.contains(group)){
+                        addGroup(group);
+                    } else {
+                        int i = groups.indexOf(group);
+                        Group groupArray = groups.get(i);
+                        if (!groupArray.getName().equals(group.getName()) || !groupArray.getDescription().equals(group.getDescription())){
+                            groups.set(i, group);
+                        }
+                    }
+                } else {
+                    if (groups.contains(group)){
+                        groups.remove(group);
+                    }
+                }
+                groupAdapter.notifyDataSetChanged();
+                progressDialog.dismiss();
+            }
+
+            @Override
+            public void onRemoved(DataSnapshot data) {
+                //Nothing to do
+            }
+
+            @Override
+            public void onFailed(DatabaseError databaseError) {
+                Log.e("LoadMyGroups error", databaseError.getMessage());
+            }
+        });
     }
 }

@@ -11,7 +11,7 @@ public class Route implements Parcelable {
     private String idRoute, name, headerPhoto, trackPhoto, profilePhoto, season, startPlace, time, trackLink, meteo;
     private String type, difficult, distance, description, region, township;
     private Double lng, lat;
-    private Float ratingAverage;
+    private Float sumRatings;
     private int numRatings, decline, ascent;
     private Map<String, String> finished = new HashMap<>();
 
@@ -20,7 +20,7 @@ public class Route implements Parcelable {
     }
 
     public Route(String idRoute, String name, String headerPhoto, String trackPhoto, String startPplace, String profilePhoto, String season, String time,
-                 String trackLink, String meteo, String type, Double lng, Double lat, Float ratingAverage, String distance, String difficult, String description,
+                 String trackLink, String meteo, String type, Double lng, Double lat, Float sumRatings, String distance, String difficult, String description,
                  int decline, int ascent, String region, String township, int numRatings) {
         this.idRoute = idRoute;
         this.name = name;
@@ -35,7 +35,7 @@ public class Route implements Parcelable {
         this.type = type;
         this.lng = lng;
         this.lat = lat;
-        this.ratingAverage = ratingAverage;
+        this.sumRatings = sumRatings;
         this.distance = distance;
         this.difficult = difficult;
         this.description = description;
@@ -58,7 +58,7 @@ public class Route implements Parcelable {
         this.trackLink = in.readString();
         this.meteo = in.readString();
         this.type = in.readString();
-        this.ratingAverage = in.readFloat();
+        this.sumRatings = in.readFloat();
         this.distance = in.readString();
         this.difficult = in.readString();
         this.description = in.readString();
@@ -174,12 +174,12 @@ public class Route implements Parcelable {
         this.lat = lat;
     }
 
-    public Float getRatingAverage() {
-        return ratingAverage;
+    public Float getSumRatings() {
+        return sumRatings;
     }
 
-    public void setRatingAverage(Float ratingAverage) {
-        this.ratingAverage = ratingAverage;
+    public void setSumRatings(Float sumRatings) {
+        this.sumRatings = sumRatings;
     }
 
     public String getDistance() {
@@ -268,7 +268,7 @@ public class Route implements Parcelable {
         dest.writeString(trackLink);
         dest.writeString(meteo);
         dest.writeString(type);
-        dest.writeFloat(ratingAverage);
+        dest.writeFloat(sumRatings);
         dest.writeString(distance);
         dest.writeString(difficult);
         dest.writeString(description);

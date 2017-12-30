@@ -8,31 +8,23 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.RadioGroup;
 
-import com.google.firebase.auth.FirebaseAuth;
-
 import java.util.ArrayList;
 
 import edu.uoc.iartal.trekkingchallenge.R;
+import edu.uoc.iartal.trekkingchallenge.common.FirebaseController;
 import edu.uoc.iartal.trekkingchallenge.model.Route;
 import edu.uoc.iartal.trekkingchallenge.user.LoginActivity;
 
 public class SearchRoutesActivity extends AppCompatActivity {
 
-    private ArrayList<Route> routes = new ArrayList<>();
+    private ArrayList<Route> routes;
     private RadioGroup rgDifficult, rgType, rgDistance;
-    private ArrayList<Route> filteredModelList = new ArrayList<>();
-
+    private ArrayList<Route> filteredModelList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_routes);
-
-        // If user isn't logged, start login activity
-        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
-            startActivity(new Intent(getApplicationContext(), LoginActivity.class));
-            finish();
-        }
 
         // Set toolbar and actionbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.searchRouteToolbar);
@@ -40,6 +32,17 @@ public class SearchRoutesActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle(getString(R.string.advancedSearch));
+
+        // Initialize variables
+        FirebaseController controller = new FirebaseController();
+        routes = new ArrayList<>();
+        filteredModelList = new ArrayList<>();
+
+        // If user isn't logged, start login activity
+        if (controller.getActiveUserSession() == null) {
+            startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+            finish();
+        }
 
         // Link layout elements with variables
         rgDifficult = (RadioGroup) findViewById(R.id.rgDifficult);
@@ -51,7 +54,10 @@ public class SearchRoutesActivity extends AppCompatActivity {
         routes = bundle.getParcelableArrayList("routes");
     }
 
-
+    /**
+     *  Executed when search button is clicked. Check selected filters and get new result list
+     * @param view
+     */
     public void advancedSearch (View view){
         // Initialize filter search with default value
         String difficult = getString(R.string.all);
@@ -103,7 +109,7 @@ public class SearchRoutesActivity extends AppCompatActivity {
                 Boolean distExists = false;
                 String queryDiff = route.getDifficult();
                 String queryType = route.getType();
-                Double queryDist = Double.parseDouble(route.getDistance());
+                double queryDist = Double.parseDouble(route.getDistance());
 
                 // Compare route distance according to radio button filter
                 switch (distance) {
@@ -135,7 +141,7 @@ public class SearchRoutesActivity extends AppCompatActivity {
             }
         }
 
-        // Return search result list to list activity
+        // Return search result list to list routes activity
         Intent result = new Intent();
         result.putExtra("routes", filteredModelList);
         setResult(RESULT_OK, result);

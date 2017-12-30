@@ -8,9 +8,8 @@ import android.support.v7.widget.Toolbar;
 import android.text.method.ScrollingMovementMethod;
 import android.widget.TextView;
 
-import com.google.firebase.auth.FirebaseAuth;
-
 import edu.uoc.iartal.trekkingchallenge.R;
+import edu.uoc.iartal.trekkingchallenge.common.FirebaseController;
 import edu.uoc.iartal.trekkingchallenge.model.Route;
 import edu.uoc.iartal.trekkingchallenge.user.LoginActivity;
 
@@ -21,8 +20,11 @@ public class DetailRouteActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_route);
 
+        // Initialize variables
+        FirebaseController controller = new FirebaseController();
+
         // If user isn't logged, start login activity
-        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+        if (controller.getActiveUserSession() == null) {
             startActivity(new Intent(getApplicationContext(), LoginActivity.class));
             finish();
         }
@@ -38,13 +40,15 @@ public class DetailRouteActivity extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
         Route route = bundle.getParcelable("route");
 
-        // Link layout elements with variables and set values
+        // Link layout elements with variables
         TextView textViewDetails = (TextView) findViewById(R.id.textArea_information);
+        TextView textViewMeteo = (TextView) findViewById(R.id.tvMeteo);
+        TextView textViewStartPlace = (TextView) findViewById(R.id.tvStartPlace);
+
+        // Show selected route information in the layout
         textViewDetails.setMovementMethod(new ScrollingMovementMethod());
         textViewDetails.setText(route.getDescription());
-        TextView textViewMeteo = (TextView) findViewById(R.id.tvMeteo);
         textViewMeteo.setText(route.getMeteo());
-        TextView textViewStartPlace = (TextView) findViewById(R.id.tvStartPlace);
         textViewStartPlace.setText(route.getStartPlace());
     }
 }

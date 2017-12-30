@@ -61,12 +61,10 @@ public class TripHistoryActivity extends AppCompatActivity {
             finish();
         }
 
-        // Get Firebase authentication instance and database references
-        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-        DatabaseReference databaseUser = FirebaseDatabase.getInstance().getReference(FireBaseReferences.USER_REFERENCE);
-        DatabaseReference databaseTripDone = FirebaseDatabase.getInstance().getReference(FireBaseReferences.TRIPSDONE_REFERENCE);
+        // Get database reference
+        DatabaseReference databaseTripDone = controller.getDatabaseReference(FireBaseReferences.TRIPSDONE_REFERENCE);
 
-        // Link layout elements with variables
+        // Set listView and its header
         historyList = (ListView) findViewById(R.id.lvTripHistory);
         ViewGroup headerView = (ViewGroup) getLayoutInflater().inflate(R.layout.header_trip_history, historyList, false);
         historyList.addHeaderView(headerView);

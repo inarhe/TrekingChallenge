@@ -261,7 +261,7 @@ public class MyTripsFragment extends Fragment implements SearchView.OnQueryTextL
 
             @Override
             public void onFailed(DatabaseError databaseError) {
-                Log.e("LoadMyTrips error", databaseError.getMessage());
+                Log.e("ListMyTrips error", databaseError.getMessage());
             }
         });
     }

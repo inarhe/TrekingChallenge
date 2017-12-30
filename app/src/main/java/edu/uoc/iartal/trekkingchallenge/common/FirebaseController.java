@@ -3,6 +3,7 @@ package edu.uoc.iartal.trekkingchallenge.common;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.net.Uri;
 import android.renderscript.Sampler;
 import android.support.annotation.NonNull;
 import android.support.multidex.MultiDexApplication;
@@ -10,6 +11,8 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
@@ -23,6 +26,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 
@@ -89,6 +94,8 @@ public class FirebaseController {
         return FirebaseAuth.getInstance().getCurrentUser();
     }
 
+
+
     public void loginDatabase(String email, String password, final ProgressDialog progressDialog, final Context context){
         // Execute firebase sign in function
         FirebaseAuth.getInstance().signInWithEmailAndPassword(email,password)
@@ -123,6 +130,10 @@ public class FirebaseController {
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(reference);
 
         return databaseReference;
+    }
+
+    public StorageReference getStorageReference(){
+        return FirebaseStorage.getInstance().getReference();
     }
 
     /**
@@ -167,21 +178,16 @@ public class FirebaseController {
         });
     }
 
-    public void queryDataOnce(DatabaseReference database, String reference, String value, final OnGetDataListener listener){
-
-        Query query = database.orderByChild(reference).equalTo(value);
-
-        listener.onStart();
-
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
+    public void readPhoto(StorageReference storage, String reference, final OnGetPhotoListener listener){
+        storage.child(reference).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                listener.onSuccess(dataSnapshot);
+            public void onSuccess(Uri uri) {
+                listener.onSuccess(uri);
             }
-
+        }).addOnFailureListener(new OnFailureListener() {
             @Override
-            public void onCancelled(DatabaseError databaseError) {
-                listener.onFailed(databaseError);
+            public void onFailure(@NonNull Exception e) {
+                listener.onFailed(e);
             }
         });
     }
@@ -236,7 +242,15 @@ public class FirebaseController {
         });
     }
 
-    public void editObjectParameter(DatabaseReference database, String child, String reference, String value){
+    public void editStringParameter(DatabaseReference database, String child, String reference, String value){
+        database.child(child).child(reference).setValue(value);
+    }
+
+    public void editIntParameter(DatabaseReference database, String child, String reference, int value){
+        database.child(child).child(reference).setValue(value);
+    }
+
+    public void editFloatParameter(DatabaseReference database, String child, String reference, float value){
         database.child(child).child(reference).setValue(value);
     }
 
@@ -309,6 +323,32 @@ public class FirebaseController {
         });
     }
 
+    public void addNewRating(DatabaseReference databaseRating, Rating rating, final Context context){
+        databaseRating.child(rating.getId()).setValue(rating).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if(task.isSuccessful()) {
+                    Toast.makeText(context, R.string.rateSaved, Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(context, R.string.rateNotSaved, Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    public void addNewRouteResult(DatabaseReference databaseFinished, Finished finished, final Context context){
+        databaseFinished.child(finished.getId()).setValue(finished).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if(task.isSuccessful()) {
+                    Toast.makeText(context, R.string.finishedSaved, Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(context, R.string.finishedFailed, Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
 
     /**
      * Update joins, when a user wants to join or leave a group, trip or challenge
@@ -339,9 +379,9 @@ public class FirebaseController {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if(task.isSuccessful()){
-                            Toast.makeText(context, context.getResources().getString(R.string.finishedSaved), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context, context.getResources().getString(R.string.infoSaved), Toast.LENGTH_SHORT).show();
                         } else {
-                            Toast.makeText(context, context.getResources().getString(R.string.finishedFailed),Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context, context.getResources().getString(R.string.infoNotSaved),Toast.LENGTH_SHORT).show();
                         }
                     }
                 });

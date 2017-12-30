@@ -35,7 +35,7 @@ public class FireBaseReferences {
     final public static String TRACKS_STORAGE = "tracks/";
     final public static String PROFILES_STORAGE = "profiles/";
     final public static String ROUTE_RATINGS_REFERENCE = "ratings";
-    final public static String ROUTE_RATING_AVERAGE_REFERENCE = "ratingAverage";
+    final public static String ROUTE_SUM_RATINGS_REFERENCE = "sumRatings";
     final public static String ROUTE_NUM_RATINGS_REFERENCE = "numRatings";
 
     // Trip references

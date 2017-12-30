@@ -2,7 +2,6 @@ package edu.uoc.iartal.trekkingchallenge.route;
 
 import android.content.Intent;
 import android.net.Uri;
-import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,27 +11,31 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import edu.uoc.iartal.trekkingchallenge.R;
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
+import edu.uoc.iartal.trekkingchallenge.common.FirebaseController;
+import edu.uoc.iartal.trekkingchallenge.common.OnGetPhotoListener;
 import edu.uoc.iartal.trekkingchallenge.model.Route;
 import edu.uoc.iartal.trekkingchallenge.user.LoginActivity;
 
 public class TrackRouteActivity extends AppCompatActivity {
     private ImageView imageViewTrack, imageViewProfile;
+    private FirebaseController controller;
+    private  Route route;
+    private StorageReference storageReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_track_route);
 
+        // Initialize variables
+        controller = new FirebaseController();
+
         // If user isn't logged, start login activity
-        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+        if (controller.getActiveUserSession() == null) {
             startActivity(new Intent(getApplicationContext(), LoginActivity.class));
             finish();
         }
@@ -44,9 +47,12 @@ public class TrackRouteActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle(getString(R.string.trackActivity));
 
+        // Get storage reference
+        storageReference = controller.getStorageReference();
+
         // Get data from show route activity
         Bundle bundle = getIntent().getExtras();
-        Route route = bundle.getParcelable("route");
+        route = bundle.getParcelable("route");
 
         // Link layout elements with variables and set values
         imageViewTrack = (ImageView) findViewById(R.id.ivTrack);
@@ -54,37 +60,48 @@ public class TrackRouteActivity extends AppCompatActivity {
         TextView textViewLink = (TextView) findViewById(R.id.tvLinkTracks);
         textViewLink.setText(route.getTrackLink());
 
-        // Get storage reference
-        StorageReference storageReference = FirebaseStorage.getInstance().getReference();
-
-        //Initialize variables
-        String photoTrack = route.getTrackPhoto();
-        String photoProfile = route.getProfilePhoto();
-
         // Set images from storage into view
-        storageReference.child(FireBaseReferences.TRACKS_STORAGE + photoTrack).getDownloadUrl()
-                .addOnSuccessListener(new OnSuccessListener<Uri>() {
-                    @Override
-                    public void onSuccess(Uri uri) {
-                        Glide.with(TrackRouteActivity.this).load(uri).into(imageViewTrack);
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
+        showTrackPhoto();
+        showProfilePhoto();
+    }
+
+    /**
+     * Get track photo name, download it and set into track route
+     */
+    private void showTrackPhoto() {
+        String photoTrack = route.getTrackPhoto();
+
+        controller.readPhoto(storageReference, FireBaseReferences.TRACKS_STORAGE + photoTrack, new OnGetPhotoListener() {
             @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(TrackRouteActivity.this, R.string.notDownloaded, Toast.LENGTH_LONG).show();
+            public void onSuccess(Uri uri) {
+                Glide.with(TrackRouteActivity.this).load(uri).into(imageViewTrack);
+            }
+
+            @Override
+            public void onFailed(Exception e) {
+                e.printStackTrace();
+                Toast.makeText(TrackRouteActivity.this, R.string.notDownloaded, Toast.LENGTH_SHORT).show();
             }
         });
 
-        storageReference.child(FireBaseReferences.PROFILES_STORAGE + photoProfile).getDownloadUrl()
-                .addOnSuccessListener(new OnSuccessListener<Uri>() {
-                    @Override
-                    public void onSuccess(Uri uri) {
-                        Glide.with(TrackRouteActivity.this).load(uri).into(imageViewProfile);
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
+    }
+
+    /**
+     * Get profile photo name, download it and set into track route
+     */
+    private void showProfilePhoto() {
+        String photoProfile = route.getProfilePhoto();
+
+        controller.readPhoto(storageReference, FireBaseReferences.PROFILES_STORAGE + photoProfile, new OnGetPhotoListener() {
             @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(TrackRouteActivity.this, R.string.notDownloaded, Toast.LENGTH_LONG).show();
+            public void onSuccess(Uri uri) {
+                Glide.with(TrackRouteActivity.this).load(uri).into(imageViewProfile);
+            }
+
+            @Override
+            public void onFailed(Exception e) {
+                e.printStackTrace();
+                Toast.makeText(TrackRouteActivity.this, R.string.notDownloaded, Toast.LENGTH_SHORT).show();
             }
         });
     }

@@ -7,6 +7,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -19,13 +20,9 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
@@ -33,6 +30,9 @@ import java.util.ArrayList;
 import edu.uoc.iartal.trekkingchallenge.R;
 import edu.uoc.iartal.trekkingchallenge.challenge.AddChallengeActivity;
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
+import edu.uoc.iartal.trekkingchallenge.common.FirebaseController;
+import edu.uoc.iartal.trekkingchallenge.common.OnGetDataListener;
+import edu.uoc.iartal.trekkingchallenge.common.OnGetPhotoListener;
 import edu.uoc.iartal.trekkingchallenge.model.Finished;
 import edu.uoc.iartal.trekkingchallenge.model.Route;
 import edu.uoc.iartal.trekkingchallenge.model.User;
@@ -41,18 +41,23 @@ import edu.uoc.iartal.trekkingchallenge.user.LoginActivity;
 
 public class ShowRouteActivity extends AppCompatActivity {
     private StorageReference storageReference;
+    private DatabaseReference databaseUser;
     private ImageView imageViewHeader, imageViewCalendar;
     private TextView textViewDate;
     private Route route;
-    private String currentMail, currentUserName;
+    private FirebaseController controller;
+    private User currentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_route);
 
+        // Initialize variables
+        controller = new FirebaseController();
+
         // If user isn't logged, start login activity
-        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+        if (controller.getActiveUserSession() == null) {
             startActivity(new Intent(getApplicationContext(), LoginActivity.class));
             finish();
         }
@@ -68,8 +73,9 @@ public class ShowRouteActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle(route.getName());
 
-        // Get storage and database references
-        storageReference = FirebaseStorage.getInstance().getReference();
+        // Get storage reference
+        storageReference = controller.getStorageReference();
+        databaseUser = controller.getDatabaseReference(FireBaseReferences.USER_REFERENCE);
 
         // Link layout elements with variables
         imageViewHeader = (ImageView) findViewById(R.id.ivRoute);
@@ -105,20 +111,8 @@ public class ShowRouteActivity extends AppCompatActivity {
             imageViewType.setImageResource(R.drawable.ic_goback);
         }
 
-        // Get header_ranking_challenge photo name, download it and set into show route
-        String namePhoto = route.getHeaderPhoto();
-        storageReference.child(FireBaseReferences.HEADERS_STORAGE + namePhoto).getDownloadUrl()
-                .addOnSuccessListener(new OnSuccessListener<Uri>() {
-                    @Override
-                    public void onSuccess(Uri uri) {
-                        Glide.with(ShowRouteActivity.this).load(uri).into(imageViewHeader);
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(ShowRouteActivity.this, R.string.imageNotDonwloaded, Toast.LENGTH_LONG).show();
-            }
-        });
+        // Get header route photo
+        getHeaderPhoto();
 
         // Show selected route information in the layout
         textViewType.setText(route.getDistance());
@@ -130,36 +124,13 @@ public class ShowRouteActivity extends AppCompatActivity {
         textViewRegion.setText(getString(R.string.region) + "  " + route.getRegion());
         textViewTownship.setText(getString(R.string.township) + "  " + route.getTownship());
 
-        rbAverage.setRating(route.getRatingAverage());
+        rbAverage.setRating(route.getSumRatings() / route.getNumRatings());
 
-        DatabaseReference databaseUser = FirebaseDatabase.getInstance().getReference(FireBaseReferences.USER_REFERENCE);
-        currentMail = FirebaseAuth.getInstance().getCurrentUser().getEmail();
-
-        // Get current user
-        databaseUser.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot userSnapshot :
-                        dataSnapshot.getChildren()) {
-                    User user = userSnapshot.getValue(User.class);
-                    if (user.getMail().equals(currentMail)) {
-                        currentUserName = user.getId();
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                //TO-DO
-            }
-        });
-
-        checkIfUserHasDone();
-
+        getCurrentUser();
     }
 
     /**
-     * Starts detail information route activity when button is clicked
+     * Start detail information route activity when button is clicked
      * @param view
      */
     public void showDetails (View view){
@@ -223,7 +194,7 @@ public class ShowRouteActivity extends AppCompatActivity {
     }
 
     /**
-     * Starts finished route activity when menu option is selected
+     * Start finished route activity when menu option is selected
      */
     public void routeFinished() {
         Intent intent = new Intent(this, FinishedRouteActivity.class);
@@ -232,7 +203,7 @@ public class ShowRouteActivity extends AppCompatActivity {
     }
 
     /**
-     * Starts new trip activity when menu option is selected
+     * Start new trip activity when menu option is selected
      */
     public void newTrip() {
         Intent intent = new Intent(this, AddTripActivity.class);
@@ -241,7 +212,7 @@ public class ShowRouteActivity extends AppCompatActivity {
     }
 
     /**
-     * Starts new challenge activity when menu option is selected
+     * Start new challenge activity when menu option is selected
      */
     public void newChallenge() {
         Intent intent = new Intent(this, AddChallengeActivity.class);
@@ -258,18 +229,29 @@ public class ShowRouteActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    /**
+     * Check if user has done this route to show its finished date
+     */
     private void checkIfUserHasDone(){
         final ArrayList<String> finishedList = new ArrayList<>();
         finishedList.addAll(route.getFinished().keySet());
 
-        DatabaseReference databaseFinished = FirebaseDatabase.getInstance().getReference(FireBaseReferences.FINISHED_REFERENCE);
-        databaseFinished.addListenerForSingleValueEvent(new ValueEventListener() {
+        DatabaseReference databaseFinished = controller.getDatabaseReference(FireBaseReferences.FINISHED_REFERENCE);
+
+        controller.readDataOnce(databaseFinished, new OnGetDataListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot finishedSnapshot : dataSnapshot.getChildren()){
+            public void onStart() {
+                // Nothing to do
+            }
+
+            @Override
+            public void onSuccess(DataSnapshot data) {
+                for (DataSnapshot finishedSnapshot : data.getChildren()){
+
                     if (finishedList.contains(finishedSnapshot.getValue(Finished.class).getId())){
                         String finisher = finishedSnapshot.getValue(Finished.class).getUser();
-                        if (finisher.equals(currentUserName)){
+
+                        if (finisher.equals(currentUser.getId())){
                             textViewDate.setText(finishedSnapshot.getValue(Finished.class).getDate());
                             imageViewCalendar.setImageResource(R.drawable.ic_done);
                         }
@@ -281,8 +263,61 @@ public class ShowRouteActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
+            public void onFailed(DatabaseError databaseError) {
+                Log.e("ShowRoute ckDone error", databaseError.getMessage());
+            }
+        });
+    }
 
+    /**
+     * Get current user information and get his history values
+     */
+    private void getCurrentUser(){
+        // Execute controller method to get database current user object. Use OnGetDataListener interface to know
+        // when database data is retrieved
+        controller.readDataOnce(databaseUser, new OnGetDataListener() {
+            @Override
+            public void onStart() {
+                //Nothing to do
+            }
+
+            @Override
+            public void onSuccess(DataSnapshot data) {
+                String currentMail = controller.getCurrentUserEmail();
+
+                for (DataSnapshot userSnapshot : data.getChildren()){
+                    User user = userSnapshot.getValue(User.class);
+
+                    if (user.getMail().equals(currentMail)){
+                        currentUser = user;
+                        checkIfUserHasDone();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailed(DatabaseError databaseError) {
+                Log.e("ShowRoute getUsr error", databaseError.getMessage());
+            }
+        });
+    }
+
+    /**
+     * Get header photo name, download it and set into show route
+     */
+    private void getHeaderPhoto(){
+        String namePhoto = route.getHeaderPhoto();
+
+        controller.readPhoto(storageReference, FireBaseReferences.HEADERS_STORAGE + namePhoto, new OnGetPhotoListener() {
+            @Override
+            public void onSuccess(Uri uri) {
+                Glide.with(ShowRouteActivity.this).load(uri).into(imageViewHeader);
+            }
+
+            @Override
+            public void onFailed(Exception e) {
+                e.printStackTrace();
+                Toast.makeText(ShowRouteActivity.this, R.string.imageNotDonwloaded, Toast.LENGTH_SHORT).show();
             }
         });
     }

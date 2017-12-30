@@ -5,15 +5,13 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -24,6 +22,8 @@ import java.util.Date;
 
 import edu.uoc.iartal.trekkingchallenge.R;
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
+import edu.uoc.iartal.trekkingchallenge.common.FirebaseController;
+import edu.uoc.iartal.trekkingchallenge.common.OnGetDataListener;
 import edu.uoc.iartal.trekkingchallenge.model.Finished;
 import edu.uoc.iartal.trekkingchallenge.adapter.RouteHistoryAdapter;
 import edu.uoc.iartal.trekkingchallenge.model.User;
@@ -41,26 +41,28 @@ public class RouteHistoryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_route_history);
 
-        // Set toolbar
+        // Set toolbar and actionbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.routeHistoryToolbar);
         setSupportActionBar(toolbar);
-        // Set actionbar
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle(R.string.routeHistoryActivity);
 
-        // Get Firebase authentication instance and database references
-        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-        DatabaseReference databaseUser = FirebaseDatabase.getInstance().getReference(FireBaseReferences.USER_REFERENCE);
-        DatabaseReference databaseFinished = FirebaseDatabase.getInstance().getReference(FireBaseReferences.FINISHED_REFERENCE);
+        // Initialize variables
+        FirebaseController controller = new FirebaseController();
+        routes = new ArrayList<>();
+        finishedRoutes = new ArrayList<>();
 
         // If user isn't logged, start login activity
-        if (firebaseAuth.getCurrentUser() == null) {
+        if (controller.getActiveUserSession() == null) {
             startActivity(new Intent(getApplicationContext(), LoginActivity.class));
             finish();
         }
 
-        // Link layout elements with variables
+        // Get database reference
+        DatabaseReference databaseFinished = controller.getDatabaseReference(FireBaseReferences.FINISHED_REFERENCE);
+
+        // Set listView and its header
         historyList = (ListView) findViewById(R.id.lvRouteHistory);
         ViewGroup headerView = (ViewGroup) getLayoutInflater().inflate(R.layout.header_route_history, historyList, false);
         historyList.addHeaderView(headerView);
@@ -69,58 +71,53 @@ public class RouteHistoryActivity extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
         User user = bundle.getParcelable("user");
 
-        routes = new ArrayList<>();
+        // Get user routes finished ids
         routes.addAll(user.getFinished().keySet());
 
+        // Execute controller method to get database current user trips done. Use OnGetDataListener interface to know
+        // when database data is retrieved
+        controller.readDataOnce(databaseFinished, new OnGetDataListener() {
+            @Override
+            public void onStart() {
+                // Nothing to do
+            }
 
-        finishedRoutes = new ArrayList<>();
-
-        //DatabaseReference databaseFinished = FirebaseDatabase.getInstance().getReference(FireBaseReferences.FINISHED_REFERENCE);
-
-
-            databaseFinished.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    finishedRoutes.clear();
-                    for (DataSnapshot finishedSnapshot :
-                            dataSnapshot.getChildren()) {
-                        Finished finished = finishedSnapshot.getValue(Finished.class);
-                        if (routes.contains(finished.getId())) {
-                            finishedRoutes.add(finished);
-                        }
+            @Override
+            public void onSuccess(DataSnapshot data) {
+                finishedRoutes.clear();
+                for (DataSnapshot finishedSnapshot :
+                        data.getChildren()) {
+                    Finished finished = finishedSnapshot.getValue(Finished.class);
+                    if (routes.contains(finished.getId())) {
+                        finishedRoutes.add(finished);
                     }
-                    formatter = new SimpleDateFormat("dd.MM.yyyy");
+                }
+                formatter = new SimpleDateFormat("dd.MM.yyyy");
 
-                    Collections.sort(finishedRoutes, new Comparator<Finished>() {
-                        @Override
-                        public int compare(Finished o1, Finished o2) {
-                            Date date1 = null;
-                            Date date2 = null;
-                            try {
-                                date1 = formatter.parse(o1.getDate());
-                                date2 =  formatter.parse(o2.getDate());
-                            } catch (ParseException e) {
-                                e.printStackTrace();
-                            }
-
-                            return date1.compareTo(date2);
-
+                Collections.sort(finishedRoutes, new Comparator<Finished>() {
+                    @Override
+                    public int compare(Finished o1, Finished o2) {
+                        Date date1 = null;
+                        Date date2 = null;
+                        try {
+                            date1 = formatter.parse(o1.getDate());
+                            date2 = formatter.parse(o2.getDate());
+                        } catch (ParseException e) {
+                            e.printStackTrace();
                         }
-                    });
 
+                        return date1.compareTo(date2);
+                    }
+                });
+                RouteHistoryAdapter adapter = new RouteHistoryAdapter(getApplicationContext(), R.layout.adapter_route_history, finishedRoutes);
+                historyList.setAdapter(adapter);
 
-                    RouteHistoryAdapter adapter = new RouteHistoryAdapter(getApplicationContext(), R.layout.adapter_route_history, finishedRoutes);
-                    historyList.setAdapter(adapter);
+            }
 
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                    //TO-DO
-                }
-            });
-
-
-
+            @Override
+            public void onFailed(DatabaseError databaseError) {
+                Log.e("HistRoute error", databaseError.getMessage());
+            }
+        });
     }
 }

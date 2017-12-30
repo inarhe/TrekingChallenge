@@ -62,9 +62,6 @@ public class FinishedTripActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle(R.string.finishTripActivity);
 
-        // Hide keyboard until user select edit text
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-
         // Initialize variables
         controller = new FirebaseController();
         context = this;
@@ -75,6 +72,9 @@ public class FinishedTripActivity extends AppCompatActivity {
             startActivity(new Intent(getApplicationContext(), LoginActivity.class));
             finish();
         }
+
+        // Hide keyboard until user select edit text
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         // Get data from show challenge activity
         Bundle bundle = getIntent().getExtras();
@@ -98,7 +98,7 @@ public class FinishedTripActivity extends AppCompatActivity {
         sdf = new SimpleDateFormat(dateFormat, Locale.GERMAN);
         setDate();
 
-        getUserAdmin();
+        getCurrentUser();
 
         // Click listener on date edit text to show calendar
         editTextDate.setOnClickListener(new View.OnClickListener() {
@@ -142,13 +142,14 @@ public class FinishedTripActivity extends AppCompatActivity {
         } else {
             TripDone tripDone = new TripDone(idDone, Double.parseDouble(finishDist), Double.parseDouble(finishHour), currentUser.getId(), trip.getId(), finishDate, trip.getName(), trip.getRoute());
             controller.addNewTripResult(databaseTripDone, tripDone, getApplicationContext());
+
+            // Update result list in user and challenge database nodes
+            controller.updateResults (databaseUser, currentUser.getId(), FireBaseReferences.USER_TRIPSDONE_REFERENCE, idDone, context);
+            controller.updateResults(databaseTrip, trip.getId(), FireBaseReferences.TRIP_DONE_REFERENCE,idDone, context);
+
+            updateHistory();
         }
 
-        // Update result list in user and challenge database nodes
-        controller.updateResults (databaseUser, currentUser.getId(), FireBaseReferences.USER_TRIPSDONE_REFERENCE, idDone, this);
-        controller.updateResults(databaseTrip, trip.getId(), FireBaseReferences.TRIP_DONE_REFERENCE,idDone, this);
-
-        updateHistory();
         finish();
     }
 
@@ -189,7 +190,7 @@ public class FinishedTripActivity extends AppCompatActivity {
     /**
      * Get current user information and get his history values
      */
-    private void getUserAdmin(){
+    private void getCurrentUser(){
         // Execute controller method to get database current user object. Use OnGetDataListener interface to know
         // when database data is retrieved
         controller.readDataOnce(databaseUser, new OnGetDataListener() {
@@ -214,7 +215,7 @@ public class FinishedTripActivity extends AppCompatActivity {
 
             @Override
             public void onFailed(DatabaseError databaseError) {
-                Log.e("FinishTrip getAdm error", databaseError.getMessage());
+                Log.e("FinishTrip getUsr error", databaseError.getMessage());
             }
         });
     }

@@ -193,7 +193,7 @@ public class AllGroupsFragment extends Fragment implements SearchView.OnQueryTex
 
             @Override
             public void onFailed(DatabaseError databaseError) {
-                Log.e("LoadAllGroups error", databaseError.getMessage());
+                Log.e("ListAllGroups error", databaseError.getMessage());
             }
         });
     }

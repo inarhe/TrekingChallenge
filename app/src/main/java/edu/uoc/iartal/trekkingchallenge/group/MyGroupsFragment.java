@@ -261,7 +261,7 @@ public class MyGroupsFragment extends Fragment implements SearchView.OnQueryText
 
             @Override
             public void onFailed(DatabaseError databaseError) {
-                Log.e("LoadMyGroups error", databaseError.getMessage());
+                Log.e("ListMyGroups error", databaseError.getMessage());
             }
         });
     }

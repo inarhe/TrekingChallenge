@@ -221,7 +221,7 @@ public class EditTripActivity extends AppCompatActivity {
      */
     private void updateDescriptionValue(){
         // Execute controller method to update database group object.
-        controller.editObjectParameter(databaseTrip, trip.getId(), FireBaseReferences.TRIP_DESCRIPTION_REFERENCE, newDescription);
+        controller.editStringParameter(databaseTrip, trip.getId(), FireBaseReferences.TRIP_DESCRIPTION_REFERENCE, newDescription);
     }
 
     /**
@@ -229,7 +229,7 @@ public class EditTripActivity extends AppCompatActivity {
      */
     private void updateDateValue(){
         // Execute controller method to update database group object.
-        controller.editObjectParameter(databaseTrip, trip.getId(), FireBaseReferences.TRIP_DATE_REFERENCE, newDate);
+        controller.editStringParameter(databaseTrip, trip.getId(), FireBaseReferences.TRIP_DATE_REFERENCE, newDate);
     }
 
     /**

@@ -50,8 +50,8 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/icFinishRoute"
                 android:layout_marginTop="30dp"
-                android:layout_marginLeft="@dimen/activity_vertical_margin"
-                android:layout_marginStart="@dimen/activity_vertical_margin"
+                android:layout_marginLeft="25dp"
+                android:layout_marginStart="25dp"
                 android:src="@drawable/ic_done"/>
 
             <TextView
@@ -77,16 +77,31 @@
                 android:inputType="date"
                 android:layout_below="@+id/icDateFinish"
                 android:layout_marginTop="4dp"
-                android:layout_marginLeft="@dimen/activity_vertical_margin"
-                android:layout_marginStart="@dimen/activity_vertical_margin"
-                android:layout_marginRight="@dimen/activity_vertical_margin"
-                android:layout_marginEnd="@dimen/activity_vertical_margin" />
+                android:layout_alignLeft="@+id/tvDateFinish"
+                android:layout_alignStart="@+id/tvDateFinish"
+                android:layout_marginRight="25dp"
+                android:layout_marginEnd="25dp" />
+
+            <TextView
+                android:id="@+id/tvResultRoute"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_marginLeft="25dp"
+                android:layout_marginStart="25dp"
+                android:layout_alignLeft="@+id/icDateFinish"
+                android:layout_alignStart="@+id/icDateFinish"
+                android:layout_below="@+id/etDateFinish"
+                android:layout_marginTop="10dp"
+                android:text="@string/resultsTrip"
+                android:textStyle="bold"
+                android:textSize="15sp"/>
 
             <ImageView
                 android:id="@+id/icDistFinish"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/etDateFinish"
+                android:layout_below="@+id/tvResultRoute"
                 android:layout_marginTop="10dp"
                 android:layout_alignLeft="@+id/icDateFinish"
                 android:layout_alignStart="@+id/icDateFinish"
@@ -137,7 +152,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/etDistFinish"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="10dp"
                 android:layout_alignLeft="@+id/icDistFinish"
                 android:layout_alignStart="@+id/icDistFinish"
                 android:src="@drawable/ic_time"/>

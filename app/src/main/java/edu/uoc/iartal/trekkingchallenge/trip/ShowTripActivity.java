@@ -30,6 +30,7 @@ import edu.uoc.iartal.trekkingchallenge.model.TripDone;
 import edu.uoc.iartal.trekkingchallenge.model.User;
 import edu.uoc.iartal.trekkingchallenge.user.LoginActivity;
 
+
 public class ShowTripActivity extends AppCompatActivity {
     private DatabaseReference databaseTrip, databaseUser, databaseTripDone;
     private Trip trip;

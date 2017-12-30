@@ -10,17 +10,6 @@
         android:icon="@drawable/ic_gallery"
         app:showAsAction="ifRoom" />
 
-    <item android:id="@+id/action_opinion"
-        android:title="@string/action_opinion"
-        android:orderInCategory="100"
-        android:icon="@drawable/ic_opinion"
-        app:showAsAction="ifRoom"/>
-
-    <item android:id="@+id/action_finished"
-        android:title="@string/action_finished"
-        android:orderInCategory="100"
-        app:showAsAction="never"/>
-
     <item android:id="@+id/action_trip"
         android:title="@string/action_trip"
         android:orderInCategory="100"
@@ -30,4 +19,15 @@
         android:title="@string/action_chall"
         android:orderInCategory="100"
         app:showAsAction="never"/>
+
+    <item android:id="@+id/action_finished"
+        android:title="@string/action_finished"
+        android:orderInCategory="100"
+        app:showAsAction="never"/>
+
+    <item android:id="@+id/action_opinion"
+        android:title="@string/action_opinion"
+        android:orderInCategory="100"
+        android:icon="@drawable/ic_opinion"
+        app:showAsAction="ifRoom"/>
 </menu>

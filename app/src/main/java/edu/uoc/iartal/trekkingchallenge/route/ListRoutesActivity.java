@@ -1,5 +1,6 @@
 package edu.uoc.iartal.trekkingchallenge.route;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
@@ -9,79 +10,69 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import edu.uoc.iartal.trekkingchallenge.R;
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
+import edu.uoc.iartal.trekkingchallenge.common.FirebaseController;
+import edu.uoc.iartal.trekkingchallenge.common.OnGetDataListener;
 import edu.uoc.iartal.trekkingchallenge.model.Route;
 import edu.uoc.iartal.trekkingchallenge.adapter.RouteAdapter;
 import edu.uoc.iartal.trekkingchallenge.user.LoginActivity;
 
 public class ListRoutesActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
     private static final int ACTIVITY_CODE = 1;
+
     private RouteAdapter routeAdapter;
-    private RecyclerView recyclerView;
-    private ArrayList<Route> routes = new ArrayList<>();
-    private Toolbar toolbar;
+    private ProgressDialog progressDialog;
+    private ArrayList<Route> routes;
     private DatabaseReference databaseRoutes;
+    private FirebaseController controller;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_routes);
 
-        // If user isn't logged, start login activity
-        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
-            startActivity(new Intent(getApplicationContext(), LoginActivity.class));
-            finish();
-        }
-
         // Set toolbar and actionbar
-        toolbar = (Toolbar) findViewById(R.id.listRouteToolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.listRouteToolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle(getString(R.string.listRoutesActivity));
 
+        // Initialize variables
+        progressDialog = new ProgressDialog(this);
+        controller = new FirebaseController();
+        routes = new ArrayList<>();
+
+        // If user isn't logged, start login activity
+        if (controller.getActiveUserSession() == null) {
+            startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+            finish();
+        }
+
         // Initialize and set recycler view and its adapter
-        recyclerView = (RecyclerView) findViewById(R.id.rvListRoutes);
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rvListRoutes);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         routeAdapter = new RouteAdapter(routes, ListRoutesActivity.this);
         recyclerView.setAdapter(routeAdapter);
 
-        // Database reference
-        databaseRoutes = FirebaseDatabase.getInstance().getReference(FireBaseReferences.ROUTE_REFERENCE);
+        // Get route database reference
+        databaseRoutes = controller.getDatabaseReference(FireBaseReferences.ROUTE_REFERENCE);
 
-        // Show database users in recycler view
-        databaseRoutes.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                routes.clear();
-                for (DataSnapshot routeSnapshot:
-                        dataSnapshot.getChildren()) {
-                    Route route = routeSnapshot.getValue(Route.class);
-                        routes.add(route);
-                }
-                routeAdapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                //TO-DO
-            }
-        });
+        // Show database routes in recycler view
+        getRoutes();
     }
 
     /**
@@ -160,16 +151,14 @@ public class ListRoutesActivity extends AppCompatActivity implements SearchView.
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_advancedSearch:
-                Intent intent = new Intent(this, SearchRoutesActivity.class);
-                intent.putExtra("routes",routes);
-                startActivityForResult(intent,ACTIVITY_CODE);
+                advancedSearch();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
-    // Get result from advanced search activity when it has finished
+    // Get data from advanced search activity when it has finished
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -182,5 +171,43 @@ public class ListRoutesActivity extends AppCompatActivity implements SearchView.
             }
             routeAdapter.setFilter(filterRoutes);
         }
+    }
+
+    /**
+     * Start advanced search activity and pass routes list
+     */
+    private void advancedSearch(){
+        Intent intent = new Intent(this, SearchRoutesActivity.class);
+        intent.putExtra("routes", routes);
+        startActivityForResult(intent, ACTIVITY_CODE);
+    }
+
+    /**
+     * Get routes list from database
+     */
+    private void getRoutes(){
+        controller.readData(databaseRoutes, new OnGetDataListener() {
+            @Override
+            public void onStart() {
+                progressDialog.setMessage(getString(R.string.loadingData));
+                progressDialog.show();
+            }
+
+            @Override
+            public void onSuccess(DataSnapshot data) {
+                routes.clear();
+                for (DataSnapshot routeSnapshot : data.getChildren()) {
+                    Route route = routeSnapshot.getValue(Route.class);
+                    routes.add(route);
+                }
+                routeAdapter.notifyDataSetChanged();
+                progressDialog.dismiss();
+            }
+
+            @Override
+            public void onFailed(DatabaseError databaseError) {
+                Log.e("ListRoutes error", databaseError.getMessage());
+            }
+        });
     }
 }

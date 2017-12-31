@@ -4,7 +4,7 @@
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:id="@+id/cardViewChallenge"
     android:layout_width="match_parent"
-    android:layout_height="125dp"
+    android:layout_height="@dimen/cardView_height"
     card_view:cardUseCompatPadding="true">
 
     <RelativeLayout
@@ -15,10 +15,10 @@
         <ImageView
             android:id="@+id/cvChallengePhoto"
             android:cropToPadding="true"
-            android:layout_width="55dp"
-            android:layout_height="60dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginEnd="16dp"
+            android:layout_width="@dimen/cardView_image_width"
+            android:layout_height="@dimen/cardView_image_height"
+            android:layout_marginRight="@dimen/cardView_margin_right"
+            android:layout_marginEnd="@dimen/cardView_margin_right"
             android:scaleType="centerCrop"
             android:layout_centerVertical="true"/>
 
@@ -30,13 +30,13 @@
             android:layout_toEndOf="@+id/cvChallengePhoto"
             android:layout_alignParentTop="true"
             android:textStyle="bold"
-            android:textSize="20sp"/>
+            android:textSize="@dimen/title1"/>
 
         <TextView
             android:id="@+id/cvIsPublic"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="@dimen/margin_below"
             android:layout_toRightOf="@+id/cvChallengePhoto"
             android:layout_toEndOf="@+id/cvChallengePhoto"
             android:layout_below="@+id/cvChallengeName"/>
@@ -46,7 +46,7 @@
             android:src="@drawable/ic_done"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="@dimen/margin_below"
             android:layout_toRightOf="@+id/cvChallengePhoto"
             android:layout_toEndOf="@+id/cvChallengePhoto"
             android:layout_below="@+id/cvIsPublic" />
@@ -71,8 +71,8 @@
             android:layout_toStartOf="@+id/icDelChallengeAdmin"
             android:layout_alignTop="@+id/icDelChallengeAdmin"
             android:layout_alignBottom="@+id/icDelChallengeAdmin"
-            android:layout_marginRight="4dp"
-            android:layout_marginEnd="4dp"
+            android:layout_marginRight="@dimen/cardView_marginRight_button_admin"
+            android:layout_marginEnd="@dimen/cardView_marginRight_button_admin"
             android:src="@drawable/ic_edit" />
 
         <ImageButton
@@ -84,7 +84,7 @@
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
             android:src="@drawable/ic_delete"
-            android:layout_marginTop="40dp"/>
+            android:layout_marginTop="@dimen/cardView_marginTop_button_admin"/>
 
         </RelativeLayout>
 

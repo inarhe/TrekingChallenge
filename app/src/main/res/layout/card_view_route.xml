@@ -15,14 +15,14 @@
         <ImageView
             android:id="@+id/cvRoutePhoto"
             android:cropToPadding="true"
-            android:layout_width="160dp"
-            android:layout_height="150dp"
+            android:layout_width="@dimen/cardView_route_width"
+            android:layout_height="@dimen/cardView_route_height"
             android:scaleType="fitXY"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:layout_marginRight="8dp"
-            android:layout_marginEnd="8dp"/>
+            android:layout_marginRight="@dimen/cardView_route_margin"
+            android:layout_marginEnd="@dimen/cardView_route_margin"/>
 
             <TextView
                 android:id="@+id/cvRouteName"
@@ -32,7 +32,7 @@
                 android:layout_toEndOf="@+id/cvRoutePhoto"
                 android:layout_alignParentTop="true"
                 android:textStyle="bold"
-                android:textSize="18sp"/>
+                android:textSize="@dimen/title2"/>
 
             <TextView
                 android:id="@+id/cvRegion"
@@ -48,8 +48,8 @@
                 android:cropToPadding="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="2dp"
-                android:layout_marginEnd="2dp"
+                android:layout_marginRight="@dimen/cardView_margin_elements"
+                android:layout_marginEnd="@dimen/cardView_margin_elements"
                 android:tint="@color/colorAccent"
                 android:layout_toRightOf="@+id/cvRoutePhoto"
                 android:layout_toEndOf="@+id/cvRoutePhoto"
@@ -74,7 +74,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true"
                 android:layout_below="@+id/cvRegion"
-                android:layout_marginTop="4dp"
+                android:layout_marginTop="@dimen/cardView_marginRight_button_admin"
                 android:clickable="false"
                 android:focusable="false"
                 android:gravity="center"
@@ -88,8 +88,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:tint="@color/colorAccent"
-                android:layout_marginRight="2dp"
-                android:layout_marginEnd="2dp"
+                android:layout_marginRight="@dimen/cardView_margin_elements"
+                android:layout_marginEnd="@dimen/cardView_margin_elements"
                 android:layout_toRightOf="@+id/cvRoutePhoto"
                 android:layout_toEndOf="@+id/cvRoutePhoto"
                 android:layout_below="@+id/cvIconType" />
@@ -111,8 +111,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:tint="@color/colorAccent"
-                android:layout_marginRight="2dp"
-                android:layout_marginEnd="2dp"
+                android:layout_marginRight="@dimen/cardView_margin_elements"
+                android:layout_marginEnd="@dimen/cardView_margin_elements"
                 android:layout_toRightOf="@+id/cvRoutePhoto"
                 android:layout_toEndOf="@+id/cvRoutePhoto"
                 android:layout_below="@+id/cvIconTime" />
@@ -134,8 +134,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:tint="@color/colorAccent"
-                android:layout_marginRight="2dp"
-                android:layout_marginEnd="2dp"
+                android:layout_marginRight="@dimen/cardView_margin_elements"
+                android:layout_marginEnd="@dimen/cardView_margin_elements"
                 android:layout_toLeftOf="@+id/cvDoneDate"
                 android:layout_toStartOf="@+id/cvDoneDate"
                 android:layout_below="@+id/cvIconTime" />

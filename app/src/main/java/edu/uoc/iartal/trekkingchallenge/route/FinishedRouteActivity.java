@@ -25,6 +25,7 @@ import java.util.Locale;
 
 import edu.uoc.iartal.trekkingchallenge.R;
 import edu.uoc.iartal.trekkingchallenge.common.CommonFunctionality;
+import edu.uoc.iartal.trekkingchallenge.common.ConstantsUtils;
 import edu.uoc.iartal.trekkingchallenge.common.FirebaseController;
 import edu.uoc.iartal.trekkingchallenge.interfaces.OnGetDataListener;
 import edu.uoc.iartal.trekkingchallenge.model.Finished;
@@ -142,8 +143,14 @@ public class FinishedRouteActivity extends AppCompatActivity {
             controller.addNewRouteResult(databaseFinished, finished, getApplicationContext());
 
             // Update result list in user and route database nodes
-            controller.updateResults (databaseUser, currentUser.getId(), FireBaseReferences.USER_FINISHED_REFERENCE, idFinish, context);
-            controller.updateResults (databaseRoute, route.getIdRoute(), FireBaseReferences.ROUTE_FINISHED_REFERENCE, idFinish, context);
+            try{
+                controller.updateStringParameter(databaseUser, currentUser.getId(), FireBaseReferences.USER_FINISHED_REFERENCE, idFinish);
+                controller.updateStringParameter(databaseRoute, route.getIdRoute(), FireBaseReferences.ROUTE_FINISHED_REFERENCE, idFinish);
+                Toast.makeText(getApplicationContext(), R.string.finishedSaved, Toast.LENGTH_SHORT).show();
+            }catch (Exception e){
+                e.printStackTrace();
+                Toast.makeText(getApplicationContext(), R.string.finishedFailed, Toast.LENGTH_SHORT).show();
+            }
 
             updateHistory();
         }
@@ -253,9 +260,17 @@ public class FinishedRouteActivity extends AppCompatActivity {
      */
     private void updateHistory(){
         int totalSlope = historySlope + route.getAscent() + route.getDecline();
-        double totalDistance = common.round(historyDistance + Double.parseDouble(finishDist),2);
-        double totalTime = common.round(common.sumHours(historyTime, Double.parseDouble(finishTime)),2);
+        double totalDistance = common.round(historyDistance + Double.parseDouble(finishDist), ConstantsUtils.NUM_OF_DECIMALS);
+        double totalTime = common.round(common.sumHours(historyTime, Double.parseDouble(finishTime)),ConstantsUtils.NUM_OF_DECIMALS);
 
-        controller.updateHistory(currentUser.getHistory(), totalSlope, totalDistance , totalTime, -1);
+        // Update user history with trip values
+        try{
+            controller.updateIntParameter(databaseHistory, currentUser.getHistory(), FireBaseReferences.HISTORY_SLOPE_REFERENCE, totalSlope);
+            controller.updateDoubleParameter(databaseHistory, currentUser.getHistory(), FireBaseReferences.HISTORY_DISTANCE_REFERENCE, totalDistance);
+            controller.updateDoubleParameter(databaseHistory, currentUser.getHistory(), FireBaseReferences.HISTORY_TIME_REFERENCE, totalTime);
+        }catch (Exception e){
+            e.printStackTrace();
+            Log.e("FinRoute upHist error", e.getMessage());
+        }
     }
 }

@@ -145,8 +145,14 @@ public class FinishedTripActivity extends AppCompatActivity {
             controller.addNewTripResult(databaseTripDone, tripDone, context);
 
             // Update result list in user and challenge database nodes
-            controller.updateResults (databaseUser, currentUser.getId(), FireBaseReferences.USER_TRIPSDONE_REFERENCE, idDone, context);
-            controller.updateResults(databaseTrip, trip.getId(), FireBaseReferences.TRIP_DONE_REFERENCE,idDone, context);
+            try{
+                controller.updateStringParameter(databaseUser, currentUser.getId(), FireBaseReferences.USER_TRIPSDONE_REFERENCE, idDone);
+                controller.updateStringParameter(databaseTrip, trip.getId(), FireBaseReferences.TRIP_DONE_REFERENCE, idDone);
+                Toast.makeText(getApplicationContext(), R.string.finishedSaved, Toast.LENGTH_SHORT).show();
+            }catch (Exception e){
+                e.printStackTrace();
+                Toast.makeText(getApplicationContext(), R.string.finishedFailed, Toast.LENGTH_SHORT).show();
+            }
 
             updateHistory();
         }
@@ -273,7 +279,15 @@ public class FinishedTripActivity extends AppCompatActivity {
                 double totalDistance = common.round(historyDistance + Double.parseDouble(finishDist),ConstantsUtils.NUM_OF_DECIMALS);
                 double totalTime = common.round(common.sumHours(historyTime, Double.parseDouble(finishHour)),ConstantsUtils.NUM_OF_DECIMALS);
 
-                controller.updateHistory(currentUser.getHistory(), totalSlope, totalDistance , totalTime, ConstantsUtils.NO_CHALLENGE_WIN);
+                // Update user history with trip values
+                try{
+                    controller.updateIntParameter(databaseHistory, currentUser.getHistory(), FireBaseReferences.HISTORY_SLOPE_REFERENCE, totalSlope);
+                    controller.updateDoubleParameter(databaseHistory, currentUser.getHistory(), FireBaseReferences.HISTORY_DISTANCE_REFERENCE, totalDistance);
+                    controller.updateDoubleParameter(databaseHistory, currentUser.getHistory(), FireBaseReferences.HISTORY_TIME_REFERENCE, totalTime);
+                }catch (Exception e){
+                    e.printStackTrace();
+                    Log.e("FinTrip upHist error", e.getMessage());
+                }
             }
 
             @Override

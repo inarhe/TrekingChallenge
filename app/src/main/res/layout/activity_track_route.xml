@@ -14,23 +14,24 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:layout_marginTop="75dp"
-        android:layout_marginLeft="@dimen/activity_vertical_margin"
-        android:layout_marginStart="@dimen/activity_vertical_margin"
+        android:layout_marginTop="@dimen/margin_top"
+        android:layout_marginLeft="@dimen/margin_left_right"
+        android:layout_marginStart="@dimen/margin_left_right"
         android:padding="4dp"
         android:text="@string/trackTitle"
+        android:textSize="@dimen/title_info"
         android:textStyle="bold"/>
 
     <ImageView
         android:id="@+id/ivTrack"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
+        android:layout_height="@dimen/image_height_track"
         android:scaleType="fitCenter"
         android:cropToPadding="true"
-        android:layout_marginLeft="@dimen/activity_vertical_margin"
-        android:layout_marginStart="@dimen/activity_vertical_margin"
-        android:layout_marginRight="@dimen/activity_vertical_margin"
-        android:layout_marginEnd="@dimen/activity_vertical_margin"
+        android:layout_marginLeft="@dimen/margin_left_right"
+        android:layout_marginStart="@dimen/margin_left_right"
+        android:layout_marginRight="@dimen/margin_left_right"
+        android:layout_marginEnd="@dimen/margin_left_right"
         android:layout_below="@+id/tvTrack" />
 
     <TextView
@@ -39,23 +40,24 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:layout_below="@id/ivTrack"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="@dimen/activity_vertical_margin"
-        android:layout_marginStart="@dimen/activity_vertical_margin"
+        android:layout_marginTop="@dimen/margin_below"
+        android:layout_marginLeft="@dimen/margin_left_right"
+        android:layout_marginStart="@dimen/margin_left_right"
         android:padding="4dp"
         android:text="@string/profileTitle"
+        android:textSize="@dimen/title_info"
         android:textStyle="bold"/>
 
     <ImageView
         android:id="@+id/ivProfile"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
+        android:layout_height="@dimen/image_height_track"
         android:scaleType="fitCenter"
         android:cropToPadding="true"
-        android:layout_marginLeft="@dimen/activity_vertical_margin"
-        android:layout_marginStart="@dimen/activity_vertical_margin"
-        android:layout_marginRight="@dimen/activity_vertical_margin"
-        android:layout_marginEnd="@dimen/activity_vertical_margin"
+        android:layout_marginLeft="@dimen/margin_left_right"
+        android:layout_marginStart="@dimen/margin_left_right"
+        android:layout_marginRight="@dimen/margin_left_right"
+        android:layout_marginEnd="@dimen/margin_left_right"
         android:layout_below="@+id/tvProfile" />
 
     <TextView
@@ -64,11 +66,12 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:layout_below="@id/ivProfile"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="@dimen/activity_vertical_margin"
-        android:layout_marginStart="@dimen/activity_vertical_margin"
+        android:layout_marginTop="@dimen/margin_below"
+        android:layout_marginLeft="@dimen/margin_left_right"
+        android:layout_marginStart="@dimen/margin_left_right"
         android:padding="4dp"
         android:textStyle="bold"
+        android:textSize="@dimen/title_info"
         android:text="@string/otherTracks"/>
 
     <TextView
@@ -78,8 +81,21 @@
         android:padding="6dp"
         android:autoLink="web"
         android:layout_below="@+id/tvLinkOtherTrack"
-        android:layout_marginTop="6dp"
-        android:layout_marginLeft="@dimen/activity_vertical_margin"
-        android:layout_marginStart="@dimen/activity_vertical_margin"/>
+        android:layout_marginTop="@dimen/margin_below"
+        android:layout_marginLeft="@dimen/margin_left_right"
+        android:layout_marginStart="@dimen/margin_left_right" />
+
+    <TextView
+        android:id="@+id/tvWikiloc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_below="@id/tvLinkTracks"
+        android:layout_marginTop="@dimen/margin_below"
+        android:layout_marginLeft="@dimen/margin_left_right"
+        android:layout_marginStart="@dimen/margin_left_right"
+        android:padding="4dp"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+        android:text="@string/wikilocFont"/>
 
 </RelativeLayout>

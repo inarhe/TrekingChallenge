@@ -171,10 +171,18 @@ public class RatingRouteActivity extends AppCompatActivity {
                         controller.addNewRating(databaseRating, rating, getApplicationContext());
 
                         // Update rating list in user and route database nodes
-                        controller.updateResults (databaseUser, currentUser.getId(), FireBaseReferences.USER_RATINGS_REFERENCE, idRate, context);
-                        controller.updateResults (databaseRoute, route.getIdRoute(), FireBaseReferences.ROUTE_RATINGS_REFERENCE, idRate, context);
-                        controller.editIntParameter(databaseRoute, route.getIdRoute(), FireBaseReferences.ROUTE_NUM_RATINGS_REFERENCE, route.getNumRatings() + 1);
-                        controller.editFloatParameter(databaseRoute, route.getIdRoute(), FireBaseReferences.ROUTE_SUM_RATINGS_REFERENCE, route.getSumRatings() + ratingBar.getRating());
+                        try{
+                            controller.updateStringParameter(databaseUser, currentUser.getId(), FireBaseReferences.USER_RATINGS_REFERENCE, idRate);
+                            controller.updateStringParameter(databaseRoute, route.getIdRoute(), FireBaseReferences.ROUTE_RATINGS_REFERENCE, idRate);
+                            controller.updateIntParameter(databaseRoute, route.getIdRoute(), FireBaseReferences.ROUTE_NUM_RATINGS_REFERENCE, route.getNumRatings() + 1);
+                            controller.updateFloatParameter(databaseRoute, route.getIdRoute(), FireBaseReferences.ROUTE_SUM_RATINGS_REFERENCE, route.getSumRatings() + ratingBar.getRating());
+                            Toast.makeText(getApplicationContext(), R.string.rateSaved, Toast.LENGTH_SHORT).show();
+                        }catch (Exception e){
+                            e.printStackTrace();
+                            Toast.makeText(getApplicationContext(), R.string.rateNotSaved, Toast.LENGTH_SHORT).show();
+                        }
+
+
                     }
 
                     rateDialog.dismiss();

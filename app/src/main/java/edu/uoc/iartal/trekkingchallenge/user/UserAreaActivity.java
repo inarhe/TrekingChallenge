@@ -14,7 +14,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -32,7 +31,7 @@ public class UserAreaActivity extends AppCompatActivity {
     private TextView textViewUserName, textViewUserMail, textViewAlias;
     private Intent intent;
     private ProgressDialog progressDialog;
-    private User user;
+    private User currentUser;
     private DatabaseReference databaseUser;
     private FirebaseController controller;
 
@@ -41,8 +40,13 @@ public class UserAreaActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_area);
 
+        // Initialize progress dialog
+        progressDialog = new ProgressDialog(this);
+        controller = new FirebaseController();
+        databaseUser = controller.getDatabaseReference(FireBaseReferences.USER_REFERENCE);
+
         // If user isn't logged, start login activity
-        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+        if (controller.getActiveUserSession() == null) {
             startActivity(new Intent(getApplicationContext(), LoginActivity.class));
             finish();
         }
@@ -53,11 +57,6 @@ public class UserAreaActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle(getString(R.string.userAreaActivity));
-
-        // Initialize progress dialog
-        progressDialog = new ProgressDialog(this);
-        controller = new FirebaseController();
-        databaseUser = controller.getDatabaseReference(FireBaseReferences.USER_REFERENCE);
 
         // Link layout elements with variables
         textViewAlias = (TextView) findViewById(R.id.tvIdUser);
@@ -95,9 +94,7 @@ public class UserAreaActivity extends AppCompatActivity {
                 deleteUserAccount();
                 return true;
             case R.id.action_userHistory:
-                intent = new Intent(UserAreaActivity.this, UserHistoryActivity.class);
-                intent.putExtra("user", user);
-                startActivity(intent);
+                showUserHistory();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -133,9 +130,10 @@ public class UserAreaActivity extends AppCompatActivity {
                 String currentMail = controller.getCurrentUserEmail();
 
                 for (DataSnapshot userSnapshot : data.getChildren()){
-                    user = userSnapshot.getValue(User.class);
+                    User user = userSnapshot.getValue(User.class);
 
                     if (user.getMail().equals(currentMail)){
+                        currentUser = user;
                         textViewAlias.setText(user.getAlias());
                         textViewUserName.setText(user.getName());
                         textViewUserMail.setText(user.getMail());
@@ -151,9 +149,21 @@ public class UserAreaActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Start user history activity when button is clicked
+     */
+    private void showUserHistory(){
+        intent = new Intent(UserAreaActivity.this, UserHistoryActivity.class);
+        intent.putExtra("user", currentUser);
+        startActivity(intent);
+    }
+
+    /**
+     * Start edit profile activity when button is clicked
+     */
     private void editUserAccount(){
         intent = new Intent(UserAreaActivity.this, EditProfileActivity.class);
-        intent.putExtra("user", user);
+        intent.putExtra("user", currentUser);
         startActivityForResult(intent, ACTIVITY_CODE);
     }
 
@@ -175,8 +185,8 @@ public class UserAreaActivity extends AppCompatActivity {
                        // AuthCredential credential = ((FirebaseController)getApplication()).getUserCredentials(user.getMail(), user.getPassword());
 
                         if (firebaseUser != null){
-                            controller.removeUserDependencies(user);
-                            controller.deleteFirebaseUser(firebaseUser, user, getApplicationContext());
+                            controller.removeUserDependencies(currentUser);
+                            controller.deleteFirebaseUser(firebaseUser, currentUser, getApplicationContext());
                         } else {
                             startActivity(new Intent(getApplicationContext(), LoginActivity.class));
                             finish();
@@ -202,9 +212,6 @@ public class UserAreaActivity extends AppCompatActivity {
      */
     public void signOut(View view) {
         controller.signOutDatabase(this);
-
-
-
     }
 
 

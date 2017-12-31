@@ -326,9 +326,7 @@ public class ShowChallengeActivity extends AppCompatActivity {
     private void getChallengeResults(){
 
         // Get all challenge results
-        for (String key : challenge.getResults().keySet()) {
-            challengesResultsIds.add(key);
-        }
+        challengesResultsIds.addAll(challenge.getResults().keySet());
 
         if (databaseResults != null) {
             controller.readData(databaseResults, new OnGetDataListener() {

@@ -259,15 +259,19 @@ public class FirebaseController {
         database.child(child).child(reference).child(value).removeValue();
     }
 
-    public void editStringParameter(DatabaseReference database, String child, String reference, String value){
+    public void updateStringParameter(DatabaseReference database, String child, String reference, String value){
         database.child(child).child(reference).setValue(value);
     }
 
-    public void editIntParameter(DatabaseReference database, String child, String reference, int value){
+    public void updateIntParameter(DatabaseReference database, String child, String reference, int value){
         database.child(child).child(reference).setValue(value);
     }
 
-    public void editFloatParameter(DatabaseReference database, String child, String reference, float value){
+    public void updateFloatParameter(DatabaseReference database, String child, String reference, float value){
+        database.child(child).child(reference).setValue(value);
+    }
+
+    public void updateDoubleParameter(DatabaseReference database, String child, String reference, double value){
         database.child(child).child(reference).setValue(value);
     }
 
@@ -445,34 +449,6 @@ public class FirebaseController {
             databaseReference.child(childId).child(FireBaseReferences.NUMBER_OF_MEMBERS_REFERENCE).setValue(numberOfMembers-1);
         }
     }
-
-    public void updateResults (DatabaseReference databaseObject, String childId, String childReference, String childResult, final Context context){
-        databaseObject.child(childId).child(childReference).child(childResult).setValue("true")
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if(task.isSuccessful()){
-                            Toast.makeText(context, context.getResources().getString(R.string.infoSaved), Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(context, context.getResources().getString(R.string.infoNotSaved),Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-    }
-
-    public void updateHistory (String childId, int slope, Double distance, double time, int challengeWin){
-        DatabaseReference databaseHistory = getDatabaseReference(FireBaseReferences.HISTORY_REFERENCE);
-
-        databaseHistory.child(childId).child(FireBaseReferences.HISTORY_SLOPE_REFERENCE).setValue(slope);
-        databaseHistory.child(childId).child(FireBaseReferences.HISTORY_DISTANCE_REFERENCE).setValue(distance);
-        databaseHistory.child(childId).child(FireBaseReferences.HISTORY_TIME_REFERENCE).setValue(time);
-
-        if (challengeWin != -1){
-            databaseHistory.child(childId).child(FireBaseReferences.HISTORY_WINS_REFERENCE).setValue(challengeWin);
-        }
-    }
-
-
 
 
 

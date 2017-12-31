@@ -236,14 +236,14 @@ public class EditTripActivity extends AppCompatActivity {
      * Update trip description into database
      */
     private void updateDescriptionValue(){
-        controller.editStringParameter(databaseTrip, trip.getId(), FireBaseReferences.TRIP_DESCRIPTION_REFERENCE, newDescription);
+        controller.updateStringParameter(databaseTrip, trip.getId(), FireBaseReferences.TRIP_DESCRIPTION_REFERENCE, newDescription);
     }
 
     /**
      * Update trip date into database
      */
     private void updateDateValue(){
-        controller.editStringParameter(databaseTrip, trip.getId(), FireBaseReferences.TRIP_DATE_REFERENCE, newDate);
+        controller.updateStringParameter(databaseTrip, trip.getId(), FireBaseReferences.TRIP_DATE_REFERENCE, newDate);
     }
 
     /**
@@ -264,7 +264,7 @@ public class EditTripActivity extends AppCompatActivity {
                 for (DataSnapshot doneSnapshot : data.getChildren()){
                     TripDone tripDone = doneSnapshot.getValue(TripDone.class);
                     if (tripsDone.contains(tripDone.getId())){
-                        controller.editStringParameter(databaseDone, tripDone.getId(), FireBaseReferences.TRIPSDONE_TRIP_NAME, newName);
+                        controller.updateStringParameter(databaseDone, tripDone.getId(), FireBaseReferences.TRIPSDONE_TRIP_NAME, newName);
                     }
                 }
             }

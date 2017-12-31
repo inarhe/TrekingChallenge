@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -13,9 +12,13 @@
     <Button
         android:id="@+id/bHistChallenges"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="@dimen/button_long_height"
         android:layout_below="@id/viewDiv3"
-        android:layout_marginTop="70dp"
+        android:layout_marginTop="@dimen/margin_top"
+        android:layout_marginLeft="@dimen/margin_left_right"
+        android:layout_marginStart="@dimen/margin_left_right"
+        android:layout_marginRight="@dimen/margin_left_right"
+        android:layout_marginEnd="@dimen/margin_left_right"
         android:drawableEnd="@drawable/ic_next"
         android:drawableLeft="@drawable/ic_challenge"
         android:drawableRight="@drawable/ic_next"
@@ -27,8 +30,12 @@
     <Button
         android:id="@+id/bHistTrips"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="@dimen/button_long_height"
         android:layout_below="@id/bHistChallenges"
+        android:layout_marginLeft="@dimen/margin_left_right"
+        android:layout_marginStart="@dimen/margin_left_right"
+        android:layout_marginRight="@dimen/margin_left_right"
+        android:layout_marginEnd="@dimen/margin_left_right"
         android:drawableRight="@drawable/ic_next"
         android:drawableEnd="@drawable/ic_next"
         android:drawableStart="@drawable/ic_trip"
@@ -40,8 +47,12 @@
     <Button
         android:id="@+id/bHistRoutes"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="@dimen/button_long_height"
         android:layout_below="@id/bHistTrips"
+        android:layout_marginLeft="@dimen/margin_left_right"
+        android:layout_marginStart="@dimen/margin_left_right"
+        android:layout_marginRight="@dimen/margin_left_right"
+        android:layout_marginEnd="@dimen/margin_left_right"
         android:drawableRight="@drawable/ic_next"
         android:drawableEnd="@drawable/ic_next"
         android:drawableStart="@drawable/ic_landscape"
@@ -54,7 +65,7 @@
         android:id="@+id/viewDiv1"
         style="@style/Divider"
         android:layout_below="@id/bHistRoutes"
-        android:layout_marginTop="15dp"/>
+        android:layout_marginTop="@dimen/margin_top_line_history"/>
 
     <TextView
         android:id="@+id/tvTotalChallenge"
@@ -62,11 +73,11 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/viewDiv1"
         android:padding="4dp"
-        android:layout_marginLeft="35dp"
-        android:layout_marginStart="35dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginLeft="@dimen/margin_left_history_user"
+        android:layout_marginStart="@dimen/margin_left_history_user"
+        android:layout_marginTop="@dimen/margin_below"
         android:text="@string/totalChallenges"
-        android:textSize="20sp"
+        android:textSize="@dimen/title1"
         android:textStyle="bold" />
 
     <TextView
@@ -80,7 +91,7 @@
         android:layout_alignStart="@+id/tvUserTotSlope"
         android:layout_alignLeft="@+id/tvUserTotSlope"
         android:gravity="center"
-        android:textSize="18sp"/>
+        android:textSize="@dimen/title2"/>
 
     <TextView
         android:id="@+id/tvTotalTrips"
@@ -88,11 +99,11 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/tvTotalChallenge"
         android:padding="4dp"
-        android:layout_marginLeft="35dp"
-        android:layout_marginStart="35dp"
-        android:layout_marginTop="6dp"
+        android:layout_marginLeft="@dimen/margin_left_history_user"
+        android:layout_marginStart="@dimen/margin_left_history_user"
+        android:layout_marginTop="@dimen/margin_below"
         android:text="@string/totalTrips"
-        android:textSize="20sp"
+        android:textSize="@dimen/title1"
         android:textStyle="bold" />
 
     <TextView
@@ -106,7 +117,7 @@
         android:layout_alignStart="@+id/tvUserTotSlope"
         android:layout_alignLeft="@+id/tvUserTotSlope"
         android:gravity="center"
-        android:textSize="18sp"/>
+        android:textSize="@dimen/title2"/>
 
     <TextView
         android:id="@+id/tvTotalRoutes"
@@ -114,11 +125,11 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/tvTotalTrips"
         android:padding="4dp"
-        android:layout_marginLeft="35dp"
-        android:layout_marginStart="35dp"
-        android:layout_marginTop="6dp"
+        android:layout_marginLeft="@dimen/margin_left_history_user"
+        android:layout_marginStart="@dimen/margin_left_history_user"
+        android:layout_marginTop="@dimen/margin_below"
         android:text="@string/totalRoutes"
-        android:textSize="20sp"
+        android:textSize="@dimen/title1"
         android:textStyle="bold" />
 
     <TextView
@@ -132,7 +143,7 @@
         android:layout_alignStart="@+id/tvUserTotSlope"
         android:layout_alignLeft="@+id/tvUserTotSlope"
         android:gravity="center"
-        android:textSize="18sp"/>
+        android:textSize="@dimen/title2"/>
 
     <TextView
         android:id="@+id/tvTotalWin"
@@ -140,11 +151,11 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/tvTotalRoutes"
         android:padding="4dp"
-        android:layout_marginLeft="35dp"
-        android:layout_marginStart="35dp"
-        android:layout_marginTop="6dp"
+        android:layout_marginLeft="@dimen/margin_left_history_user"
+        android:layout_marginStart="@dimen/margin_left_history_user"
+        android:layout_marginTop="@dimen/margin_below"
         android:text="@string/challengeWin"
-        android:textSize="20sp"
+        android:textSize="@dimen/title1"
         android:textStyle="bold" />
 
     <TextView
@@ -158,7 +169,7 @@
         android:layout_alignStart="@+id/tvUserTotSlope"
         android:layout_alignLeft="@+id/tvUserTotSlope"
         android:gravity="center"
-        android:textSize="18sp"/>
+        android:textSize="@dimen/title2"/>
 
     <TextView
         android:id="@+id/tvTotalKm"
@@ -166,11 +177,11 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/tvTotalWin"
         android:padding="4dp"
-        android:layout_marginLeft="35dp"
-        android:layout_marginStart="35dp"
-        android:layout_marginTop="6dp"
+        android:layout_marginLeft="@dimen/margin_left_history_user"
+        android:layout_marginStart="@dimen/margin_left_history_user"
+        android:layout_marginTop="@dimen/margin_below"
         android:text="@string/totalKms"
-        android:textSize="20sp"
+        android:textSize="@dimen/title1"
         android:textStyle="bold" />
 
     <TextView
@@ -184,7 +195,7 @@
         android:layout_alignStart="@+id/tvUserTotSlope"
         android:layout_alignLeft="@+id/tvUserTotSlope"
         android:gravity="center"
-        android:textSize="18sp"/>
+        android:textSize="@dimen/title2"/>
 
     <TextView
         android:id="@+id/tvTotalSlope"
@@ -192,11 +203,11 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/tvTotalKm"
         android:padding="4dp"
-        android:layout_marginLeft="35dp"
-        android:layout_marginStart="35dp"
-        android:layout_marginTop="6dp"
+        android:layout_marginLeft="@dimen/margin_left_history_user"
+        android:layout_marginStart="@dimen/margin_left_history_user"
+        android:layout_marginTop="@dimen/margin_below"
         android:text="@string/totalIncSlope"
-        android:textSize="20sp"
+        android:textSize="@dimen/title1"
         android:textStyle="bold" />
 
     <TextView
@@ -207,10 +218,10 @@
         android:layout_toEndOf="@+id/tvTotalSlope"
         android:layout_alignTop="@+id/tvTotalSlope"
         android:layout_alignBottom="@+id/tvTotalSlope"
-        android:layout_marginLeft="15dp"
-        android:layout_marginStart="15dp"
+        android:layout_marginLeft="@dimen/margin_left_history_slope"
+        android:layout_marginStart="@dimen/margin_left_history_slope"
         android:gravity="center"
-        android:textSize="18sp"/>
+        android:textSize="@dimen/title2"/>
 
     <TextView
         android:id="@+id/tvTotalHours"
@@ -218,11 +229,11 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/tvTotalSlope"
         android:padding="4dp"
-        android:layout_marginLeft="35dp"
-        android:layout_marginStart="35dp"
-        android:layout_marginTop="6dp"
+        android:layout_marginLeft="@dimen/margin_left_history_user"
+        android:layout_marginStart="@dimen/margin_left_history_user"
+        android:layout_marginTop="@dimen/margin_below"
         android:text="@string/routeHours"
-        android:textSize="20sp"
+        android:textSize="@dimen/title1"
         android:textStyle="bold" />
 
     <TextView
@@ -236,6 +247,6 @@
         android:layout_alignStart="@+id/tvUserTotSlope"
         android:layout_alignLeft="@+id/tvUserTotSlope"
         android:gravity="center"
-        android:textSize="18sp"/>
+        android:textSize="@dimen/title2"/>
 
 </RelativeLayout>

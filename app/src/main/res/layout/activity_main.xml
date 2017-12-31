@@ -16,10 +16,10 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="@dimen/marginTop_mainTitle"
         android:text="@string/app_name"
         android:textColor="#FFFF"
-        android:textSize="30sp"
+        android:textSize="@dimen/mainTitle"
         android:textStyle="bold"/>
 
     <Button
@@ -30,11 +30,11 @@
         android:layout_alignParentStart="true"
         android:layout_below="@+id/textMainMenu"
         android:onClick="mapActivity"
-        android:layout_marginLeft="40dp"
-        android:layout_marginStart="40dp"
-        android:layout_marginTop="40dp"
-        android:height="75dp"
-        android:width="132dp"
+        android:layout_marginLeft="@dimen/margin_main"
+        android:layout_marginStart="@dimen/margin_main"
+        android:layout_marginTop="@dimen/margin_main"
+        android:height="@dimen/height_mainButton"
+        android:width="@dimen/width_mainButton"
         android:drawableTop="@drawable/ic_map"
         android:text="@string/mapMenuButton" />
 
@@ -46,11 +46,11 @@
         android:layout_alignBottom="@+id/buttonMapMenu"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_marginEnd="40dp"
-        android:layout_marginRight="40dp"
+        android:layout_marginEnd="@dimen/margin_main"
+        android:layout_marginRight="@dimen/margin_main"
         android:onClick="routesActivity"
-        android:height="75dp"
-        android:width="132dp"
+        android:height="@dimen/height_mainButton"
+        android:width="@dimen/width_mainButton"
         android:drawableTop="@drawable/ic_landscape"
         android:text="@string/routesMenuButton" />
 
@@ -61,10 +61,10 @@
         android:layout_alignLeft="@+id/buttonMapMenu"
         android:layout_alignStart="@+id/buttonMapMenu"
         android:layout_below="@+id/buttonMapMenu"
-        android:layout_marginTop="49dp"
+        android:layout_marginTop="@dimen/margin_main"
         android:onClick="tripActivity"
-        android:height="75dp"
-        android:width="132dp"
+        android:height="@dimen/height_mainButton"
+        android:width="@dimen/width_mainButton"
         android:drawableTop="@drawable/ic_trip"
         android:text="@string/tripMenuButton" />
 
@@ -75,8 +75,8 @@
         android:layout_alignBottom="@+id/buttonTripMenu"
         android:layout_alignEnd="@+id/buttonSearchMenu"
         android:layout_alignRight="@+id/buttonSearchMenu"
-        android:height="75dp"
-        android:width="132dp"
+        android:height="@dimen/height_mainButton"
+        android:width="@dimen/width_mainButton"
         android:onClick="challengeActivity"
         android:drawableTop="@drawable/ic_challenge"
         android:text="@string/challengeMenuButton" />
@@ -88,9 +88,9 @@
         android:layout_alignLeft="@+id/buttonTripMenu"
         android:layout_alignStart="@+id/buttonTripMenu"
         android:layout_below="@+id/buttonTripMenu"
-        android:layout_marginTop="48dp"
-        android:height="75dp"
-        android:width="132dp"
+        android:layout_marginTop="@dimen/margin_main"
+        android:height="@dimen/height_mainButton"
+        android:width="@dimen/width_mainButton"
         android:onClick="userAreaActivity"
         android:drawableTop="@drawable/ic_person"
         android:text="@string/userMenuButton" />
@@ -102,8 +102,8 @@
         android:layout_alignBottom="@+id/buttonUserMenu"
         android:layout_alignEnd="@+id/buttonChallengeMenu"
         android:layout_alignRight="@+id/buttonChallengeMenu"
-        android:height="75dp"
-        android:width="132dp"
+        android:height="@dimen/height_mainButton"
+        android:width="@dimen/width_mainButton"
         android:drawableTop="@drawable/ic_people"
         android:onClick="groupActivity"
         android:text="@string/groupMenuButton" />

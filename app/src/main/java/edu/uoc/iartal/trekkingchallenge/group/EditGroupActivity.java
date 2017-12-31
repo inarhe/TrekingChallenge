@@ -156,6 +156,6 @@ public class EditGroupActivity extends AppCompatActivity {
      * Update description group into database
      */
     private void updateDescriptionValue() {
-        controller.editStringParameter(databaseGroup, group.getId(), FireBaseReferences.GROUP_DESCRIPTION_REFERENCE, newDescription);
+        controller.updateStringParameter(databaseGroup, group.getId(), FireBaseReferences.GROUP_DESCRIPTION_REFERENCE, newDescription);
     }
 }

@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".challenge.ShowChallengeActivity">
 
     <include android:id="@+id/showChallengeToolbar"
@@ -23,9 +22,9 @@
                 android:id="@+id/icRouteShowChallenge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:layout_marginLeft="25dp"
-                android:layout_marginStart="25dp"
+                android:layout_marginTop="@dimen/margin_top_with_toolbar"
+                android:layout_marginLeft="@dimen/margin_left_right"
+                android:layout_marginStart="@dimen/margin_left_right"
                 android:src="@drawable/ic_challenge"/>
 
             <TextView
@@ -36,28 +35,28 @@
                 android:layout_toEndOf="@+id/icRouteShowChallenge"
                 android:layout_alignTop="@+id/icRouteShowChallenge"
                 android:layout_alignBottom="@+id/icRouteShowChallenge"
-                android:layout_marginLeft="10dp"
-                android:layout_marginStart="10dp"
+                android:layout_marginLeft="@dimen/margin_left_with_icon"
+                android:layout_marginStart="@dimen/margin_left_with_icon"
                 android:gravity="center"
                 android:text="@string/routeChallenge"
                 android:textStyle="bold"
-                android:textSize="18sp"/>
+                android:textSize="@dimen/title_info"/>
 
             <TextView
                 android:id="@+id/tvRouteChallenge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="@dimen/margin_below"
                 android:layout_below="@+id/icRouteShowChallenge"
                 android:layout_alignLeft="@+id/tvRouteShowChallenge"
                 android:layout_alignStart="@+id/tvRouteShowChallenge"
-                android:textSize="15sp"/>
+                android:textSize="@dimen/title2"/>
 
             <ImageView
                 android:id="@+id/icDateShowChallenge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="@dimen/margin_top_icon"
                 android:layout_alignLeft="@+id/icRouteShowChallenge"
                 android:layout_alignStart="@+id/icRouteShowChallenge"
                 android:layout_below="@+id/tvRouteChallenge"
@@ -71,28 +70,28 @@
                 android:layout_toEndOf="@+id/icDateShowChallenge"
                 android:layout_alignTop="@+id/icDateShowChallenge"
                 android:layout_alignBottom="@+id/icDateShowChallenge"
-                android:layout_marginLeft="10dp"
-                android:layout_marginStart="10dp"
+                android:layout_marginLeft="@dimen/margin_left_with_icon"
+                android:layout_marginStart="@dimen/margin_left_with_icon"
                 android:gravity="center"
                 android:text="@string/dateChallenge"
                 android:textStyle="bold"
-                android:textSize="15sp"/>
+                android:textSize="@dimen/title_info"/>
 
             <TextView
                 android:id="@+id/tvDateChallenge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="@dimen/margin_below"
                 android:layout_below="@+id/icDateShowChallenge"
                 android:layout_alignLeft="@+id/tvDateShowChallenge"
                 android:layout_alignStart="@+id/tvDateShowChallenge"
-                android:textSize="15sp"/>
+                android:textSize="@dimen/title2"/>
 
             <ImageView
                 android:id="@+id/icDescShowChallenge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="@dimen/margin_top_icon"
                 android:layout_alignLeft="@+id/icRouteShowChallenge"
                 android:layout_alignStart="@+id/icRouteShowChallenge"
                 android:layout_below="@+id/tvDateChallenge"
@@ -106,46 +105,46 @@
                 android:layout_toEndOf="@+id/icDescShowChallenge"
                 android:layout_alignTop="@+id/icDescShowChallenge"
                 android:layout_alignBottom="@+id/icDescShowChallenge"
-                android:layout_marginLeft="10dp"
-                android:layout_marginStart="10dp"
+                android:layout_marginLeft="@dimen/margin_left_with_icon"
+                android:layout_marginStart="@dimen/margin_left_with_icon"
                 android:gravity="center"
                 android:text="@string/descTrip"
                 android:textStyle="bold"
-                android:textSize="15sp"/>
+                android:textSize="@dimen/title_info"/>
 
             <TextView
                 android:id="@+id/tvDescChallenge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="@dimen/margin_below"
                 android:layout_below="@+id/icDescShowChallenge"
                 android:layout_alignLeft="@+id/tvDescShowChallenge"
                 android:layout_alignStart="@+id/tvDescShowChallenge"
-                android:textSize="15sp"/>
+                android:textSize="@dimen/title2"/>
 
             <TextView
                 android:id="@+id/tvRankingChallenge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="@dimen/margin_top_icon"
                 android:layout_below="@+id/tvDescChallenge"
                 android:layout_alignLeft="@+id/tvDescShowChallenge"
                 android:layout_alignStart="@+id/tvDescShowChallenge"
                 android:gravity="center"
                 android:text="@string/rankingChallenge"
                 android:textStyle="bold"
-                android:textSize="15sp"/>
+                android:textSize="@dimen/title_info"/>
 
             <ListView
                 android:id="@+id/lvRanking"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
+                android:layout_height="@dimen/rankingList_height"
                 android:layout_below="@+id/tvRankingChallenge"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="@dimen/margin_below"
                 android:layout_alignLeft="@+id/tvRankingChallenge"
                 android:layout_alignStart="@+id/tvRankingChallenge"
-                android:layout_marginRight="60dp"
-                android:layout_marginEnd="60dp">
+                android:layout_marginRight="@dimen/rankingList_margin"
+                android:layout_marginEnd="@dimen/rankingList_margin">
 
             </ListView>
         </RelativeLayout>

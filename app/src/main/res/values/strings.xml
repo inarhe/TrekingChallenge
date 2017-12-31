@@ -28,7 +28,7 @@
     <!--Logging activity-->
     <string name="loginSuccess">Sessió iniciada correctament</string>
     <string name="failedLogin">No s\'ha pogut iniciar sessió, siusplau torna-ho a provar</string>
-    <string name="loginTitle">Accedeix a TrekkingChallenge</string>
+    <string name="loginTitle">Accés TrekkingChallenge</string>
     <string name="logging">Iniciant sessió usuari...</string>
     <string name="loginActivity">Inici de sessió</string>
     <string name="loginButton">Accedir</string>
@@ -115,6 +115,7 @@
     <string name="trackDownload">Descarregar track</string>
     <string name="otherTracks">Altres recorreguts ruta:</string>
     <string name="trackActivity">Recorregut ruta</string>
+    <string name="wikilocFont">Font https://es.wikiloc.com</string>
 
     <!--Finished route activity-->
     <string name="finishRouteActivity">Ruta realitzada</string>
@@ -135,7 +136,6 @@
     <string name="summer">Estiu</string>
     <string name="winter">Hivern</string>
     <string name="imageNotDonwloaded">Imatge no descarregada</string>
-    <string name="action_gallery">Galeria de fotos</string>
     <string name="action_trip">Crear excursió</string>
     <string name="action_chall">Crear repte</string>
     <string name="action_opinion">Opinions</string>
@@ -169,13 +169,11 @@
     <string name="titleDetail">Informació detallada</string>
     <string name="infoMeteo">Meteorologia:</string>
     <string name="startPlace">Lloc de sortida:</string>
+    <string name="meteoFont">Font http://www.meteo.cat/</string>
 
     <!--List routes activity-->
     <string name="listRoutesActivity">Llista de rutes</string>
     <string name="noMatches">No hi han coincidències</string>
-
-    <!--Photo gallery activity-->
-    <string name="photoGallery">Galeria de fotos</string>
 
     <!--Route history activity-->
     <string name="headerRouteName">Ruta</string>
@@ -360,8 +358,6 @@
     <string name="actionLeave">Abandonar</string>
     <string name="actionFinish">Registrar resultat</string>
     <string name="alreadyFinish">Ja has registrat un resultat</string>
-    <string name="infoSaved">Informació guardada correctament</string>
-    <string name="infoNotSaved">No s\'ha pogut guardar la informació</string>
 
     <!--Manifest-->
     <string name="title_activity_map">Map</string>

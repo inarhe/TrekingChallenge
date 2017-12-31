@@ -140,12 +140,18 @@ public class FinishedChallengeActivity extends AppCompatActivity {
         if (idResult == null){
             Toast.makeText(getApplicationContext(), R.string.finishedFailed, Toast.LENGTH_SHORT).show();
         } else {
-            ChallengeResult challengeResult = new ChallengeResult(idResult, Double.parseDouble(finishDist), Double.parseDouble(finishTime), currentUser.getId(), challenge.getId(), finishDate,ConstantsUtils.DEFAULT_RANKING_POSITION, challenge.getName());
+            ChallengeResult challengeResult = new ChallengeResult(idResult, Double.parseDouble(finishDist), Double.parseDouble(finishTime), currentUser.getId(), currentUser.getAlias(), challenge.getId(), finishDate,ConstantsUtils.DEFAULT_RANKING_POSITION, challenge.getName());
             controller.addNewChallengeResult(databaseResult, challengeResult, getApplicationContext());
 
             // Update result list in user and challenge database nodes
-            controller.updateResults (databaseUser, currentUser.getId(), FireBaseReferences.USER_RESULT_REFERENCE, idResult, context);
-            controller.updateResults(databaseChallenge, challenge.getId(), FireBaseReferences.CHALLENGE_FINISHED_REFERENCE,idResult, context);
+            try{
+                controller.updateStringParameter(databaseUser, currentUser.getId(), FireBaseReferences.USER_RESULT_REFERENCE, idResult);
+                controller.updateStringParameter(databaseChallenge, challenge.getId(), FireBaseReferences.CHALLENGE_FINISHED_REFERENCE, idResult);
+                Toast.makeText(getApplicationContext(), R.string.finishedSaved, Toast.LENGTH_SHORT).show();
+            }catch (Exception e){
+                e.printStackTrace();
+                Toast.makeText(getApplicationContext(), R.string.finishedFailed, Toast.LENGTH_SHORT).show();
+            }
 
             updateHistory(challengeResult);
 
@@ -274,10 +280,18 @@ public class FinishedChallengeActivity extends AppCompatActivity {
                 double totalDistance = common.round(historyDistance + Double.parseDouble(finishDist), ConstantsUtils.NUM_OF_DECIMALS);
                 double totalTime = common.round(common.sumHours(historyTime, Double.parseDouble(finishTime)),ConstantsUtils.NUM_OF_DECIMALS);
 
-                if (challengeResult.getPosition() == 1){
-                    controller.updateHistory(currentUser.getHistory(), totalSlope, totalDistance , totalTime,historyWins + 1);
-                } else {
-                    controller.updateHistory(currentUser.getHistory(), totalSlope, totalDistance , totalTime, ConstantsUtils.NO_CHALLENGE_WIN);
+                // Update user history with trip values
+                try{
+                    controller.updateIntParameter(databaseHistory, currentUser.getHistory(), FireBaseReferences.HISTORY_SLOPE_REFERENCE, totalSlope);
+                    controller.updateDoubleParameter(databaseHistory, currentUser.getHistory(), FireBaseReferences.HISTORY_DISTANCE_REFERENCE, totalDistance);
+                    controller.updateDoubleParameter(databaseHistory, currentUser.getHistory(), FireBaseReferences.HISTORY_TIME_REFERENCE, totalTime);
+
+                    if (challengeResult.getPosition() == 1){
+                        controller.updateIntParameter(databaseHistory, currentUser.getHistory(), FireBaseReferences.HISTORY_WINS_REFERENCE, historyWins + 1);
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
+                    Log.e("FinChall upHist error", e.getMessage());
                 }
             }
 

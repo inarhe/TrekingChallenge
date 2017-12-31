@@ -20,14 +20,14 @@
 
             <ImageView
                 android:id="@+id/icFinishChallenge"
-                android:layout_width="55dp"
-                android:layout_height="55dp"
+                android:layout_width="@dimen/result_image_size"
+                android:layout_height="@dimen/result_image_size"
                 android:cropToPadding="true"
                 android:scaleType="centerCrop"
                 android:src="@drawable/ic_finished"
-                android:layout_marginTop="25dp"
-                android:layout_marginLeft="50dp"
-                android:layout_marginStart="50dp"/>
+                android:layout_marginTop="@dimen/margin_left_right"
+                android:layout_marginLeft="@dimen/result_marginLeft_image"
+                android:layout_marginStart="@dimen/result_marginLeft_image"/>
 
             <TextView
                 android:id="@+id/tvFinishChallenge"
@@ -35,10 +35,10 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="@string/titleFinishChallenge"
-                android:textSize="20sp"
+                android:textSize="@dimen/title1"
                 android:textStyle="bold"
-                android:layout_marginLeft="20dp"
-                android:layout_marginStart="20dp"
+                android:layout_marginLeft="@dimen/margin_left_right"
+                android:layout_marginStart="@dimen/margin_left_right"
                 android:layout_toRightOf="@+id/icFinishChallenge"
                 android:layout_toEndOf="@+id/icFinishChallenge"
                 android:layout_alignTop="@+id/icFinishChallenge"
@@ -49,9 +49,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/icFinishChallenge"
-                android:layout_marginTop="30dp"
-                android:layout_marginLeft="25dp"
-                android:layout_marginStart="25dp"
+                android:layout_marginTop="@dimen/margin_main"
+                android:layout_marginLeft="@dimen/margin_left_right"
+                android:layout_marginStart="@dimen/margin_left_right"
                 android:src="@drawable/ic_done"/>
 
             <TextView
@@ -59,15 +59,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:layout_marginLeft="10dp"
-                android:layout_marginStart="10dp"
+                android:layout_marginLeft="@dimen/margin_left_with_icon"
+                android:layout_marginStart="@dimen/margin_left_with_icon"
                 android:layout_toRightOf="@+id/icDateFinish"
                 android:layout_toEndOf="@+id/icDateFinish"
                 android:layout_alignTop="@+id/icDateFinish"
                 android:layout_alignBottom="@+id/icDateFinish"
                 android:text="@string/finishDate"
                 android:textStyle="bold"
-                android:textSize="15sp"/>
+                android:textSize="@dimen/title_info"/>
 
             <EditText
                 android:id="@+id/etDateFinish"
@@ -76,33 +76,33 @@
                 android:focusable="false"
                 android:inputType="date"
                 android:layout_below="@+id/icDateFinish"
-                android:layout_marginTop="4dp"
+                android:layout_marginTop="@dimen/margin_below"
                 android:layout_alignLeft="@+id/tvDateFinish"
                 android:layout_alignStart="@+id/tvDateFinish"
-                android:layout_marginRight="25dp"
-                android:layout_marginEnd="25dp" />
+                android:layout_marginRight="@dimen/margin_left_right"
+                android:layout_marginEnd="@dimen/margin_left_right" />
 
             <TextView
                 android:id="@+id/tvResultChallenge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:layout_marginLeft="25dp"
-                android:layout_marginStart="25dp"
+                android:layout_marginLeft="@dimen/margin_left_right"
+                android:layout_marginStart="@dimen/margin_left_right"
                 android:layout_alignLeft="@+id/icDateFinish"
                 android:layout_alignStart="@+id/icDateFinish"
                 android:layout_below="@+id/etDateFinish"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="@dimen/margin_below"
                 android:text="@string/resultsChallenge"
                 android:textStyle="bold"
-                android:textSize="15sp"/>
+                android:textSize="@dimen/title_info"/>
 
             <ImageView
                 android:id="@+id/icDistFinish"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/tvResultChallenge"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="@dimen/margin_below"
                 android:layout_alignLeft="@+id/icDateFinish"
                 android:layout_alignStart="@+id/icDateFinish"
                 android:src="@drawable/ic_circular"/>
@@ -112,15 +112,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:layout_marginLeft="10dp"
-                android:layout_marginStart="10dp"
+                android:layout_marginLeft="@dimen/margin_left_with_icon"
+                android:layout_marginStart="@dimen/margin_left_with_icon"
                 android:layout_toRightOf="@+id/icDistFinish"
                 android:layout_toEndOf="@+id/icDistFinish"
                 android:layout_alignTop="@+id/icDistFinish"
                 android:layout_alignBottom="@+id/icDistFinish"
                 android:text="@string/finishDist"
                 android:textStyle="bold"
-                android:textSize="15sp"/>
+                android:textSize="@dimen/title_info"/>
 
             <TextView
                 android:id="@+id/tvDistResult"
@@ -128,18 +128,18 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:layout_below="@+id/icDistFinish"
-                android:layout_marginTop="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginEnd="10dp"
+                android:layout_marginTop="@dimen/margin_below"
+                android:layout_marginRight="@dimen/margin_left_with_icon"
+                android:layout_marginEnd="@dimen/margin_left_with_icon"
                 android:layout_alignLeft="@+id/tvDistFinish"
                 android:layout_alignStart="@+id/tvDistFinish"
                 android:text="@string/km"
                 android:textStyle="bold"
-                android:textSize="15sp"/>
+                android:textSize="@dimen/title_info"/>
 
             <EditText
                 android:id="@+id/etDistFinish"
-                android:layout_width="70dp"
+                android:layout_width="@dimen/text_width"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/icDistFinish"
                 android:gravity="center"
@@ -152,7 +152,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/etDistFinish"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="@dimen/margin_below"
                 android:layout_alignLeft="@+id/icDistFinish"
                 android:layout_alignStart="@+id/icDistFinish"
                 android:src="@drawable/ic_time"/>
@@ -162,15 +162,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:layout_marginLeft="10dp"
-                android:layout_marginStart="10dp"
+                android:layout_marginLeft="@dimen/margin_left_with_icon"
+                android:layout_marginStart="@dimen/margin_left_with_icon"
                 android:layout_toRightOf="@+id/icTimeFinish"
                 android:layout_toEndOf="@+id/icTimeFinish"
                 android:layout_alignTop="@+id/icTimeFinish"
                 android:layout_alignBottom="@+id/icTimeFinish"
                 android:text="@string/finishTime"
                 android:textStyle="bold"
-                android:textSize="15sp"/>
+                android:textSize="@dimen/title_info"/>
 
             <TextView
                 android:id="@+id/tvHourFinish"
@@ -178,18 +178,18 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:layout_below="@+id/icTimeFinish"
-                android:layout_marginTop="8dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginEnd="10dp"
+                android:layout_marginTop="@dimen/margin_below"
+                android:layout_marginRight="@dimen/margin_left_with_icon"
+                android:layout_marginEnd="@dimen/margin_left_with_icon"
                 android:layout_alignLeft="@+id/tvTimeFinish"
                 android:layout_alignStart="@+id/tvTimeFinish"
                 android:text="@string/finishHour"
                 android:textStyle="bold"
-                android:textSize="15sp"/>
+                android:textSize="@dimen/title_info"/>
 
             <EditText
                 android:id="@+id/etHourFinish"
-                android:layout_width="70dp"
+                android:layout_width="@dimen/text_width"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/icTimeFinish"
                 android:gravity="center"
@@ -201,34 +201,34 @@
                 android:id="@+id/bCancelFinish"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="@dimen/marginTop_result_button"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
-                android:layout_marginLeft="60dp"
-                android:layout_marginStart="60dp"
+                android:layout_marginLeft="@dimen/marginLeft_result_button"
+                android:layout_marginStart="@dimen/marginLeft_result_button"
                 android:padding="15dp"
                 android:layout_below="@id/etHourFinish"
                 android:background="#E0E0E0"
                 android:onClick="cancelFinish"
                 android:text="@string/cancelButton"
-                android:textSize="14sp" />
+                android:textSize="@dimen/text_button" />
 
             <Button
                 android:id="@+id/bRegisterFinish"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="@dimen/marginTop_result_button"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true"
-                android:layout_marginRight="60dp"
-                android:layout_marginEnd="60dp"
+                android:layout_marginRight="@dimen/marginLeft_result_button"
+                android:layout_marginEnd="@dimen/marginLeft_result_button"
                 android:padding="15dp"
                 android:layout_below="@id/etHourFinish"
                 android:background="#009688"
                 android:textColor="#FFFFFF"
                 android:onClick="registerFinish"
                 android:text="@string/registerButton"
-                android:textSize="14sp" />
+                android:textSize="@dimen/text_button" />
         </RelativeLayout>
     </ScrollView>
 </RelativeLayout>

@@ -10,9 +10,9 @@
 
     <ImageView
         android:id="@+id/ivUser"
-        android:layout_width="125dp"
-        android:layout_height="100dp"
-        android:layout_marginTop="100dp"
+        android:layout_width="@dimen/showDetail_width_image"
+        android:layout_height="@dimen/showDetail_height_image"
+        android:layout_marginTop="@dimen/showDetail_marginTop_image"
         android:layout_centerHorizontal="true"
         android:src="@drawable/ic_account_circle" />
 
@@ -20,7 +20,7 @@
         android:id="@+id/tvIdUser"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="@dimen/showDetail_marginTop_title"
         android:layout_below="@+id/ivUser"
         android:layout_centerInParent="true"
         android:textAppearance="@android:style/TextAppearance.Large" />
@@ -31,11 +31,11 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/tvIdUser"
         android:padding="8dp"
-        android:layout_marginLeft="30dp"
-        android:layout_marginStart="30dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginLeft="@dimen/showDetail_marginLeft"
+        android:layout_marginStart="@dimen/showDetail_marginLeft"
+        android:layout_marginTop="@dimen/userActivity_marginTop_info"
         android:text="@string/infoName"
-        android:textSize="20sp"
+        android:textSize="@dimen/title1"
         android:textStyle="bold"/>
 
     <TextView
@@ -47,7 +47,7 @@
         android:layout_alignTop="@+id/tvName"
         android:layout_alignBottom="@+id/tvName"
         android:gravity="center"
-        android:textSize="18sp"/>
+        android:textSize="@dimen/title2"/>
 
     <TextView
         android:id="@+id/tvMail"
@@ -55,11 +55,11 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/tvName"
         android:padding="8dp"
-        android:layout_marginLeft="30dp"
-        android:layout_marginStart="30dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginLeft="@dimen/showDetail_marginLeft"
+        android:layout_marginStart="@dimen/showDetail_marginLeft"
+        android:layout_marginTop="@dimen/showDetail_marginTop_title"
         android:text="@string/infoMail"
-        android:textSize="20sp"
+        android:textSize="@dimen/title1"
         android:textStyle="bold" />
 
     <TextView
@@ -71,19 +71,19 @@
         android:layout_alignTop="@+id/tvMail"
         android:layout_alignBottom="@+id/tvMail"
         android:gravity="center"
-        android:textSize="18sp"/>
+        android:textSize="@dimen/title2"/>
 
     <Button
         android:id="@+id/bSignOut"
-        android:layout_width="200dp"
+        android:layout_width="@dimen/button_width"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="@dimen/userActivity_marginTop_info"
         android:layout_centerInParent="true"
         android:layout_below="@+id/tvUserMail"
         android:background="#009688"
         android:textColor="#FFFFFF"
         android:onClick="signOut"
+        android:textSize="@dimen/text_button"
         android:text="@string/buttonSignOut"/>
 
 </RelativeLayout>

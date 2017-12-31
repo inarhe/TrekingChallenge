@@ -22,9 +22,9 @@
 
             <ImageView
                 android:id="@+id/ivGroup"
-                android:layout_width="125dp"
-                android:layout_height="100dp"
-                android:layout_marginTop="45dp"
+                android:layout_width="@dimen/image_width_edit_group"
+                android:layout_height="@dimen/image_height_edit_group"
+                android:layout_marginTop="@dimen/marginTop_editGroup"
                 android:layout_gravity="center"
                 app:srcCompat="@drawable/ic_people" />
 
@@ -32,45 +32,45 @@
                 android:id="@+id/textGroupName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="35dp"
-                android:layout_marginStart="35dp"
-                android:layout_marginTop="30dp"
+                android:layout_marginLeft="@dimen/margin_left_right"
+                android:layout_marginStart="@dimen/margin_left_right"
+                android:layout_marginTop="@dimen/margin_top_icon"
                 android:text="@string/textNameGroup"
-                android:textSize="18sp"
+                android:textSize="@dimen/title_info"
                 android:textStyle="bold" />
 
             <EditText
                 android:id="@+id/etGroupName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="35dp"
-                android:layout_marginStart="35dp"
-                android:layout_marginRight="40dp"
-                android:layout_marginEnd="40dp"
+                android:layout_marginLeft="@dimen/margin_left_right"
+                android:layout_marginStart="@dimen/margin_left_right"
+                android:layout_marginRight="@dimen/margin_left_right"
+                android:layout_marginEnd="@dimen/margin_left_right"
                 android:inputType="text"
-                android:textSize="16sp" />
+                android:textSize="@dimen/title2" />
 
             <TextView
                 android:id="@+id/textGroupDesc"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="35dp"
-                android:layout_marginStart="35dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginLeft="@dimen/margin_left_right"
+                android:layout_marginStart="@dimen/margin_left_right"
+                android:layout_marginTop="@dimen/margin_top_icon"
                 android:text="@string/textGroupDescription"
-                android:textSize="18sp"
+                android:textSize="@dimen/title_info"
                 android:textStyle="bold" />
 
             <EditText
                 android:id="@+id/etGroupDesc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="35dp"
-                android:layout_marginStart="35dp"
-                android:layout_marginRight="40dp"
-                android:layout_marginEnd="40dp"
+                android:layout_marginLeft="@dimen/margin_left_right"
+                android:layout_marginStart="@dimen/margin_left_right"
+                android:layout_marginRight="@dimen/margin_left_right"
+                android:layout_marginEnd="@dimen/margin_left_right"
                 android:inputType="textMultiLine"
-                android:textSize="16sp" />
+                android:textSize="@dimen/title2" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -82,23 +82,23 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:layout_margin="16dp"
+                        android:layout_margin="@dimen/marginTop_result_button"
                         android:background="#E0E0E0"
                         android:onClick="cancelEditGroup"
                         android:text="@string/cancelButton"
-                        android:textSize="14sp" />
+                        android:textSize="@dimen/text_button" />
 
                     <Button
                         android:id="@+id/bAcceptEdit"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:layout_margin="16dp"
+                        android:layout_margin="@dimen/marginTop_result_button"
                         android:background="#009688"
                         android:textColor="#FFFFFF"
                         android:onClick="editGroup"
                         android:text="@string/acceptButton"
-                        android:textSize="14sp" />
+                        android:textSize="@dimen/text_button" />
                 </LinearLayout>
         </LinearLayout>
     </ScrollView>

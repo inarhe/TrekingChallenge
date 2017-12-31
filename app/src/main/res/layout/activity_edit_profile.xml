@@ -22,113 +22,113 @@
                 android:id="@+id/textIdUser"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/activity_vertical_margin"
-                android:layout_marginStart="@dimen/activity_vertical_margin"
-                android:layout_marginTop="30dp"
+                android:layout_marginLeft="@dimen/margin_left_right"
+                android:layout_marginStart="@dimen/margin_left_right"
+                android:layout_marginTop="@dimen/margin_top_icon"
                 android:text="@string/hintIdUser"
-                android:textSize="14sp"
+                android:textSize="@dimen/title_info"
                 android:textStyle="bold" />
 
             <EditText
                 android:id="@+id/etIdUser"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/activity_vertical_margin"
-                android:layout_marginStart="@dimen/activity_vertical_margin"
-                android:layout_marginRight="@dimen/activity_vertical_margin"
-                android:layout_marginEnd="@dimen/activity_vertical_margin"
+                android:layout_marginLeft="@dimen/margin_left_right"
+                android:layout_marginStart="@dimen/margin_left_right"
+                android:layout_marginRight="@dimen/margin_left_right"
+                android:layout_marginEnd="@dimen/margin_left_right"
                 android:inputType="textPersonName"
-                android:textSize="14sp" />
+                android:textSize="@dimen/title2" />
 
             <TextView
                 android:id="@+id/textNameUser"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/activity_vertical_margin"
-                android:layout_marginStart="@dimen/activity_vertical_margin"
-                android:layout_marginTop="20dp"
+                android:layout_marginLeft="@dimen/margin_left_right"
+                android:layout_marginStart="@dimen/margin_left_right"
+                android:layout_marginTop="@dimen/margin_top_icon"
                 android:text="@string/hintUserName"
-                android:textSize="14sp"
+                android:textSize="@dimen/title_info"
                 android:textStyle="bold" />
 
             <EditText
                 android:id="@+id/etUserName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/activity_vertical_margin"
-                android:layout_marginStart="@dimen/activity_vertical_margin"
-                android:layout_marginRight="@dimen/activity_vertical_margin"
-                android:layout_marginEnd="@dimen/activity_vertical_margin"
+                android:layout_marginLeft="@dimen/margin_left_right"
+                android:layout_marginStart="@dimen/margin_left_right"
+                android:layout_marginRight="@dimen/margin_left_right"
+                android:layout_marginEnd="@dimen/margin_left_right"
                 android:inputType="textPersonName"
-                android:textSize="14sp" />
+                android:textSize="@dimen/title2" />
 
             <TextView
                 android:id="@+id/textMailUser"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/activity_vertical_margin"
-                android:layout_marginStart="@dimen/activity_vertical_margin"
-                android:layout_marginTop="20dp"
+                android:layout_marginLeft="@dimen/margin_left_right"
+                android:layout_marginStart="@dimen/margin_left_right"
+                android:layout_marginTop="@dimen/margin_top_icon"
                 android:text="@string/hintUserMail"
-                android:textSize="14sp"
+                android:textSize="@dimen/title_info"
                 android:textStyle="bold" />
 
             <EditText
                 android:id="@+id/etUserMail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/activity_vertical_margin"
-                android:layout_marginStart="@dimen/activity_vertical_margin"
-                android:layout_marginRight="@dimen/activity_vertical_margin"
-                android:layout_marginEnd="@dimen/activity_vertical_margin"
+                android:layout_marginLeft="@dimen/margin_left_right"
+                android:layout_marginStart="@dimen/margin_left_right"
+                android:layout_marginRight="@dimen/margin_left_right"
+                android:layout_marginEnd="@dimen/margin_left_right"
                 android:inputType="textEmailAddress"
-                android:textSize="14sp" />
+                android:textSize="@dimen/title2" />
 
             <TextView
                 android:id="@+id/textPassUser"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/activity_vertical_margin"
-                android:layout_marginStart="@dimen/activity_vertical_margin"
-                android:layout_marginTop="20dp"
+                android:layout_marginLeft="@dimen/margin_left_right"
+                android:layout_marginStart="@dimen/margin_left_right"
+                android:layout_marginTop="@dimen/margin_top_icon"
                 android:text="@string/hintUserPass"
-                android:textSize="14sp"
+                android:textSize="@dimen/title_info"
                 android:textStyle="bold" />
 
             <EditText
                 android:id="@+id/etUserPass"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/activity_vertical_margin"
-                android:layout_marginStart="@dimen/activity_vertical_margin"
-                android:layout_marginRight="@dimen/activity_vertical_margin"
-                android:layout_marginEnd="@dimen/activity_vertical_margin"
+                android:layout_marginLeft="@dimen/margin_left_right"
+                android:layout_marginStart="@dimen/margin_left_right"
+                android:layout_marginRight="@dimen/margin_left_right"
+                android:layout_marginEnd="@dimen/margin_left_right"
                 android:hint="@string/hintUserPass"
                 android:inputType="textPassword"
-                android:textSize="14sp" />
+                android:textSize="@dimen/title2" />
 
             <TextView
                 android:id="@+id/textPassRepeat"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/activity_vertical_margin"
-                android:layout_marginStart="@dimen/activity_vertical_margin"
-                android:layout_marginTop="20dp"
+                android:layout_marginLeft="@dimen/margin_left_right"
+                android:layout_marginStart="@dimen/margin_left_right"
+                android:layout_marginTop="@dimen/margin_top_icon"
                 android:text="@string/hintUserPassRep"
-                android:textSize="14sp"
+                android:textSize="@dimen/title_info"
                 android:textStyle="bold" />
 
             <EditText
                 android:id="@+id/etPassRepeat"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/activity_vertical_margin"
-                android:layout_marginStart="@dimen/activity_vertical_margin"
-                android:layout_marginRight="@dimen/activity_vertical_margin"
-                android:layout_marginEnd="@dimen/activity_vertical_margin"
+                android:layout_marginLeft="@dimen/margin_left_right"
+                android:layout_marginStart="@dimen/margin_left_right"
+                android:layout_marginRight="@dimen/margin_left_right"
+                android:layout_marginEnd="@dimen/margin_left_right"
                 android:hint="@string/hintUserPass"
                 android:inputType="textPassword"
-                android:textSize="14sp" />
+                android:textSize="@dimen/title2" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -140,23 +140,23 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:layout_margin="16dp"
+                    android:layout_margin="@dimen/margin_button"
                     android:background="#E0E0E0"
                     android:onClick="editProfileCanceled"
                     android:text="@string/cancelButton"
-                    android:textSize="14sp" />
+                    android:textSize="@dimen/text_button" />
 
                 <Button
                     android:id="@+id/bAcceptRegister"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:layout_margin="16dp"
+                    android:layout_margin="@dimen/margin_button"
                     android:background="#009688"
                     android:textColor="#FFFFFF"
                     android:onClick="editProfile"
                     android:text="@string/acceptButton"
-                    android:textSize="14sp" />
+                    android:textSize="@dimen/text_button" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

@@ -12,9 +12,6 @@ import android.widget.TextView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
@@ -97,8 +94,10 @@ public class ChallengeResultAdapter extends ArrayAdapter<ChallengeResult> {
         final ChallengeResult challengeResult = this.getItem(position);
 
         if (challengeResult.getPosition() != (position + 1)) {
-            controller.editIntParameter(databaseChallResults, challengeResult.getId(), FireBaseReferences.CHALLENGERESULT_POSITION_REFERENCE, position + 1);
+            controller.updateIntParameter(databaseChallResults, challengeResult.getId(), FireBaseReferences.CHALLENGERESULT_POSITION_REFERENCE, position + 1);
         }
+
+        //
         controller.readDataOnce(databaseUser, new OnGetDataListener() {
             @Override
             public void onStart() {
@@ -109,11 +108,10 @@ public class ChallengeResultAdapter extends ArrayAdapter<ChallengeResult> {
             public void onSuccess(DataSnapshot data) {
                 for (DataSnapshot userSnapshot : data.getChildren()){
                     final User user = userSnapshot.getValue(User.class);
-                    if (user.getId().equals(challengeResult.getUser())) {
-                        ArrayList<String> challengeResults = new ArrayList<>();
-                        challengeResults.addAll(user.getChallengeResults().keySet());
-                        holder.textViewUser.setText(user.getAlias());
 
+                    if (user.getId().equals(challengeResult.getUser())) {
+
+                        // Update user history challenge win, according to challenge result position
                         controller.readDataOnce(databaseChallResults, new OnGetDataListener() {
                             @Override
                             public void onStart() {
@@ -131,6 +129,8 @@ public class ChallengeResultAdapter extends ArrayAdapter<ChallengeResult> {
                                         }
                                     }
                                 }
+
+                                controller.updateIntParameter(databaseHistory, user.getHistory(), FireBaseReferences.HISTORY_WINS_REFERENCE, challengeWin);
                             }
 
                             @Override
@@ -139,30 +139,6 @@ public class ChallengeResultAdapter extends ArrayAdapter<ChallengeResult> {
                             }
                         });
                     }
-
-
-
-                    databaseChallResults.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            challengeWin = 0;
-                            for (DataSnapshot result : dataSnapshot.getChildren()){
-                                ChallengeResult challengeResult = result.getValue(ChallengeResult.class);
-                                if (challengeResult.getUser().equals(user.getId())){
-                                    if (challengeResult.getPosition() == 1){
-                                        challengeWin ++;
-                                    }
-                                }
-                            }
-
-                            databaseHistory.child(user.getHistory()).child(FireBaseReferences.HISTORY_WINS_REFERENCE).setValue(challengeWin);
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-
-                        }
-                    });
                 }
             }
 
@@ -171,12 +147,11 @@ public class ChallengeResultAdapter extends ArrayAdapter<ChallengeResult> {
 
             }
         });
-
+        holder.textViewUser.setText(challengeResult.getUserAlias());
         holder.textViewPosition.setText(Integer.toString(position + 1));
-
         holder.textViewTime.setText(challengeResult.getTime().toString() + " h");
         holder.textViewDistance.setText(challengeResult.getDistance().toString() + " km");
-        
+
         return row;
     }
 }

@@ -16,13 +16,13 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginLeft="50dp"
-        android:layout_marginStart="50dp"
-        android:layout_marginTop="150dp"
+        android:layout_marginLeft="@dimen/margin_main"
+        android:layout_marginStart="@dimen/margin_main"
+        android:layout_marginTop="@dimen/marginTop_mainTitle"
         android:text="@string/registeredText"
         android:textAlignment="center"
         android:textAppearance="@android:style/TextAppearance.Large"
-        android:textSize="24sp" />
+        android:textSize="@dimen/big_title" />
 
     <Button
         android:id="@+id/loginButton"
@@ -33,12 +33,12 @@
         android:layout_below="@+id/registeredText"
         android:background="#009688"
         android:textColor="#FFFFFF"
-        android:layout_marginLeft="50dp"
-        android:layout_marginRight="50dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginLeft="@dimen/margin_main"
+        android:layout_marginRight="@dimen/margin_main"
+        android:layout_marginTop="@dimen/margin_below"
         android:onClick="loginActivity"
         android:text="@string/accessButton"
-        android:textSize="18sp" />
+        android:textSize="@dimen/title_info" />
 
     <TextView
         android:id="@+id/noRegisteredText"
@@ -47,12 +47,12 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/loginButton"
-        android:layout_marginLeft="50dp"
-        android:layout_marginStart="50dp"
-        android:layout_marginTop="55dp"
+        android:layout_marginLeft="@dimen/margin_main"
+        android:layout_marginStart="@dimen/margin_main"
+        android:layout_marginTop="@dimen/access_marginTop"
         android:text="@string/noRegisteredText"
         android:textAppearance="@android:style/TextAppearance.Large"
-        android:textSize="24sp" />
+        android:textSize="@dimen/big_title" />
 
     <Button
         android:id="@+id/registerButton"
@@ -61,10 +61,10 @@
         android:layout_below="@+id/noRegisteredText"
         android:background="#009688"
         android:textColor="#FFFFFF"
-        android:layout_marginLeft="50dp"
-        android:layout_marginRight="50dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginLeft="@dimen/margin_main"
+        android:layout_marginRight="@dimen/margin_main"
+        android:layout_marginTop="@dimen/margin_below"
         android:onClick="registerActivity"
         android:text="@string/registerUserButton"
-        android:textSize="18sp" />
+        android:textSize="@dimen/title_info" />
 </RelativeLayout>

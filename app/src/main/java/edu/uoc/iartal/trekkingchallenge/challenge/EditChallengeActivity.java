@@ -236,14 +236,14 @@ public class EditChallengeActivity extends AppCompatActivity {
      * Update challenge description into database
      */
     private void updateDescriptionValue(){
-        controller.editStringParameter(databaseChallenge, challenge.getId(), FireBaseReferences.CHALLENGE_DESCRIPTION_REFERENCE, newDescription);
+        controller.updateStringParameter(databaseChallenge, challenge.getId(), FireBaseReferences.CHALLENGE_DESCRIPTION_REFERENCE, newDescription);
     }
 
     /**
      * Update challenge date into database
      */
     private void updateDateValue(){
-        controller.editStringParameter(databaseChallenge, challenge.getId(), FireBaseReferences.CHALLENGE_DATE_REFERENCE, newDate);
+        controller.updateStringParameter(databaseChallenge, challenge.getId(), FireBaseReferences.CHALLENGE_DATE_REFERENCE, newDate);
     }
 
     /**
@@ -264,7 +264,7 @@ public class EditChallengeActivity extends AppCompatActivity {
                 for (DataSnapshot resultSnapshot : data.getChildren()){
                     ChallengeResult challengeResult = resultSnapshot.getValue(ChallengeResult.class);
                     if (results.contains(challengeResult.getId())){
-                        controller.editStringParameter(databaseResults, challengeResult.getId(), FireBaseReferences.NAME_REFERENCE, newName);
+                        controller.updateStringParameter(databaseResults, challengeResult.getId(), FireBaseReferences.NAME_REFERENCE, newName);
                     }
                 }
             }

@@ -15,9 +15,9 @@
         android:layout_width="match_parent"
         android:scaleType="fitCenter"
         android:cropToPadding="true"
-        android:layout_height="175dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginTop="60dp" />
+        android:layout_height="@dimen/image_height_route"
+        android:layout_marginBottom="@dimen/image_route_marginBottom"
+        android:layout_marginTop="@dimen/margin_top" />
 
     <View
         android:id="@+id/viewDiv1"
@@ -29,11 +29,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/viewDiv1"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="25dp"
-        android:layout_marginStart="25dp"
-        android:layout_marginRight="4dp"
-        android:layout_marginEnd="4dp"/>
+        android:layout_marginTop="@dimen/margin_below"
+        android:layout_marginLeft="@dimen/margin_left_right"
+        android:layout_marginStart="@dimen/margin_left_right"
+        android:layout_marginRight="@dimen/margin_line_right"
+        android:layout_marginEnd="@dimen/margin_line_right"/>
 
     <TextView
         android:id="@+id/tvCalendar"
@@ -53,9 +53,9 @@
         style="@style/Widget.AppCompat.RatingBar.Indicator"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginTop="6dp"
-        android:layout_marginRight="25dp"
-        android:layout_marginEnd="25dp"
+        android:layout_marginTop="@dimen/margin_below"
+        android:layout_marginRight="@dimen/margin_line_right"
+        android:layout_marginEnd="@dimen/margin_line_right"
         android:layout_below="@id/viewDiv1"
         android:clickable="false"
         android:focusable="false"
@@ -68,7 +68,7 @@
     <View
         android:id="@+id/viewDivMiddle"
         style="@style/Divider"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="@dimen/margin_below"
         android:layout_below="@id/icCalendar" />
 
     <TextView
@@ -76,11 +76,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="25dp"
-        android:layout_marginStart="25dp"
-        android:layout_marginRight="4dp"
-        android:layout_marginEnd="4dp"
+        android:layout_marginTop="@dimen/margin_below"
+        android:layout_marginLeft="@dimen/margin_left_right"
+        android:layout_marginStart="@dimen/margin_left_right"
+        android:layout_marginRight="@dimen/margin_line_right"
+        android:layout_marginEnd="@dimen/margin_line_right"
         android:layout_below="@id/viewDivMiddle"/>
 
     <TextView
@@ -95,19 +95,19 @@
     <View
         android:id="@+id/viewDiv2"
         style="@style/Divider"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="@dimen/margin_below"
         android:layout_below="@id/tvRegion" />
 
     <ImageView
         android:id="@+id/icType"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:layout_marginRight="4dp"
-        android:layout_marginEnd="4dp"
+        android:layout_marginTop="@dimen/showRoute_marginTop_icon"
+        android:layout_marginRight="@dimen/margin_line_right"
+        android:layout_marginEnd="@dimen/margin_line_right"
         android:layout_below="@id/viewDiv2"
-        android:layout_marginLeft="35dp"
-        android:layout_marginStart="35dp" />
+        android:layout_marginLeft="@dimen/margin_left_showRoute"
+        android:layout_marginStart="@dimen/margin_left_showRoute" />
 
     <TextView
         android:id="@+id/tvType"
@@ -124,9 +124,9 @@
         android:id="@+id/icTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:layout_marginRight="4dp"
-        android:layout_marginEnd="4dp"
+        android:layout_marginTop="@dimen/showRoute_marginTop_icon"
+        android:layout_marginRight="@dimen/margin_line_right"
+        android:layout_marginEnd="@dimen/margin_line_right"
         android:layout_below="@id/icType"
         android:layout_alignLeft="@+id/icType"
         android:layout_alignStart="@+id/icType"
@@ -148,10 +148,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/icType"
-        android:layout_marginRight="4dp"
-        android:layout_marginEnd="4dp"
-        android:layout_marginLeft="25dp"
-        android:layout_marginStart="25dp"
+        android:layout_marginRight="@dimen/margin_line_right"
+        android:layout_marginEnd="@dimen/margin_line_right"
+        android:layout_marginLeft="@dimen/margin_left_right"
+        android:layout_marginStart="@dimen/margin_left_right"
         android:layout_below="@id/viewDiv2"
         android:layout_toRightOf="@+id/tvType"
         android:layout_toEndOf="@+id/tvType"
@@ -175,8 +175,8 @@
         android:layout_alignTop="@+id/icTime"
         android:layout_alignLeft="@+id/icAscent"
         android:layout_alignStart="@+id/icAscent"
-        android:layout_marginRight="4dp"
-        android:layout_marginEnd="4dp"
+        android:layout_marginRight="@dimen/margin_line_right"
+        android:layout_marginEnd="@dimen/margin_line_right"
         android:layout_below="@id/icAscent"
         android:layout_toRightOf="@+id/tvTime"
         android:layout_toEndOf="@+id/tvTime"
@@ -198,10 +198,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/icType"
-        android:layout_marginRight="4dp"
-        android:layout_marginEnd="4dp"
-        android:layout_marginLeft="25dp"
-        android:layout_marginStart="25dp"
+        android:layout_marginRight="@dimen/margin_line_right"
+        android:layout_marginEnd="@dimen/margin_line_right"
+        android:layout_marginLeft="@dimen/margin_left_right"
+        android:layout_marginStart="@dimen/margin_left_right"
         android:layout_below="@id/viewDiv2"
         android:layout_toRightOf="@+id/tvAscent"
         android:layout_toEndOf="@+id/tvAscent" />
@@ -224,8 +224,8 @@
         android:layout_alignTop="@+id/icDecline"
         android:layout_alignLeft="@+id/icSeason"
         android:layout_alignStart="@+id/icSeason"
-        android:layout_marginRight="4dp"
-        android:layout_marginEnd="4dp"
+        android:layout_marginRight="@dimen/margin_line_right"
+        android:layout_marginEnd="@dimen/margin_line_right"
         android:layout_below="@id/icSeason"
         android:layout_toRightOf="@+id/tvDecline"
         android:layout_toEndOf="@+id/tvDecline"
@@ -245,15 +245,19 @@
     <View
         android:id="@+id/viewDiv3"
         style="@style/Divider"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="@dimen/margin_below"
         android:layout_below="@id/icDifficult" />
 
     <Button
         android:id="@+id/bDetails"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="@dimen/button_long_height"
         android:layout_below="@id/viewDiv3"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="@dimen/margin_below"
+        android:layout_marginLeft="@dimen/margin_left_right"
+        android:layout_marginStart="@dimen/margin_left_right"
+        android:layout_marginRight="@dimen/margin_left_right"
+        android:layout_marginEnd="@dimen/margin_left_right"
         android:drawableEnd="@drawable/ic_next"
         android:drawableLeft="@drawable/ic_info"
         android:drawableRight="@drawable/ic_next"
@@ -265,8 +269,12 @@
     <Button
         android:id="@+id/bTrack"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="@dimen/button_long_height"
         android:layout_below="@id/bDetails"
+        android:layout_marginLeft="@dimen/margin_left_right"
+        android:layout_marginStart="@dimen/margin_left_right"
+        android:layout_marginRight="@dimen/margin_left_right"
+        android:layout_marginEnd="@dimen/margin_left_right"
         android:drawableRight="@drawable/ic_next"
         android:drawableEnd="@drawable/ic_next"
         android:drawableStart="@drawable/ic_track"

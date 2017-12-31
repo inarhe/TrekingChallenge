@@ -16,11 +16,11 @@
             android:id="@+id/cvRatingUser"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
-            android:layout_marginLeft="15dp"
+            android:layout_marginStart="@dimen/cardView_margin_right"
+            android:layout_marginLeft="@dimen/cardView_margin_right"
             android:layout_alignParentTop="true"
             android:textStyle="bold"
-            android:textSize="18sp"/>
+            android:textSize="@dimen/title2"/>
 
         <TextView
             android:id="@+id/cvRatingTitle"
@@ -29,7 +29,7 @@
             android:layout_alignStart="@+id/cvRatingUser"
             android:layout_alignLeft="@+id/cvRatingUser"
             android:layout_below="@+id/cvRatingUser"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="@dimen/cardView_marginTop_subtitle"
             android:textStyle="bold"
             android:textSize="15sp"/>
 
@@ -40,7 +40,7 @@
             android:layout_alignStart="@+id/cvRatingUser"
             android:layout_alignLeft="@+id/cvRatingUser"
             android:layout_below="@+id/cvRatingTitle"
-            android:layout_marginTop="4dp"/>
+            android:layout_marginTop="@dimen/cardView_marginTop_subtitle"/>
 
         <RatingBar
             android:id="@+id/rbUserRate"

@@ -146,13 +146,6 @@ public class ShowRouteActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    //TO-DO
-    public void showPhotoGallery () {
-        Intent intent = new Intent (this, PhotoGalleryActivity.class);
-        intent.putExtra("route", route);
-        startActivity(intent);
-    }
-
     /**
      * Inflate menu with menu layout information
      * @param menu

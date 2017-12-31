@@ -10,25 +10,25 @@
         android:id="@+id/tvTitleRate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="20sp"
+        android:textSize="@dimen/title1"
         android:textStyle="bold"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="@dimen/margin_below"
         android:layout_gravity="center"/>
 
     <android.support.design.widget.TextInputLayout
         android:id="@+id/titleWrapper"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp">
+        android:layout_marginTop="@dimen/margin_top_textInputLayout">
 
         <EditText
             android:id="@+id/etCommentTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/hintCommentTitle"
-            android:layout_marginLeft="@dimen/activity_vertical_margin"
-            android:layout_marginRight="@dimen/activity_vertical_margin"
-            android:textSize="14sp" />
+            android:layout_marginLeft="@dimen/margin_left_right"
+            android:layout_marginRight="@dimen/margin_left_right"
+            android:textSize="@dimen/text_button" />
 
     </android.support.design.widget.TextInputLayout>
 
@@ -36,16 +36,16 @@
         android:id="@+id/commentWrapper"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp">
+        android:layout_marginTop="@dimen/margin_top_textInputLayout">
 
         <EditText
             android:id="@+id/etCommentBody"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/hintCommentBody"
-            android:layout_marginLeft="@dimen/activity_vertical_margin"
-            android:layout_marginRight="@dimen/activity_vertical_margin"
-            android:textSize="14sp" />
+            android:layout_marginLeft="@dimen/margin_left_right"
+            android:layout_marginRight="@dimen/margin_left_right"
+            android:textSize="@dimen/text_button" />
 
     </android.support.design.widget.TextInputLayout>
 
@@ -53,8 +53,8 @@
         android:id="@+id/rbRateRoute"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:layout_marginBottom="10dp"
+        android:layout_marginTop="@dimen/margin_top_ratingBar"
+        android:layout_marginBottom="@dimen/margin_below"
         android:clickable="true"
         android:focusable="true"
         android:layout_gravity="center"
@@ -69,25 +69,25 @@
 
         <Button
             android:id="@+id/bCancelRate"
-            android:layout_width="40dp"
+            android:layout_width="@dimen/button_width_dialog"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_margin="16dp"
+            android:layout_margin="@dimen/margin_left_right"
             android:background="#E0E0E0"
             android:onClick="cancelRate"
             android:text="@string/cancelButton"
-            android:textSize="14sp" />
+            android:textSize="@dimen/text_button" />
 
         <Button
             android:id="@+id/bAcceptRate"
-            android:layout_width="40dp"
+            android:layout_width="@dimen/button_width_dialog"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_margin="16dp"
+            android:layout_margin="@dimen/margin_left_right"
             android:background="#009688"
             android:textColor="#FFFFFF"
             android:text="@string/registerButton"
-            android:textSize="14sp" />
+            android:textSize="@dimen/text_button" />
 
     </LinearLayout>
 

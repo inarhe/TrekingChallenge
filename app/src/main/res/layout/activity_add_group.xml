@@ -24,16 +24,16 @@
                 android:id="@+id/nameGroupWrapper"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="75dp">
+                android:layout_marginTop="@dimen/margin_top_title">
 
                 <EditText
                     android:id="@+id/etNameGroup"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/activity_vertical_margin"
-                    android:layout_marginStart="@dimen/activity_vertical_margin"
-                    android:layout_marginRight="@dimen/activity_vertical_margin"
-                    android:layout_marginEnd="@dimen/activity_vertical_margin"
+                    android:layout_marginLeft="@dimen/margin_left_right"
+                    android:layout_marginStart="@dimen/margin_left_right"
+                    android:layout_marginRight="@dimen/margin_left_right"
+                    android:layout_marginEnd="@dimen/margin_left_right"
                     android:hint="@string/hintNameGroup" />
 
             </android.support.design.widget.TextInputLayout>
@@ -42,16 +42,16 @@
                 android:id="@+id/descriptionWrapper"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp">
+                android:layout_marginTop="@dimen/margin_top_icon">
 
                 <EditText
                     android:id="@+id/etDescriptionGroup"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/activity_vertical_margin"
-                    android:layout_marginStart="@dimen/activity_vertical_margin"
-                    android:layout_marginRight="@dimen/activity_vertical_margin"
-                    android:layout_marginEnd="@dimen/activity_vertical_margin"
+                    android:layout_marginLeft="@dimen/margin_left_right"
+                    android:layout_marginStart="@dimen/margin_left_right"
+                    android:layout_marginRight="@dimen/margin_left_right"
+                    android:layout_marginEnd="@dimen/margin_left_right"
                     android:hint="@string/hintDescription"
                     android:inputType="textMultiLine|textLongMessage" />
 
@@ -62,15 +62,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:layout_marginLeft="@dimen/activity_vertical_margin"
-                android:layout_marginStart="@dimen/activity_vertical_margin"
-                android:layout_marginTop="25dp"
+                android:layout_marginLeft="@dimen/margin_left_right"
+                android:layout_marginStart="@dimen/margin_left_right"
+                android:layout_marginTop="@dimen/margin_top_icon"
                 android:text="@string/checkIsPublic" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="@dimen/margin_top_icon"
                 android:gravity="center"
                 android:orientation="horizontal">
 
@@ -79,23 +79,23 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:layout_margin="16dp"
+                    android:layout_margin="@dimen/margin_button"
                     android:background="#E0E0E0"
                     android:onClick="cancelGroup"
                     android:text="@string/cancelButton"
-                    android:textSize="14sp"/>
+                    android:textSize="@dimen/text_button"/>
 
                 <Button
                     android:id="@+id/acceptGroup"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:layout_margin="16dp"
+                    android:layout_margin="@dimen/margin_button"
                     android:background="#009688"
                     android:textColor="#FFFFFF"
                     android:onClick="addGroup"
                     android:text="@string/acceptButton"
-                    android:textSize="14sp"/>
+                    android:textSize="@dimen/text_button"/>
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

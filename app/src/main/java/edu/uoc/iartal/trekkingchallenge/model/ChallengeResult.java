@@ -6,7 +6,7 @@ import android.os.Parcelable;
 // ChallengeResult object class. Implements Parcelable to pass ChallengeResult object between activities
 public class ChallengeResult implements Parcelable {
 
-    private String id, user, challenge, date, name;
+    private String id, user, userAlias, challenge, date, name;
     private double distance, time;
     private int position;
 
@@ -15,11 +15,12 @@ public class ChallengeResult implements Parcelable {
 
     }
 
-    public ChallengeResult(String id, Double distance, Double time, String user, String challenge, String date, int position, String name) {
+    public ChallengeResult(String id, Double distance, Double time, String user, String userAlias, String challenge, String date, int position, String name) {
         this.id = id;
         this.distance = distance;
         this.time = time;
         this.user = user;
+        this.userAlias = userAlias;
         this.challenge = challenge;
         this.date = date;
         this.position = position;
@@ -31,6 +32,7 @@ public class ChallengeResult implements Parcelable {
         this.distance = in.readDouble();
         this.time = in.readDouble();
         this.user = in.readString();
+        this.userAlias = in.readString();
         this.challenge = in.readString();
         this.date = in.readString();
         this.position = in.readInt();
@@ -68,6 +70,14 @@ public class ChallengeResult implements Parcelable {
     public void setUser(String user) {
             this.user = user;
         }
+
+    public String getUserAlias() {
+        return userAlias;
+    }
+
+    public void setUserAlias(String userAlias) {
+        this.userAlias = userAlias;
+    }
 
     public String getChallenge() {
             return challenge;
@@ -112,6 +122,7 @@ public class ChallengeResult implements Parcelable {
         dest.writeDouble(distance);
         dest.writeDouble(time);
         dest.writeString(user);
+        dest.writeString(userAlias);
         dest.writeString(challenge);
         dest.writeString(date);
         dest.writeInt(position);

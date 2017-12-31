@@ -4,12 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".route.ShowRouteActivity">
 
-    <item android:id="@+id/action_gallery"
-        android:title="@string/action_gallery"
-        android:orderInCategory="100"
-        android:icon="@drawable/ic_gallery"
-        app:showAsAction="ifRoom" />
-
     <item android:id="@+id/action_trip"
         android:title="@string/action_trip"
         android:orderInCategory="100"

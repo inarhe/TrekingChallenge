@@ -25,8 +25,8 @@ import java.util.List;
 
 import edu.uoc.iartal.trekkingchallenge.R;
 import edu.uoc.iartal.trekkingchallenge.common.FirebaseController;
-import edu.uoc.iartal.trekkingchallenge.common.OnGetChildListener;
-import edu.uoc.iartal.trekkingchallenge.common.OnGetDataListener;
+import edu.uoc.iartal.trekkingchallenge.interfaces.OnGetChildListener;
+import edu.uoc.iartal.trekkingchallenge.interfaces.OnGetDataListener;
 import edu.uoc.iartal.trekkingchallenge.model.Challenge;
 import edu.uoc.iartal.trekkingchallenge.adapter.ChallengeAdapter;
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;

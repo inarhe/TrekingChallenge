@@ -14,26 +14,19 @@ import java.util.ArrayList;
 import edu.uoc.iartal.trekkingchallenge.R;
 import edu.uoc.iartal.trekkingchallenge.model.TripDone;
 
-/**
- * Created by Ingrid Artal on 22/12/2017.
- */
 
 public class TripHistoryAdapter extends ArrayAdapter<TripDone> {
 
-    private Context mContext;
+    private Context context;
     private ArrayList<TripDone> tripsDone;
-    private String currentUserName;
-    private TripDone tripDone;
-    private ViewHolder holder;
-    private View row;
 
     public TripHistoryAdapter(@NonNull Context context, int resource, @NonNull ArrayList<TripDone> objects) {
         super(context, resource, objects);
-        this.mContext = context;
+        this.context = context;
         this.tripsDone = objects;
     }
 
-    // Holda views of the ListView to improve its scrolling performance
+    // Link layout elements to variables only once
     static class ViewHolder {
         TextView textViewName, textViewDate, textViewRoute, textViewTime, textViewDistance;
 
@@ -62,24 +55,28 @@ public class TripHistoryAdapter extends ArrayAdapter<TripDone> {
         return position;
     }
 
+    /**
+     * Show each item of user trip results list in list view
+     * @param position
+     * @param convertView
+     * @param parent
+     * @return
+     */
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-
-
-        row = convertView;
-        holder = null;
+        View row = convertView;
+        ViewHolder holder = null;
 
         if (row == null){
-            row = LayoutInflater.from(mContext).inflate(R.layout.adapter_trip_history, parent, false);
+            row = LayoutInflater.from(context).inflate(R.layout.adapter_trip_history, parent, false);
             holder = new ViewHolder(row);
             row.setTag(holder);
         } else {
             holder = (ViewHolder) row.getTag();
         }
 
-        //DatabaseReference databaseChallengeResult = FirebaseDatabase.getInstance().getReference(FireBaseReferences.CHALLENGERESULT_REFERENCE);
-        tripDone = this.getItem(position);
+        TripDone tripDone = this.getItem(position);
 
         holder.textViewName.setText(tripDone.getTripName());
         holder.textViewDate.setText(tripDone.getDate());

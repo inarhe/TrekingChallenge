@@ -14,25 +14,19 @@ import java.util.ArrayList;
 import edu.uoc.iartal.trekkingchallenge.R;
 import edu.uoc.iartal.trekkingchallenge.model.Finished;
 
-/**
- * Created by Ingrid Artal on 22/12/2017.
- */
 
 public class RouteHistoryAdapter extends ArrayAdapter<Finished> {
 
-    private Context mContext;
+    private Context context;
     private ArrayList<Finished> finishedRoutes;
-    private Finished finished;
-    private  ViewHolder holder;
-    private View row;
 
     public RouteHistoryAdapter(@NonNull Context context, int resource, @NonNull ArrayList<Finished> objects) {
         super(context, resource, objects);
-        this.mContext = context;
+        this.context = context;
         this.finishedRoutes = objects;
     }
 
-    // Holda views of the ListView to improve its scrolling performance
+    // Link layout elements to variables only once
     static class ViewHolder {
         TextView textViewName, textViewDate, textViewTime, textViewDistance;
 
@@ -60,24 +54,28 @@ public class RouteHistoryAdapter extends ArrayAdapter<Finished> {
         return position;
     }
 
+    /**
+     * Show each item of user route results list in list view
+     * @param position
+     * @param convertView
+     * @param parent
+     * @return
+     */
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-
-
-        row = convertView;
-        holder = null;
+        View row = convertView;
+        ViewHolder holder = null;
 
         if (row == null){
-            row = LayoutInflater.from(mContext).inflate(R.layout.adapter_route_history, parent, false);
+            row = LayoutInflater.from(context).inflate(R.layout.adapter_route_history, parent, false);
             holder = new ViewHolder(row);
             row.setTag(holder);
         } else {
             holder = (ViewHolder) row.getTag();
         }
 
-        //DatabaseReference databaseChallengeResult = FirebaseDatabase.getInstance().getReference(FireBaseReferences.CHALLENGERESULT_REFERENCE);
-        finished = this.getItem(position);
+        Finished finished = this.getItem(position);
 
         holder.textViewName.setText(finished.getName());
         holder.textViewDate.setText(finished.getDate());

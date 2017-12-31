@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
-import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import edu.uoc.iartal.trekkingchallenge.map.MapActivity;
 import edu.uoc.iartal.trekkingchallenge.R;
@@ -19,7 +19,7 @@ import edu.uoc.iartal.trekkingchallenge.user.UserAreaActivity;
 
 public class MainActivity extends AppCompatActivity {
 
-    private FirebaseAuth firebaseAuth;
+    private FirebaseUser currentFirebaseUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,8 +30,11 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.mainToolbar);
         setSupportActionBar(toolbar);
 
-        //Get firebase authentication instance
-        firebaseAuth = FirebaseAuth.getInstance();
+        // Initialize variables
+        FirebaseController controller = new FirebaseController();
+
+        // Get current firebase user
+        currentFirebaseUser = controller.getActiveUserSession();
     }
 
     /**
@@ -39,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
      * @param view
      */
     public void mapActivity (View view){
-        if (firebaseAuth.getCurrentUser() != null) {
+        if (currentFirebaseUser != null) {
             startActivity(new Intent(getApplicationContext(),MapActivity.class));
         } else {
             startActivity(new Intent(getApplicationContext(), AccessActivity.class));
@@ -51,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
      * @param view
      */
     public void routesActivity(View view){
-        if (firebaseAuth.getCurrentUser() != null) {
+        if (currentFirebaseUser != null) {
             startActivity(new Intent(getApplicationContext(),ListRoutesActivity.class));
         } else {
             startActivity(new Intent(getApplicationContext(), AccessActivity.class));
@@ -63,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
      * @param view
      */
     public void tripActivity (View view){
-        if (firebaseAuth.getCurrentUser() != null) {
+        if (currentFirebaseUser != null) {
             startActivity(new Intent(getApplicationContext(),ListTripsActivity.class));
         } else {
             startActivity(new Intent(getApplicationContext(), AccessActivity.class));
@@ -75,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
      * @param view
      */
     public void challengeActivity (View view){
-        if (firebaseAuth.getCurrentUser() != null) {
+        if (currentFirebaseUser != null) {
             startActivity(new Intent(getApplicationContext(),ListChallengesActivity.class));
         } else {
             startActivity(new Intent(getApplicationContext(), AccessActivity.class));
@@ -87,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
      * @param view
      */
     public void userAreaActivity (View view){
-        if (firebaseAuth.getCurrentUser() != null) {
+        if (currentFirebaseUser != null) {
             startActivity(new Intent(getApplicationContext(), UserAreaActivity.class));
         } else {
             startActivity(new Intent(getApplicationContext(), AccessActivity.class));
@@ -99,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
      * @param view
      */
     public void groupActivity (View view){
-        if (firebaseAuth.getCurrentUser() != null) {
+        if (currentFirebaseUser != null) {
             startActivity(new Intent(getApplicationContext(), ListGroupsActivity.class));
         } else {
             startActivity(new Intent(getApplicationContext(), AccessActivity.class));

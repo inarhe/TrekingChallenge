@@ -129,7 +129,7 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.RouteViewHol
         viewHolder.textViewTime.setText(routes.get(position).getTime());
         viewHolder.textViewDifficult.setText(routes.get(position).getDifficult());
         viewHolder.textViewRegion.setText(routes.get(position).getRegion());
-        viewHolder.rbAverage.setRating(routes.get(position).getRatingAverage());
+        viewHolder.rbAverage.setRating(routes.get(position).getSumRatings() / routes.get(position).getNumRatings());
 
         // Show icon according to route type
         if (routes.get(position).getType().equals(context.getResources().getString(R.string.circular))){

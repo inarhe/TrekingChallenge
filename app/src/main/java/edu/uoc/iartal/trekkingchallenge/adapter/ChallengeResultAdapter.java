@@ -20,27 +20,28 @@ import java.util.ArrayList;
 
 import edu.uoc.iartal.trekkingchallenge.R;
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
+import edu.uoc.iartal.trekkingchallenge.common.FirebaseController;
+import edu.uoc.iartal.trekkingchallenge.interfaces.OnGetDataListener;
 import edu.uoc.iartal.trekkingchallenge.model.ChallengeResult;
 import edu.uoc.iartal.trekkingchallenge.model.User;
 
-/**
- * Created by Ingrid Artal on 22/12/2017.
- */
 
 public class ChallengeResultAdapter extends ArrayAdapter<ChallengeResult> {
 
-    private Context mContext;
+    private Context context;
     private ArrayList<ChallengeResult> challengeResults;
-    private DatabaseReference databaseChallResults;
+    private DatabaseReference databaseChallResults, databaseHistory, databaseUser;
     private int challengeWin;
+    private ViewHolder holder;
+    private FirebaseController controller = new FirebaseController();
 
     public ChallengeResultAdapter(@NonNull Context context, int resource, @NonNull ArrayList<ChallengeResult> objects) {
         super(context, resource, objects);
-        this.mContext = context;
+        this.context = context;
         this.challengeResults = objects;
     }
 
-    // Holda views of the ListView to improve its scrolling performance
+    // Link layout elements to variables only once
     static class ViewHolder {
         TextView textViewPosition, textViewUser, textViewTime, textViewDistance;
 
@@ -68,58 +69,61 @@ public class ChallengeResultAdapter extends ArrayAdapter<ChallengeResult> {
         return position;
     }
 
+    /**
+     * Show each item of user challenge results list in list ranking view
+     * @param position
+     * @param convertView
+     * @param parent
+     * @return
+     */
     @NonNull
     @Override
-    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        // Get challenge result information
-      /*  String user = getItem(position).getUser();
-        String time = getItem(position).getTime().toString();
-        String distance = getItem(position).getDistance().toString();*/
-
-        // Create the challenge result object with the information
-       // ChallengeResult challengeResult = new Cha
-       // convertView = LayoutInflater.from(mContext).inflate(R.layout.activity_show_challenge, parent, false);
-      //  convertView = inflater.inflate(mResource, parent, false);
-
+    public View getView(final int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         View row = convertView;
-        ViewHolder holder = null;
+        holder = null;
 
         if (row == null){
-            row = LayoutInflater.from(mContext).inflate(R.layout.adapter_challenge_results, parent, false);
+            row = LayoutInflater.from(context).inflate(R.layout.adapter_challenge_results, parent, false);
             holder = new ViewHolder(row);
             row.setTag(holder);
         } else {
             holder = (ViewHolder) row.getTag();
         }
-       /* TextView textViewUser = (TextView) convertView.findViewById(R.id.tvUser);
-        TextView textViewTime = (TextView) convertView.findViewById(R.id.tvTime);
-        TextView textViewDistance = (TextView) convertView.findViewById(R.id.tvDistance);*/
 
-        databaseChallResults = FirebaseDatabase.getInstance().getReference(FireBaseReferences.CHALLENGERESULT_REFERENCE);
-        final DatabaseReference databaseHistory = FirebaseDatabase.getInstance().getReference(FireBaseReferences.HISTORY_REFERENCE);
-        DatabaseReference databaseUser = FirebaseDatabase.getInstance().getReference(FireBaseReferences.USER_REFERENCE);
+        databaseChallResults = controller.getDatabaseReference(FireBaseReferences.CHALLENGERESULT_REFERENCE);
+        databaseHistory = controller.getDatabaseReference(FireBaseReferences.HISTORY_REFERENCE);
+        databaseUser = controller.getDatabaseReference(FireBaseReferences.USER_REFERENCE);
 
         final ChallengeResult challengeResult = this.getItem(position);
 
-        if (challengeResult.getPosition() != (position + 1)){
-            databaseChallResults.child(challengeResult.getId()).child(FireBaseReferences.CHALLENGERESULT_POSITION_REFERENCE).setValue(position + 1);
+        if (challengeResult.getPosition() != (position + 1)) {
+            controller.editIntParameter(databaseChallResults, challengeResult.getId(), FireBaseReferences.CHALLENGERESULT_POSITION_REFERENCE, position + 1);
+        }
+        controller.readDataOnce(databaseUser, new OnGetDataListener() {
+            @Override
+            public void onStart() {
 
-            Query query = databaseUser.orderByChild(FireBaseReferences.USER_ID_REFERENCE).equalTo(challengeResult.getUser());
+            }
 
-            query.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    for (DataSnapshot userSnapshot : dataSnapshot.getChildren()){
-                        final User user = userSnapshot.getValue(User.class);
-
+            @Override
+            public void onSuccess(DataSnapshot data) {
+                for (DataSnapshot userSnapshot : data.getChildren()){
+                    final User user = userSnapshot.getValue(User.class);
+                    if (user.getId().equals(challengeResult.getUser())) {
                         ArrayList<String> challengeResults = new ArrayList<>();
                         challengeResults.addAll(user.getChallengeResults().keySet());
+                        holder.textViewUser.setText(user.getAlias());
 
-                        databaseChallResults.addListenerForSingleValueEvent(new ValueEventListener() {
+                        controller.readDataOnce(databaseChallResults, new OnGetDataListener() {
                             @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
+                            public void onStart() {
+                                // Nothing to do
+                            }
+
+                            @Override
+                            public void onSuccess(DataSnapshot data) {
                                 challengeWin = 0;
-                                for (DataSnapshot result : dataSnapshot.getChildren()){
+                                for (DataSnapshot result : data.getChildren()){
                                     ChallengeResult challengeResult = result.getValue(ChallengeResult.class);
                                     if (challengeResult.getUser().equals(user.getId())){
                                         if (challengeResult.getPosition() == 1){
@@ -127,29 +131,52 @@ public class ChallengeResultAdapter extends ArrayAdapter<ChallengeResult> {
                                         }
                                     }
                                 }
-                                databaseHistory.child(user.getHistory()).child(FireBaseReferences.HISTORY_WINS_REFERENCE).setValue(challengeWin);
                             }
 
                             @Override
-                            public void onCancelled(DatabaseError databaseError) {
+                            public void onFailed(DatabaseError databaseError) {
 
                             }
                         });
                     }
-                }
 
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
 
+
+                    databaseChallResults.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            challengeWin = 0;
+                            for (DataSnapshot result : dataSnapshot.getChildren()){
+                                ChallengeResult challengeResult = result.getValue(ChallengeResult.class);
+                                if (challengeResult.getUser().equals(user.getId())){
+                                    if (challengeResult.getPosition() == 1){
+                                        challengeWin ++;
+                                    }
+                                }
+                            }
+
+                            databaseHistory.child(user.getHistory()).child(FireBaseReferences.HISTORY_WINS_REFERENCE).setValue(challengeWin);
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
                 }
-            });
-        }
+            }
+
+            @Override
+            public void onFailed(DatabaseError databaseError) {
+
+            }
+        });
 
         holder.textViewPosition.setText(Integer.toString(position + 1));
-        holder.textViewUser.setText(challengeResult.getUser());
+
         holder.textViewTime.setText(challengeResult.getTime().toString() + " h");
         holder.textViewDistance.setText(challengeResult.getDistance().toString() + " km");
-
+        
         return row;
     }
 }

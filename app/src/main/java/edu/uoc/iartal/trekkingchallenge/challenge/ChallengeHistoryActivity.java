@@ -25,7 +25,7 @@ import edu.uoc.iartal.trekkingchallenge.R;
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
 import edu.uoc.iartal.trekkingchallenge.adapter.ChallengeHistoryAdapter;
 import edu.uoc.iartal.trekkingchallenge.common.FirebaseController;
-import edu.uoc.iartal.trekkingchallenge.common.OnGetDataListener;
+import edu.uoc.iartal.trekkingchallenge.interfaces.OnGetDataListener;
 import edu.uoc.iartal.trekkingchallenge.model.ChallengeResult;
 import edu.uoc.iartal.trekkingchallenge.model.User;
 import edu.uoc.iartal.trekkingchallenge.user.LoginActivity;

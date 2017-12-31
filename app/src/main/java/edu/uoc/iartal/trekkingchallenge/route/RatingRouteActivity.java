@@ -30,7 +30,7 @@ import java.util.ArrayList;
 import edu.uoc.iartal.trekkingchallenge.R;
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
 import edu.uoc.iartal.trekkingchallenge.common.FirebaseController;
-import edu.uoc.iartal.trekkingchallenge.common.OnGetDataListener;
+import edu.uoc.iartal.trekkingchallenge.interfaces.OnGetDataListener;
 import edu.uoc.iartal.trekkingchallenge.model.Rating;
 import edu.uoc.iartal.trekkingchallenge.adapter.RatingAdapter;
 import edu.uoc.iartal.trekkingchallenge.model.Route;

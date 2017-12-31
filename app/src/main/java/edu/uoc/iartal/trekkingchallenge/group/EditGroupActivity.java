@@ -17,7 +17,7 @@ import com.google.firebase.database.DatabaseReference;
 import edu.uoc.iartal.trekkingchallenge.R;
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
 import edu.uoc.iartal.trekkingchallenge.common.FirebaseController;
-import edu.uoc.iartal.trekkingchallenge.common.OnCompleteTaskListener;
+import edu.uoc.iartal.trekkingchallenge.interfaces.OnCompleteTaskListener;
 import edu.uoc.iartal.trekkingchallenge.model.Group;
 import edu.uoc.iartal.trekkingchallenge.user.LoginActivity;
 
@@ -113,7 +113,7 @@ public class EditGroupActivity extends AppCompatActivity {
         if (updateName) {
             // Execute controller method to update database group object. Use OnGetDataListener interface to know
             // when database is updated
-            controller.executeTask(databaseGroup, group.getId(), FireBaseReferences.GROUP_NAME_REFERENCE, newName, new OnCompleteTaskListener() {
+            controller.executeAddTask(databaseGroup, group.getId(), FireBaseReferences.GROUP_NAME_REFERENCE, newName, new OnCompleteTaskListener() {
                 @Override
                 public void onStart() {
                     //Nothing to do

@@ -3,7 +3,6 @@ package edu.uoc.iartal.trekkingchallenge.adapter;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -15,10 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +23,8 @@ import edu.uoc.iartal.trekkingchallenge.R;
 import edu.uoc.iartal.trekkingchallenge.challenge.EditChallengeActivity;
 import edu.uoc.iartal.trekkingchallenge.challenge.ShowChallengeActivity;
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
+import edu.uoc.iartal.trekkingchallenge.common.FirebaseController;
+import edu.uoc.iartal.trekkingchallenge.interfaces.OnCompleteTaskListener;
 import edu.uoc.iartal.trekkingchallenge.model.Challenge;
 
 public class ChallengeAdapter extends RecyclerView.Adapter<ChallengeAdapter.ChallengeViewHolder> {
@@ -35,6 +33,7 @@ public class ChallengeAdapter extends RecyclerView.Adapter<ChallengeAdapter.Chal
     private ArrayList<Boolean> isVisibleArray = new ArrayList<>();
     private ArrayList<String> challengeMembers = new ArrayList<>();
     private Context context;
+    private FirebaseController controller = new FirebaseController();
 
     // Object which represents a list item and save view references
     public static class ChallengeViewHolder extends RecyclerView.ViewHolder {
@@ -89,7 +88,7 @@ public class ChallengeAdapter extends RecyclerView.Adapter<ChallengeAdapter.Chal
             viewHolder.textViewIsPublic.setText(R.string.privateChallenge);
         }
 
-        // Show delete button only if current user is challenge admin
+        // Show delete and edit buttons only if current user is challenge admin
         if (isVisibleArray.isEmpty()){
             viewHolder.buttonDelete.setVisibility(View.GONE);
             viewHolder.buttonEdit.setVisibility(View.GONE);
@@ -122,6 +121,7 @@ public class ChallengeAdapter extends RecyclerView.Adapter<ChallengeAdapter.Chal
             public void onClick(View v) {
                 // Get challenge members
                 getMembers(position);
+
                 context = v.getContext();
 
                 // Delete challenge and its dependencies
@@ -133,7 +133,7 @@ public class ChallengeAdapter extends RecyclerView.Adapter<ChallengeAdapter.Chal
         viewHolder.buttonEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Context context = v.getContext();
+                context = v.getContext();
 
                 Intent intent = new Intent(context, EditChallengeActivity.class);
                 intent.putExtra("challenge", challenges.get(position));
@@ -144,7 +144,7 @@ public class ChallengeAdapter extends RecyclerView.Adapter<ChallengeAdapter.Chal
     }
 
     /**
-     * Define visibility of delete button for each element
+     * Define visibility of delete and edit buttons for each element
      * @param visible
      */
     public void setVisibility(Boolean visible){
@@ -190,22 +190,29 @@ public class ChallengeAdapter extends RecyclerView.Adapter<ChallengeAdapter.Chal
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
-                        DatabaseReference databaseChallenge = FirebaseDatabase.getInstance().getReference(FireBaseReferences.CHALLENGE_REFERENCE);
-                        databaseChallenge.child(challenges.get(position).getId()).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                        DatabaseReference databaseChallenge = controller.getDatabaseReference(FireBaseReferences.CHALLENGE_REFERENCE);
+
+                        controller.executeRemoveTask(databaseChallenge, challenges.get(position).getId(), new OnCompleteTaskListener() {
                             @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if (task.isSuccessful()) {
-                                    DatabaseReference databaseUser = FirebaseDatabase.getInstance().getReference(FireBaseReferences.USER_REFERENCE);
-                                    for (String user:challengeMembers){
-                                        databaseUser.child(user).child(FireBaseReferences.USER_CHALLENGES_REFERENCE).child(challenges.get(position).getId()).removeValue();
-                                    }
-                                    Toast.makeText(context , R.string.challengeDeleted, Toast.LENGTH_SHORT).show();
-                                    challenges.remove(position);
-                                    isVisibleArray.remove(position);
-                                    notifyDataSetChanged();
-                                } else {
-                                    Toast.makeText(context, R.string.challengeNotDeleted, Toast.LENGTH_LONG).show();
+                            public void onStart() {
+                                //Nothing to do
+                            }
+
+                            @Override
+                            public void onSuccess() {
+                                DatabaseReference databaseUser = controller.getDatabaseReference(FireBaseReferences.USER_REFERENCE);
+                                for (String member : challengeMembers) {
+                                    controller.removeValue(databaseUser, member, FireBaseReferences.USER_CHALLENGES_REFERENCE, challenges.get(position).getId());
                                 }
+                                Toast.makeText(context, R.string.challengeDeleted, Toast.LENGTH_SHORT).show();
+                                challenges.remove(position);
+                                isVisibleArray.remove(position);
+                                notifyDataSetChanged();
+                            }
+
+                            @Override
+                            public void onFailed() {
+                                Toast.makeText(context, R.string.challengeNotDeleted, Toast.LENGTH_LONG).show();
                             }
                         });
                     }

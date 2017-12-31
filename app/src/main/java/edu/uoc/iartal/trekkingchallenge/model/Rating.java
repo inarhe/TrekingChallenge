@@ -6,9 +6,11 @@ import android.os.Parcelable;
 
 // Rating object class. Implements Parcelable to pass rating object between activities
 public class Rating implements Parcelable{
-    private String id, title, opinion, route, user;
-    private Float value;
 
+    private String id, title, opinion, route, user;
+    private float value;
+
+    // Default constructor required for calls to DataSnapshot.getValue(Rating.class)
     public Rating(){
 
     }

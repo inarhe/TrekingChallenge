@@ -27,11 +27,8 @@ public class FireBaseReferences {
 
     // Route references
     final public static String ROUTE_REFERENCE = "route";
-    final public static String ROUTE_ID_REFERENCE = "idRoute";
-    final public static String ROUTE_NAME_REFERENCE = "name";
     final public static String ROUTE_FINISHED_REFERENCE = "finished";
     final public static String HEADERS_STORAGE = "headers/";
-    final public static String GALLERY_STORAGE = "gallery/";
     final public static String TRACKS_STORAGE = "tracks/";
     final public static String PROFILES_STORAGE = "profiles/";
     final public static String ROUTE_RATINGS_REFERENCE = "ratings";
@@ -62,6 +59,7 @@ public class FireBaseReferences {
 
     // TripDone references
     final public static String TRIPSDONE_REFERENCE = "tripsDone";
+    final public static String TRIPSDONE_TRIP_NAME = "tripName";
 
     // Rating references
     final public static String RATING_REFERENCE = "rating";
@@ -83,4 +81,5 @@ public class FireBaseReferences {
     final public static String MESSAGES_REFERENCE = "messages";
     final public static String USER_ADMIN_REFERENCE = "userAdmin";
     final public static String OBJECT_USER_REFERENCE = "user";
+    final public static String NAME_REFERENCE = "name";
 }

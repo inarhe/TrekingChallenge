@@ -8,12 +8,14 @@ import java.util.Map;
 
 // Trip object class. Implements Parcelable to pass trip object between activities
 public class Trip implements Parcelable{
+
     private String id, name, description, date, place, route, userAdmin;
-    private Boolean isPublic;
+    private boolean isPublic;
     private int numberOfMembers;
     private Map<String, String> members = new HashMap<>();
     private Map<String, String> done = new HashMap<>();
 
+    // Default constructor required for calls to DataSnapshot.getValue(Trip.class)
     public Trip() {
 
     }

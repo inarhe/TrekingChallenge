@@ -1,4 +1,4 @@
-package edu.uoc.iartal.trekkingchallenge.common;
+package edu.uoc.iartal.trekkingchallenge.interfaces;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;

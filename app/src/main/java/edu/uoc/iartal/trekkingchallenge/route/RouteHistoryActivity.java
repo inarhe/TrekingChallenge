@@ -23,7 +23,7 @@ import java.util.Date;
 import edu.uoc.iartal.trekkingchallenge.R;
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
 import edu.uoc.iartal.trekkingchallenge.common.FirebaseController;
-import edu.uoc.iartal.trekkingchallenge.common.OnGetDataListener;
+import edu.uoc.iartal.trekkingchallenge.interfaces.OnGetDataListener;
 import edu.uoc.iartal.trekkingchallenge.model.Finished;
 import edu.uoc.iartal.trekkingchallenge.adapter.RouteHistoryAdapter;
 import edu.uoc.iartal.trekkingchallenge.model.User;

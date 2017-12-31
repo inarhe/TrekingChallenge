@@ -1,31 +1,16 @@
 package edu.uoc.iartal.trekkingchallenge.common;
 
-import android.content.Context;
-import android.support.annotation.NonNull;
-import android.widget.Toast;
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import edu.uoc.iartal.trekkingchallenge.R;
-import edu.uoc.iartal.trekkingchallenge.model.User;
 
-
+// Functionality used by different activities
 public class CommonFunctionality {
 
     private static final String EMAIL_PATTERN = "^[a-zA-Z0-9#_~!$&'()*+,;=:.\"(),:;<>@\\[\\]\\\\]+@[a-zA-Z0-9-]+(\\.[a-zA-Z0-9-]{2,}+)*$";
-    private String currentUserName;
+
     /**
      *  Validate mail format
      * @param email
@@ -50,80 +35,6 @@ public class CommonFunctionality {
     }
 
     /**
-     * Update joins, when a user wants to join a group, trip or challenge
-     * @param currentMail
-     * @param action
-     * @param databaseObject
-     * @param id
-     * @param objectReference
-     */
-    public void updateJoins(String currentMail, final String action, final DatabaseReference databaseObject, final String id, final int numberOfMembers, final String objectReference){
-        final DatabaseReference databaseUser = FirebaseDatabase.getInstance().getReference(FireBaseReferences.USER_REFERENCE);
-
-        Query query = databaseUser.orderByChild(FireBaseReferences.USER_MAIL_REFERENCE).equalTo(currentMail);
-
-        // Query database to get user information
-        query.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                User user = dataSnapshot.getValue(User.class);
-
-                if (action.equals("join")) {
-                    databaseObject.child(id).child(FireBaseReferences.MEMBERS_REFERENCE).child(user.getId()).setValue("true");
-                    databaseUser.child(user.getId()).child(objectReference).child(id).setValue("true");
-                    databaseObject.child(id).child(FireBaseReferences.NUMBER_OF_MEMBERS_REFERENCE).setValue(numberOfMembers+1);
-                } else {
-                    databaseObject.child(id).child(FireBaseReferences.MEMBERS_REFERENCE).child(user.getId()).removeValue();
-                    databaseUser.child(user.getId()).child(objectReference).child(id).removeValue();
-                    databaseObject.child(id).child(FireBaseReferences.NUMBER_OF_MEMBERS_REFERENCE).setValue(numberOfMembers-1);
-                }
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                //TO-DO
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-                //TO-DO
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-                //TO-DO
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                //TO-DO
-            }
-        });
-    }
-
-    /**
-     * Update route results and challenge results in all dependencies
-     * @param databaseObject
-     * @param childId
-     * @param childReference
-     * @param childResult
-     * @param context
-     */
-    public void updateResults (DatabaseReference databaseObject, String childId, String childReference, String childResult, final Context context){
-        databaseObject.child(childId).child(childReference).child(childResult).setValue("true")
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if(task.isSuccessful()){
-                            Toast.makeText(context, context.getResources().getString(R.string.finishedSaved), Toast.LENGTH_LONG).show();
-                        } else {
-                            Toast.makeText(context, context.getResources().getString(R.string.finishedFailed),Toast.LENGTH_LONG).show();
-                        }
-                    }
-                });
-    }
-
-    /**
      * Sum two hours in double format
      * @param firstHour
      * @param secondHour
@@ -136,12 +47,18 @@ public class CommonFunctionality {
         Integer secondInt = Integer.parseInt(secondNum[0]);
         double totalDecimal = (firstHour - (double)firstInt) + (secondHour - (double)secondInt);
 
-        if (totalDecimal > 60){
-            totalDecimal = totalDecimal/60;
+        if (totalDecimal > ConstantsUtils.MINUTES){
+            totalDecimal = totalDecimal / ConstantsUtils.MINUTES;
         }
-        return round((double)firstInt + (double)secondInt + totalDecimal,2);
+        return round((double)firstInt + (double)secondInt + totalDecimal,ConstantsUtils.NUM_OF_DECIMALS);
     }
 
+    /**
+     * Round double number decimals
+     * @param value
+     * @param places
+     * @return
+     */
     public double round(double value, int places) {
         if (places < 0) throw new IllegalArgumentException();
 

@@ -8,13 +8,15 @@ import java.util.Map;
 
 // Route object class. Implements Parcelable to pass route object between activities
 public class Route implements Parcelable {
+
     private String idRoute, name, headerPhoto, trackPhoto, profilePhoto, season, startPlace, time, trackLink, meteo;
     private String type, difficult, distance, description, region, township;
-    private Double lng, lat;
-    private Float sumRatings;
+    private double lng, lat;
+    private float sumRatings;
     private int numRatings, decline, ascent;
     private Map<String, String> finished = new HashMap<>();
 
+    // Default constructor required for calls to DataSnapshot.getValue(Route.class)
     public Route() {
 
     }

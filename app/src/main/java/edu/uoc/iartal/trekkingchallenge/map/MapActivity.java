@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -14,20 +16,17 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import edu.uoc.iartal.trekkingchallenge.R;
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
+import edu.uoc.iartal.trekkingchallenge.common.FirebaseController;
+import edu.uoc.iartal.trekkingchallenge.interfaces.OnGetDataListener;
 import edu.uoc.iartal.trekkingchallenge.model.Route;
 import edu.uoc.iartal.trekkingchallenge.route.ShowRouteActivity;
 import edu.uoc.iartal.trekkingchallenge.user.LoginActivity;
@@ -36,6 +35,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     private GoogleMap mMap;
     private List<Route> routes;
+    private DatabaseReference databaseRoute;
 
     public MapActivity() {
 
@@ -45,10 +45,16 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         return new MapActivity();
     }
 
+    private FirebaseController controller;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
+
+        // Initialize variables
+        controller = new FirebaseController();
+        routes = new ArrayList<>();
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -56,10 +62,13 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
 
         // If user isn't logged, start login activity
-        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+        if (controller.getActiveUserSession() == null) {
             startActivity(new Intent(getApplicationContext(), LoginActivity.class));
             finish();
         }
+
+        // Get database reference
+        databaseRoute = controller.getDatabaseReference(FireBaseReferences.ROUTE_REFERENCE);
 
         // Set toolbar and actionbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.mapToolbar);
@@ -99,40 +108,15 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(Marker marker) {
-                final String routeName = marker.getTitle();
-                DatabaseReference databaseRoute = FirebaseDatabase.getInstance().getReference(FireBaseReferences.ROUTE_REFERENCE);
+                String routeName = marker.getTitle();
 
-                Query query = databaseRoute.orderByChild(FireBaseReferences.ROUTE_NAME_REFERENCE).equalTo(routeName);
-
-                query.addChildEventListener(new ChildEventListener() {
-                    @Override
-                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                        Route route = dataSnapshot.getValue(Route.class);
+                for (Route route : routes){
+                    if (route.getName().equals(routeName)){
                         Intent intent = new Intent(getApplicationContext(), ShowRouteActivity.class);
                         intent.putExtra("route", route);
                         startActivity(intent);
                     }
-
-                    @Override
-                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-                    }
-
-                    @Override
-                    public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-                    }
-
-                    @Override
-                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
+                }
             }
         });
     }
@@ -153,17 +137,18 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
      */
     private void loadMarkRoutes(){
 
-        DatabaseReference databaseRoute = FirebaseDatabase.getInstance().getReference(FireBaseReferences.ROUTE_REFERENCE);
-        routes = new ArrayList<>();
-
-        databaseRoute.addValueEventListener(new ValueEventListener() {
+        controller.readData(databaseRoute, new OnGetDataListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onStart() {
+                //Nothing to do
+            }
+
+            @Override
+            public void onSuccess(DataSnapshot data) {
                 routes.clear();
-                for (DataSnapshot routeSnapshot:
-                        dataSnapshot.getChildren()) {
+                for (DataSnapshot routeSnapshot : data.getChildren()) {
                     Route route = routeSnapshot.getValue(Route.class);
-                        routes.add(route);
+                    routes.add(route);
                 }
 
                 for (Route route : routes) {
@@ -172,8 +157,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
-                //TO-DO
+            public void onFailed(DatabaseError databaseError) {
+                Log.e("Map routes error", databaseError.getMessage());
             }
         });
     }

@@ -28,7 +28,7 @@ import edu.uoc.iartal.trekkingchallenge.common.CommonFunctionality;
 import edu.uoc.iartal.trekkingchallenge.common.ConstantsUtils;
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
 import edu.uoc.iartal.trekkingchallenge.common.FirebaseController;
-import edu.uoc.iartal.trekkingchallenge.common.OnGetDataListener;
+import edu.uoc.iartal.trekkingchallenge.interfaces.OnGetDataListener;
 import edu.uoc.iartal.trekkingchallenge.model.History;
 import edu.uoc.iartal.trekkingchallenge.model.Route;
 import edu.uoc.iartal.trekkingchallenge.model.Trip;
@@ -142,7 +142,7 @@ public class FinishedTripActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), R.string.finishedFailed, Toast.LENGTH_SHORT).show();
         } else {
             TripDone tripDone = new TripDone(idDone, Double.parseDouble(finishDist), Double.parseDouble(finishHour), currentUser.getId(), trip.getId(), finishDate, trip.getName(), trip.getRoute());
-            controller.addNewTripResult(databaseTripDone, tripDone, getApplicationContext());
+            controller.addNewTripResult(databaseTripDone, tripDone, context);
 
             // Update result list in user and challenge database nodes
             controller.updateResults (databaseUser, currentUser.getId(), FireBaseReferences.USER_TRIPSDONE_REFERENCE, idDone, context);

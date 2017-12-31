@@ -27,7 +27,7 @@ import java.util.List;
 
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
 import edu.uoc.iartal.trekkingchallenge.common.FirebaseController;
-import edu.uoc.iartal.trekkingchallenge.common.OnGetDataListener;
+import edu.uoc.iartal.trekkingchallenge.interfaces.OnGetDataListener;
 import edu.uoc.iartal.trekkingchallenge.model.Group;
 import edu.uoc.iartal.trekkingchallenge.adapter.GroupAdapter;
 import edu.uoc.iartal.trekkingchallenge.R;

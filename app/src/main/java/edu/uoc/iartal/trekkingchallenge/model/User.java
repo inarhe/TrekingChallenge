@@ -1,15 +1,14 @@
 package edu.uoc.iartal.trekkingchallenge.model;
 
-
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.util.HashMap;
 import java.util.Map;
 
-
 // User object class. Implements Parcelable to pass user object between activities
 public class User implements Parcelable {
+
     private String id, alias, name, mail, password, history;
     private Map<String, String> groups = new HashMap<>();
     private Map<String, String> trips = new HashMap<>();
@@ -20,8 +19,9 @@ public class User implements Parcelable {
     private Map<String, String> challengeResults = new HashMap<>();
     private Map<String, String> messages = new HashMap<>();
 
+    // Default constructor required for calls to DataSnapshot.getValue(User.class)
     public User() {
-        // Default constructor required for calls to DataSnapshot.getValue(User.class)
+
     }
 
 

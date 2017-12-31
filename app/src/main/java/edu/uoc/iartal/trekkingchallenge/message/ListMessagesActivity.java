@@ -1,5 +1,6 @@
 package edu.uoc.iartal.trekkingchallenge.message;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
@@ -8,24 +9,21 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
 import edu.uoc.iartal.trekkingchallenge.R;
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
+import edu.uoc.iartal.trekkingchallenge.common.FirebaseController;
+import edu.uoc.iartal.trekkingchallenge.interfaces.OnGetDataListener;
 import edu.uoc.iartal.trekkingchallenge.model.Group;
 import edu.uoc.iartal.trekkingchallenge.model.Message;
 import edu.uoc.iartal.trekkingchallenge.adapter.MessageAdapter;
@@ -35,24 +33,19 @@ import edu.uoc.iartal.trekkingchallenge.user.LoginActivity;
 
 public class ListMessagesActivity extends AppCompatActivity {
 
-    private ArrayList<Message> messages = new ArrayList<>();
+    private ArrayList<Message> messages;
     private Group group;
     private Trip trip;
-    private DatabaseReference databaseMessage, databaseUser, databaseGroup, databaseTrip;
-    private String userName, idMessage;
+    private ProgressDialog progressDialog;
+    private DatabaseReference databaseMessage, databaseUser;
+    private String currentUserId;
+    private FirebaseController controller;
     private MessageAdapter messageAdapter;
-    private EditText editTextTitle, editTextBody;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_message);
-
-        // If user isn't logged, start login activity
-        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
-            startActivity(new Intent(getApplicationContext(), LoginActivity.class));
-            finish();
-        }
 
         // Set toolbar and actionbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.messageListToolbar);
@@ -60,6 +53,18 @@ public class ListMessagesActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle(getString(R.string.messageListActivity));
+
+        //Initialize progress dialog
+        progressDialog = new ProgressDialog(this);
+        controller = new FirebaseController();
+        messages = new ArrayList<>();
+        messageAdapter = new MessageAdapter (messages);
+
+        // If user isn't logged, start login activity
+        if (controller.getActiveUserSession() == null) {
+            startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+            finish();
+        }
 
         // Get route data from show route activity
         Bundle bundle = getIntent().getExtras();
@@ -69,14 +74,11 @@ public class ListMessagesActivity extends AppCompatActivity {
         // Initialize and set recycler view with its adapter
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rvMessages);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        messageAdapter = new MessageAdapter (messages);
         recyclerView.setAdapter(messageAdapter);
 
         // Initialize database references
-        databaseMessage = FirebaseDatabase.getInstance().getReference(FireBaseReferences.MESSAGE_REFERENCE);
-        databaseUser = FirebaseDatabase.getInstance().getReference(FireBaseReferences.USER_REFERENCE);
-        databaseGroup = FirebaseDatabase.getInstance().getReference(FireBaseReferences.GROUP_REFERENCE);
-        databaseTrip = FirebaseDatabase.getInstance().getReference(FireBaseReferences.TRIP_REFERENCE);
+        databaseMessage = controller.getDatabaseReference(FireBaseReferences.MESSAGE_REFERENCE);
+        databaseUser = controller.getDatabaseReference(FireBaseReferences.USER_REFERENCE);
 
         // Define floating button for adding new rating
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fabAddMessage);
@@ -92,45 +94,14 @@ public class ListMessagesActivity extends AppCompatActivity {
                     intent.putExtra("trip", trip);
                 }
 
-                intent.putExtra("user", userName);
+                intent.putExtra("user", currentUserId);
 
                 startActivity(intent);
             }
         });
 
-        // Show database route ratings in recycler view
-        databaseMessage.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                messages.clear();
-                for (DataSnapshot messageSnapshot:
-                        dataSnapshot.getChildren()) {
-                    Message message = messageSnapshot.getValue(Message.class);
-                    if (group != null) {
-                        if (message.getGroup().equals(group.getId())){
-                            messages.add(message);
-                        }
-                    }
-                    if (trip != null) {
-                        if (message.getTrip().equals(trip.getId())) {
-                            messages.add(message);
-                        }
-                    }
-
-                }
-                messageAdapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                //TO-DO
-            }
-        });
-
-
-        // Get current user name
-        getCurrentUserName();
-        // Search user messages
+        getMessagesList();
+        getCurrentUserId();
     }
 
     /**
@@ -160,38 +131,73 @@ public class ListMessagesActivity extends AppCompatActivity {
     }
 
     /**
-     * Search the name of current user, to know who is doing the action
+     * Get current user id
      */
-    private void getCurrentUserName(){
-        // Get current user mail
-        String currentMail = FirebaseAuth.getInstance().getCurrentUser().getEmail();
-
-        // Query database to find user who has the current mail
-        Query query = databaseUser.orderByChild(FireBaseReferences.USER_MAIL_REFERENCE).equalTo(currentMail);
-        query.addChildEventListener(new ChildEventListener() {
+    private void getCurrentUserId(){
+        // Execute controller method to get database current user object. Use OnGetDataListener interface to know
+        // when database data is retrieved
+        controller.readDataOnce(databaseUser, new OnGetDataListener() {
             @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                userName = dataSnapshot.getValue(User.class).getId();
+            public void onStart() {
+                //Nothing to do
             }
 
             @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                //TO-DO
+            public void onSuccess(DataSnapshot data) {
+                String currentMail = controller.getCurrentUserEmail();
+
+                for (DataSnapshot userSnapshot : data.getChildren()){
+                    User user = userSnapshot.getValue(User.class);
+
+                    if (user.getMail().equals(currentMail)){
+                        currentUserId = user.getId();
+                    }
+                }
             }
 
             @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-                //TO-DO
+            public void onFailed(DatabaseError databaseError) {
+                Log.e("MssgCurrentUser error", databaseError.getMessage());
+            }
+        });
+    }
+
+    /**
+     * Show database messages in recycler view
+     */
+    private void getMessagesList(){
+
+        controller.readData(databaseMessage, new OnGetDataListener() {
+            @Override
+            public void onStart() {
+                progressDialog.setMessage(getString(R.string.loadingData));
+                progressDialog.show();
             }
 
             @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-                //TO-DO
+            public void onSuccess(DataSnapshot data) {
+                messages.clear();
+                for (DataSnapshot messageSnapshot : data.getChildren()) {
+                    Message message = messageSnapshot.getValue(Message.class);
+                    if (group != null) {
+                        if (message.getGroup().equals(group.getId())){
+                            messages.add(message);
+                        }
+                    }
+                    if (trip != null) {
+                        if (message.getTrip().equals(trip.getId())) {
+                            messages.add(message);
+                        }
+                    }
+
+                }
+                messageAdapter.notifyDataSetChanged();
+                progressDialog.dismiss();
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
-                //TO-DO
+            public void onFailed(DatabaseError databaseError) {
+                Log.e("ListMssg error", databaseError.getMessage());
             }
         });
     }

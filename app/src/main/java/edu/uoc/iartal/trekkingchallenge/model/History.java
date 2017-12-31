@@ -3,16 +3,14 @@ package edu.uoc.iartal.trekkingchallenge.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-/**
- * Created by Ingrid Artal on 26/12/2017.
- */
-
+// History object class. Implements Parcelable to pass history object between activities
 public class History implements Parcelable {
 
-    private Double totalDistance, totalTime;
+    private double totalDistance, totalTime;
     private int challengeWin, totalSlope;
     private String id, user;
 
+    // Default constructor required for calls to DataSnapshot.getValue(History.class)
     public History() {
 
     }

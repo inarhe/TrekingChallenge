@@ -9,11 +9,12 @@ import java.util.Map;
 // Challenge object class. Implements Parcelable to pass challenge object between activities
 public class Challenge implements Parcelable{
     private String id, name, description, limitDate, route, userAdmin, classification;
-    private Boolean isPublic;
+    private boolean isPublic;
     private int numberOfMembers;
     private Map<String, String> results = new HashMap<>();
     private Map<String, String> members = new HashMap<>();
 
+    // Default constructor required for calls to DataSnapshot.getValue(Challenge.class)
     public Challenge() {
 
     }

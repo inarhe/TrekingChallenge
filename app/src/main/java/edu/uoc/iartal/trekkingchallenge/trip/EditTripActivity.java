@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.DatePicker;
@@ -16,26 +17,31 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
 import edu.uoc.iartal.trekkingchallenge.R;
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
 import edu.uoc.iartal.trekkingchallenge.common.FirebaseController;
-import edu.uoc.iartal.trekkingchallenge.common.OnCompleteTaskListener;
+import edu.uoc.iartal.trekkingchallenge.interfaces.OnCompleteTaskListener;
+import edu.uoc.iartal.trekkingchallenge.interfaces.OnGetDataListener;
 import edu.uoc.iartal.trekkingchallenge.model.Trip;
+import edu.uoc.iartal.trekkingchallenge.model.TripDone;
 import edu.uoc.iartal.trekkingchallenge.user.LoginActivity;
 
 public class EditTripActivity extends AppCompatActivity {
-    private DatabaseReference databaseTrip;
+    private DatabaseReference databaseTrip, databaseDone;
     private Trip trip;
     private EditText editTextName, editTextDescription, dateEditText;
     private ProgressDialog progressDialog;
     private Boolean updateDate, updateDesc;
-    private String newDescription, newDate;
+    private String newName, newDescription, newDate;
     private Calendar dateSelected;
     private SimpleDateFormat sdf;
     private DatePickerDialog.OnDateSetListener date;
@@ -70,6 +76,7 @@ public class EditTripActivity extends AppCompatActivity {
 
         // Get database references
         databaseTrip = controller.getDatabaseReference(FireBaseReferences.TRIP_REFERENCE);
+        databaseDone = controller.getDatabaseReference(FireBaseReferences.TRIPSDONE_REFERENCE);
 
         // Link layout elements with variables
         editTextName = (EditText) findViewById(R.id.etTripName);
@@ -113,7 +120,7 @@ public class EditTripActivity extends AppCompatActivity {
         updateDate = false;
 
         // Get input parameters
-        String newName = editTextName.getText().toString().trim();
+        newName = editTextName.getText().toString().trim();
         newDescription = editTextDescription.getText().toString().trim();
         newDate = dateEditText.getText().toString().trim();
 
@@ -151,7 +158,8 @@ public class EditTripActivity extends AppCompatActivity {
         if (updateName) {
             // Execute controller method to update database trip object. Use OnGetDataListener interface to know
             // when database is updated
-            controller.executeTask(databaseTrip, trip.getId(), FireBaseReferences.TRIP_NAME_REFERENCE, newName, new OnCompleteTaskListener() {
+            getTripResults();
+            controller.executeAddTask(databaseTrip, trip.getId(), FireBaseReferences.TRIP_NAME_REFERENCE, newName, new OnCompleteTaskListener() {
                         @Override
                         public void onStart() {
                             //Nothing to do
@@ -236,5 +244,35 @@ public class EditTripActivity extends AppCompatActivity {
      */
     private void updateDateValue(){
         controller.editStringParameter(databaseTrip, trip.getId(), FireBaseReferences.TRIP_DATE_REFERENCE, newDate);
+    }
+
+    /**
+     * Update trip name of trips results
+     */
+    private void getTripResults(){
+        final ArrayList<String> tripsDone = new ArrayList<>();
+        tripsDone.addAll(trip.getDone().keySet());
+
+        controller.readData(databaseDone, new OnGetDataListener() {
+            @Override
+            public void onStart() {
+                // Nothing to do
+            }
+
+            @Override
+            public void onSuccess(DataSnapshot data) {
+                for (DataSnapshot doneSnapshot : data.getChildren()){
+                    TripDone tripDone = doneSnapshot.getValue(TripDone.class);
+                    if (tripsDone.contains(tripDone.getId())){
+                        controller.editStringParameter(databaseDone, tripDone.getId(), FireBaseReferences.TRIPSDONE_TRIP_NAME, newName);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailed(DatabaseError databaseError) {
+                Log.e("Edit tripDone", databaseError.getMessage());
+            }
+        });
     }
 }

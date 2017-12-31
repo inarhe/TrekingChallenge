@@ -4,9 +4,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.net.Uri;
-import android.renderscript.Sampler;
 import android.support.annotation.NonNull;
-import android.support.multidex.MultiDexApplication;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -24,7 +22,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -32,7 +29,10 @@ import com.google.firebase.storage.StorageReference;
 import java.util.ArrayList;
 
 import edu.uoc.iartal.trekkingchallenge.R;
-import edu.uoc.iartal.trekkingchallenge.group.AddGroupActivity;
+import edu.uoc.iartal.trekkingchallenge.interfaces.OnCompleteTaskListener;
+import edu.uoc.iartal.trekkingchallenge.interfaces.OnGetChildListener;
+import edu.uoc.iartal.trekkingchallenge.interfaces.OnGetDataListener;
+import edu.uoc.iartal.trekkingchallenge.interfaces.OnGetPhotoListener;
 import edu.uoc.iartal.trekkingchallenge.model.Challenge;
 import edu.uoc.iartal.trekkingchallenge.model.ChallengeResult;
 import edu.uoc.iartal.trekkingchallenge.model.Finished;
@@ -43,7 +43,6 @@ import edu.uoc.iartal.trekkingchallenge.model.Rating;
 import edu.uoc.iartal.trekkingchallenge.model.Trip;
 import edu.uoc.iartal.trekkingchallenge.model.TripDone;
 import edu.uoc.iartal.trekkingchallenge.model.User;
-import edu.uoc.iartal.trekkingchallenge.trip.FinishedTripActivity;
 
 /**
  * Created by Ingrid Artal on 27/12/2017.
@@ -228,7 +227,7 @@ public class FirebaseController {
         });
     }
 
-    public void executeTask (DatabaseReference database, String child, String reference, String value, final OnCompleteTaskListener listener){
+    public void executeAddTask(DatabaseReference database, String child, String reference, String value, final OnCompleteTaskListener listener){
         listener.onStart();
         database.child(child).child(reference).setValue(value).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
@@ -240,6 +239,24 @@ public class FirebaseController {
                 }
             }
         });
+    }
+
+    public void executeRemoveTask(DatabaseReference database, String child, final OnCompleteTaskListener listener){
+        listener.onStart();
+        database.child(child).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()){
+                    listener.onSuccess();
+                } else {
+                    listener.onFailed();
+                }
+            }
+        });
+    }
+
+    public void removeValue (DatabaseReference database, String child, String reference, String value){
+        database.child(child).child(reference).child(value).removeValue();
     }
 
     public void editStringParameter(DatabaseReference database, String child, String reference, String value){
@@ -322,6 +339,31 @@ public class FirebaseController {
                     Toast.makeText(context, R.string.challengeSaved, Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(context, R.string.failedAddChallenge, Toast.LENGTH_SHORT).show();
+                    Log.e("error",task.getException().getMessage());
+                }
+            }
+        });
+    }
+
+    public void addNewMessage(final DatabaseReference databaseMessage, final Message message, final String user, final String idGroup, final String idTrip, final Context context){
+        final DatabaseReference databaseUser = getDatabaseReference(FireBaseReferences.USER_REFERENCE);
+        final DatabaseReference databaseGroup = getDatabaseReference(FireBaseReferences.GROUP_REFERENCE);
+        final DatabaseReference databaseTrip = getDatabaseReference(FireBaseReferences.TRIP_REFERENCE);
+
+        databaseMessage.child(message.getId()).setValue(message).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if(task.isSuccessful()) {
+                    databaseUser.child(user).child(FireBaseReferences.MESSAGES_REFERENCE).child(message.getId()).setValue("true");
+
+                    if (idGroup.equals(context.getResources().getString(R.string.none))){
+                        databaseTrip.child(idTrip).child(FireBaseReferences.MESSAGES_REFERENCE).child(message.getId()).setValue("true");
+                    } else {
+                        databaseGroup.child(idGroup).child(FireBaseReferences.MESSAGES_REFERENCE).child(message.getId()).setValue("true");
+                    }
+                    Toast.makeText(context, R.string.messagePublished, Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(context, R.string.messageNotPublished, Toast.LENGTH_SHORT).show();
                     Log.e("error",task.getException().getMessage());
                 }
             }

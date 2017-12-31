@@ -5,8 +5,10 @@ import android.os.Parcelable;
 
 // Message object class. Implements Parcelable to pass message object between activities
 public class Message implements Parcelable{
+
     private String id, text, user, group, trip;
 
+    // Default constructor required for calls to DataSnapshot.getValue(Message.class)
     public Message(){
 
     }

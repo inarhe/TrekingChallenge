@@ -9,11 +9,13 @@ import java.util.Map;
 
 // Group object class. Implements Parcelable to pass group object between activities
 public class Group implements Parcelable {
+
     private String id, name, description, userAdmin;
-    private Boolean isPublic;
+    private boolean isPublic;
     private int numberOfMembers;
     private Map<String, String> members = new HashMap<>();
 
+    // Default constructor required for calls to DataSnapshot.getValue(Group.class)
     public Group() {
 
     }

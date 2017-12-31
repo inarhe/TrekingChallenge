@@ -14,26 +14,19 @@ import java.util.ArrayList;
 import edu.uoc.iartal.trekkingchallenge.R;
 import edu.uoc.iartal.trekkingchallenge.model.ChallengeResult;
 
-/**
- * Created by Ingrid Artal on 22/12/2017.
- */
 
 public class ChallengeHistoryAdapter extends ArrayAdapter<ChallengeResult> {
 
-    private Context mContext;
+    private Context context;
     private ArrayList<ChallengeResult> challengeResults;
-    private String currentUserName;
-    private  ChallengeResult challengeResult;
-    private  ViewHolder holder;
-    private View row;
 
     public ChallengeHistoryAdapter(@NonNull Context context, int resource, @NonNull ArrayList<ChallengeResult> objects) {
         super(context, resource, objects);
-        this.mContext = context;
+        this.context = context;
         this.challengeResults = objects;
     }
 
-    // Holda views of the ListView to improve its scrolling performance
+    // Link layout elements to variables only once
     static class ViewHolder {
         TextView textViewName, textViewDate, textViewPosition, textViewTime, textViewDistance;
 
@@ -62,24 +55,28 @@ public class ChallengeHistoryAdapter extends ArrayAdapter<ChallengeResult> {
         return position;
     }
 
+    /**
+     * Show each item of user challenge results list in list view
+     * @param position
+     * @param convertView
+     * @param parent
+     * @return
+     */
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-
-
-        row = convertView;
-        holder = null;
+        View row = convertView;
+        ViewHolder holder = null;
 
         if (row == null){
-            row = LayoutInflater.from(mContext).inflate(R.layout.adapter_challenge_history, parent, false);
+            row = LayoutInflater.from(context).inflate(R.layout.adapter_challenge_history, parent, false);
             holder = new ViewHolder(row);
             row.setTag(holder);
         } else {
             holder = (ViewHolder) row.getTag();
         }
 
-        //DatabaseReference databaseChallengeResult = FirebaseDatabase.getInstance().getReference(FireBaseReferences.CHALLENGERESULT_REFERENCE);
-        challengeResult = this.getItem(position);
+        ChallengeResult challengeResult = this.getItem(position);
 
         holder.textViewName.setText(challengeResult.getName());
         holder.textViewDate.setText(challengeResult.getDate());

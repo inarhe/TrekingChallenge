@@ -3,7 +3,6 @@ package edu.uoc.iartal.trekkingchallenge.adapter;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -15,26 +14,27 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.uoc.iartal.trekkingchallenge.common.FirebaseController;
 import edu.uoc.iartal.trekkingchallenge.group.EditGroupActivity;
 import edu.uoc.iartal.trekkingchallenge.R;
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
 import edu.uoc.iartal.trekkingchallenge.group.ShowGroupActivity;
+import edu.uoc.iartal.trekkingchallenge.interfaces.OnCompleteTaskListener;
 import edu.uoc.iartal.trekkingchallenge.model.Group;
 
 
 public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.GroupViewHolder> {
+
     private List<Group> groups;
     private ArrayList<Boolean> isVisibleArray = new ArrayList<>();
     private ArrayList<String> groupMembers = new ArrayList<>();
     private Context context;
+    private FirebaseController controller = new FirebaseController();
 
     // Object which represents a list item and save view references
     public static class GroupViewHolder extends RecyclerView.ViewHolder {
@@ -78,31 +78,28 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.GroupViewHol
      */
     @Override
     public void onBindViewHolder(GroupViewHolder viewHolder, final int position) {
-        if (position < groups.size()){
-            viewHolder.textViewGroupName.setText(groups.get(position).getName());
-            viewHolder.imageViewGroup.setImageResource(R.drawable.ic_people);
+        viewHolder.textViewGroupName.setText(groups.get(position).getName());
+        viewHolder.imageViewGroup.setImageResource(R.drawable.ic_people);
 
-            if (groups.get(position).getIsPublic()) {
-                viewHolder.textViewIsPublic.setText(R.string.publicGroup);
-            } else {
-                viewHolder.textViewIsPublic.setText(R.string.privateGroup);
-            }
-
-            // Show delete button only if current user is group admin
-            if (isVisibleArray.isEmpty()){
-                viewHolder.buttonDelete.setVisibility(View.GONE);
-                viewHolder.buttonEdit.setVisibility(View.GONE);
-            } else {
-                if(isVisibleArray.get(position)){
-                    viewHolder.buttonDelete.setVisibility(View.VISIBLE);
-                    viewHolder.buttonEdit.setVisibility(View.VISIBLE);
-                } else {
-                    viewHolder.buttonDelete.setVisibility(View.GONE);
-                    viewHolder.buttonEdit.setVisibility(View.GONE);
-                }
-            }
+        if (groups.get(position).getIsPublic()) {
+            viewHolder.textViewIsPublic.setText(R.string.publicGroup);
+        } else {
+            viewHolder.textViewIsPublic.setText(R.string.privateGroup);
         }
 
+        // Show delete and edit buttons only if current user is group admin
+        if (isVisibleArray.isEmpty()){
+            viewHolder.buttonDelete.setVisibility(View.GONE);
+            viewHolder.buttonEdit.setVisibility(View.GONE);
+        } else {
+            if(isVisibleArray.get(position)){
+                viewHolder.buttonDelete.setVisibility(View.VISIBLE);
+                viewHolder.buttonEdit.setVisibility(View.VISIBLE);
+            } else {
+                viewHolder.buttonDelete.setVisibility(View.GONE);
+                viewHolder.buttonEdit.setVisibility(View.GONE);
+            }
+        }
 
         // When cardview is clicked starts show detail group activity
         viewHolder.cardView.setOnClickListener(new View.OnClickListener() {
@@ -123,6 +120,7 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.GroupViewHol
             public void onClick(View v) {
                 // Get group members
                 getMembers(position);
+
                 context = v.getContext();
 
                 // Delete group and its dependencies
@@ -134,7 +132,7 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.GroupViewHol
         viewHolder.buttonEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Context context = v.getContext();
+                context = v.getContext();
 
                 Intent intent = new Intent(context, EditGroupActivity.class);
                 intent.putExtra("group", groups.get(position));
@@ -145,7 +143,7 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.GroupViewHol
     }
 
     /**
-     * Define visibility of delete button for each element
+     * Define visibility of delete and edit buttons for each element
      * @param visible
      */
     public void setVisibility(Boolean visible){
@@ -154,10 +152,6 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.GroupViewHol
         } else {
             isVisibleArray.add(false);
         }
-    }
-
-    public void removeVisibility(){
-        isVisibleArray.clear();
     }
 
     /**
@@ -195,22 +189,29 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.GroupViewHol
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
-                        DatabaseReference databaseGroup = FirebaseDatabase.getInstance().getReference(FireBaseReferences.GROUP_REFERENCE);
-                        databaseGroup.child(groups.get(position).getId()).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                        DatabaseReference databaseGroup = controller.getDatabaseReference(FireBaseReferences.GROUP_REFERENCE);
+
+                        controller.executeRemoveTask(databaseGroup, groups.get(position).getId(), new OnCompleteTaskListener() {
                             @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if (task.isSuccessful()) {
-                                    DatabaseReference databaseUser = FirebaseDatabase.getInstance().getReference(FireBaseReferences.USER_REFERENCE);
-                                    for (String user:groupMembers){
-                                        databaseUser.child(user).child(FireBaseReferences.USER_GROUPS_REFERENCE).child(groups.get(position).getId()).removeValue();
-                                    }
-                                    Toast.makeText(context , R.string.groupDeleted, Toast.LENGTH_SHORT).show();
-                                    groups.remove(position);
-                                    isVisibleArray.remove(position);
-                                    notifyDataSetChanged();
-                                } else {
-                                    Toast.makeText(context, R.string.groupNotDeleted, Toast.LENGTH_SHORT).show();
+                            public void onStart() {
+                                //Nothing to do
+                            }
+
+                            @Override
+                            public void onSuccess() {
+                                DatabaseReference databaseUser = controller.getDatabaseReference(FireBaseReferences.USER_REFERENCE);
+                                for (String member : groupMembers) {
+                                    controller.removeValue(databaseUser, member, FireBaseReferences.USER_GROUPS_REFERENCE, groups.get(position).getId());
                                 }
+                                Toast.makeText(context, R.string.groupDeleted, Toast.LENGTH_SHORT).show();
+                                groups.remove(position);
+                                isVisibleArray.remove(position);
+                                notifyDataSetChanged();
+                            }
+
+                            @Override
+                            public void onFailed() {
+                                Toast.makeText(context, R.string.groupNotDeleted, Toast.LENGTH_SHORT).show();
                             }
                         });
                     }

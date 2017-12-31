@@ -6,9 +6,11 @@ import android.os.Parcelable;
 
 // Finished object class. Implements Parcelable to pass finished object between activities
 public class Finished implements Parcelable {
-    private String id, user, route, date, name;
-    private Double distance, time;
 
+    private String id, user, route, date, name;
+    private double distance, time;
+
+    // Default constructor required for calls to DataSnapshot.getValue(Finished.class)
     public Finished (){
 
     }

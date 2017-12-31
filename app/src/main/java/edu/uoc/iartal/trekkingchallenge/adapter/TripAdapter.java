@@ -3,7 +3,6 @@ package edu.uoc.iartal.trekkingchallenge.adapter;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -15,16 +14,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import edu.uoc.iartal.trekkingchallenge.R;
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
+import edu.uoc.iartal.trekkingchallenge.common.FirebaseController;
+import edu.uoc.iartal.trekkingchallenge.interfaces.OnCompleteTaskListener;
 import edu.uoc.iartal.trekkingchallenge.model.Trip;
 import edu.uoc.iartal.trekkingchallenge.trip.EditTripActivity;
 import edu.uoc.iartal.trekkingchallenge.trip.ShowTripActivity;
@@ -35,6 +33,7 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
     private ArrayList<Boolean> isVisibleArray = new ArrayList<>();
     private ArrayList<String> tripMembers = new ArrayList<>();
     private Context context;
+    private FirebaseController controller = new FirebaseController();
 
     // Object which represents a list item and save view references
     public static class TripViewHolder extends RecyclerView.ViewHolder {
@@ -89,7 +88,7 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
             viewHolder.textViewIsPublic.setText(R.string.privateTrip);
         }
 
-        // Show delete button only if current user is trip admin
+        // Show delete and edit buttons only if current user is trip admin
         if (isVisibleArray.isEmpty()){
             viewHolder.buttonDelete.setVisibility(View.GONE);
             viewHolder.buttonEdit.setVisibility(View.GONE);
@@ -122,6 +121,7 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
             public void onClick(View v) {
                 // Get trip members
                 getMembers(position);
+
                 context = v.getContext();
 
                 // Delete trip and its dependencies
@@ -133,7 +133,7 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
         viewHolder.buttonEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Context context = v.getContext();
+                context = v.getContext();
 
                 Intent intent = new Intent(context, EditTripActivity.class);
                 intent.putExtra("trip", trips.get(position));
@@ -144,7 +144,7 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
     }
 
     /**
-     * Define visibility of delete button for each element
+     * Define visibility of delete and edit buttons for each element
      * @param visible
      */
     public void setVisibility(Boolean visible){
@@ -190,22 +190,29 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
-                        DatabaseReference databaseTrip = FirebaseDatabase.getInstance().getReference(FireBaseReferences.TRIP_REFERENCE);
-                        databaseTrip.child(trips.get(position).getId()).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                        DatabaseReference databaseTrip = controller.getDatabaseReference(FireBaseReferences.TRIP_REFERENCE);
+
+                        controller.executeRemoveTask(databaseTrip, trips.get(position).getId(), new OnCompleteTaskListener() {
                             @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if (task.isSuccessful()) {
-                                    DatabaseReference databaseUser = FirebaseDatabase.getInstance().getReference(FireBaseReferences.USER_REFERENCE);
-                                    for (String user:tripMembers){
-                                        databaseUser.child(user).child(FireBaseReferences.USER_TRIPS_REFERENCE).child(trips.get(position).getId()).removeValue();
-                                    }
-                                    Toast.makeText(context , R.string.tripDeleted, Toast.LENGTH_LONG).show();
-                                    trips.remove(position);
-                                    isVisibleArray.remove(position);
-                                    notifyDataSetChanged();
-                                } else {
-                                    Toast.makeText(context, R.string.tripNotDeleted, Toast.LENGTH_LONG).show();
+                            public void onStart() {
+                                //Nothing to do
+                            }
+
+                            @Override
+                            public void onSuccess() {
+                                DatabaseReference databaseUser = controller.getDatabaseReference(FireBaseReferences.USER_REFERENCE);
+                                for (String member : tripMembers) {
+                                    controller.removeValue(databaseUser, member, FireBaseReferences.USER_TRIPS_REFERENCE, trips.get(position).getId());
                                 }
+                                Toast.makeText(context, R.string.tripDeleted, Toast.LENGTH_SHORT).show();
+                                trips.remove(position);
+                                isVisibleArray.remove(position);
+                                notifyDataSetChanged();
+                            }
+
+                            @Override
+                            public void onFailed() {
+                                Toast.makeText(context, R.string.tripNotDeleted, Toast.LENGTH_SHORT).show();
                             }
                         });
                     }

@@ -104,7 +104,7 @@ public class RegisterActivity extends AppCompatActivity {
         progressDialog.show();
 
         // Execute controller method to create user in database
-        controller.createUserAndHistory(alias, name, mail, password, this, progressDialog);
+        controller.addNewUser(alias, name, mail, password, this, progressDialog);
     }
 
     /**

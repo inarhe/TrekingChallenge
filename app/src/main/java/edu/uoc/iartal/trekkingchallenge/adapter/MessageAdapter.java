@@ -26,6 +26,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 
     private ArrayList<Message> messages = new ArrayList<>();
     private FirebaseController controller = new FirebaseController();
+    private DatabaseReference databaseUser;
 
     // Object which represents a list item and save view references
     public static class MessageViewHolder extends RecyclerView.ViewHolder {
@@ -41,6 +42,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 
     public MessageAdapter(ArrayList<Message> messages) {
         this.messages = messages;
+
+        databaseUser = controller.getDatabaseReference(FireBaseReferences.USER_REFERENCE);
     }
 
     @Override
@@ -62,7 +65,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
      */
     @Override
     public void onBindViewHolder(final MessageAdapter.MessageViewHolder viewHolder, final int position) {
-        DatabaseReference databaseUser = controller.getDatabaseReference(FireBaseReferences.USER_REFERENCE);
 
         controller.readDataOnce(databaseUser, new OnGetDataListener() {
             @Override

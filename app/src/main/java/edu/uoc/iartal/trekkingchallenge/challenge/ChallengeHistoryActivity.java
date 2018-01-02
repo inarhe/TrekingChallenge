@@ -119,7 +119,7 @@ public class ChallengeHistoryActivity extends AppCompatActivity {
 
                     }
                 });
-                ChallengeHistoryAdapter adapter = new ChallengeHistoryAdapter(getApplicationContext(), R.layout.adapter_challenge_history, challengeResults);
+                ChallengeHistoryAdapter adapter = new ChallengeHistoryAdapter(getBaseContext(), R.layout.adapter_challenge_history, challengeResults);
                 historyList.setAdapter(adapter);
             }
 

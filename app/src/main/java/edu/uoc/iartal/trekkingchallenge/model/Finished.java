@@ -8,20 +8,22 @@ import android.os.Parcelable;
 public class Finished implements Parcelable {
 
     private String id, user, route, date, name;
-    private double distance, time;
+    private double distance;
+    private int hours, minutes;
 
     // Default constructor required for calls to DataSnapshot.getValue(Finished.class)
     public Finished (){
 
     }
 
-    public Finished(String id, String user, String route, String date, Double distance, Double time, String name) {
+    public Finished(String id, String user, String route, String date, Double distance, int hours, int minutes, String name) {
         this.id = id;
         this.user = user;
         this.route = route;
         this.date = date;
         this.distance = distance;
-        this.time = time;
+        this.hours = hours;
+        this.minutes = minutes;
         this.name = name;
     }
 
@@ -31,7 +33,8 @@ public class Finished implements Parcelable {
         this.route = in.readString();
         this.date = in.readString();
         this.distance = in.readDouble();
-        this.time = in.readDouble();
+        this.hours = in.readInt();
+        this.minutes = in.readInt();
         this.name = in.readString();
     }
 
@@ -75,12 +78,20 @@ public class Finished implements Parcelable {
         this.distance = distance;
     }
 
-    public Double getTime() {
-        return time;
+    public int getHours() {
+        return hours;
     }
 
-    public void setTime(Double time) {
-        this.time = time;
+    public void setHours(int hours) {
+        this.hours = hours;
+    }
+
+    public int getMinutes() {
+        return minutes;
+    }
+
+    public void setMinutes(int minutes) {
+        this.minutes = minutes;
     }
 
     public String getName() {
@@ -103,7 +114,8 @@ public class Finished implements Parcelable {
         dest.writeString(route);
         dest.writeString(date);
         dest.writeDouble(distance);
-        dest.writeDouble(time);
+        dest.writeInt(hours);
+        dest.writeInt(minutes);
         dest.writeString(name);
     }
 

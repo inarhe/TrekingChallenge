@@ -20,6 +20,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
@@ -41,13 +42,13 @@ public class FinishedChallengeActivity extends AppCompatActivity {
     private SimpleDateFormat sdf;
     private DatePickerDialog.OnDateSetListener date;
     private User currentUser;
-    private EditText editTextDate, editTextDist, editTextHour;
+    private EditText editTextDate, editTextDist, editTextHour, editTextMin;
     private Context context;
     private Challenge challenge;
-    private DatabaseReference databaseUser, databaseResult, databaseChallenge, databaseHistory, databaseRoute;
-    private double historyTime, historyDistance;
-    private String finishDist, finishTime;
-    private int historyWins, historySlope, routeSlope;
+    private DatabaseReference databaseUser, databaseResult, databaseHistory, databaseRoute;
+    private double historyDistance;
+    private String finishDist, finishHour, finishMin;
+    private int historyWins, historySlope, historyHour, historyMin, routeSlope;
     private FirebaseController controller;
     private CommonFunctionality common;
 
@@ -84,7 +85,6 @@ public class FinishedChallengeActivity extends AppCompatActivity {
         // Get database references
         databaseUser = controller.getDatabaseReference(FireBaseReferences.USER_REFERENCE);
         databaseResult = controller.getDatabaseReference(FireBaseReferences.CHALLENGERESULT_REFERENCE);
-        databaseChallenge = controller.getDatabaseReference(FireBaseReferences.CHALLENGE_REFERENCE);
         databaseHistory = controller.getDatabaseReference(FireBaseReferences.HISTORY_REFERENCE);
         databaseRoute = controller.getDatabaseReference(FireBaseReferences.ROUTE_REFERENCE);
 
@@ -92,6 +92,7 @@ public class FinishedChallengeActivity extends AppCompatActivity {
         editTextDate = (EditText) findViewById(R.id.etDateFinish);
         editTextDist = (EditText) findViewById(R.id.etDistFinish);
         editTextHour = (EditText) findViewById(R.id.etHourFinish);
+        editTextMin = (EditText) findViewById(R.id.etMinFinish);
 
         // Set calendar and date format
         dateSelected = Calendar.getInstance();
@@ -121,7 +122,8 @@ public class FinishedChallengeActivity extends AppCompatActivity {
         String idResult;
         String finishDate = editTextDate.getText().toString().trim();
         finishDist = editTextDist.getText().toString().trim();
-        finishTime = editTextHour.getText().toString().trim();
+        finishHour = editTextHour.getText().toString().trim();
+        finishMin = editTextMin.getText().toString().trim();
 
         // Check input parameters. If some parameter is incorrect or empty, stops the function execution
         if (TextUtils.isEmpty(finishDist)) {
@@ -129,7 +131,12 @@ public class FinishedChallengeActivity extends AppCompatActivity {
             return;
         }
 
-        if (TextUtils.isEmpty(finishTime)) {
+        if (TextUtils.isEmpty(finishHour)) {
+            Toast.makeText(this, getString(R.string.timeAdvice), Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (TextUtils.isEmpty(finishMin)) {
             Toast.makeText(this, getString(R.string.timeAdvice), Toast.LENGTH_SHORT).show();
             return;
         }
@@ -140,18 +147,8 @@ public class FinishedChallengeActivity extends AppCompatActivity {
         if (idResult == null){
             Toast.makeText(getApplicationContext(), R.string.finishedFailed, Toast.LENGTH_SHORT).show();
         } else {
-            ChallengeResult challengeResult = new ChallengeResult(idResult, Double.parseDouble(finishDist), Double.parseDouble(finishTime), currentUser.getId(), currentUser.getAlias(), challenge.getId(), finishDate,ConstantsUtils.DEFAULT_RANKING_POSITION, challenge.getName());
-            controller.addNewChallengeResult(databaseResult, challengeResult, getApplicationContext());
-
-            // Update result list in user and challenge database nodes
-            try{
-                controller.updateStringParameter(databaseUser, currentUser.getId(), FireBaseReferences.USER_RESULT_REFERENCE, idResult);
-                controller.updateStringParameter(databaseChallenge, challenge.getId(), FireBaseReferences.CHALLENGE_FINISHED_REFERENCE, idResult);
-                Toast.makeText(getApplicationContext(), R.string.finishedSaved, Toast.LENGTH_SHORT).show();
-            }catch (Exception e){
-                e.printStackTrace();
-                Toast.makeText(getApplicationContext(), R.string.finishedFailed, Toast.LENGTH_SHORT).show();
-            }
+            ChallengeResult challengeResult = new ChallengeResult(idResult, Double.parseDouble(finishDist), Integer.parseInt(finishHour), Integer.parseInt(finishMin), currentUser.getId(), currentUser.getAlias(), challenge.getId(), finishDate, ConstantsUtils.DEFAULT_RANKING_POSITION, challenge.getName());
+            controller.addNewChallengeResult(databaseResult, challengeResult, currentUser.getId(), challenge.getId(), getApplicationContext());
 
             updateHistory(challengeResult);
 
@@ -245,7 +242,8 @@ public class FinishedChallengeActivity extends AppCompatActivity {
                     if (history.getId().equals(currentUser.getHistory())){
                         historyWins = history.getChallengeWin();
                         historyDistance = history.getTotalDistance();
-                        historyTime = history.getTotalTime();
+                        historyHour = history.getTotalHour();
+                        historyMin = history.getTotalMin();
                         historySlope = history.getTotalSlope();
                     }
                 }
@@ -270,6 +268,7 @@ public class FinishedChallengeActivity extends AppCompatActivity {
 
             @Override
             public void onSuccess(DataSnapshot data) {
+
                 for (DataSnapshot routeSnapshot : data.getChildren()) {
                     Route route = routeSnapshot.getValue(Route.class);
                     if (route.getName().equals(challenge.getRoute())) {
@@ -278,13 +277,14 @@ public class FinishedChallengeActivity extends AppCompatActivity {
                 }
                 int totalSlope = historySlope + routeSlope;
                 double totalDistance = common.round(historyDistance + Double.parseDouble(finishDist), ConstantsUtils.NUM_OF_DECIMALS);
-                double totalTime = common.round(common.sumHours(historyTime, Double.parseDouble(finishTime)),ConstantsUtils.NUM_OF_DECIMALS);
+                ArrayList<Integer> time = common.sumTime(historyHour, Integer.parseInt(finishHour), historyMin, Integer.parseInt(finishMin));
 
                 // Update user history with trip values
                 try{
                     controller.updateIntParameter(databaseHistory, currentUser.getHistory(), FireBaseReferences.HISTORY_SLOPE_REFERENCE, totalSlope);
                     controller.updateDoubleParameter(databaseHistory, currentUser.getHistory(), FireBaseReferences.HISTORY_DISTANCE_REFERENCE, totalDistance);
-                    controller.updateDoubleParameter(databaseHistory, currentUser.getHistory(), FireBaseReferences.HISTORY_TIME_REFERENCE, totalTime);
+                    controller.updateIntParameter(databaseHistory, currentUser.getHistory(), FireBaseReferences.HISTORY_HOUR_REFERENCE, time.get(0));
+                    controller.updateIntParameter(databaseHistory, currentUser.getHistory(), FireBaseReferences.HISTORY_MIN_REFERENCE, time.get(1));
 
                     if (challengeResult.getPosition() == 1){
                         controller.updateIntParameter(databaseHistory, currentUser.getHistory(), FireBaseReferences.HISTORY_WINS_REFERENCE, historyWins + 1);

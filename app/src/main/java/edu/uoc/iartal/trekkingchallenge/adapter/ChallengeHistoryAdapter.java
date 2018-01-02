@@ -81,7 +81,7 @@ public class ChallengeHistoryAdapter extends ArrayAdapter<ChallengeResult> {
         holder.textViewName.setText(challengeResult.getName());
         holder.textViewDate.setText(challengeResult.getDate());
         holder.textViewPosition.setText(Integer.toString(challengeResult.getPosition()));
-        holder.textViewTime.setText(String.valueOf(challengeResult.getTime()) + " h");
+        holder.textViewTime.setText(Integer.toString(challengeResult.getHours()) + "h" + Integer.toString(challengeResult.getMinutes()));
         holder.textViewDistance.setText(String.valueOf(challengeResult.getDistance()) + " km");
 
         return row;

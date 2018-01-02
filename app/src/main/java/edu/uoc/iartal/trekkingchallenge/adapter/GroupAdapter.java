@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 
 import java.util.ArrayList;
@@ -25,7 +28,9 @@ import edu.uoc.iartal.trekkingchallenge.R;
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
 import edu.uoc.iartal.trekkingchallenge.group.ShowGroupActivity;
 import edu.uoc.iartal.trekkingchallenge.interfaces.OnCompleteTaskListener;
+import edu.uoc.iartal.trekkingchallenge.interfaces.OnGetDataListener;
 import edu.uoc.iartal.trekkingchallenge.model.Group;
+import edu.uoc.iartal.trekkingchallenge.model.Message;
 
 
 public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.GroupViewHolder> {
@@ -33,6 +38,7 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.GroupViewHol
     private List<Group> groups;
     private ArrayList<Boolean> isVisibleArray = new ArrayList<>();
     private ArrayList<String> groupMembers = new ArrayList<>();
+    private ArrayList<String> groupMessages = new ArrayList<>();
     private Context context;
     private FirebaseController controller = new FirebaseController();
 
@@ -121,6 +127,9 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.GroupViewHol
                 // Get group members
                 getMembers(position);
 
+                // Get group messages
+                getMessages(position);
+
                 context = v.getContext();
 
                 // Delete group and its dependencies
@@ -175,6 +184,16 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.GroupViewHol
     }
 
     /**
+     * Get id of group messages
+     * @param position
+     */
+    private void getMessages(int position){
+        groupMessages.clear();
+        Group group = groups.get(position);
+        groupMessages.addAll(group.getMessages().keySet());
+    }
+
+    /**
      * Delete selected group and update groups list of each member
      * @param position
      */
@@ -191,6 +210,7 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.GroupViewHol
                         dialog.cancel();
                         DatabaseReference databaseGroup = controller.getDatabaseReference(FireBaseReferences.GROUP_REFERENCE);
 
+                        // Remove group from database
                         controller.executeRemoveTask(databaseGroup, groups.get(position).getId(), new OnCompleteTaskListener() {
                             @Override
                             public void onStart() {
@@ -199,10 +219,8 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.GroupViewHol
 
                             @Override
                             public void onSuccess() {
-                                DatabaseReference databaseUser = controller.getDatabaseReference(FireBaseReferences.USER_REFERENCE);
-                                for (String member : groupMembers) {
-                                    controller.removeValue(databaseUser, member, FireBaseReferences.USER_GROUPS_REFERENCE, groups.get(position).getId());
-                                }
+                                deleteGroupFromMembers(position);
+                                deleteMessages(position);
                                 Toast.makeText(context, R.string.groupDeleted, Toast.LENGTH_SHORT).show();
                                 groups.remove(position);
                                 isVisibleArray.remove(position);
@@ -227,5 +245,52 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.GroupViewHol
 
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
+    }
+
+    /**
+     * Delete dependencies of group members
+     * @param position
+     */
+    private void deleteGroupFromMembers(int position){
+        DatabaseReference databaseUser = controller.getDatabaseReference(FireBaseReferences.USER_REFERENCE);
+        for (String member : groupMembers) {
+            controller.removeValue(databaseUser, member, FireBaseReferences.USER_GROUPS_REFERENCE, groups.get(position).getId());
+        }
+    }
+
+    /**
+     * Delete group messages and their dependencies
+     * @param position
+     */
+    private void deleteMessages(int position){
+        final DatabaseReference databaseMessage = controller.getDatabaseReference(FireBaseReferences.MESSAGE_REFERENCE);
+        final DatabaseReference databaseUser = controller.getDatabaseReference(FireBaseReferences.USER_REFERENCE);
+
+        if (groupMessages.size() != 0){
+            controller.readDataOnce(databaseMessage, new OnGetDataListener() {
+                @Override
+                public void onStart() {
+                    //Nothing to do
+                }
+
+                @Override
+                public void onSuccess(DataSnapshot data) {
+                    for (DataSnapshot messageSnapshot : data.getChildren()){
+                        Message message = messageSnapshot.getValue(Message.class);
+                        if (groupMessages.contains(message.getId())){
+                            String sender = message.getUser();
+                            controller.removeObject(databaseMessage, message.getId());
+                            controller.removeValue(databaseUser, sender, FireBaseReferences.MESSAGES_REFERENCE, message.getId());
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailed(DatabaseError databaseError) {
+                    Log.e("DelGroupMssg error", databaseError.getMessage());
+                }
+            });
+
+        }
     }
 }

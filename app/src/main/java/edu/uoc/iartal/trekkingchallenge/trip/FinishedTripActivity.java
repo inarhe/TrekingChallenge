@@ -20,6 +20,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
@@ -41,12 +42,12 @@ public class FinishedTripActivity extends AppCompatActivity {
     private SimpleDateFormat sdf;
     private DatePickerDialog.OnDateSetListener date;
     private User currentUser;
-    private EditText editTextDate, editTextDist, editTextHour;
+    private EditText editTextDate, editTextDist, editTextHour, editTextMin;
     private Trip trip;
-    private String finishDist, finishHour;
-    private DatabaseReference databaseUser, databaseTripDone, databaseTrip, databaseHistory, databaseRoute;
-    private double historyTime, historyDistance;
-    private int historySlope, routeSlope;
+    private String finishDist, finishHour, finishMin;
+    private DatabaseReference databaseUser, databaseTripDone, databaseHistory, databaseRoute;
+    private double historyDistance;
+    private int historySlope, routeSlope, historyHour, historyMin;
     private FirebaseController controller;
     private Context context;
     private CommonFunctionality common;
@@ -84,7 +85,6 @@ public class FinishedTripActivity extends AppCompatActivity {
         // Get database references
         databaseUser = controller.getDatabaseReference(FireBaseReferences.USER_REFERENCE);
         databaseTripDone = controller.getDatabaseReference(FireBaseReferences.TRIPSDONE_REFERENCE);
-        databaseTrip = controller.getDatabaseReference(FireBaseReferences.TRIP_REFERENCE);
         databaseHistory = controller.getDatabaseReference(FireBaseReferences.HISTORY_REFERENCE);
         databaseRoute = controller.getDatabaseReference(FireBaseReferences.ROUTE_REFERENCE);
 
@@ -92,6 +92,7 @@ public class FinishedTripActivity extends AppCompatActivity {
         editTextDate = (EditText) findViewById(R.id.etDateFinish);
         editTextDist = (EditText) findViewById(R.id.etDistFinish);
         editTextHour = (EditText) findViewById(R.id.etHourFinish);
+        editTextMin = (EditText) findViewById(R.id.etMinFinish);
 
         // Set calendar and date format
         dateSelected = Calendar.getInstance();
@@ -123,6 +124,7 @@ public class FinishedTripActivity extends AppCompatActivity {
         String finishDate = editTextDate.getText().toString().trim();
         finishDist = editTextDist.getText().toString().trim();
         finishHour = editTextHour.getText().toString().trim();
+        finishMin = editTextMin.getText().toString().trim();
 
         // Check input parameters. If some parameter is incorrect or empty, stops the function execution
         if (TextUtils.isEmpty(finishDist)) {
@@ -135,24 +137,19 @@ public class FinishedTripActivity extends AppCompatActivity {
             return;
         }
 
+        if (TextUtils.isEmpty(finishMin)) {
+            Toast.makeText(this, getString(R.string.timeAdvice), Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         // Add trip result to firebase database
         idDone = controller.getFirebaseNewKey(databaseTripDone);
 
         if (idDone == null){
             Toast.makeText(getApplicationContext(), R.string.finishedFailed, Toast.LENGTH_SHORT).show();
         } else {
-            TripDone tripDone = new TripDone(idDone, Double.parseDouble(finishDist), Double.parseDouble(finishHour), currentUser.getId(), trip.getId(), finishDate, trip.getName(), trip.getRoute());
-            controller.addNewTripResult(databaseTripDone, tripDone, context);
-
-            // Update result list in user and challenge database nodes
-            try{
-                controller.updateStringParameter(databaseUser, currentUser.getId(), FireBaseReferences.USER_TRIPSDONE_REFERENCE, idDone);
-                controller.updateStringParameter(databaseTrip, trip.getId(), FireBaseReferences.TRIP_DONE_REFERENCE, idDone);
-                Toast.makeText(getApplicationContext(), R.string.finishedSaved, Toast.LENGTH_SHORT).show();
-            }catch (Exception e){
-                e.printStackTrace();
-                Toast.makeText(getApplicationContext(), R.string.finishedFailed, Toast.LENGTH_SHORT).show();
-            }
+            TripDone tripDone = new TripDone(idDone, Double.parseDouble(finishDist), Integer.parseInt(finishHour), Integer.parseInt(finishMin), currentUser.getId(), trip.getId(), finishDate, trip.getName(), trip.getRoute());
+            controller.addNewTripResult(databaseTripDone, tripDone, currentUser.getId(), trip.getId(), context);
 
             updateHistory();
         }
@@ -172,9 +169,7 @@ public class FinishedTripActivity extends AppCompatActivity {
      * Set current date format and DatePickerDialog
      */
     private void setDate(){
-        long currentDate = System.currentTimeMillis();
-        String dateString = sdf.format(currentDate);
-        editTextDate.setText(dateString);
+        editTextDate.setText(trip.getDate());
 
         date = new DatePickerDialog.OnDateSetListener() {
             @Override
@@ -244,7 +239,8 @@ public class FinishedTripActivity extends AppCompatActivity {
                     History history = historySnapshot.getValue(History.class);
                     if (history.getId().equals(currentUser.getHistory())){
                         historyDistance = history.getTotalDistance();
-                        historyTime = history.getTotalTime();
+                        historyHour = history.getTotalHour();
+                        historyMin = history.getTotalMin();
                         historySlope = history.getTotalSlope();
                     }
                 }
@@ -277,13 +273,14 @@ public class FinishedTripActivity extends AppCompatActivity {
                 }
                 int totalSlope = historySlope + routeSlope;
                 double totalDistance = common.round(historyDistance + Double.parseDouble(finishDist),ConstantsUtils.NUM_OF_DECIMALS);
-                double totalTime = common.round(common.sumHours(historyTime, Double.parseDouble(finishHour)),ConstantsUtils.NUM_OF_DECIMALS);
+                ArrayList<Integer> time = common.sumTime(historyHour, Integer.parseInt(finishHour), historyMin, Integer.parseInt(finishMin));
 
                 // Update user history with trip values
                 try{
                     controller.updateIntParameter(databaseHistory, currentUser.getHistory(), FireBaseReferences.HISTORY_SLOPE_REFERENCE, totalSlope);
                     controller.updateDoubleParameter(databaseHistory, currentUser.getHistory(), FireBaseReferences.HISTORY_DISTANCE_REFERENCE, totalDistance);
-                    controller.updateDoubleParameter(databaseHistory, currentUser.getHistory(), FireBaseReferences.HISTORY_TIME_REFERENCE, totalTime);
+                    controller.updateIntParameter(databaseHistory, currentUser.getHistory(), FireBaseReferences.HISTORY_HOUR_REFERENCE, time.get(0));
+                    controller.updateIntParameter(databaseHistory, currentUser.getHistory(), FireBaseReferences.HISTORY_MIN_REFERENCE, time.get(1));
                 }catch (Exception e){
                     e.printStackTrace();
                     Log.e("FinTrip upHist error", e.getMessage());

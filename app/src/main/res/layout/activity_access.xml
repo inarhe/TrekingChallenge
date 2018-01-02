@@ -9,62 +9,74 @@
     <include android:id="@+id/accessToolbar"
         layout="@layout/toolbar" />
 
-    <TextView
-        android:id="@+id/registeredText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginLeft="@dimen/margin_main"
-        android:layout_marginStart="@dimen/margin_main"
-        android:layout_marginTop="@dimen/marginTop_mainTitle"
-        android:text="@string/registeredText"
-        android:textAlignment="center"
-        android:textAppearance="@android:style/TextAppearance.Large"
-        android:textSize="@dimen/big_title" />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/cast_expanded_controller_control_toolbar_min_height">
 
-    <Button
-        android:id="@+id/loginButton"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/registeredText"
-        android:background="#009688"
-        android:textColor="#FFFFFF"
-        android:layout_marginLeft="@dimen/margin_main"
-        android:layout_marginRight="@dimen/margin_main"
-        android:layout_marginTop="@dimen/margin_below"
-        android:onClick="loginActivity"
-        android:text="@string/accessButton"
-        android:textSize="@dimen/title_info" />
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/noRegisteredText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/loginButton"
-        android:layout_marginLeft="@dimen/margin_main"
-        android:layout_marginStart="@dimen/margin_main"
-        android:layout_marginTop="@dimen/access_marginTop"
-        android:text="@string/noRegisteredText"
-        android:textAppearance="@android:style/TextAppearance.Large"
-        android:textSize="@dimen/big_title" />
+        <TextView
+            android:id="@+id/registeredText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="@dimen/margin_main"
+            android:layout_marginStart="@dimen/margin_main"
+            android:layout_marginTop="@dimen/marginTop_mainTitle"
+            android:text="@string/registeredText"
+            android:textAlignment="center"
+            android:textAppearance="@android:style/TextAppearance.Large"
+            android:textSize="@dimen/big_title" />
 
-    <Button
-        android:id="@+id/registerButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/noRegisteredText"
-        android:background="#009688"
-        android:textColor="#FFFFFF"
-        android:layout_marginLeft="@dimen/margin_main"
-        android:layout_marginRight="@dimen/margin_main"
-        android:layout_marginTop="@dimen/margin_below"
-        android:onClick="registerActivity"
-        android:text="@string/registerUserButton"
-        android:textSize="@dimen/title_info" />
+        <Button
+            android:id="@+id/loginButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/registeredText"
+            android:background="#009688"
+            android:textColor="#FFFFFF"
+            android:layout_marginLeft="@dimen/margin_main"
+            android:layout_marginRight="@dimen/margin_main"
+            android:layout_marginTop="@dimen/margin_below"
+            android:onClick="loginActivity"
+            android:text="@string/accessButton"
+            android:textSize="@dimen/title_info" />
+
+        <TextView
+            android:id="@+id/noRegisteredText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/loginButton"
+            android:layout_marginLeft="@dimen/margin_main"
+            android:layout_marginStart="@dimen/margin_main"
+            android:layout_marginTop="@dimen/access_marginTop"
+            android:text="@string/noRegisteredText"
+            android:textAppearance="@android:style/TextAppearance.Large"
+            android:textSize="@dimen/big_title" />
+
+        <Button
+            android:id="@+id/registerButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/noRegisteredText"
+            android:background="#009688"
+            android:textColor="#FFFFFF"
+            android:layout_marginLeft="@dimen/margin_main"
+            android:layout_marginRight="@dimen/margin_main"
+            android:layout_marginTop="@dimen/margin_below"
+            android:onClick="registerActivity"
+            android:text="@string/registerUserButton"
+            android:textSize="@dimen/title_info" />
+    </LinearLayout>
+    </ScrollView>
 </RelativeLayout>

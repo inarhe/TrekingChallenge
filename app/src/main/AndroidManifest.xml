@@ -25,6 +25,7 @@
         <!-- Common activities -->
         <activity
             android:name=".common.SplashActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -54,11 +55,6 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".common.MainActivity" />
-        </activity>
-        <activity android:name=".user.EditProfileActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".user.UserAreaActivity" />
         </activity>
         <activity android:name=".user.ListUsersActivity">
             <meta-data

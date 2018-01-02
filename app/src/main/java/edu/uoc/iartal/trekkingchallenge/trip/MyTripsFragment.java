@@ -241,7 +241,7 @@ public class MyTripsFragment extends Fragment implements SearchView.OnQueryTextL
                         int i = trips.indexOf(trip);
                         Trip tripArray = trips.get(i);
                         if (!tripArray.getName().equals(trip.getName()) || !tripArray.getDescription().equals(trip.getDescription())
-                                || !tripArray.getDate().equals(trip.getDate())){
+                                || !tripArray.getDate().equals(trip.getDate()) || (tripArray.getNumberOfMembers() != trip.getNumberOfMembers())){
                             trips.set(i, trip);
                         }
                     }

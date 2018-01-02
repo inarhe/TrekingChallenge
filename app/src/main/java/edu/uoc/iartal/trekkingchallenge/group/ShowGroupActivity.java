@@ -171,6 +171,11 @@ public class ShowGroupActivity extends AppCompatActivity {
             return;
         }
 
+        if (currentUser.getId().equals(group.getUserAdmin())){
+            Toast.makeText(getApplicationContext(), R.string.adviceAdminGroup, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         // Create alert dialog to ask user confirmation
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(getString(R.string.groupLeftAsk));

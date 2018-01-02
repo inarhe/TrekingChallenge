@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +31,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
+import edu.uoc.iartal.trekkingchallenge.common.FirebaseController;
+import edu.uoc.iartal.trekkingchallenge.interfaces.OnGetDataListener;
+import edu.uoc.iartal.trekkingchallenge.interfaces.OnGetPhotoListener;
 import edu.uoc.iartal.trekkingchallenge.model.Finished;
 import edu.uoc.iartal.trekkingchallenge.model.Route;
 import edu.uoc.iartal.trekkingchallenge.model.User;
@@ -42,14 +46,15 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.RouteViewHol
     private ArrayList<Route> routes = new ArrayList<>();
     private ListRoutesActivity listRoutesActivity;
     private Context context;
-    private DatabaseReference databaseRoute,databaseUser;
+    private User currentUser;
+    private DatabaseReference databaseFinished, databaseUser;
     private StorageReference storageReference;
-    private String currentMail, currentUserName;
+    private FirebaseController controller = new FirebaseController();
 
     // Object which represents a list item and save view references
     public static class RouteViewHolder extends RecyclerView.ViewHolder {
         TextView textViewRouteName, textViewDistance, textViewTime, textViewDifficult, textViewRegion, textViewDate;
-        ImageView imageViewRoute, imageViewType, imageViewCheck;
+        ImageView imageViewRoute, imageViewType;
         ListRoutesActivity listRoutesActivity;
         CardView cardView;
         RatingBar rbAverage;
@@ -67,15 +72,24 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.RouteViewHol
             this.listRoutesActivity = listRoutesActivity;
             cardView = (CardView)itemView.findViewById(R.id.cardViewRoute);
             rbAverage = (RatingBar) itemView.findViewById(R.id.rbAverage);
-            imageViewCheck = (ImageView) itemView.findViewById(R.id.cvIconDone);
             textViewDate = (TextView) itemView.findViewById(R.id.cvDoneDate);
+
         }
     }
 
     public RouteAdapter(ArrayList<Route> routes, Context context) {
         this.routes = routes;
         this.context = context;
+
         listRoutesActivity = (ListRoutesActivity) context;
+
+        // Get database and storage references
+        databaseFinished = controller.getDatabaseReference(FireBaseReferences.FINISHED_REFERENCE);
+        storageReference = controller.getStorageReference();
+        databaseUser = controller.getDatabaseReference(FireBaseReferences.USER_REFERENCE);
+
+        // Get current user
+        getCurrentUser();
     }
 
     @Override
@@ -85,33 +99,6 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.RouteViewHol
 
     @Override
     public RouteViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        // Get database and storage references
-        databaseRoute = FirebaseDatabase.getInstance().getReference(FireBaseReferences.ROUTE_REFERENCE);
-        storageReference = FirebaseStorage.getInstance().getReference();
-        currentMail = FirebaseAuth.getInstance().getCurrentUser().getEmail();
-        databaseUser = FirebaseDatabase.getInstance().getReference(FireBaseReferences.USER_REFERENCE);
-
-        // Get current user
-        databaseUser.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot userSnapshot :
-                        dataSnapshot.getChildren()) {
-                    User user = userSnapshot.getValue(User.class);
-                    if (user.getMail().equals(currentMail)) {
-                        currentUserName = user.getId();
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                //TO-DO
-            }
-        });
-
-
-
         // Inflates new list item
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.card_view_route, viewGroup, false);
         return new RouteViewHolder(view, listRoutesActivity);
@@ -138,46 +125,12 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.RouteViewHol
             viewHolder.imageViewType.setImageResource(R.drawable.ic_goback);
         }
 
-        // Get header_ranking_challenge photo name, download it and set into list route
-        String namePhoto = routes.get(position).getHeaderPhoto();
-        storageReference.child(FireBaseReferences.HEADERS_STORAGE + namePhoto).getDownloadUrl()
-                .addOnSuccessListener(new OnSuccessListener<Uri>() {
-                    @Override
-                    public void onSuccess(Uri uri) {
-                        Glide.with(context).load(uri).into(viewHolder.imageViewRoute);
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(context, R.string.imageNotDonwloaded, Toast.LENGTH_SHORT).show();
-            }
-        });
+        // Get header route photo
+        getHeaderPhoto(routes.get(position), viewHolder);
 
-        final ArrayList<String> finishedList = new ArrayList<>();
-        finishedList.addAll(routes.get(position).getFinished().keySet());
+        // Check if user has done the route
+        checkIfUserHasDone(routes.get(position), viewHolder);
 
-        DatabaseReference databaseFinished = FirebaseDatabase.getInstance().getReference(FireBaseReferences.FINISHED_REFERENCE);
-        databaseFinished.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot finishedSnapshot : dataSnapshot.getChildren()){
-                    if (finishedList.contains(finishedSnapshot.getValue(Finished.class).getId())){
-                        String finisher = finishedSnapshot.getValue(Finished.class).getUser();
-                        if (finisher.equals(currentUserName)){
-                            viewHolder.textViewDate.setText(finishedSnapshot.getValue(Finished.class).getDate());
-                            viewHolder.imageViewCheck.setVisibility(View.VISIBLE);
-                        }
-                    } else {
-                        viewHolder.imageViewCheck.setVisibility(View.GONE);
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
 
 
 
@@ -205,7 +158,90 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.RouteViewHol
         notifyDataSetChanged();
     }
 
-    private void checkIfUserHasDone(Route route){
+    /**
+     * Check if current user has done the route
+     * @param route
+     * @param viewHolder
+     */
+    private void checkIfUserHasDone(Route route, final RouteViewHolder viewHolder){
 
+        final ArrayList<String> finishedList = new ArrayList<>();
+        finishedList.addAll(route.getFinished().keySet());
+
+        controller.readDataOnce(databaseFinished, new OnGetDataListener() {
+            @Override
+            public void onStart() {
+                //Nothing to do
+            }
+
+            @Override
+            public void onSuccess(DataSnapshot data) {
+                for (DataSnapshot finishedSnapshot : data.getChildren()){
+                    if (finishedList.contains(finishedSnapshot.getValue(Finished.class).getId())){
+                        String finisher = finishedSnapshot.getValue(Finished.class).getUser();
+                        if (finisher.equals(currentUser.getId())){
+                            viewHolder.textViewDate.setText(finishedSnapshot.getValue(Finished.class).getDate());
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onFailed(DatabaseError databaseError) {
+                Log.e("RouteAdp fin error", databaseError.getMessage());
+            }
+        });
+    }
+
+    /**
+     * Get current user information and know who is doing the action
+     */
+    private void getCurrentUser(){
+        // Execute controller method to get database current user object. Use OnGetDataListener interface to know
+        // when database data is retrieved
+        controller.readDataOnce(databaseUser, new OnGetDataListener() {
+            @Override
+            public void onStart() {
+                //Nothing to do
+            }
+
+            @Override
+            public void onSuccess(DataSnapshot data) {
+                String currentMail = controller.getCurrentUserEmail();
+
+                for (DataSnapshot userSnapshot : data.getChildren()){
+                    User user = userSnapshot.getValue(User.class);
+
+                    if (user.getMail().equals(currentMail)){
+                        currentUser = user;
+                    }
+                }
+            }
+
+            @Override
+            public void onFailed(DatabaseError databaseError) {
+                Log.e("RouteAdp usr error", databaseError.getMessage());
+            }
+        });
+    }
+
+    /**
+     * Get header photo name, download it and set into show route
+     */
+    private void getHeaderPhoto(Route route, final RouteViewHolder viewHolder){
+        String namePhoto = route.getHeaderPhoto();
+
+        controller.readPhoto(storageReference, FireBaseReferences.HEADERS_STORAGE + namePhoto, new OnGetPhotoListener() {
+            @Override
+            public void onSuccess(Uri uri) {
+                Glide.with(context).load(uri).into(viewHolder.imageViewRoute);
+            }
+
+            @Override
+            public void onFailed(Exception e) {
+                e.printStackTrace();
+                Toast.makeText(context, R.string.imageNotDonwloaded, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

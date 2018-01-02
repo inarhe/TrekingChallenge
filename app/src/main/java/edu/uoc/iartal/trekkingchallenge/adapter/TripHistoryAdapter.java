@@ -81,7 +81,7 @@ public class TripHistoryAdapter extends ArrayAdapter<TripDone> {
         holder.textViewName.setText(tripDone.getTripName());
         holder.textViewDate.setText(tripDone.getDate());
         holder.textViewRoute.setText(tripDone.getRouteName());
-        holder.textViewTime.setText(String.valueOf(tripDone.getTime()) + " h");
+        holder.textViewTime.setText(Integer.toString(tripDone.getHours()) + "h" + Integer.toString(tripDone.getMinutes()));
         holder.textViewDistance.setText(String.valueOf(tripDone.getDistance()) + " km");
 
         return row;

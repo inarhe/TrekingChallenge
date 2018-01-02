@@ -4,16 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".user.UserAreaActivity">
 
-    <item android:id="@+id/action_editProfile"
-        android:title="@string/actionEditProfile"
-        android:orderInCategory="100"
-        app:showAsAction="never" />
-
-    <item android:id="@+id/action_deleteProfile"
-        android:title="@string/actionDeleteProfile"
-        android:orderInCategory="100"
-        app:showAsAction="never"/>
-
     <item android:id="@+id/action_userHistory"
         android:title="@string/actionUserHistory"
         android:orderInCategory="100"

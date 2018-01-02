@@ -123,7 +123,7 @@ public class UserHistoryActivity extends AppCompatActivity {
                     if (history.getId().equals(user.getHistory())){
                         tvTotalSlope.setText(Integer.toString(history.getTotalSlope()) + " m");
                         tvTotalKm.setText(String.valueOf(history.getTotalDistance()) + " km");
-                        formatHour(history.getTotalTime());
+                        tvTotalHour.setText(Integer.toString(history.getTotalHour()) + "h" + Integer.toString(history.getTotalMin()));
                         tvTotalWin.setText(Integer.toString(history.getChallengeWin()));
                     }
                 }
@@ -135,18 +135,5 @@ public class UserHistoryActivity extends AppCompatActivity {
                 Log.e("UserHist error", databaseError.getMessage());
             }
         });
-    }
-
-    /**
-     * Show time in correct format
-     * @param historyHour
-     */
-    private void formatHour(Double historyHour){
-        String [] number = (Double.toString(historyHour)).split("\\.");
-
-        Integer hour = Integer.parseInt(number[0]);
-        Integer minute = Integer.parseInt(number[1]);
-
-        tvTotalHour.setText(String.valueOf(hour + "h" + minute));
     }
 }

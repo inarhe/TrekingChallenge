@@ -26,6 +26,7 @@ public class RatingAdapter extends RecyclerView.Adapter<RatingAdapter.RatingView
 
     private ArrayList<Rating> ratings = new ArrayList<>();
     private FirebaseController controller = new FirebaseController();
+    private DatabaseReference databaseUser;
 
     // Object which represents a list item and save view references
     public static class RatingViewHolder extends RecyclerView.ViewHolder {
@@ -44,6 +45,8 @@ public class RatingAdapter extends RecyclerView.Adapter<RatingAdapter.RatingView
 
     public RatingAdapter(ArrayList<Rating> ratings) {
         this.ratings = ratings;
+
+        databaseUser = controller.getDatabaseReference(FireBaseReferences.USER_REFERENCE);
     }
 
     @Override
@@ -65,7 +68,6 @@ public class RatingAdapter extends RecyclerView.Adapter<RatingAdapter.RatingView
      */
     @Override
     public void onBindViewHolder(final RatingViewHolder viewHolder, final int position) {
-        DatabaseReference databaseUser = controller.getDatabaseReference(FireBaseReferences.USER_REFERENCE);
 
         controller.readDataOnce(databaseUser, new OnGetDataListener() {
             @Override

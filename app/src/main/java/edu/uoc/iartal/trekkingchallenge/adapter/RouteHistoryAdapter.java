@@ -79,7 +79,7 @@ public class RouteHistoryAdapter extends ArrayAdapter<Finished> {
 
         holder.textViewName.setText(finished.getName());
         holder.textViewDate.setText(finished.getDate());
-        holder.textViewTime.setText(String.valueOf(finished.getTime()) + " h");
+        holder.textViewTime.setText(Integer.toString(finished.getHours()) + "h" + Integer.toString(finished.getMinutes()));
         holder.textViewDistance.setText(String.valueOf(finished.getDistance()) + " km");
 
         return row;

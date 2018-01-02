@@ -14,6 +14,7 @@ public class Trip implements Parcelable{
     private int numberOfMembers;
     private Map<String, String> members = new HashMap<>();
     private Map<String, String> done = new HashMap<>();
+    private Map<String, String> messages = new HashMap<>();
 
     // Default constructor required for calls to DataSnapshot.getValue(Trip.class)
     public Trip() {
@@ -44,6 +45,7 @@ public class Trip implements Parcelable{
         this.numberOfMembers = in.readInt();
         in.readMap(members, String.class.getClassLoader());
         in.readMap(done, String.class.getClassLoader());
+        in.readMap(messages, String.class.getClassLoader());
     }
 
     public String getId() {
@@ -126,6 +128,10 @@ public class Trip implements Parcelable{
         return this.done;
     }
 
+    public Map<String, String> getMessages() {
+        return this.messages;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -143,6 +149,7 @@ public class Trip implements Parcelable{
         dest.writeInt(numberOfMembers);
         dest.writeMap(members);
         dest.writeMap(done);
+        dest.writeMap(messages);
     }
 
     // Method to compare two trip objects

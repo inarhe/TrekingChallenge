@@ -91,6 +91,7 @@
     <string name="alreadyInGroup">Ja formes part del grup</string>
     <string name="noMemberGroup">No formes part d\'aquest grup</string>
     <string name="action_message">Fòrum</string>
+    <string name="adviceAdminGroup">Un administrador no pot abandonar el grup</string>
 
     <!--Add groups activity-->
     <string name="failedAddGroup">El grup no s\'ha creat correctament</string>
@@ -122,7 +123,7 @@
     <string name="titleFinishRoute">Ruta superada!</string>
     <string name="finishDate">Data realització</string>
     <string name="finishDist">Distància realitzada</string>
-    <string name="finishTime">Temps realitzat (Format h.min)</string>
+    <string name="finishTime">Temps realitzat</string>
     <string name="finishHour">Temps</string>
     <string name="distAdvice">Siusplau, introdueix una distància</string>
     <string name="timeAdvice">Siusplau, introdueix un temps</string>
@@ -203,6 +204,7 @@
     <string name="dateTrip">Data excursió</string>
     <string name="alreadyInTrip">Ja formes part de l\'excursió</string>
     <string name="noMemberTrip">No formes part d\'aquesta excursió</string>
+    <string name="adviceAdminTrip">Un administrador no pot abandonar l\'excursió</string>
 
     <!--Add trip activity-->
     <string name="chooseRouteSpinner">- Selecciona la ruta -</string>
@@ -259,6 +261,7 @@
     <string name="headerUser">Usuari</string>
     <string name="headerTime">Temps</string>
     <string name="headerDistance">Distància</string>
+    <string name="adviceAdminChall">Un administrador no pot abandonar el repte</string>
 
     <!--Finished challenge activity-->
     <string name="finishChallengeActivity">Repte realitzat</string>
@@ -352,6 +355,8 @@
     <string name="loadingDataFailed">Error al carregar les dades</string>
     <string name="actionSearch">Buscar</string>
     <string name="km">km</string>
+    <string name="h">h</string>
+    <string name="min">min</string>
     <string name="updating">Actualitzant dades</string>
     <string name="none">none</string>
     <string name="actionJoin">Unir-se</string>

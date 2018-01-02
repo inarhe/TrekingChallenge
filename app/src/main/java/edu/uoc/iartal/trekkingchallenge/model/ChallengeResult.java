@@ -7,18 +7,19 @@ import android.os.Parcelable;
 public class ChallengeResult implements Parcelable {
 
     private String id, user, userAlias, challenge, date, name;
-    private double distance, time;
-    private int position;
+    private double distance;
+    private int position, hours, minutes;
 
     // Default constructor required for calls to DataSnapshot.getValue(ChallengeResult.class)
     public ChallengeResult() {
 
     }
 
-    public ChallengeResult(String id, Double distance, Double time, String user, String userAlias, String challenge, String date, int position, String name) {
+    public ChallengeResult(String id, Double distance, int hours, int minutes, String user, String userAlias, String challenge, String date, int position, String name) {
         this.id = id;
         this.distance = distance;
-        this.time = time;
+        this.hours = hours;
+        this.minutes = minutes;
         this.user = user;
         this.userAlias = userAlias;
         this.challenge = challenge;
@@ -30,7 +31,8 @@ public class ChallengeResult implements Parcelable {
     public ChallengeResult(Parcel in) {
         this.id = in.readString();
         this.distance = in.readDouble();
-        this.time = in.readDouble();
+        this.hours = in.readInt();
+        this.minutes = in.readInt();
         this.user = in.readString();
         this.userAlias = in.readString();
         this.challenge = in.readString();
@@ -55,13 +57,21 @@ public class ChallengeResult implements Parcelable {
             this.distance = distance;
         }
 
-    public Double getTime() {
-            return time;
+    public int getHours() {
+            return hours;
         }
 
-    public void setTime(Double time) {
-            this.time = time;
+    public void setHours(int hours) {
+            this.hours = hours;
         }
+
+    public int getMinutes() {
+        return minutes;
+    }
+
+    public void setMinutes(int minutes) {
+        this.minutes = minutes;
+    }
 
     public String getUser() {
             return user;
@@ -120,7 +130,8 @@ public class ChallengeResult implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(id);
         dest.writeDouble(distance);
-        dest.writeDouble(time);
+        dest.writeInt(hours);
+        dest.writeInt(minutes);
         dest.writeString(user);
         dest.writeString(userAlias);
         dest.writeString(challenge);

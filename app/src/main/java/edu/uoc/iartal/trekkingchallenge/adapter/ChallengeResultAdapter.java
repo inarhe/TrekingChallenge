@@ -36,6 +36,10 @@ public class ChallengeResultAdapter extends ArrayAdapter<ChallengeResult> {
         super(context, resource, objects);
         this.context = context;
         this.challengeResults = objects;
+
+        databaseChallResults = controller.getDatabaseReference(FireBaseReferences.CHALLENGERESULT_REFERENCE);
+        databaseHistory = controller.getDatabaseReference(FireBaseReferences.HISTORY_REFERENCE);
+        databaseUser = controller.getDatabaseReference(FireBaseReferences.USER_REFERENCE);
     }
 
     // Link layout elements to variables only once
@@ -86,10 +90,6 @@ public class ChallengeResultAdapter extends ArrayAdapter<ChallengeResult> {
         } else {
             holder = (ViewHolder) row.getTag();
         }
-
-        databaseChallResults = controller.getDatabaseReference(FireBaseReferences.CHALLENGERESULT_REFERENCE);
-        databaseHistory = controller.getDatabaseReference(FireBaseReferences.HISTORY_REFERENCE);
-        databaseUser = controller.getDatabaseReference(FireBaseReferences.USER_REFERENCE);
 
         final ChallengeResult challengeResult = this.getItem(position);
 
@@ -149,7 +149,7 @@ public class ChallengeResultAdapter extends ArrayAdapter<ChallengeResult> {
         });
         holder.textViewUser.setText(challengeResult.getUserAlias());
         holder.textViewPosition.setText(Integer.toString(position + 1));
-        holder.textViewTime.setText(challengeResult.getTime().toString() + " h");
+        holder.textViewTime.setText(Integer.toString(challengeResult.getHours()) + "h" + Integer.toString(challengeResult.getMinutes()));
         holder.textViewDistance.setText(challengeResult.getDistance().toString() + " km");
 
         return row;

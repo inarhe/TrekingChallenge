@@ -128,28 +128,15 @@
                 android:layout_alignTop="@+id/cvIconDifficult"
                 android:layout_alignBottom="@+id/cvIconDifficult"/>
 
-            <ImageView
-                android:id="@+id/cvIconDone"
-                android:src="@drawable/ic_check_grey"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:tint="@color/colorAccent"
-                android:layout_marginRight="@dimen/cardView_margin_elements"
-                android:layout_marginEnd="@dimen/cardView_margin_elements"
-                android:layout_toLeftOf="@+id/cvDoneDate"
-                android:layout_toStartOf="@+id/cvDoneDate"
-                android:layout_below="@+id/cvIconTime" />
-
             <TextView
                 android:id="@+id/cvDoneDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true"
+                android:textColor="@color/colorAccent"
                 android:layout_below="@+id/cvIconTime"
-                android:gravity="center"
-                android:layout_alignTop="@+id/cvIconDone"
-                android:layout_alignBottom="@+id/cvIconDone"/>
+                android:gravity="center" />
 
         </RelativeLayout>
 

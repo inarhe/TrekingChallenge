@@ -6,8 +6,8 @@ import android.os.Parcelable;
 // History object class. Implements Parcelable to pass history object between activities
 public class History implements Parcelable {
 
-    private double totalDistance, totalTime;
-    private int challengeWin, totalSlope;
+    private double totalDistance;
+    private int challengeWin, totalSlope, totalHour, totalMin;
     private String id, user;
 
     // Default constructor required for calls to DataSnapshot.getValue(History.class)
@@ -15,10 +15,11 @@ public class History implements Parcelable {
 
     }
 
-    public History(String id, Double totalDistance, Double totalTime, int challengeWin,  int totalSlope, String user) {
+    public History(String id, Double totalDistance, int totalHour, int totalMin, int challengeWin,  int totalSlope, String user) {
         this.id = id;
         this.totalDistance = totalDistance;
-        this.totalTime = totalTime;
+        this.totalHour = totalHour;
+        this.totalMin = totalMin;
         this.challengeWin = challengeWin;
         this.totalSlope = totalSlope;
         this.user = user;
@@ -27,7 +28,8 @@ public class History implements Parcelable {
     public History(Parcel in) {
         this.id = in.readString();
         this.totalDistance = in.readDouble();
-        this.totalTime = in.readDouble();
+        this.totalHour = in.readInt();
+        this.totalMin = in.readInt();
         this.challengeWin = in.readInt();
         this.totalSlope = in.readInt();
         this.user = in.readString();
@@ -41,20 +43,28 @@ public class History implements Parcelable {
         this.id = id;
     }
 
-    public Double getTotalDistance() {
+    public double getTotalDistance() {
         return totalDistance;
     }
 
-    public void setTotalDistance(Double totalDistance) {
+    public void setTotalDistance(double totalDistance) {
         this.totalDistance = totalDistance;
     }
 
-    public Double getTotalTime() {
-        return totalTime;
+    public int getTotalMin() {
+        return totalMin;
     }
 
-    public void setTotalTime(Double totalTime) {
-        this.totalTime = totalTime;
+    public void setTotalMin(int totalMin) {
+        this.totalMin = totalMin;
+    }
+
+    public int getTotalHour() {
+        return totalHour;
+    }
+
+    public void setTotalHour(int totalHour) {
+        this.totalHour = totalHour;
     }
 
     public int getChallengeWin() {
@@ -89,7 +99,8 @@ public class History implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(id);
-        dest.writeDouble(totalTime);
+        dest.writeInt(totalHour);
+        dest.writeInt(totalMin);
         dest.writeDouble(totalDistance);
         dest.writeInt(challengeWin);
         dest.writeInt(totalSlope);

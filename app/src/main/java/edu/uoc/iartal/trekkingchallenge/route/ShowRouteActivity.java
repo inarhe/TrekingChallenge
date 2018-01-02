@@ -37,10 +37,13 @@ import edu.uoc.iartal.trekkingchallenge.trip.AddTripActivity;
 import edu.uoc.iartal.trekkingchallenge.user.LoginActivity;
 
 public class ShowRouteActivity extends AppCompatActivity {
+    private static final int ACTIVITY_CODE = 1;
+
     private StorageReference storageReference;
     private DatabaseReference databaseUser;
     private ImageView imageViewHeader, imageViewCalendar;
     private TextView textViewDate;
+    private RatingBar rbAverage;
     private Route route;
     private FirebaseController controller;
     private User currentUser;
@@ -88,7 +91,7 @@ public class ShowRouteActivity extends AppCompatActivity {
         TextView textViewDifficult = (TextView) findViewById(R.id.tvDifficult);
         TextView textViewTownship = (TextView) findViewById(R.id.tvTownShip);
         TextView textViewRegion = (TextView) findViewById(R.id.tvRegion);
-        RatingBar rbAverage = (RatingBar) findViewById(R.id.rbAverageRoute);
+        rbAverage = (RatingBar) findViewById(R.id.rbAverageRoute);
 
         // Set season icon according to route season
         if (route.getSeason().equals(getString(R.string.spring))){
@@ -216,19 +219,30 @@ public class ShowRouteActivity extends AppCompatActivity {
     public void setOpinion() {
         Intent intent = new Intent(this, RatingRouteActivity.class);
         intent.putExtra("route", route);
-        startActivity(intent);
+        //startActivity(intent);
+        startActivityForResult(intent, ACTIVITY_CODE);
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == RESULT_OK){
+            float sumRating = data.getFloatExtra("sumRating", route.getSumRatings());
+            int numRating = data.getIntExtra("numRating", route.getNumRatings());
+
+            rbAverage.setRating(sumRating / numRating);
+        }
+    }
+
 
     /**
      * Check if user has done this route to show its finished date
      */
     private void checkIfUserHasDone(){
-        final ArrayList<String> finishedList = new ArrayList<>();
-        finishedList.addAll(route.getFinished().keySet());
-
         DatabaseReference databaseFinished = controller.getDatabaseReference(FireBaseReferences.FINISHED_REFERENCE);
 
-        controller.readDataOnce(databaseFinished, new OnGetDataListener() {
+        controller.readData(databaseFinished, new OnGetDataListener() {
             @Override
             public void onStart() {
                 // Nothing to do
@@ -237,18 +251,18 @@ public class ShowRouteActivity extends AppCompatActivity {
             @Override
             public void onSuccess(DataSnapshot data) {
                 for (DataSnapshot finishedSnapshot : data.getChildren()){
-
-                    if (finishedList.contains(finishedSnapshot.getValue(Finished.class).getId())){
-                        String finisher = finishedSnapshot.getValue(Finished.class).getUser();
-
-                        if (finisher.equals(currentUser.getId())){
-                            textViewDate.setText(finishedSnapshot.getValue(Finished.class).getDate());
-                            imageViewCalendar.setImageResource(R.drawable.ic_done);
-                        }
+                    Finished finished = finishedSnapshot.getValue(Finished.class);
+                    if ((finished.getRoute().equals(route.getIdRoute())) && (finished.getUser().equals(currentUser.getId()))){
+                        textViewDate.setText(finishedSnapshot.getValue(Finished.class).getDate());
+                        imageViewCalendar.setImageResource(R.drawable.ic_done);
                     } else {
                         textViewDate.setText(R.string.notAlreadyDone);
                         imageViewCalendar.setImageResource(R.drawable.ic_notdone);
                     }
+                }
+                if (data.getChildren() == null){
+                    textViewDate.setText(R.string.notAlreadyDone);
+                    imageViewCalendar.setImageResource(R.drawable.ic_notdone);
                 }
             }
 

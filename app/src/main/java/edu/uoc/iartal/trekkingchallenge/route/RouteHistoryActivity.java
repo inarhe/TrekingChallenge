@@ -118,7 +118,7 @@ public class RouteHistoryActivity extends AppCompatActivity {
                         return date1.compareTo(date2);
                     }
                 });
-                RouteHistoryAdapter adapter = new RouteHistoryAdapter(getApplicationContext(), R.layout.adapter_route_history, finishedRoutes);
+                RouteHistoryAdapter adapter = new RouteHistoryAdapter(getBaseContext(), R.layout.adapter_route_history, finishedRoutes);
                 historyList.setAdapter(adapter);
 
             }

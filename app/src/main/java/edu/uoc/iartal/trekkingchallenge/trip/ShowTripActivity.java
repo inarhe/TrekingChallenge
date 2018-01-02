@@ -184,6 +184,11 @@ public class ShowTripActivity extends AppCompatActivity {
             return;
         }
 
+        if (currentUser.getId().equals(trip.getUserAdmin())){
+            Toast.makeText(getApplicationContext(), R.string.adviceAdminTrip, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         // Create alert dialog to ask user confirmation
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(getString(R.string.tripLeftAsk));
@@ -264,14 +269,15 @@ public class ShowTripActivity extends AppCompatActivity {
             public void onSuccess(DataSnapshot data) {
                 for (DataSnapshot doneSnapshot : data.getChildren()){
                     TripDone tripDone = doneSnapshot.getValue(TripDone.class);
-                    if ((dones.contains(tripDone.getId())) && (tripDone.getTrip().equals(trip.getName()))){
-                        Toast.makeText(getApplicationContext(), R.string.alreadyFinish, Toast.LENGTH_SHORT).show();
+                    if ((dones.contains(tripDone.getId())) && (tripDone.getTrip().equals(trip.getId()))){
                         isFinished = true;
                     }
                 }
 
                 if (!isFinished){
                     startResultRegister();
+                } else {
+                    Toast.makeText(getApplicationContext(), R.string.alreadyFinish, Toast.LENGTH_SHORT).show();
                 }
             }
 

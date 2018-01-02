@@ -118,7 +118,7 @@ public class TripHistoryActivity extends AppCompatActivity {
 
                     }
                 });
-                TripHistoryAdapter adapter = new TripHistoryAdapter(getApplicationContext(), R.layout.adapter_trip_history, tripsDone);
+                TripHistoryAdapter adapter = new TripHistoryAdapter(getBaseContext(), R.layout.adapter_trip_history, tripsDone);
                 historyList.setAdapter(adapter);
             }
 

@@ -7,17 +7,19 @@ import android.os.Parcelable;
 public class TripDone implements Parcelable {
 
     private String id, user, trip, date, tripName, routeName;
-    private double distance, time;
+    private double distance;
+    private int hours, minutes;
 
     // Default constructor required for calls to DataSnapshot.getValue(TripDone.class)
     public TripDone() {
 
     }
 
-    public TripDone(String id, Double distance, Double time, String user, String trip, String date, String tripName, String routeName) {
+    public TripDone(String id, Double distance, int hours, int minutes, String user, String trip, String date, String tripName, String routeName) {
         this.id = id;
         this.distance = distance;
-        this.time = time;
+        this.hours = hours;
+        this.minutes = minutes;
         this.user = user;
         this.trip = trip;
         this.date = date;
@@ -28,7 +30,8 @@ public class TripDone implements Parcelable {
     public TripDone(Parcel in) {
         this.id = in.readString();
         this.distance = in.readDouble();
-        this.time = in.readDouble();
+        this.hours = in.readInt();
+        this.minutes = in.readInt();
         this.user = in.readString();
         this.trip = in.readString();
         this.date = in.readString();
@@ -52,13 +55,21 @@ public class TripDone implements Parcelable {
             this.distance = distance;
         }
 
-    public Double getTime() {
-            return time;
-        }
+    public int getHours() {
+        return hours;
+    }
 
-    public void setTime(Double time) {
-            this.time = time;
-        }
+    public void setHours(int hours) {
+        this.hours = hours;
+    }
+
+    public int getMinutes() {
+        return minutes;
+    }
+
+    public void setMinutes(int minutes) {
+        this.minutes = minutes;
+    }
 
     public String getUser() {
             return user;
@@ -109,7 +120,8 @@ public class TripDone implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(id);
         dest.writeDouble(distance);
-        dest.writeDouble(time);
+        dest.writeInt(hours);
+        dest.writeInt(minutes);
         dest.writeString(user);
         dest.writeString(trip);
         dest.writeString(date);

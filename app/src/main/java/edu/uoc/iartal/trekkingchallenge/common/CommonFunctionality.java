@@ -2,6 +2,7 @@ package edu.uoc.iartal.trekkingchallenge.common;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -51,6 +52,22 @@ public class CommonFunctionality {
             totalDecimal = totalDecimal / ConstantsUtils.MINUTES;
         }
         return round((double)firstInt + (double)secondInt + totalDecimal,ConstantsUtils.NUM_OF_DECIMALS);
+    }
+
+    public ArrayList<Integer> sumTime (int historyHour, int hour, int historyMin, int min){
+        ArrayList<Integer> time = new ArrayList<>();
+        int totalMin = historyMin + min;
+        int countHour = 0;
+
+        while (totalMin >= 60){
+            totalMin = totalMin - 60;
+            countHour ++;
+        }
+
+        time.add(historyHour + hour + countHour);
+        time.add(totalMin);
+
+        return time;
     }
 
     /**

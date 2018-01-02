@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 
 import java.util.ArrayList;
@@ -23,6 +26,9 @@ import edu.uoc.iartal.trekkingchallenge.R;
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
 import edu.uoc.iartal.trekkingchallenge.common.FirebaseController;
 import edu.uoc.iartal.trekkingchallenge.interfaces.OnCompleteTaskListener;
+import edu.uoc.iartal.trekkingchallenge.interfaces.OnGetDataListener;
+import edu.uoc.iartal.trekkingchallenge.model.Group;
+import edu.uoc.iartal.trekkingchallenge.model.Message;
 import edu.uoc.iartal.trekkingchallenge.model.Trip;
 import edu.uoc.iartal.trekkingchallenge.trip.EditTripActivity;
 import edu.uoc.iartal.trekkingchallenge.trip.ShowTripActivity;
@@ -32,6 +38,7 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
     private List<Trip> trips;
     private ArrayList<Boolean> isVisibleArray = new ArrayList<>();
     private ArrayList<String> tripMembers = new ArrayList<>();
+    private ArrayList<String> tripMessages = new ArrayList<>();
     private Context context;
     private FirebaseController controller = new FirebaseController();
 
@@ -122,6 +129,9 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
                 // Get trip members
                 getMembers(position);
 
+                // Get trip messages
+                getMessages(position);
+
                 context = v.getContext();
 
                 // Delete trip and its dependencies
@@ -176,6 +186,16 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
     }
 
     /**
+     * Get id of trip messages
+     * @param position
+     */
+    private void getMessages(int position){
+        tripMessages.clear();
+        Trip trip = trips.get(position);
+        tripMessages.addAll(trip.getMessages().keySet());
+    }
+
+    /**
      * Delete selected trip and update trips list of each member
      * @param position
      */
@@ -192,6 +212,7 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
                         dialog.cancel();
                         DatabaseReference databaseTrip = controller.getDatabaseReference(FireBaseReferences.TRIP_REFERENCE);
 
+                        // Remove trip from database
                         controller.executeRemoveTask(databaseTrip, trips.get(position).getId(), new OnCompleteTaskListener() {
                             @Override
                             public void onStart() {
@@ -200,10 +221,10 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
 
                             @Override
                             public void onSuccess() {
-                                DatabaseReference databaseUser = controller.getDatabaseReference(FireBaseReferences.USER_REFERENCE);
-                                for (String member : tripMembers) {
-                                    controller.removeValue(databaseUser, member, FireBaseReferences.USER_TRIPS_REFERENCE, trips.get(position).getId());
-                                }
+                                deleteTripFromMembers(position);
+                                deleteMessages(position);
+
+
                                 Toast.makeText(context, R.string.tripDeleted, Toast.LENGTH_SHORT).show();
                                 trips.remove(position);
                                 isVisibleArray.remove(position);
@@ -228,5 +249,52 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
 
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
+    }
+
+    /**
+     * Delete dependencies of trip members
+     * @param position
+     */
+    private void deleteTripFromMembers(int position){
+        DatabaseReference databaseUser = controller.getDatabaseReference(FireBaseReferences.USER_REFERENCE);
+        for (String member : tripMembers) {
+            controller.removeValue(databaseUser, member, FireBaseReferences.USER_TRIPS_REFERENCE, trips.get(position).getId());
+        }
+    }
+
+    /**
+     * Delete trip messages and their dependencies
+     * @param position
+     */
+    private void deleteMessages(int position){
+        final DatabaseReference databaseMessage = controller.getDatabaseReference(FireBaseReferences.MESSAGE_REFERENCE);
+        final DatabaseReference databaseUser = controller.getDatabaseReference(FireBaseReferences.USER_REFERENCE);
+
+        if (tripMessages.size() != 0){
+            controller.readDataOnce(databaseMessage, new OnGetDataListener() {
+                @Override
+                public void onStart() {
+                    //Nothing to do
+                }
+
+                @Override
+                public void onSuccess(DataSnapshot data) {
+                    for (DataSnapshot messageSnapshot : data.getChildren()){
+                        Message message = messageSnapshot.getValue(Message.class);
+                        if (tripMessages.contains(message.getId())){
+                            String sender = message.getUser();
+                            controller.removeObject(databaseMessage, message.getId());
+                            controller.removeValue(databaseUser, sender, FireBaseReferences.MESSAGES_REFERENCE, message.getId());
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailed(DatabaseError databaseError) {
+                    Log.e("DelTripMssg error", databaseError.getMessage());
+                }
+            });
+
+        }
     }
 }

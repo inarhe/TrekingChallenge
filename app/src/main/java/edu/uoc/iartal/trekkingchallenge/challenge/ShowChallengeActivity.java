@@ -40,7 +40,6 @@ public class ShowChallengeActivity extends AppCompatActivity {
     private Challenge challenge;
     private ListView rankingList;
     private User currentUser;
-    private ArrayList<String> challengesResultsIds;
     private ArrayList<ChallengeResult> challengeResults;
     private FirebaseController controller;
     private boolean isFinished;
@@ -57,7 +56,6 @@ public class ShowChallengeActivity extends AppCompatActivity {
 
         // Initialize variables
         controller = new FirebaseController();
-        challengesResultsIds = new ArrayList<>();
         challengeResults = new ArrayList<>();
 
         // If user isn't logged, start login activity
@@ -181,6 +179,11 @@ public class ShowChallengeActivity extends AppCompatActivity {
             return;
         }
 
+        if (currentUser.getId().equals(challenge.getUserAdmin())){
+            Toast.makeText(getApplicationContext(), R.string.adviceAdminChall, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         // Create alert dialog to ask user confirmation
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(getString(R.string.challengeLeftAsk));
@@ -242,14 +245,6 @@ public class ShowChallengeActivity extends AppCompatActivity {
         return members.contains(currentUser.getId());
     }
 
-    private static class ChallengeResultComparator implements Comparator<Double>{
-        @Override
-        public int compare(Double result1, Double result2) {
-
-            return result1.compareTo(result2);
-        }
-    }
-
     /**
      * Check if current user has already registered a result
      * @return current user id
@@ -269,7 +264,7 @@ public class ShowChallengeActivity extends AppCompatActivity {
             public void onSuccess(DataSnapshot data) {
                 for (DataSnapshot resultSnapshot : data.getChildren()){
                     ChallengeResult challengeResult = resultSnapshot.getValue(ChallengeResult.class);
-                    if ((results.contains(challengeResult.getId())) && (challengeResult.getChallenge().equals(challenge.getName()))){
+                    if ((results.contains(challengeResult.getId())) && (challengeResult.getChallenge().equals(challenge.getId()))){
                         Toast.makeText(getApplicationContext(), R.string.alreadyFinish, Toast.LENGTH_SHORT).show();
                         isFinished = true;
                     }
@@ -325,9 +320,6 @@ public class ShowChallengeActivity extends AppCompatActivity {
      */
     private void getChallengeResults(){
 
-        // Get all challenge results
-        challengesResultsIds.addAll(challenge.getResults().keySet());
-
         if (databaseResults != null) {
             controller.readData(databaseResults, new OnGetDataListener() {
                 @Override
@@ -339,17 +331,23 @@ public class ShowChallengeActivity extends AppCompatActivity {
                 public void onSuccess(DataSnapshot data) {
                     challengeResults.clear();
                     for (DataSnapshot challengesSnapshot : data.getChildren()) {
-                        ChallengeResult chall = challengesSnapshot.getValue(ChallengeResult.class);
-                        if (challengesResultsIds.contains(chall.getId())) {
-                            challengeResults.add(chall);
+                        ChallengeResult challengeResult = challengesSnapshot.getValue(ChallengeResult.class);
+                        if (challengeResult.getChallenge().equals(challenge.getId())) {
+                            challengeResults.add(challengeResult);
                         }
                     }
 
                     Collections.sort(challengeResults, new Comparator<ChallengeResult>() {
                         @Override
                         public int compare(ChallengeResult o1, ChallengeResult o2) {
+                            int time;
                             if (challenge.getClassification().equals(getString(R.string.time))) {
-                                return o1.getTime().intValue() - o2.getTime().intValue();
+                                time = o1.getHours() - o2.getHours();
+                                if (time == 0){
+                                    time = o1.getMinutes() - o2.getMinutes();
+                                }
+
+                                return time;
                             } else {
                                 return o1.getDistance().intValue() - o2.getDistance().intValue();
                             }
@@ -357,7 +355,7 @@ public class ShowChallengeActivity extends AppCompatActivity {
                     });
 
 
-                    ChallengeResultAdapter adapter = new ChallengeResultAdapter(getApplicationContext(), R.layout.adapter_challenge_results, challengeResults);
+                    ChallengeResultAdapter adapter = new ChallengeResultAdapter(getBaseContext(), R.layout.adapter_challenge_results, challengeResults);
                     rankingList.setAdapter(adapter);
                 }
 

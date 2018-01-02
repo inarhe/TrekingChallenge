@@ -12,7 +12,7 @@ public class FireBaseReferences {
     final public static String USER_NAME_REFERENCE = "name";
     final public static String USER_MAIL_REFERENCE = "mail";
     final public static String USER_FINISHED_REFERENCE = "finished";
-    final public static String USER_RESULT_REFERENCE = "results";
+    final public static String USER_RESULT_REFERENCE = "challengeResults";
     final public static String USER_TRIPSDONE_REFERENCE = "tripsDone";
     final public static String USER_TRIPS_REFERENCE = "trips";
     final public static String USER_GROUPS_REFERENCE = "groups";
@@ -48,7 +48,6 @@ public class FireBaseReferences {
     final public static String CHALLENGE_NAME_REFERENCE = "name";
     final public static String CHALLENGE_DESCRIPTION_REFERENCE = "description";
     final public static String CHALLENGE_DATE_REFERENCE = "limitDate";
-    final public static String CHALLENGE_RESULTS_REFERENCE = "results";
 
     // Finished route references
     final public static String FINISHED_REFERENCE = "finished";
@@ -73,7 +72,8 @@ public class FireBaseReferences {
     final public static String HISTORY_WINS_REFERENCE = "challengeWin";
     final public static String HISTORY_DISTANCE_REFERENCE = "totalDistance";
     final public static String HISTORY_SLOPE_REFERENCE = "totalSlope";
-    final public static String HISTORY_TIME_REFERENCE = "totalTime";
+    final public static String HISTORY_HOUR_REFERENCE = "totalHour";
+    final public static String HISTORY_MIN_REFERENCE = "totalMin";
 
     // Common references
     final public static String MEMBERS_REFERENCE = "members";

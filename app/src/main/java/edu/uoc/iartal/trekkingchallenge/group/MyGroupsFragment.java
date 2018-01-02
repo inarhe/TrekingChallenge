@@ -240,7 +240,8 @@ public class MyGroupsFragment extends Fragment implements SearchView.OnQueryText
                     } else {
                         int i = groups.indexOf(group);
                         Group groupArray = groups.get(i);
-                        if (!groupArray.getName().equals(group.getName()) || !groupArray.getDescription().equals(group.getDescription())){
+                        if (!groupArray.getName().equals(group.getName()) || !groupArray.getDescription().equals(group.getDescription())
+                                || (groupArray.getNumberOfMembers() != group.getNumberOfMembers())){
                             groups.set(i, group);
                         }
                     }

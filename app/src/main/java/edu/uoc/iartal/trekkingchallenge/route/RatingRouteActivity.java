@@ -14,6 +14,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -52,6 +53,7 @@ public class RatingRouteActivity extends AppCompatActivity {
     private ProgressDialog progressDialog;
     private FirebaseController controller;
     private Context context;
+    private Intent result;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +73,7 @@ public class RatingRouteActivity extends AppCompatActivity {
         ratings = new ArrayList<>();
         ratingAdapter = new RatingAdapter(ratings);
         rateDialog = new Dialog(this);
+        result = new Intent();
         context = this;
 
         // If user isn't logged, start login activity
@@ -99,14 +102,16 @@ public class RatingRouteActivity extends AppCompatActivity {
         // Set rate dialog
         rateDialog.setContentView(R.layout.rating_route_dialog);
         rateDialog.setCancelable(true);
+        rateDialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
         // Define floating button for adding new rating
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fabAddRate);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // Search if user has rated it
                 searchRating();
-                rateRoute();
+               // rateRoute();
             }
         });
 
@@ -115,11 +120,11 @@ public class RatingRouteActivity extends AppCompatActivity {
         // Get current user
         getCurrentUser();
         // Search user ratings
-        searchRating();
+       // searchRating();
     }
 
     /**
-     * Opens rating dialog when rate button is clicked. Save ratting and comment too.
+     * If user hasn't rating yet, open rating dialog when rate button is clicked. Save ratting and comment too.
      */
     public void rateRoute(){
         // Show rate dialog when rate button is clicked
@@ -168,12 +173,10 @@ public class RatingRouteActivity extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(), R.string.finishedFailed, Toast.LENGTH_SHORT).show();
                     } else {
                         Rating rating = new Rating(idRate, title, body, route.getIdRoute(), currentUser.getId(), ratingBar.getRating());
-                        controller.addNewRating(databaseRating, rating, getApplicationContext());
+                        controller.addNewRating(databaseRating, rating, currentUser.getId(), route.getIdRoute(), context);
 
-                        // Update rating list in user and route database nodes
+                        // Update rating route values in database route node
                         try{
-                            controller.updateStringParameter(databaseUser, currentUser.getId(), FireBaseReferences.USER_RATINGS_REFERENCE, idRate);
-                            controller.updateStringParameter(databaseRoute, route.getIdRoute(), FireBaseReferences.ROUTE_RATINGS_REFERENCE, idRate);
                             controller.updateIntParameter(databaseRoute, route.getIdRoute(), FireBaseReferences.ROUTE_NUM_RATINGS_REFERENCE, route.getNumRatings() + 1);
                             controller.updateFloatParameter(databaseRoute, route.getIdRoute(), FireBaseReferences.ROUTE_SUM_RATINGS_REFERENCE, route.getSumRatings() + ratingBar.getRating());
                             Toast.makeText(getApplicationContext(), R.string.rateSaved, Toast.LENGTH_SHORT).show();
@@ -181,10 +184,11 @@ public class RatingRouteActivity extends AppCompatActivity {
                             e.printStackTrace();
                             Toast.makeText(getApplicationContext(), R.string.rateNotSaved, Toast.LENGTH_SHORT).show();
                         }
-
-
                     }
 
+                    result.putExtra("sumRating", route.getSumRatings() + ratingBar.getRating());
+                    result.putExtra("numRating", route.getNumRatings() + 1);
+                    setResult(RESULT_OK, result);
                     rateDialog.dismiss();
                 }
             }
@@ -276,9 +280,14 @@ public class RatingRouteActivity extends AppCompatActivity {
             public void onSuccess(DataSnapshot data) {
                 for (DataSnapshot ratingSnapshot : data.getChildren()){
                     Rating rate = ratingSnapshot.getValue(Rating.class);
-                    if (rate.getRoute().equals(route.getName()) && rate.getUser().equals(currentUser.getId())){
+                    if (rate.getRoute().equals(route.getIdRoute()) && rate.getUser().equals(currentUser.getId())){
                         isRated = true;
                     }
+                }
+                if (!isRated){
+                    rateRoute();
+                } else {
+                    Toast.makeText(getApplicationContext(), R.string.alreadyRated, Toast.LENGTH_SHORT).show();
                 }
             }
 

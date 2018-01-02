@@ -27,9 +27,7 @@ import edu.uoc.iartal.trekkingchallenge.R;
 
 public class UserAreaActivity extends AppCompatActivity {
 
-    private static final int ACTIVITY_CODE = 1;
     private TextView textViewUserName, textViewUserMail, textViewAlias;
-    private Intent intent;
     private ProgressDialog progressDialog;
     private User currentUser;
     private DatabaseReference databaseUser;
@@ -40,10 +38,16 @@ public class UserAreaActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_area);
 
-        // Initialize progress dialog
+        // Set toolbar and actionbar
+        Toolbar toolbar = (Toolbar) findViewById(R.id.userToolbar);
+        setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setTitle(getString(R.string.userAreaActivity));
+
+        // Initialize variables
         progressDialog = new ProgressDialog(this);
         controller = new FirebaseController();
-        databaseUser = controller.getDatabaseReference(FireBaseReferences.USER_REFERENCE);
 
         // If user isn't logged, start login activity
         if (controller.getActiveUserSession() == null) {
@@ -51,12 +55,8 @@ public class UserAreaActivity extends AppCompatActivity {
             finish();
         }
 
-        // Set toolbar and actionbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.userToolbar);
-        setSupportActionBar(toolbar);
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setTitle(getString(R.string.userAreaActivity));
+        // Get database reference
+        databaseUser = controller.getDatabaseReference(FireBaseReferences.USER_REFERENCE);
 
         // Link layout elements with variables
         textViewAlias = (TextView) findViewById(R.id.tvIdUser);
@@ -86,29 +86,11 @@ public class UserAreaActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_editProfile:
-                loadUser();
-                editUserAccount();
-                return true;
-            case R.id.action_deleteProfile:
-                deleteUserAccount();
-                return true;
             case R.id.action_userHistory:
                 showUserHistory();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
-        }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        //user = data.getParcelableExtra("user");
-        //loadUser();
-        if (data.getStringExtra("userMail") != null) {
-            textViewUserMail.setText(data.getStringExtra("userMail"));
         }
     }
 
@@ -153,57 +135,9 @@ public class UserAreaActivity extends AppCompatActivity {
      * Start user history activity when button is clicked
      */
     private void showUserHistory(){
-        intent = new Intent(UserAreaActivity.this, UserHistoryActivity.class);
+        Intent intent = new Intent(UserAreaActivity.this, UserHistoryActivity.class);
         intent.putExtra("user", currentUser);
         startActivity(intent);
-    }
-
-    /**
-     * Start edit profile activity when button is clicked
-     */
-    private void editUserAccount(){
-        intent = new Intent(UserAreaActivity.this, EditProfileActivity.class);
-        intent.putExtra("user", currentUser);
-        startActivityForResult(intent, ACTIVITY_CODE);
-    }
-
-    /**
-     * Delete user account when delete button is clicked
-     */
-    private void deleteUserAccount(){
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(getString(R.string.deleteUserConfirmation));
-        builder.setCancelable(true);
-
-        builder.setPositiveButton(
-                getString(R.string.acceptButton),
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-
-                        FirebaseUser firebaseUser = controller.getActiveUserSession();
-                       // AuthCredential credential = ((FirebaseController)getApplication()).getUserCredentials(user.getMail(), user.getPassword());
-
-                        if (firebaseUser != null){
-                            controller.removeUserDependencies(currentUser);
-                            controller.deleteFirebaseUser(firebaseUser, currentUser, getApplicationContext());
-                        } else {
-                            startActivity(new Intent(getApplicationContext(), LoginActivity.class));
-                            finish();
-                        }
-                    }
-                });
-
-        builder.setNegativeButton(
-                getString(R.string.cancelButton),
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                    }
-                });
-
-        AlertDialog alertDialog = builder.create();
-        alertDialog.show();
     }
 
     /**

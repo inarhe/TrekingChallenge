@@ -189,13 +189,57 @@
 
             <EditText
                 android:id="@+id/etHourFinish"
-                android:layout_width="@dimen/text_width"
+                android:layout_width="@dimen/text_time_width"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/icTimeFinish"
                 android:gravity="center"
-                android:inputType="numberDecimal"
+                android:inputType="number"
                 android:layout_toRightOf="@+id/tvHourFinish"
                 android:layout_toEndOf="@+id/tvHourFinish" />
+
+            <TextView
+                android:id="@+id/tvHour"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_below="@+id/icTimeFinish"
+                android:layout_marginTop="@dimen/margin_below"
+                android:layout_alignTop="@+id/tvHourFinish"
+                android:layout_alignBottom="@+id/tvHourFinish"
+                android:layout_toRightOf="@+id/etHourFinish"
+                android:layout_toEndOf="@+id/etHourFinish"
+                android:text="@string/h"
+                android:textStyle="bold"
+                android:textSize="@dimen/title2"/>
+
+            <EditText
+                android:id="@+id/etMinFinish"
+                android:layout_width="@dimen/text_time_width"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/icTimeFinish"
+                android:layout_alignTop="@+id/etHourFinish"
+                android:layout_alignBottom="@+id/etHourFinish"
+                android:gravity="center"
+                android:inputType="number"
+                android:layout_marginLeft="@dimen/margin_left_with_icon"
+                android:layout_marginStart="@dimen/margin_left_with_icon"
+                android:layout_toRightOf="@+id/tvHour"
+                android:layout_toEndOf="@+id/tvHour" />
+
+            <TextView
+                android:id="@+id/tvMin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_below="@+id/icTimeFinish"
+                android:layout_marginTop="@dimen/margin_below"
+                android:layout_alignTop="@+id/tvHourFinish"
+                android:layout_alignBottom="@+id/tvHourFinish"
+                android:layout_toRightOf="@+id/etMinFinish"
+                android:layout_toEndOf="@+id/etMinFinish"
+                android:text="@string/min"
+                android:textStyle="bold"
+                android:textSize="@dimen/title2"/>
 
             <Button
                 android:id="@+id/bCancelFinish"

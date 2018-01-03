@@ -21,6 +21,8 @@ public class LoginActivity extends AppCompatActivity {
     private EditText editTextMail, editTextPass;
     private ProgressDialog progressDialog;
     private FirebaseController controller;
+    private CommonFunctionality common;
+    private String password;
 
     /**
      * Initialize variables and link view elements on activity create
@@ -43,6 +45,7 @@ public class LoginActivity extends AppCompatActivity {
         // Initialize progress dialog
         progressDialog = new ProgressDialog(this);
         controller = new FirebaseController();
+        common = new CommonFunctionality();
 
         // If user is logged starts main activity with main menu
         if (controller.getActiveUserSession() != null) {
@@ -62,7 +65,12 @@ public class LoginActivity extends AppCompatActivity {
 
         // Get input parameters
         String email = editTextMail.getText().toString().trim();
-        String password = editTextPass.getText().toString().trim();
+        try{
+            password = common.encryptPassword(editTextPass.getText().toString().trim());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
 
         // Instantiate common functionality class
         CommonFunctionality common = new CommonFunctionality();
@@ -76,7 +84,7 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
-        if(TextUtils.isEmpty(password)) {
+        if(TextUtils.isEmpty(editTextPass.getText().toString().trim())) {
             Toast.makeText(this, getString(R.string.passwordField), Toast.LENGTH_LONG).show();
             return;
         } else if (!common.validatePassword(password)){

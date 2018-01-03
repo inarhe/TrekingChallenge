@@ -20,6 +20,8 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText editTextUserAlias, editTextUserName, editTextUserMail, editTextUserPass, editTextPassRepeat;
     private ProgressDialog progressDialog ;
     private FirebaseController controller;
+    private CommonFunctionality common;
+    private String password, repeatPassword;
 
     /**
      * Initialize variables and link view elements on activity create
@@ -43,6 +45,7 @@ public class RegisterActivity extends AppCompatActivity {
         // Initialize progressDialog
         progressDialog =  new ProgressDialog(this);
         controller = new FirebaseController();
+        common = new CommonFunctionality();
 
         // Link layout elements with variables
         editTextUserAlias = (EditText) findViewById(R.id.etIdUser);
@@ -62,8 +65,13 @@ public class RegisterActivity extends AppCompatActivity {
         String alias = editTextUserAlias.getText().toString().trim();
         String name = editTextUserName.getText().toString().trim();
         String mail = editTextUserMail.getText().toString().trim();
-        String password = editTextUserPass.getText().toString().trim();
-        String repeatPassword = editTextPassRepeat.getText().toString().trim();
+
+        try{
+            password = common.encryptPassword(editTextUserPass.getText().toString().trim());
+            repeatPassword = common.encryptPassword(editTextPassRepeat.getText().toString().trim());
+        } catch (Exception e){
+            e.printStackTrace();
+        }
 
         // Instantiate common functionality class
         CommonFunctionality common = new CommonFunctionality();
@@ -87,10 +95,10 @@ public class RegisterActivity extends AppCompatActivity {
             return;
         }
 
-        if(TextUtils.isEmpty(password)) {
+        if(TextUtils.isEmpty(editTextUserPass.getText().toString().trim())) {
             Toast.makeText(this, getString(R.string.passwordField), Toast.LENGTH_SHORT).show();
             return;
-        } else if (!common.validatePassword(password)){
+        } else if (!common.validatePassword(editTextUserPass.getText().toString().trim())){
             Toast.makeText(this, getString(R.string.passwordTooShort), Toast.LENGTH_SHORT).show();
             return;
         }
@@ -115,3 +123,5 @@ public class RegisterActivity extends AppCompatActivity {
         finish();
     }
 }
+
+

@@ -131,6 +131,11 @@ public class FinishedChallengeActivity extends AppCompatActivity {
             return;
         }
 
+        if (common.validateDistance(finishDist)) {
+            Toast.makeText(this, getString(R.string.distanceFormat), Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         if (TextUtils.isEmpty(finishHour)) {
             Toast.makeText(this, getString(R.string.timeAdvice), Toast.LENGTH_SHORT).show();
             return;

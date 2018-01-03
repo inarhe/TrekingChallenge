@@ -1,16 +1,20 @@
 package edu.uoc.iartal.trekkingchallenge.common;
 
+import android.util.Base64;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.crypto.Cipher;
+import javax.crypto.spec.SecretKeySpec;
+
 
 // Functionality used by different activities
 public class CommonFunctionality {
-
-    private static final String EMAIL_PATTERN = "^[a-zA-Z0-9#_~!$&'()*+,;=:.\"(),:;<>@\\[\\]\\\\]+@[a-zA-Z0-9-]+(\\.[a-zA-Z0-9-]{2,}+)*$";
 
     /**
      *  Validate mail format
@@ -21,7 +25,7 @@ public class CommonFunctionality {
         Pattern pattern;
 
         // Define mail pattern
-        pattern = Pattern.compile(EMAIL_PATTERN);
+        pattern = Pattern.compile(ConstantsUtils.EMAIL_PATTERN);
         Matcher matcher = pattern.matcher(email);
         return matcher.matches();
     }
@@ -36,24 +40,27 @@ public class CommonFunctionality {
     }
 
     /**
-     * Sum two hours in double format
-     * @param firstHour
-     * @param secondHour
-     * @return
+     *  Validate distance format
+     * @param distance
+     * @return if mail is ok
      */
-    public double sumHours (Double firstHour, Double secondHour){
-        String [] firstNum = (Double.toString(firstHour)).split("\\.");
-        String [] secondNum = (Double.toString(secondHour)).split("\\.");
-        Integer firstInt = Integer.parseInt(firstNum[0]);
-        Integer secondInt = Integer.parseInt(secondNum[0]);
-        double totalDecimal = (firstHour - (double)firstInt) + (secondHour - (double)secondInt);
+    public boolean validateDistance(String distance) {
+        Pattern pattern;
 
-        if (totalDecimal > ConstantsUtils.MINUTES){
-            totalDecimal = totalDecimal / ConstantsUtils.MINUTES;
-        }
-        return round((double)firstInt + (double)secondInt + totalDecimal,ConstantsUtils.NUM_OF_DECIMALS);
+        // Define distance pattern
+        pattern = Pattern.compile(ConstantsUtils.DISTANCE_PATTERN);
+        Matcher matcher = pattern.matcher(distance);
+        return matcher.matches();
     }
 
+    /**
+     * Sum hours and minutes in time format
+     * @param historyHour
+     * @param hour
+     * @param historyMin
+     * @param min
+     * @return array with hours and minutes
+     */
     public ArrayList<Integer> sumTime (int historyHour, int hour, int historyMin, int min){
         ArrayList<Integer> time = new ArrayList<>();
         int totalMin = historyMin + min;
@@ -82,5 +89,38 @@ public class CommonFunctionality {
         BigDecimal bd = new BigDecimal(value);
         bd = bd.setScale(places, RoundingMode.HALF_UP);
         return bd.doubleValue();
+    }
+
+    public String encryptPassword(String password) throws Exception{
+        SecretKeySpec key = generateKey(ConstantsUtils.KEY_CIPHER);
+        Cipher c = Cipher.getInstance(ConstantsUtils.ALGORITHM_AES);
+        c.init(Cipher.ENCRYPT_MODE, key);
+        byte[] encValue = c.doFinal(password.getBytes());
+        String encryptedPassword = Base64.encodeToString(encValue, Base64.DEFAULT);
+
+        return encryptedPassword;
+    }
+
+    public String decryptPassword(String password) throws Exception{
+
+        SecretKeySpec key = generateKey(ConstantsUtils.KEY_CIPHER);
+        Cipher c = Cipher.getInstance(ConstantsUtils.ALGORITHM_AES);
+        c.init(Cipher.DECRYPT_MODE, key);
+        byte[] decodedValue = Base64.decode(password, Base64.DEFAULT);
+        byte[] decValue = c.doFinal(decodedValue);
+        String decryptedValue = new String(decValue);
+
+        return decryptedValue;
+    }
+
+    private SecretKeySpec generateKey(String password) throws Exception{
+
+        final MessageDigest digest = MessageDigest.getInstance(ConstantsUtils.ALGORITHM_SHA_256);
+        byte[] bytes = password.getBytes(ConstantsUtils.UTF_8);
+        digest.update(bytes, 0, bytes.length);
+        byte[] key = digest.digest();
+        SecretKeySpec secretKeySpec = new SecretKeySpec(key, ConstantsUtils.ALGORITHM_AES);
+
+        return secretKeySpec;
     }
 }

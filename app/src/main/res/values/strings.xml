@@ -362,6 +362,7 @@
     <string name="actionLeave">Abandonar</string>
     <string name="actionFinish">Registrar resultat</string>
     <string name="alreadyFinish">Ja has registrat un resultat</string>
+    <string name="distanceFormat">La distància no té el format correcte.</string>
 
     <!--Manifest-->
     <string name="title_activity_map">Map</string>

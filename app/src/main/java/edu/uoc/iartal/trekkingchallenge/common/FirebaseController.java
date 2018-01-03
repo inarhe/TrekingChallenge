@@ -76,21 +76,28 @@ public class FirebaseController {
      * @param context
      */
     public void loginDatabase(String email, String password, final ProgressDialog progressDialog, final Context context){
-        // Execute firebase sign in function
-        FirebaseAuth.getInstance().signInWithEmailAndPassword(email,password)
-                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if(task.isSuccessful()) {
-                            progressDialog.dismiss();
-                            Toast.makeText(context, R.string.loginSuccess,Toast.LENGTH_SHORT).show();
-                            ((Activity)context).finish();
-                        }else{
-                            progressDialog.dismiss();
-                            Toast.makeText(context, R.string.failedLogin,Toast.LENGTH_SHORT).show();
+        CommonFunctionality common = new CommonFunctionality();
+
+        try {
+            // Execute firebase sign in function
+            FirebaseAuth.getInstance().signInWithEmailAndPassword(email,common.decryptPassword(password))
+                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if(task.isSuccessful()) {
+                                progressDialog.dismiss();
+                                Toast.makeText(context, R.string.loginSuccess,Toast.LENGTH_SHORT).show();
+                                ((Activity)context).finish();
+                            }else{
+                                progressDialog.dismiss();
+                                Toast.makeText(context, R.string.failedLogin,Toast.LENGTH_SHORT).show();
+                            }
                         }
-                    }
-                });
+                    });
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
     }
 
     /**
@@ -151,41 +158,45 @@ public class FirebaseController {
      * @param progressDialog
      */
     public void addNewUser(final String alias, final String name, final String mail, final String password, final Context context, final ProgressDialog progressDialog){
-
+        CommonFunctionality common = new CommonFunctionality();
         final DatabaseReference databaseUser = getDatabaseReference(FireBaseReferences.USER_REFERENCE);
         final DatabaseReference databaseHistory = getDatabaseReference(FireBaseReferences.HISTORY_REFERENCE);
 
-        // Execute firebase user registration function
-        FirebaseAuth.getInstance().createUserWithEmailAndPassword(mail,password)
-                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        // If user is successfully registered and logged in, create user object and start main activity
-                        if(task.isSuccessful()){
-                            try {
-                                String idHistory = databaseHistory.push().getKey();
-                                String idUser = databaseUser.push().getKey();
+        try{
+            // Execute firebase user registration function
+            FirebaseAuth.getInstance().createUserWithEmailAndPassword(mail,common.decryptPassword(password))
+                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            // If user is successfully registered and logged in, create user object and start main activity
+                            if(task.isSuccessful()){
+                                try {
+                                    String idHistory = databaseHistory.push().getKey();
+                                    String idUser = databaseUser.push().getKey();
 
-                                History history = new History(idHistory, 0.0, 0, 0, 0, 0, idUser);
-                                databaseHistory.child(idHistory).setValue(history);
+                                    History history = new History(idHistory, 0.0, 0, 0, 0, 0, idUser);
+                                    databaseHistory.child(idHistory).setValue(history);
 
-                                User user = new User(idUser, alias, name, mail, password, idHistory);
-                                databaseUser.child(idUser).setValue(user);
+                                    User user = new User(idUser, alias, name, mail, password, idHistory);
+                                    databaseUser.child(idUser).setValue(user);
 
+                                    progressDialog.dismiss();
+                                    Toast.makeText(context, R.string.successfulRegister,Toast.LENGTH_SHORT).show();
+                                    ((Activity)context).finish();
+                                } catch (Exception e){
+                                    e.printStackTrace();
+                                }
+                            } else {
+                                Log.e("Register error",task.getException().getMessage());
                                 progressDialog.dismiss();
-                                Toast.makeText(context, R.string.successfulRegister,Toast.LENGTH_SHORT).show();
+                                Toast.makeText(context,R.string.failedRegister,Toast.LENGTH_SHORT).show();
                                 ((Activity)context).finish();
-                            } catch (Exception e){
-                                e.printStackTrace();
                             }
-                        } else {
-                            Log.e("Register error",task.getException().getMessage());
-                            progressDialog.dismiss();
-                            Toast.makeText(context,R.string.failedRegister,Toast.LENGTH_SHORT).show();
-                            ((Activity)context).finish();
                         }
-                    }
-                });
+                    });
+        } catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     /**

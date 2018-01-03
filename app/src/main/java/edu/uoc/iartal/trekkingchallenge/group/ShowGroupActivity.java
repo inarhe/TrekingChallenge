@@ -115,6 +115,10 @@ public class ShowGroupActivity extends AppCompatActivity {
      * When the menu message icon is clicked, this method is executed. Start ListMessage activity
      */
     private void sendMessage(){
+        if (!checkIsMember()){
+            Toast.makeText(getApplicationContext(), R.string.noMemberGroup, Toast.LENGTH_SHORT).show();
+            return;
+        }
         Intent intent = new Intent(getApplicationContext(), ListMessagesActivity.class);
         intent.putExtra("group", group);
         startActivity(intent);

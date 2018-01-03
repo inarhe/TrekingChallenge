@@ -505,28 +505,6 @@ public class FirebaseController {
     }
 
     /**
-     * Execute add database object task and wait for its result
-     * @param database
-     * @param child
-     * @param reference
-     * @param value
-     * @param listener
-     */
-    public void executeAddTask(DatabaseReference database, String child, String reference, String value, final OnCompleteTaskListener listener){
-        listener.onStart();
-        database.child(child).child(reference).setValue(value).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()){
-                    listener.onSuccess();
-                } else {
-                    listener.onFailed();
-                }
-            }
-        });
-    }
-
-    /**
      * Execute remove database object task and wait for its result
      * @param database
      * @param child

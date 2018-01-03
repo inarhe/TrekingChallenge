@@ -31,6 +31,7 @@ import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
 import edu.uoc.iartal.trekkingchallenge.common.FirebaseController;
 import edu.uoc.iartal.trekkingchallenge.interfaces.OnCompleteTaskListener;
 import edu.uoc.iartal.trekkingchallenge.interfaces.OnGetDataListener;
+import edu.uoc.iartal.trekkingchallenge.model.Challenge;
 import edu.uoc.iartal.trekkingchallenge.model.Trip;
 import edu.uoc.iartal.trekkingchallenge.model.TripDone;
 import edu.uoc.iartal.trekkingchallenge.user.LoginActivity;
@@ -40,7 +41,7 @@ public class EditTripActivity extends AppCompatActivity {
     private Trip trip;
     private EditText editTextName, editTextDescription, dateEditText;
     private ProgressDialog progressDialog;
-    private Boolean updateDate, updateDesc;
+    private boolean updateDate, updateDesc, tripExists;
     private String newName, newDescription, newDate;
     private Calendar dateSelected;
     private SimpleDateFormat sdf;
@@ -118,6 +119,7 @@ public class EditTripActivity extends AppCompatActivity {
         Boolean updateName = false;
         updateDesc = false;
         updateDate = false;
+        tripExists = false;
 
         // Get input parameters
         newName = editTextName.getText().toString().trim();
@@ -155,36 +157,48 @@ public class EditTripActivity extends AppCompatActivity {
         }
 
         // Update database if its necessary
-        if (updateName) {
-            // Execute controller method to update database trip object. Use OnGetDataListener interface to know
-            // when database is updated
-            getTripResults();
-            controller.executeAddTask(databaseTrip, trip.getId(), FireBaseReferences.TRIP_NAME_REFERENCE, newName, new OnCompleteTaskListener() {
-                        @Override
-                        public void onStart() {
-                            //Nothing to do
-                        }
+        if (updateName){
+            // Execute controller method to check if trip name exists and if it doesn't, update database trip object.
+            controller.readDataOnce(databaseTrip, new OnGetDataListener() {
+                @Override
+                public void onStart() {
+                    //Nothing to do
+                }
 
-                        @Override
-                        public void onSuccess() {
-                            if (updateDesc){
-                                updateDescriptionValue();
-                                if (updateDate) {
-                                    updateDateValue();
-                                }
-                            } else if (updateDate) {
+                @Override
+                public void onSuccess(DataSnapshot data) {
+                    for (DataSnapshot tripSnapshot : data.getChildren()){
+                        Trip trip = tripSnapshot.getValue(Trip.class);
+                        if (trip.getName().equals(newName)){
+                            tripExists = true;
+                            progressDialog.dismiss();
+                            Toast.makeText(getApplicationContext(), R.string.tripAlreadyExists, Toast.LENGTH_SHORT).show();
+                            break;
+                        }
+                    }
+                    // If trip doesn't exist, executes update parameter
+                    if (!tripExists){
+                        getTripResults();
+                        controller.updateStringParameter(databaseTrip, trip.getId(), FireBaseReferences.TRIP_NAME_REFERENCE, newName);
+                        if (updateDesc){
+                            updateDescriptionValue();
+                            if (updateDate) {
                                 updateDateValue();
                             }
-                            progressDialog.dismiss();
-                            Toast.makeText(getApplicationContext(), R.string.editTripOk, Toast.LENGTH_SHORT).show();
-                            finish();
+                        } else if (updateDate) {
+                            updateDateValue();
                         }
+                        progressDialog.dismiss();
+                        Toast.makeText(getApplicationContext(), R.string.editTripOk, Toast.LENGTH_SHORT).show();
+                        finish();
+                    }
+                }
 
-                        @Override
-                        public void onFailed() {
-                            Toast.makeText(getApplicationContext(), R.string.editTripFail, Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                @Override
+                public void onFailed(DatabaseError databaseError) {
+                    Log.e("EditTrip error", databaseError.getMessage());
+                }
+            });
         } else {
             if (updateDesc){
                 updateDescriptionValue();
@@ -194,7 +208,7 @@ public class EditTripActivity extends AppCompatActivity {
             } else if (updateDate){
                 updateDateValue();
             }
-            Toast.makeText(getApplicationContext(), R.string.editTripOk, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), R.string.editChallengeOk, Toast.LENGTH_SHORT).show();
             progressDialog.dismiss();
             finish();
         }
@@ -253,7 +267,7 @@ public class EditTripActivity extends AppCompatActivity {
         final ArrayList<String> tripsDone = new ArrayList<>();
         tripsDone.addAll(trip.getDone().keySet());
 
-        controller.readData(databaseDone, new OnGetDataListener() {
+        controller.readDataOnce(databaseDone, new OnGetDataListener() {
             @Override
             public void onStart() {
                 // Nothing to do
@@ -265,6 +279,7 @@ public class EditTripActivity extends AppCompatActivity {
                     TripDone tripDone = doneSnapshot.getValue(TripDone.class);
                     if (tripsDone.contains(tripDone.getId())){
                         controller.updateStringParameter(databaseDone, tripDone.getId(), FireBaseReferences.TRIPSDONE_TRIP_NAME, newName);
+                        break;
                     }
                 }
             }

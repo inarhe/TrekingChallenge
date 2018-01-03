@@ -3,7 +3,7 @@
     <!--USER OBJECT-->
     <!--Access activity-->
     <string name="registeredText">Ja ets usuari?</string>
-    <string name="accessButton">Accedeix</string>
+    <string name="accessButton">Identifica\'t</string>
     <string name="noRegisteredText">Encara no ets usuari?</string>
     <string name="registerUserButton">Registra\'t</string>
     <string name="accessActivity">Accés usuaris</string>
@@ -100,7 +100,7 @@
     <string name="hintDescription">Descripció del grup</string>
     <string name="checkIsPublic">Grup públic</string>
     <string name="addGroupActivity">Nou grup</string>
-    <string name="groupAlreadyExists">El grup ja existeix</string>
+    <string name="groupAlreadyExists">El nom del grup ja existeix</string>
 
     <!--Edit group activity-->
     <string name="textNameGroup">Nom del grup:</string>
@@ -129,7 +129,6 @@
     <string name="timeAdvice">Siusplau, introdueix un temps</string>
     <string name="finishedSaved">Resultat guardat correctament</string>
     <string name="finishedFailed">No s\'ha pogut guardar el resultat</string>
-    <string name="action_finished">Ruta realitzada</string>
 
     <!--Show route activity-->
     <string name="spring">Primavera</string>
@@ -141,7 +140,7 @@
     <string name="action_chall">Crear repte</string>
     <string name="action_opinion">Opinions</string>
     <string name="detailsButton">Informació detallada</string>
-    <string name="tracksButton">Recorregut i perfil de la ruta</string>
+    <string name="tracksButton">Recorregut i perfil</string>
     <string name="region">Comarca:</string>
     <string name="township">Municipi:</string>
     <string name="notAlreadyDone">No realitzada</string>
@@ -216,7 +215,7 @@
     <string name="tripSaved">Excursió creada correctament</string>
     <string name="failedAddTrip">No s\'ha pogut crear l\'excursió</string>
     <string name="placeAdvice">Siusplau, introdueix lloc de trobada</string>
-    <string name="tripAlreadyExists">L\'excursió ja existeix</string>
+    <string name="tripAlreadyExists">El nom de l\'excursió ja existeix</string>
 
     <!--List trips activity-->
     <string name="listTripsActivity">Excursions</string>
@@ -284,7 +283,7 @@
     <string name="classificationDist">Classificació per distància</string>
     <string name="time">Temps</string>
     <string name="distance">Distància</string>
-    <string name="challAlreadyExists">El repte ja existeix</string>
+    <string name="challAlreadyExists">El nom del repte ja existeix</string>
 
     <!--List challenges activity-->
     <string name="tabAllChallenges">"Tots"</string>

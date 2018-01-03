@@ -7,17 +7,21 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 
 import edu.uoc.iartal.trekkingchallenge.R;
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
 import edu.uoc.iartal.trekkingchallenge.common.FirebaseController;
 import edu.uoc.iartal.trekkingchallenge.interfaces.OnCompleteTaskListener;
+import edu.uoc.iartal.trekkingchallenge.interfaces.OnGetDataListener;
 import edu.uoc.iartal.trekkingchallenge.model.Group;
 import edu.uoc.iartal.trekkingchallenge.user.LoginActivity;
 
@@ -26,7 +30,7 @@ public class EditGroupActivity extends AppCompatActivity {
     private Group group;
     private EditText editTextName, editTextDescription;
     private ProgressDialog progressDialog;
-    private Boolean updateDesc;
+    private boolean updateDesc, groupExists;
     private String newDescription;
     private FirebaseController controller;
 
@@ -79,9 +83,10 @@ public class EditGroupActivity extends AppCompatActivity {
         //Initialize variables
         Boolean updateName = false;
         updateDesc = false;
+        groupExists = false;
 
         // Get input parameters
-        String newName = editTextName.getText().toString().trim();
+        final String newName = editTextName.getText().toString().trim();
         newDescription = editTextDescription.getText().toString().trim();
 
         // Check input parameters. If some parameter is incorrect or empty, stops the function execution
@@ -110,34 +115,45 @@ public class EditGroupActivity extends AppCompatActivity {
         }
 
         // Update database if its necessary
-        if (updateName) {
-            // Execute controller method to update database group object. Use OnGetDataListener interface to know
-            // when database is updated
-            controller.executeAddTask(databaseGroup, group.getId(), FireBaseReferences.GROUP_NAME_REFERENCE, newName, new OnCompleteTaskListener() {
+        if (updateName){
+            // Execute controller method to check if group name exists and if it doesn't, update database group object.
+            controller.readDataOnce(databaseGroup, new OnGetDataListener() {
                 @Override
                 public void onStart() {
                     //Nothing to do
                 }
 
                 @Override
-                public void onSuccess() {
-                    if (updateDesc){
-                        updateDescriptionValue();
+                public void onSuccess(DataSnapshot data) {
+                    for (DataSnapshot groupSnapshot : data.getChildren()){
+                        Group group = groupSnapshot.getValue(Group.class);
+                        if (group.getName().equals(newName)){
+                            groupExists = true;
+                            progressDialog.dismiss();
+                            Toast.makeText(getApplicationContext(), R.string.groupAlreadyExists, Toast.LENGTH_SHORT).show();
+                            break;
+                        }
                     }
-                    progressDialog.dismiss();
-                    Toast.makeText(getApplicationContext(), R.string.editGroupOk, Toast.LENGTH_SHORT).show();
-                    finish();
+                    // If group doesn't exist, executes update parameter
+                    if (!groupExists){
+                        controller.updateStringParameter(databaseGroup, group.getId(), FireBaseReferences.GROUP_NAME_REFERENCE, newName);
+                        if (updateDesc){
+                            updateDescriptionValue();
+                        }
+                        progressDialog.dismiss();
+                        Toast.makeText(getApplicationContext(), R.string.editGroupOk, Toast.LENGTH_SHORT).show();
+                        finish();
+                    }
                 }
 
                 @Override
-                public void onFailed() {
-                    Toast.makeText(getApplicationContext(), R.string.editGroupFail, Toast.LENGTH_SHORT).show();
+                public void onFailed(DatabaseError databaseError) {
+                    Log.e("EditGroup error", databaseError.getMessage());
                 }
             });
         } else {
             if (updateDesc){
                 updateDescriptionValue();
-                Toast.makeText(getApplicationContext(), R.string.editGroupOk, Toast.LENGTH_SHORT).show();
             }
             progressDialog.dismiss();
             finish();
@@ -157,5 +173,6 @@ public class EditGroupActivity extends AppCompatActivity {
      */
     private void updateDescriptionValue() {
         controller.updateStringParameter(databaseGroup, group.getId(), FireBaseReferences.GROUP_DESCRIPTION_REFERENCE, newDescription);
+        Toast.makeText(getApplicationContext(), R.string.editGroupOk, Toast.LENGTH_SHORT).show();
     }
 }

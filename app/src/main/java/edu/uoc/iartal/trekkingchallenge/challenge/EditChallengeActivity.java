@@ -33,6 +33,7 @@ import edu.uoc.iartal.trekkingchallenge.interfaces.OnCompleteTaskListener;
 import edu.uoc.iartal.trekkingchallenge.interfaces.OnGetDataListener;
 import edu.uoc.iartal.trekkingchallenge.model.Challenge;
 import edu.uoc.iartal.trekkingchallenge.model.ChallengeResult;
+import edu.uoc.iartal.trekkingchallenge.model.Group;
 import edu.uoc.iartal.trekkingchallenge.user.LoginActivity;
 
 public class EditChallengeActivity extends AppCompatActivity {
@@ -40,7 +41,7 @@ public class EditChallengeActivity extends AppCompatActivity {
     private Challenge challenge;
     private EditText editTextName, editTextDescription, dateEditText;
     private ProgressDialog progressDialog;
-    private Boolean updateDate, updateDesc;
+    private boolean updateDate, updateDesc, challengeExists;
     private String newName, newDescription, newDate;
     private Context context;
     private FirebaseController controller;
@@ -118,6 +119,7 @@ public class EditChallengeActivity extends AppCompatActivity {
         Boolean updateName = false;
         updateDesc = false;
         updateDate = false;
+        challengeExists = false;
 
         // Get input parameters
         newName = editTextName.getText().toString().trim();
@@ -155,34 +157,46 @@ public class EditChallengeActivity extends AppCompatActivity {
         }
 
         // Update database if its necessary
-        if (updateName) {
-            // Execute controller method to update database challenge object. Use OnGetDataListener interface to know
-            // when database is updated
-            getChallengeResults();
-            controller.executeAddTask(databaseChallenge, challenge.getId(), FireBaseReferences.CHALLENGE_NAME_REFERENCE, newName, new OnCompleteTaskListener() {
+        if (updateName){
+            // Execute controller method to check if challenge name exists and if it doesn't, update database challenge object.
+            controller.readDataOnce(databaseChallenge, new OnGetDataListener() {
                 @Override
                 public void onStart() {
                     //Nothing to do
                 }
 
                 @Override
-                public void onSuccess() {
-                    if (updateDesc){
-                        updateDescriptionValue();
-                        if (updateDate) {
+                public void onSuccess(DataSnapshot data) {
+                    for (DataSnapshot challengeSnapshot : data.getChildren()){
+                        Challenge challenge = challengeSnapshot.getValue(Challenge.class);
+                        if (challenge.getName().equals(newName)){
+                            challengeExists = true;
+                            progressDialog.dismiss();
+                            Toast.makeText(getApplicationContext(), R.string.challAlreadyExists, Toast.LENGTH_SHORT).show();
+                            break;
+                        }
+                    }
+                    // If challenge doesn't exist, executes update parameter
+                    if (!challengeExists){
+                        controller.updateStringParameter(databaseChallenge, challenge.getId(), FireBaseReferences.CHALLENGE_NAME_REFERENCE, newName);
+                        getChallengeResults();
+                        if (updateDesc){
+                            updateDescriptionValue();
+                            if (updateDate) {
+                                updateDateValue();
+                            }
+                        } else if (updateDate) {
                             updateDateValue();
                         }
-                    } else if (updateDate) {
-                        updateDateValue();
+                        progressDialog.dismiss();
+                        Toast.makeText(getApplicationContext(), R.string.editChallengeOk, Toast.LENGTH_SHORT).show();
+                        finish();
                     }
-                    progressDialog.dismiss();
-                    Toast.makeText(getApplicationContext(), R.string.editChallengeOk, Toast.LENGTH_SHORT).show();
-                    finish();
                 }
 
                 @Override
-                public void onFailed() {
-                    Toast.makeText(getApplicationContext(), R.string.editChallengeFail, Toast.LENGTH_SHORT).show();
+                public void onFailed(DatabaseError databaseError) {
+                    Log.e("EditChall error", databaseError.getMessage());
                 }
             });
         } else {
@@ -253,7 +267,7 @@ public class EditChallengeActivity extends AppCompatActivity {
         final ArrayList<String> results = new ArrayList<>();
         results.addAll(challenge.getResults().keySet());
 
-        controller.readData(databaseResults, new OnGetDataListener() {
+        controller.readDataOnce(databaseResults, new OnGetDataListener() {
             @Override
             public void onStart() {
                 // Nothing to do
@@ -265,6 +279,7 @@ public class EditChallengeActivity extends AppCompatActivity {
                     ChallengeResult challengeResult = resultSnapshot.getValue(ChallengeResult.class);
                     if (results.contains(challengeResult.getId())){
                         controller.updateStringParameter(databaseResults, challengeResult.getId(), FireBaseReferences.NAME_REFERENCE, newName);
+                        break;
                     }
                 }
             }

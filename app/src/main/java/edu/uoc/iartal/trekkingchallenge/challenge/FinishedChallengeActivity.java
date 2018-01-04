@@ -218,6 +218,7 @@ public class FinishedChallengeActivity extends AppCompatActivity {
                     if (user.getMail().equals(currentMail)){
                         currentUser = user;
                         getHistoryValues();
+                        break;
                     }
                 }
             }
@@ -250,6 +251,7 @@ public class FinishedChallengeActivity extends AppCompatActivity {
                         historyHour = history.getTotalHour();
                         historyMin = history.getTotalMin();
                         historySlope = history.getTotalSlope();
+                        break;
                     }
                 }
             }
@@ -278,6 +280,7 @@ public class FinishedChallengeActivity extends AppCompatActivity {
                     Route route = routeSnapshot.getValue(Route.class);
                     if (route.getName().equals(challenge.getRoute())) {
                         routeSlope = route.getAscent() + route.getDecline();
+                        break;
                     }
                 }
                 int totalSlope = historySlope + routeSlope;

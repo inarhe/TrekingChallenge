@@ -136,8 +136,6 @@
     <string name="summer">Estiu</string>
     <string name="winter">Hivern</string>
     <string name="imageNotDonwloaded">Imatge no descarregada</string>
-    <string name="action_trip">Crear excursió</string>
-    <string name="action_chall">Crear repte</string>
     <string name="action_opinion">Opinions</string>
     <string name="detailsButton">Informació detallada</string>
     <string name="tracksButton">Recorregut i perfil</string>
@@ -363,6 +361,9 @@
     <string name="actionFinish">Registrar resultat</string>
     <string name="alreadyFinish">Ja has registrat un resultat</string>
     <string name="distanceFormat">La distància no té el format correcte.</string>
+    <string name="mainMenu">Menú principal</string>
+    <string name="drawerOpen">Drawer Opened</string>
+    <string name="drawerClose">Drawer Closed</string>
 
     <!--Manifest-->
     <string name="title_activity_map">Map</string>
@@ -374,5 +375,6 @@
     <string name="challengeMenuButton">Reptes</string>
     <string name="userMenuButton">Àrea usuari</string>
     <string name="groupMenuButton">Grups usuaris</string>
+
 
 </resources>

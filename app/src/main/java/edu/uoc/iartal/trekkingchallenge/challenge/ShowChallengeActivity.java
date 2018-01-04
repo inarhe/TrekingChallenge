@@ -267,6 +267,7 @@ public class ShowChallengeActivity extends AppCompatActivity {
                     if ((results.contains(challengeResult.getId())) && (challengeResult.getChallenge().equals(challenge.getId()))){
                         Toast.makeText(getApplicationContext(), R.string.alreadyFinish, Toast.LENGTH_SHORT).show();
                         isFinished = true;
+                        break;
                     }
                 }
 
@@ -304,6 +305,7 @@ public class ShowChallengeActivity extends AppCompatActivity {
                     if (user.getMail().equals(currentMail)){
                         currentUser = user;
                         getChallengeResults();
+                        break;
                     }
                 }
             }

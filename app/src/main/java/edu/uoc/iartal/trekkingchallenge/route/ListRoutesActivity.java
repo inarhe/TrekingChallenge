@@ -3,8 +3,14 @@ package edu.uoc.iartal.trekkingchallenge.route;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -23,6 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.uoc.iartal.trekkingchallenge.R;
+import edu.uoc.iartal.trekkingchallenge.common.CommonFunctionality;
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
 import edu.uoc.iartal.trekkingchallenge.common.FirebaseController;
 import edu.uoc.iartal.trekkingchallenge.interfaces.OnGetDataListener;
@@ -30,7 +37,7 @@ import edu.uoc.iartal.trekkingchallenge.model.Route;
 import edu.uoc.iartal.trekkingchallenge.adapter.RouteAdapter;
 import edu.uoc.iartal.trekkingchallenge.user.LoginActivity;
 
-public class ListRoutesActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
+public class ListRoutesActivity extends AppCompatActivity implements SearchView.OnQueryTextListener, NavigationView.OnNavigationItemSelectedListener {
     private static final int ACTIVITY_CODE = 1;
 
     private RouteAdapter routeAdapter;
@@ -38,6 +45,9 @@ public class ListRoutesActivity extends AppCompatActivity implements SearchView.
     private ArrayList<Route> routes;
     private DatabaseReference databaseRoutes;
     private FirebaseController controller;
+    private DrawerLayout drawerLayout;
+    private ActionBarDrawerToggle actionBarDrawerToggle;
+    private CommonFunctionality common;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +65,7 @@ public class ListRoutesActivity extends AppCompatActivity implements SearchView.
         progressDialog = new ProgressDialog(this);
         controller = new FirebaseController();
         routes = new ArrayList<>();
+        common = new CommonFunctionality();
 
         // If user isn't logged, start login activity
         if (controller.getActiveUserSession() == null) {
@@ -70,6 +81,15 @@ public class ListRoutesActivity extends AppCompatActivity implements SearchView.
 
         // Get route database reference
         databaseRoutes = controller.getDatabaseReference(FireBaseReferences.ROUTE_REFERENCE);
+
+        // Set actionbar drawer layout
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
+        actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawerOpen, R.string.drawerClose);
+        drawerLayout.addDrawerListener(actionBarDrawerToggle);
+
+        // Set navigation view listener
+        NavigationView navigationView = (NavigationView) findViewById(R.id.navigationView);
+        navigationView.setNavigationItemSelectedListener(this);
 
         // Show database routes in recycler view
         getRoutes();
@@ -121,6 +141,57 @@ public class ListRoutesActivity extends AppCompatActivity implements SearchView.
         final List<Route> filteredModelList = filter(routes, newText);
         routeAdapter.setFilter(filteredModelList);
         return true;
+    }
+
+    @Override
+    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        actionBarDrawerToggle.syncState();
+    }
+
+    /**
+     * Handle navigation drawer view item clicked
+     * @param item
+     * @return
+     */
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.homeItem:
+                common.startHomeNavigationDrawer(this);
+                drawerLayout.closeDrawer(GravityCompat.START);
+                return true;
+            case R.id.mapItem:
+                common.startMapNavigationDrawer(this);
+                drawerLayout.closeDrawer(GravityCompat.START);
+                return true;
+            case R.id.routeItem:
+                common.startRouteNavigationDrawer(this);
+                drawerLayout.closeDrawer(GravityCompat.START);
+                return true;
+            case R.id.tripItem:
+                common.startTripNavigationDrawer(this);
+                drawerLayout.closeDrawer(GravityCompat.START);
+                return true;
+            case R.id.challengeItem:
+                common.startChallengeNavigationDrawer(this);
+                drawerLayout.closeDrawer(GravityCompat.START);
+                return true;
+            case R.id.userItem:
+                common.startUserNavigationDrawer(this);
+                drawerLayout.closeDrawer(GravityCompat.START);
+                return true;
+            case R.id.groupItem:
+                common.startGroupNavigationDrawer(this);
+                drawerLayout.closeDrawer(GravityCompat.START);
+                return true;
+            case R.id.logoutItem:
+                common.startLogOutNavigationDrawer(this);
+                drawerLayout.closeDrawer(GravityCompat.START);
+                return true;
+            default:
+                return true;
+        }
     }
 
     /**

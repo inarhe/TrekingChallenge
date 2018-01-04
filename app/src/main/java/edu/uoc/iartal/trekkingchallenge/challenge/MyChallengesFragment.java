@@ -195,6 +195,7 @@ public class MyChallengesFragment extends Fragment implements SearchView.OnQuery
 
                     if (user.getMail().equals(currentMail)){
                         currentUserId = user.getId();
+                        break;
                     }
                 }
                 getUserChallenges();

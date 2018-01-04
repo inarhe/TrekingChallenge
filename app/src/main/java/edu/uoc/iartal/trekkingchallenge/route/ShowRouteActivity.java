@@ -172,12 +172,6 @@ public class ShowRouteActivity extends AppCompatActivity {
             case R.id.action_finished:
                 routeFinished();
                 return true;
-            case R.id.action_trip:
-                newTrip();
-                return true;
-            case R.id.action_challenge:
-                newChallenge();
-                return true;
             case R.id.action_opinion:
                 setOpinion();
                 return true;
@@ -196,30 +190,11 @@ public class ShowRouteActivity extends AppCompatActivity {
     }
 
     /**
-     * Start new trip activity when menu option is selected
-     */
-    public void newTrip() {
-        Intent intent = new Intent(this, AddTripActivity.class);
-        startActivity(intent);
-        finish();
-    }
-
-    /**
-     * Start new challenge activity when menu option is selected
-     */
-    public void newChallenge() {
-        Intent intent = new Intent(this, AddChallengeActivity.class);
-        startActivity(intent);
-        finish();
-    }
-
-    /**
      * Starts opinion activity when menu option is selected
      */
     public void setOpinion() {
         Intent intent = new Intent(this, RatingRouteActivity.class);
         intent.putExtra("route", route);
-        //startActivity(intent);
         startActivityForResult(intent, ACTIVITY_CODE);
     }
 
@@ -234,7 +209,6 @@ public class ShowRouteActivity extends AppCompatActivity {
             rbAverage.setRating(sumRating / numRating);
         }
     }
-
 
     /**
      * Check if user has done this route to show its finished date
@@ -255,6 +229,7 @@ public class ShowRouteActivity extends AppCompatActivity {
                     if ((finished.getRoute().equals(route.getIdRoute())) && (finished.getUser().equals(currentUser.getId()))){
                         textViewDate.setText(finishedSnapshot.getValue(Finished.class).getDate());
                         imageViewCalendar.setImageResource(R.drawable.ic_done);
+                        break;
                     } else {
                         textViewDate.setText(R.string.notAlreadyDone);
                         imageViewCalendar.setImageResource(R.drawable.ic_notdone);
@@ -295,6 +270,7 @@ public class ShowRouteActivity extends AppCompatActivity {
                     if (user.getMail().equals(currentMail)){
                         currentUser = user;
                         checkIfUserHasDone();
+                        break;
                     }
                 }
             }

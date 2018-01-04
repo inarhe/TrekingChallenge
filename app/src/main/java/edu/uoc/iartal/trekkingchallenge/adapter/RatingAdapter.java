@@ -79,8 +79,10 @@ public class RatingAdapter extends RecyclerView.Adapter<RatingAdapter.RatingView
             public void onSuccess(DataSnapshot data) {
                 for (DataSnapshot userSnapshot : data.getChildren()){
                     User user = userSnapshot.getValue(User.class);
-                    if (user.getId().equals(ratings.get(position).getUser()))
+                    if (user.getId().equals(ratings.get(position).getUser())) {
                         viewHolder.textViewUser.setText("@" + user.getAlias());
+                        break;
+                    }
                 }
             }
 

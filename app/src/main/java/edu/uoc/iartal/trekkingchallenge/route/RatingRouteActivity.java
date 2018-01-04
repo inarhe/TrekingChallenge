@@ -204,7 +204,7 @@ public class RatingRouteActivity extends AppCompatActivity {
     }
 
     /**
-     * Get current user information and get his history values
+     * Get current user information
      */
     private void getCurrentUser(){
         // Execute controller method to get database current user object. Use OnGetDataListener interface to know
@@ -224,6 +224,7 @@ public class RatingRouteActivity extends AppCompatActivity {
 
                     if (user.getMail().equals(currentMail)){
                         currentUser = user;
+                        break;
                     }
                 }
             }
@@ -282,8 +283,10 @@ public class RatingRouteActivity extends AppCompatActivity {
                     Rating rate = ratingSnapshot.getValue(Rating.class);
                     if (rate.getRoute().equals(route.getIdRoute()) && rate.getUser().equals(currentUser.getId())){
                         isRated = true;
+                        break;
                     }
                 }
+
                 if (!isRated){
                     rateRoute();
                 } else {

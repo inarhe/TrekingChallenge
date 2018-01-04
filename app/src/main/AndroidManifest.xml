@@ -33,185 +33,247 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".common.MainActivity" />
+        <activity
+            android:name=".common.MainActivity"
+            android:screenOrientation="portrait">
+        </activity>
 
         <!-- User activities -->
-        <activity android:name=".user.RegisterActivity">
+        <activity
+            android:name=".user.RegisterActivity"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".user.AccessActivity" />
         </activity>
-        <activity android:name=".user.AccessActivity">
+        <activity
+            android:name=".user.AccessActivity"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".common.MainActivity" />
         </activity>
-        <activity android:name=".user.LoginActivity">
+        <activity
+            android:name=".user.LoginActivity"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".user.AccessActivity" />
         </activity>
-        <activity android:name=".user.UserAreaActivity">
+        <activity
+            android:name=".user.UserAreaActivity"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".common.MainActivity" />
         </activity>
-        <activity android:name=".user.ListUsersActivity">
+        <activity
+            android:name=".user.ListUsersActivity"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".group.ListGroupsActivity" />
         </activity>
         <activity
             android:name=".user.UserHistoryActivity"
-            android:launchMode="singleTop">
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".user.UserAreaActivity" />
         </activity>
 
         <!-- Group activities -->
-        <activity android:name=".group.AddGroupActivity">
+        <activity
+            android:name=".group.AddGroupActivity"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".group.ListGroupsActivity" />
         </activity>
         <activity
             android:name=".group.ShowGroupActivity"
-            android:launchMode="singleTop">
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".group.ListGroupsActivity" />
         </activity>
-        <activity android:name=".group.ListGroupsActivity">
+        <activity
+            android:name=".group.ListGroupsActivity"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".common.MainActivity" />
         </activity>
-        <activity android:name=".group.EditGroupActivity">
+        <activity
+            android:name=".group.EditGroupActivity"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".group.ListGroupsActivity" />
         </activity>
 
         <!-- Trip activities -->
-        <activity android:name=".trip.ListTripsActivity">
+        <activity
+            android:name=".trip.ListTripsActivity"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".common.MainActivity" />
         </activity>
-        <activity android:name=".trip.AddTripActivity">
+        <activity
+            android:name=".trip.AddTripActivity"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".trip.ListTripsActivity" />
         </activity>
         <activity
             android:name=".trip.ShowTripActivity"
-            android:launchMode="singleTop">
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".trip.ListTripsActivity" />
         </activity>
-        <activity android:name=".trip.EditTripActivity">
+        <activity
+            android:name=".trip.EditTripActivity"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".trip.ListTripsActivity" />
         </activity>
-        <activity android:name=".trip.FinishedTripActivity">
+        <activity
+            android:name=".trip.FinishedTripActivity"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".trip.ShowTripActivity" />
         </activity>
-        <activity android:name=".trip.TripHistoryActivity">
+        <activity
+            android:name=".trip.TripHistoryActivity"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".user.UserHistoryActivity" />
         </activity>
 
         <!-- Challenge activities -->
-        <activity android:name=".challenge.ListChallengesActivity">
+        <activity
+            android:name=".challenge.ListChallengesActivity"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".common.MainActivity" />
         </activity>
-        <activity android:name=".challenge.AddChallengeActivity">
+        <activity
+            android:name=".challenge.AddChallengeActivity"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".challenge.ListChallengesActivity" />
         </activity>
-        <activity android:name=".challenge.FinishedChallengeActivity">
+        <activity
+            android:name=".challenge.FinishedChallengeActivity"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".challenge.ShowChallengeActivity" />
         </activity>
         <activity
             android:name=".challenge.ShowChallengeActivity"
-            android:launchMode="singleTop">
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".challenge.ListChallengesActivity" />
         </activity>
-        <activity android:name=".challenge.EditChallengeActivity">
+        <activity
+            android:name=".challenge.EditChallengeActivity"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".challenge.ListChallengesActivity" />
         </activity>
-        <activity android:name=".challenge.ChallengeHistoryActivity">
+        <activity
+            android:name=".challenge.ChallengeHistoryActivity"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".user.UserHistoryActivity" />
         </activity>
 
         <!-- Route activities -->
-        <activity android:name=".route.ListRoutesActivity">
+        <activity
+            android:name=".route.ListRoutesActivity"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".common.MainActivity" />
         </activity>
         <activity
             android:name=".route.ShowRouteActivity"
-            android:launchMode="singleTop">
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".route.ListRoutesActivity" />
         </activity>
-        <activity android:name=".route.DetailRouteActivity">
+        <activity
+            android:name=".route.DetailRouteActivity"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".route.ShowRouteActivity" />
         </activity>
-        <activity android:name=".route.SearchRoutesActivity">
+        <activity
+            android:name=".route.SearchRoutesActivity"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".route.ListRoutesActivity" />
         </activity>
-        <activity android:name=".route.TrackRouteActivity">
+        <activity
+            android:name=".route.TrackRouteActivity"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".route.ShowRouteActivity" />
         </activity>
-        <activity android:name=".route.FinishedRouteActivity">
+        <activity
+            android:name=".route.FinishedRouteActivity"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".route.ShowRouteActivity" />
         </activity>
-        <activity android:name=".route.RatingRouteActivity">
+        <activity
+            android:name=".route.RatingRouteActivity"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".route.ShowRouteActivity" />
         </activity>
-        <activity android:name=".route.RouteHistoryActivity">
+        <activity
+            android:name=".route.RouteHistoryActivity"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".user.UserHistoryActivity" />
         </activity>
 
         <!-- Message activites -->
-        <activity android:name=".message.AddMessageActivity">
+        <activity
+            android:name=".message.AddMessageActivity"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".message.ListMessagesActivity" />
         </activity>
-        <activity android:name=".message.ListMessagesActivity" />
+        <activity
+            android:name=".message.ListMessagesActivity"
+            android:screenOrientation="portrait"/>
 
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
@@ -228,6 +290,7 @@
         <!-- Map activity -->
         <activity
             android:name=".map.MapActivity"
+            android:screenOrientation="portrait"
             android:label="@string/title_activity_map">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

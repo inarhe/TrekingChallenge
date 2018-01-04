@@ -4,16 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".route.ShowRouteActivity">
 
-    <item android:id="@+id/action_trip"
-        android:title="@string/action_trip"
-        android:orderInCategory="100"
-        app:showAsAction="never"/>
-
-    <item android:id="@+id/action_challenge"
-        android:title="@string/action_chall"
-        android:orderInCategory="100"
-        app:showAsAction="never"/>
-
     <item android:id="@+id/action_finished"
         android:title="@string/actionFinish"
         android:orderInCategory="100"

@@ -104,4 +104,6 @@
     <dimen name="height_spinner">45dp</dimen>
     <dimen name="text_size_radioButton">12sp</dimen>
     <dimen name="access_marginTop">55dp</dimen>
+
+    <dimen name="drawer_header">120dp</dimen>
 </resources>

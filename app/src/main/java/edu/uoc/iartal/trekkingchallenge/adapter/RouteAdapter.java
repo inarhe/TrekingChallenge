@@ -181,6 +181,7 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.RouteViewHol
                         String finisher = finishedSnapshot.getValue(Finished.class).getUser();
                         if (finisher.equals(currentUser.getId())){
                             viewHolder.textViewDate.setText(finishedSnapshot.getValue(Finished.class).getDate());
+                            break;
                         }
                     }
                 }
@@ -214,6 +215,7 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.RouteViewHol
 
                     if (user.getMail().equals(currentMail)){
                         currentUser = user;
+                        break;
                     }
                 }
             }

@@ -194,6 +194,7 @@ public class MyTripsFragment extends Fragment implements SearchView.OnQueryTextL
 
                     if (user.getMail().equals(currentMail)){
                         currentUserId = user.getId();
+                        break;
                     }
                 }
                 getUserTrips();

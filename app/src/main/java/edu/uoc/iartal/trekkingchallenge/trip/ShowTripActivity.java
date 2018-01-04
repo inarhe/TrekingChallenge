@@ -276,6 +276,7 @@ public class ShowTripActivity extends AppCompatActivity {
                     TripDone tripDone = doneSnapshot.getValue(TripDone.class);
                     if ((dones.contains(tripDone.getId())) && (tripDone.getTrip().equals(trip.getId()))){
                         isFinished = true;
+                        break;
                     }
                 }
 
@@ -314,6 +315,7 @@ public class ShowTripActivity extends AppCompatActivity {
 
                     if (user.getMail().equals(currentMail)){
                         currentUser = user;
+                        break;
                     }
                 }
             }

@@ -76,8 +76,10 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             public void onSuccess(DataSnapshot data) {
                 for (DataSnapshot userSnapshot : data.getChildren()){
                     User user = userSnapshot.getValue(User.class);
-                    if (user.getId().equals(messages.get(position).getUser()))
-                    viewHolder.textViewUser.setText("@" + user.getAlias());
+                    if (user.getId().equals(messages.get(position).getUser())) {
+                        viewHolder.textViewUser.setText("@" + user.getAlias());
+                        break;
+                    }
                 }
             }
 

@@ -203,6 +203,7 @@ public class AddChallengeActivity extends AppCompatActivity implements AdapterVi
                     Challenge challenge = challengeSnapshot.getValue(Challenge.class);
                     if (challenge.getName().equals(name)){
                         challengeExists = true;
+                        break;
                     }
                 }
 
@@ -327,6 +328,7 @@ public class AddChallengeActivity extends AppCompatActivity implements AdapterVi
 
                     if (user.getMail().equals(currentMail)){
                         currentUser = user;
+                        break;
                     }
                 }
             }

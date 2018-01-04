@@ -241,6 +241,7 @@ public class ShowGroupActivity extends AppCompatActivity {
 
                     if (user.getMail().equals(currentMail)){
                         currentUser = user;
+                        break;
                     }
                 }
             }

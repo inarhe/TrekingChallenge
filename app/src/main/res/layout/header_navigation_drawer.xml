@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/drawer_header"
+    android:background="@color/colorPrimary">
+
+    <ImageView
+        android:id="@+id/imageDrawerHead"
+        android:layout_width="@dimen/image_width_edit_trip"
+        android:layout_height="@dimen/image_width_edit_trip"
+        android:src="@drawable/ic_account_circle"
+        android:tint="#FFFFFF"
+        android:layout_marginLeft="@dimen/margin_left_right"
+        android:layout_marginStart="@dimen/margin_left_right"
+        android:layout_marginTop="@dimen/margin_left_right" />
+
+    <TextView
+        android:id="@+id/nameDrawerHead"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="bla bla"
+        android:layout_toRightOf="@+id/imageDrawerHead"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_marginTop="@dimen/margin_top_title"
+        android:layout_marginStart="@dimen/margin_left_with_icon"
+        android:layout_marginLeft="@dimen/margin_left_with_icon"/>
+
+</RelativeLayout>

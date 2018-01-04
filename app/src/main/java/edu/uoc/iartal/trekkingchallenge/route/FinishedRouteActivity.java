@@ -216,6 +216,7 @@ public class FinishedRouteActivity extends AppCompatActivity {
                     if (user.getMail().equals(currentMail)){
                         currentUser = user;
                         getHistoryValues();
+                        break;
                     }
                 }
             }
@@ -247,6 +248,7 @@ public class FinishedRouteActivity extends AppCompatActivity {
                         historyHour = history.getTotalHour();
                         historyMin = history.getTotalMin();
                         historySlope = history.getTotalSlope();
+                        break;
                     }
                 }
             }

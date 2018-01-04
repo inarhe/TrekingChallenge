@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/homeItem"
+            android:title="@string/mainMenu"
+            android:icon="@drawable/ic_home">
+        </item>
+
+        <item
+            android:id="@+id/mapItem"
+            android:title="@string/mapMenuButton"
+            android:icon="@drawable/ic_map">
+        </item>
+
+        <item
+            android:id="@+id/routeItem"
+            android:title="@string/routesMenuButton"
+            android:icon="@drawable/ic_landscape">
+        </item>
+
+        <item
+            android:id="@+id/tripItem"
+            android:title="@string/tripMenuButton"
+            android:icon="@drawable/ic_trip">
+        </item>
+
+        <item
+            android:id="@+id/challengeItem"
+            android:title="@string/challengeMenuButton"
+            android:icon="@drawable/ic_challenge">
+        </item>
+
+        <item
+            android:id="@+id/userItem"
+            android:title="@string/userMenuButton"
+            android:icon="@drawable/ic_person">
+        </item>
+
+        <item
+            android:id="@+id/groupItem"
+            android:title="@string/groupMenuButton"
+            android:icon="@drawable/ic_people">
+        </item>
+
+        <item
+            android:id="@+id/logoutItem"
+            android:title="@string/buttonSignOut"
+            android:icon="@drawable/ic_logout">
+        </item>
+
+    </group>
+
+</menu>

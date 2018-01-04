@@ -3,6 +3,7 @@ package edu.uoc.iartal.trekkingchallenge.common;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -101,12 +102,15 @@ public class FirebaseController {
     }
 
     /**
-     * Sign Out. Close user session
+     * Sign Out. Close user session and set intent Flags in order to don't have back stack
      * @param context
      */
     public void signOutDatabase(Context context){
         FirebaseAuth.getInstance().signOut();
         Toast.makeText(context, R.string.userSignOut, Toast.LENGTH_SHORT).show();
+        Intent i = new Intent(context, MainActivity.class);
+        i.setFlags(i.FLAG_ACTIVITY_NEW_TASK | i.FLAG_ACTIVITY_CLEAR_TASK);
+        context.startActivity(i);
         ((Activity)context).finish();
     }
 

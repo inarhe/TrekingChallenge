@@ -114,6 +114,7 @@ public class AddGroupActivity extends AppCompatActivity {
                     Group group = groupSnapshot.getValue(Group.class);
                     if (group.getName().equals(name)){
                         groupExists = true;
+                        break;
                     }
                 }
 
@@ -180,6 +181,7 @@ public class AddGroupActivity extends AppCompatActivity {
 
                     if (user.getMail().equals(currentMail)){
                         currentUser = user;
+                        break;
                     }
                 }
             }

@@ -2,10 +2,17 @@ package edu.uoc.iartal.trekkingchallenge.map;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.MenuItem;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -24,6 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.uoc.iartal.trekkingchallenge.R;
+import edu.uoc.iartal.trekkingchallenge.common.CommonFunctionality;
 import edu.uoc.iartal.trekkingchallenge.common.FireBaseReferences;
 import edu.uoc.iartal.trekkingchallenge.common.FirebaseController;
 import edu.uoc.iartal.trekkingchallenge.interfaces.OnGetDataListener;
@@ -31,11 +39,14 @@ import edu.uoc.iartal.trekkingchallenge.model.Route;
 import edu.uoc.iartal.trekkingchallenge.route.ShowRouteActivity;
 import edu.uoc.iartal.trekkingchallenge.user.LoginActivity;
 
-public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class MapActivity extends AppCompatActivity implements OnMapReadyCallback, NavigationView.OnNavigationItemSelectedListener {
 
     private GoogleMap mMap;
     private List<Route> routes;
     private DatabaseReference databaseRoute;
+    private DrawerLayout drawerLayout;
+    private ActionBarDrawerToggle actionBarDrawerToggle;
+    private CommonFunctionality common;
 
     public MapActivity() {
 
@@ -52,9 +63,17 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
 
+        // Set toolbar and actionbar
+        Toolbar toolbar = (Toolbar) findViewById(R.id.mapToolbar);
+        setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setTitle(R.string.mapActivity);
+
         // Initialize variables
         controller = new FirebaseController();
         routes = new ArrayList<>();
+        common = new CommonFunctionality();
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -70,12 +89,14 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         // Get database reference
         databaseRoute = controller.getDatabaseReference(FireBaseReferences.ROUTE_REFERENCE);
 
-        // Set toolbar and actionbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.mapToolbar);
-        setSupportActionBar(toolbar);
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setTitle(R.string.mapActivity);
+        // Set actionbar drawer layout
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
+        actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawerOpen, R.string.drawerClose);
+        drawerLayout.addDrawerListener(actionBarDrawerToggle);
+
+        // Set navigation view listener
+        NavigationView navigationView = (NavigationView) findViewById(R.id.navigationView);
+        navigationView.setNavigationItemSelectedListener(this);
     }
 
 
@@ -121,6 +142,57 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         });
     }
 
+    @Override
+    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        actionBarDrawerToggle.syncState();
+    }
+
+    /**
+     * Handle navigation drawer view item clicked
+     * @param item
+     * @return
+     */
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.homeItem:
+                common.startHomeNavigationDrawer(this);
+                drawerLayout.closeDrawer(GravityCompat.START);
+                return true;
+            case R.id.mapItem:
+                common.startMapNavigationDrawer(this);
+                drawerLayout.closeDrawer(GravityCompat.START);
+                return true;
+            case R.id.routeItem:
+                common.startRouteNavigationDrawer(this);
+                drawerLayout.closeDrawer(GravityCompat.START);
+                return true;
+            case R.id.tripItem:
+                common.startTripNavigationDrawer(this);
+                drawerLayout.closeDrawer(GravityCompat.START);
+                return true;
+            case R.id.challengeItem:
+                common.startChallengeNavigationDrawer(this);
+                drawerLayout.closeDrawer(GravityCompat.START);
+                return true;
+            case R.id.userItem:
+                common.startUserNavigationDrawer(this);
+                drawerLayout.closeDrawer(GravityCompat.START);
+                return true;
+            case R.id.groupItem:
+                common.startGroupNavigationDrawer(this);
+                drawerLayout.closeDrawer(GravityCompat.START);
+                return true;
+            case R.id.logoutItem:
+                common.startLogOutNavigationDrawer(this);
+                drawerLayout.closeDrawer(GravityCompat.START);
+                return true;
+            default:
+                return true;
+        }
+    }
+
     /**
      * Set map position in Catalunya
      */
@@ -137,7 +209,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
      */
     private void loadMarkRoutes(){
 
-        controller.readData(databaseRoute, new OnGetDataListener() {
+        controller.readDataOnce(databaseRoute, new OnGetDataListener() {
             @Override
             public void onStart() {
                 //Nothing to do

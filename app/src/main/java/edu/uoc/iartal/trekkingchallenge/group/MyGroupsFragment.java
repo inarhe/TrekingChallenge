@@ -195,6 +195,7 @@ public class MyGroupsFragment extends Fragment implements SearchView.OnQueryText
 
                     if (user.getMail().equals(currentMail)){
                         currentUserId = user.getId();
+                        break;
                     }
                 }
                 getUserGroups();

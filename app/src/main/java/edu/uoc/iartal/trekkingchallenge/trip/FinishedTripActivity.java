@@ -216,6 +216,7 @@ public class FinishedTripActivity extends AppCompatActivity {
                     if (user.getMail().equals(currentMail)){
                         currentUser = user;
                         getHistoryValues();
+                        break;
                     }
                 }
             }
@@ -247,6 +248,7 @@ public class FinishedTripActivity extends AppCompatActivity {
                         historyHour = history.getTotalHour();
                         historyMin = history.getTotalMin();
                         historySlope = history.getTotalSlope();
+                        break;
                     }
                 }
             }
@@ -274,8 +276,10 @@ public class FinishedTripActivity extends AppCompatActivity {
                     Route route = routeSnapshot.getValue(Route.class);
                     if (route.getName().equals(trip.getRoute())) {
                         routeSlope = route.getAscent() + route.getDecline();
+                        break;
                     }
                 }
+
                 int totalSlope = historySlope + routeSlope;
                 double totalDistance = common.round(historyDistance + Double.parseDouble(finishDist),ConstantsUtils.NUM_OF_DECIMALS);
                 ArrayList<Integer> time = common.sumTime(historyHour, Integer.parseInt(finishHour), historyMin, Integer.parseInt(finishMin));

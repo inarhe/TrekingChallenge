@@ -151,6 +151,7 @@ public class ListMessagesActivity extends AppCompatActivity {
 
                     if (user.getMail().equals(currentMail)){
                         currentUserId = user.getId();
+                        break;
                     }
                 }
             }

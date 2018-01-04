@@ -1,6 +1,13 @@
 package edu.uoc.iartal.trekkingchallenge.common;
 
+import android.content.Context;
+import android.content.Intent;
 import android.util.Base64;
+import android.util.Log;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -11,6 +18,17 @@ import java.util.regex.Pattern;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
+
+import edu.uoc.iartal.trekkingchallenge.R;
+import edu.uoc.iartal.trekkingchallenge.challenge.ListChallengesActivity;
+import edu.uoc.iartal.trekkingchallenge.group.ListGroupsActivity;
+import edu.uoc.iartal.trekkingchallenge.interfaces.OnGetDataListener;
+import edu.uoc.iartal.trekkingchallenge.map.MapActivity;
+import edu.uoc.iartal.trekkingchallenge.model.User;
+import edu.uoc.iartal.trekkingchallenge.route.ListRoutesActivity;
+import edu.uoc.iartal.trekkingchallenge.trip.ListTripsActivity;
+import edu.uoc.iartal.trekkingchallenge.user.UserAreaActivity;
+import edu.uoc.iartal.trekkingchallenge.user.UserHistoryActivity;
 
 
 // Functionality used by different activities
@@ -91,6 +109,102 @@ public class CommonFunctionality {
         return bd.doubleValue();
     }
 
+    /**
+     * Start main activity when navigation drawer option is clicked
+     */
+    public void startHomeNavigationDrawer(Context context){
+        Intent intent = new Intent(context, MainActivity.class);
+        context.startActivity(intent);
+    }
+
+    /**
+     * Start map activity when navigation drawer option is clicked
+     */
+    public void startMapNavigationDrawer(Context context){
+        Intent intent = new Intent(context, MapActivity.class);
+        context.startActivity(intent);
+    }
+
+    /**
+     * Start route activity when navigation drawer option is clicked
+     */
+    public void startRouteNavigationDrawer(Context context){
+        Intent intent = new Intent(context, ListRoutesActivity.class);
+        context.startActivity(intent);
+    }
+
+    /**
+     * Start trip activity when navigation drawer option is clicked
+     */
+    public void startTripNavigationDrawer(Context context){
+        Intent intent = new Intent(context, ListTripsActivity.class);
+        context.startActivity(intent);
+    }
+
+    /**
+     * Start challenge activity when navigation drawer option is clicked
+     */
+    public void startChallengeNavigationDrawer(Context context){
+        Intent intent = new Intent(context, ListChallengesActivity.class);
+        context.startActivity(intent);
+    }
+
+    /**
+     * Start user activity when navigation drawer option is clicked
+     */
+    public void startUserNavigationDrawer(Context context){
+        Intent intent = new Intent(context, UserAreaActivity.class);
+        context.startActivity(intent);
+    }
+
+    /**
+     * Start map activity when navigation drawer option is clicked
+     */
+    public void startGroupNavigationDrawer(Context context){
+        Intent intent = new Intent(context, ListGroupsActivity.class);
+        context.startActivity(intent);
+    }
+
+    /**
+     * Logout when navigation drawer option is clicked
+     */
+    public void startLogOutNavigationDrawer(final Context context){
+        final FirebaseController controller = new FirebaseController();
+        DatabaseReference databaseUser = controller.getDatabaseReference(FireBaseReferences.USER_REFERENCE);
+
+        controller.readDataOnce(databaseUser, new OnGetDataListener() {
+            @Override
+            public void onStart() {
+                // Nothing to do
+            }
+
+            @Override
+            public void onSuccess(DataSnapshot data) {
+                String currentMail = controller.getCurrentUserEmail();
+
+                for (DataSnapshot userSnapshot : data.getChildren()){
+                    User user = userSnapshot.getValue(User.class);
+
+                    if (user.getMail().equals(currentMail)){
+                        controller.signOutDatabase(context);
+                        break;
+                    }
+                }
+            }
+
+            @Override
+            public void onFailed(DatabaseError databaseError) {
+                Log.e("LogOut error", databaseError.getMessage());
+            }
+        });
+    }
+
+    /**
+     * Encrypt password to protect user information
+     * @param password
+     * @return
+     * @throws Exception
+     */
     public String encryptPassword(String password) throws Exception{
         SecretKeySpec key = generateKey(ConstantsUtils.KEY_CIPHER);
         Cipher c = Cipher.getInstance(ConstantsUtils.ALGORITHM_AES);
@@ -101,6 +215,12 @@ public class CommonFunctionality {
         return encryptedPassword;
     }
 
+    /**
+     * Decrypt user password
+     * @param password
+     * @return
+     * @throws Exception
+     */
     public String decryptPassword(String password) throws Exception{
 
         SecretKeySpec key = generateKey(ConstantsUtils.KEY_CIPHER);
@@ -113,6 +233,12 @@ public class CommonFunctionality {
         return decryptedValue;
     }
 
+    /**
+     * Generaye a key from a given password
+     * @param password
+     * @return
+     * @throws Exception
+     */
     private SecretKeySpec generateKey(String password) throws Exception{
 
         final MessageDigest digest = MessageDigest.getInstance(ConstantsUtils.ALGORITHM_SHA_256);

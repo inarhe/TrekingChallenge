@@ -125,6 +125,7 @@ public class UserHistoryActivity extends AppCompatActivity {
                         tvTotalKm.setText(String.valueOf(history.getTotalDistance()) + " km");
                         tvTotalHour.setText(Integer.toString(history.getTotalHour()) + "h" + Integer.toString(history.getTotalMin()));
                         tvTotalWin.setText(Integer.toString(history.getChallengeWin()));
+                        break;
                     }
                 }
             }

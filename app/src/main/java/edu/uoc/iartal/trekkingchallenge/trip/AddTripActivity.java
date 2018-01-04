@@ -196,6 +196,7 @@ public class AddTripActivity extends AppCompatActivity implements AdapterView.On
                     Trip trip = tripSnapshot.getValue(Trip.class);
                     if (trip.getName().equals(name)){
                         tripExists = true;
+                        break;
                     }
                 }
 
@@ -320,6 +321,7 @@ public class AddTripActivity extends AppCompatActivity implements AdapterView.On
 
                     if (user.getMail().equals(currentMail)){
                         currentUser = user;
+                        break;
                     }
                 }
             }

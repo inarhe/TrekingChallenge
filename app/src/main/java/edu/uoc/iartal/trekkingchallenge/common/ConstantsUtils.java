@@ -13,5 +13,5 @@ public class ConstantsUtils {
     final public static String UTF_8 = "UTF-8";
 
     final public static String EMAIL_PATTERN = "^[a-zA-Z0-9#_~!$&'()*+,;=:.\"<>@\\[\\]\\\\]+@[a-zA-Z0-9-]+(\\.[a-zA-Z0-9-]{2,})*$";
-    final public static String DISTANCE_PATTERN = "^[0-9]+([.][0-9]+)?$";
+    final public static String DISTANCE_PATTERN = "^[0-9\"]+([.][0-9\"]+)?$";
 }

@@ -154,7 +154,7 @@
     <string name="middleCheck">Middle</string>
     <string name="highCheck">High</string>
     <string name="lessKm"> &lt;10km</string>
-    <string name="middleKm"> 10km/15km</string>
+    <string name="middleKm"> 10-15km</string>
     <string name="highKm"> &gt;15km</string>
     <string name="distanceRoute">Distància ruta</string>
     <string name="typeRoute">Tipus de recorregut</string>

@@ -132,7 +132,7 @@ public class FinishedTripActivity extends AppCompatActivity {
             return;
         }
 
-        if (common.validateDistance(finishDist)) {
+        if (!common.validateDistance(finishDist)) {
             Toast.makeText(this, getString(R.string.distanceFormat), Toast.LENGTH_SHORT).show();
             return;
         }

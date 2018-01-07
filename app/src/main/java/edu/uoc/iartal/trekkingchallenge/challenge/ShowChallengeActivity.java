@@ -251,8 +251,6 @@ public class ShowChallengeActivity extends AppCompatActivity {
      */
     private void checkAlreadyFinished(){
         isFinished = false;
-        final ArrayList<String> results = new ArrayList<>();
-        results.addAll(currentUser.getChallengeResults().keySet());
 
         controller.readDataOnce(databaseResults, new OnGetDataListener() {
             @Override
@@ -264,7 +262,7 @@ public class ShowChallengeActivity extends AppCompatActivity {
             public void onSuccess(DataSnapshot data) {
                 for (DataSnapshot resultSnapshot : data.getChildren()){
                     ChallengeResult challengeResult = resultSnapshot.getValue(ChallengeResult.class);
-                    if ((results.contains(challengeResult.getId())) && (challengeResult.getChallenge().equals(challenge.getId()))){
+                    if ((challengeResult.getUser().equals(currentUser.getId())) && (challengeResult.getChallenge().equals(challenge.getId()))){
                         Toast.makeText(getApplicationContext(), R.string.alreadyFinish, Toast.LENGTH_SHORT).show();
                         isFinished = true;
                         break;

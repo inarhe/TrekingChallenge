@@ -261,8 +261,6 @@ public class ShowTripActivity extends AppCompatActivity {
      */
     private void checkAlreadyFinished(){
         isFinished = false;
-        final ArrayList<String> dones = new ArrayList<>();
-        dones.addAll(currentUser.getTripsDone().keySet());
 
         controller.readDataOnce(databaseTripDone, new OnGetDataListener() {
             @Override
@@ -274,7 +272,7 @@ public class ShowTripActivity extends AppCompatActivity {
             public void onSuccess(DataSnapshot data) {
                 for (DataSnapshot doneSnapshot : data.getChildren()){
                     TripDone tripDone = doneSnapshot.getValue(TripDone.class);
-                    if ((dones.contains(tripDone.getId())) && (tripDone.getTrip().equals(trip.getId()))){
+                    if ((tripDone.getUser().equals(currentUser.getId())) && (tripDone.getTrip().equals(trip.getId()))){
                         isFinished = true;
                         break;
                     }

@@ -117,13 +117,25 @@
                 android:layout_marginLeft="@dimen/margin_left_right"
                 android:layout_marginStart="@dimen/margin_left_right"
                 android:layout_marginTop="@dimen/margin_below"
+                android:textSize="@dimen/title2"
                 android:text="@string/challengeIsPublic" />
+
+            <TextView
+                android:id="@+id/tvClassType"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_left_right"
+                android:layout_marginStart="@dimen/margin_left_right"
+                android:layout_marginTop="@dimen/margin_below"
+                android:text="@string/classificationType"
+                android:textSize="@dimen/title2"
+                android:textStyle="bold"/>
 
             <RadioGroup
                 android:id="@+id/rgClassification"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_top_icon"
+                android:layout_marginTop="@dimen/showRoute_marginTop_icon"
                 android:layout_marginLeft="@dimen/margin_left_right"
                 android:layout_marginStart="@dimen/margin_left_right"
                 android:gravity="center"
@@ -144,13 +156,12 @@
                     android:checked="false"
                     android:textSize="@dimen/text_size_radioButton"
                     android:text="@string/classificationDist" />
-
             </RadioGroup>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="@dimen/margin_top_icon"
+                android:layout_marginTop="@dimen/margin_below"
                 android:gravity="center"
                 android:orientation="horizontal">
 

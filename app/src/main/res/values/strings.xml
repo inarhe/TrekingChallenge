@@ -188,7 +188,7 @@
     <!--Show trip activity-->
     <string name="routeTrip">Ruta escollida:</string>
     <string name="dayTrip">Dia planificat:</string>
-    <string name="placeTrip">Lloc de sortida:</string>
+    <string name="placeTrip">Lloc de trobada:</string>
     <string name="descTrip">Descripció:</string>
     <string name="membTrip">Integrants:</string>
     <string name="tripJoined">T\'has unit a l\'excursió</string>
@@ -277,8 +277,9 @@
     <string name="privateChallenge">Repte privat</string>
     <string name="usersInvitedChallenge">Usuaris afegits al repte</string>
     <string name="limitDate">Data límit:</string>
-    <string name="classificationTime">Classificació per temps</string>
-    <string name="classificationDist">Classificació per distància</string>
+    <string name="classificationType">Tipus de classificació:</string>
+    <string name="classificationTime">Per temps</string>
+    <string name="classificationDist">Per distància</string>
     <string name="time">Temps</string>
     <string name="distance">Distància</string>
     <string name="challAlreadyExists">El nom del repte ja existeix</string>
@@ -364,6 +365,7 @@
     <string name="mainMenu">Menú principal</string>
     <string name="drawerOpen">Drawer Opened</string>
     <string name="drawerClose">Drawer Closed</string>
+    <string name="welcome">Benvingut a</string>
 
     <!--Manifest-->
     <string name="title_activity_map">Map</string>

@@ -170,7 +170,6 @@ public class ShowTripActivity extends AppCompatActivity {
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
-                        finish();
                     }
                 });
 
@@ -215,7 +214,6 @@ public class ShowTripActivity extends AppCompatActivity {
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
-                        finish();
                     }
                 });
 

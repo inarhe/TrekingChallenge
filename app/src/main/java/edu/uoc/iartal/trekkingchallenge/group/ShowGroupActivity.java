@@ -156,7 +156,6 @@ public class ShowGroupActivity extends AppCompatActivity {
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
-                        finish();
                     }
                 });
 
@@ -201,7 +200,6 @@ public class ShowGroupActivity extends AppCompatActivity {
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
-                        finish();
                     }
                 });
 

@@ -106,4 +106,6 @@
     <dimen name="access_marginTop">55dp</dimen>
 
     <dimen name="drawer_header">120dp</dimen>
+
+    <dimen name="splash_logo">200dp</dimen>
 </resources>
